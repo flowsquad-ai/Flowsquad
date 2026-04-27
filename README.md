@@ -4,6 +4,8 @@
 
 FlowSquad is an AI-powered platform that analyzes your codebase and transforms it into actionable insights for your engineering squad.
 
+**Works with your existing repositories — no code changes, no setup complexity.**
+
 ---
 
 ## 📥 Download
