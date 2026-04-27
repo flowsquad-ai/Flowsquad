@@ -94,7 +94,7 @@ FlowSquad transforms your codebase into:
 1. Download the ZIP file  
 2. Extract contents  
 3. Run `FlowSquad-Setup.exe`  
-4. Add your OpenAI API key  
+4. Add your preffered AI API key  
 5. Provide repository path or URL  
 6. Start analysis  
 
