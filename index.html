@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>FlowSquad - From Code to Decisions</title>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #ffffff;
+      color: #111;
+      line-height: 1.6;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: auto;
+      padding: 40px 20px;
+    }
+
+    h1 {
+      font-size: 42px;
+      margin-bottom: 10px;
+    }
+
+    h2 {
+      font-size: 28px;
+      margin-bottom: 20px;
+    }
+
+    p {
+      color: #444;
+    }
+
+    .hero {
+      text-align: center;
+      padding: 80px 20px;
+    }
+
+    .tagline {
+      font-size: 18px;
+      margin-top: 10px;
+      color: #555;
+    }
+
+    .highlight {
+      margin-top: 15px;
+      font-weight: bold;
+    }
+
+    .buttons {
+      margin-top: 30px;
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 12px 20px;
+      margin: 10px;
+      text-decoration: none;
+      border-radius: 6px;
+      font-weight: bold;
+    }
+
+    .btn-primary {
+      background: #4f46e5;
+      color: white;
+    }
+
+    .btn-secondary {
+      border: 1px solid #4f46e5;
+      color: #4f46e5;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 20px;
+    }
+
+    .card {
+      padding: 20px;
+      border: 1px solid #eee;
+      border-radius: 10px;
+      background: #fafafa;
+    }
+
+    .section {
+      margin-top: 60px;
+    }
+
+    .split {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+    }
+
+    .footer {
+      text-align: center;
+      padding: 40px;
+      font-size: 14px;
+      color: #666;
+    }
+
+    @media(max-width: 768px) {
+      .split {
+        grid-template-columns: 1fr;
+      }
+
+      h1 {
+        font-size: 32px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="container">
+      <h1>From Code to Decisions</h1>
+
+      <p>
+        AI-powered SDLC intelligence that transforms your codebase into
+        requirements, design, testing insights, and effort estimates.
+      </p>
+
+      <p class="highlight">
+        Works with your existing repositories — no code changes required.<br/>
+        Analyze once. Reuse intelligence.
+      </p>
+
+      <div class="buttons">
+        <a href="https://github.com/flowsquad-ai/flowsquad/releases" class="btn btn-primary">
+          Download for Windows
+        </a>
+
+        <a href="https://github.com/flowsquad-ai/flowsquad" class="btn btn-secondary">
+          Deploy with Docker
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROBLEM / SOLUTION -->
+  <section class="section container split">
+    <div>
+      <h2>❌ Without FlowSquad</h2>
+      <p>AI lacks context and produces generic outputs.</p>
+      <p>Repeated analysis wastes time and cost.</p>
+      <p>Results don’t align with real systems.</p>
+    </div>
+
+    <div>
+      <h2>✅ With FlowSquad</h2>
+      <p>Deep understanding of your codebase.</p>
+      <p>Persistent intelligence — no reprocessing.</p>
+      <p>Outputs aligned with your architecture.</p>
+    </div>
+  </section>
+
+  <!-- CORE VALUE -->
+  <section class="section container">
+    <h2>From Code to Intelligence</h2>
+
+    <div class="grid">
+      <div class="card">
+        <h3>📌 Requirements</h3>
+        <p>Understand what your system actually does.</p>
+      </div>
+
+      <div class="card">
+        <h3>🏗 Design</h3>
+        <p>Architecture aligned with implementation.</p>
+      </div>
+
+      <div class="card">
+        <h3>🧪 Testing</h3>
+        <p>Identify test scenarios and coverage gaps.</p>
+      </div>
+
+      <div class="card">
+        <h3>📊 Quality</h3>
+        <p>Detect risks and complexity.</p>
+      </div>
+
+      <div class="card">
+        <h3>⏱ Estimation</h3>
+        <p>Plan effort and impact with confidence.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- PERSISTENT INTELLIGENCE -->
+  <section class="section container">
+    <h2>🧠 Persistent Intelligence</h2>
+
+    <p>
+      FlowSquad performs deep analysis of your codebase once and reuses that intelligence across workflows.
+    </p>
+
+    <div class="grid">
+      <div class="card">
+        <p>One-time deep codebase analysis</p>
+      </div>
+
+      <div class="card">
+        <p>No repeated context loading</p>
+      </div>
+
+      <div class="card">
+        <p>Faster insights with lower cost</p>
+      </div>
+
+      <div class="card">
+        <p>Efficient AI usage at scale</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- DEPLOYMENT -->
+  <section class="section container">
+    <h2>Run FlowSquad Your Way</h2>
+
+    <div class="grid">
+      <div class="card">
+        <h3>💻 Windows</h3>
+        <p>No installation required. Run locally in minutes.</p>
+        <a href="https://github.com/flowsquad-ai/flowsquad/releases" class="btn btn-primary">
+          Download
+        </a>
+      </div>
+
+      <div class="card">
+        <h3>🐳 Docker</h3>
+        <p>Deploy on Linux servers for team usage.</p>
+        <a href="https://github.com/flowsquad-ai/flowsquad" class="btn btn-secondary">
+          View Setup
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- DEMO -->
+  <section class="section container">
+    <h2>🎥 See FlowSquad in Action</h2>
+    <p>Add your demo video here (YouTube embed)</p>
+  </section>
+
+  <!-- FINAL CTA -->
+  <section class="section container hero">
+    <h2>Stop re-analyzing your codebase.</h2>
+    <p>Start building with intelligence.</p>
+
+    <div class="buttons">
+      <a href="https://github.com/flowsquad-ai/flowsquad/releases" class="btn btn-primary">
+        Download Now
+      </a>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <p>support@flowsquad.ai</p>
+    <p>© 2026 FlowSquad</p>
+  </div>
+
+</body>
+</html>
