@@ -75,6 +75,14 @@
 
 ## 🚀 Quick Start
 
+**FlowSquad Evaluation is available in two deployment options:**
+- **Windows Portable** - No installation required, double-click to run
+- **Docker Container** - Cross-platform deployment for Linux, macOS, Windows (WSL/Docker Desktop), and servers
+
+Choose the installation method below that matches your environment.
+
+---
+
 ### Installation (Portable Version)
 
 **FlowSquad Evaluation is distributed as a portable package - no installation required!**
@@ -119,6 +127,148 @@
 - 4 GB RAM minimum, 8 GB recommended
 - 2 GB free disk space (more for large codebases)
 - Internet connection (for LLM API access)
+
+---
+
+### Installation (Docker - Linux/macOS/WSL/Server)
+
+**FlowSquad is available as a Docker container for cross-platform deployment!**
+
+**Prerequisites:**
+- Docker installed ([Get Docker](https://docs.docker.com/get-docker/))
+- Docker Compose (included with Docker Desktop)
+- 4 GB RAM minimum, 8 GB recommended
+- Internet connection (for LLM API access)
+
+**Quick Start:**
+
+1. **Extract** the `FlowSquad-Docker-v1.4.zip` to a folder
+
+2. **Deploy** using the deployment script:
+
+   **Windows (PowerShell):**
+   ```powershell
+   .\deploy.ps1
+   ```
+
+   **Linux/Mac:**
+   ```bash
+   chmod +x deploy.sh
+   ./deploy.sh
+   ```
+
+3. **Access** FlowSquad in your browser
+   - Navigate to **http://localhost:5000**
+   - First launch may take 15-20 seconds (container initialization)
+
+4. **Complete** the setup wizard on first launch (see below)
+
+**Managing the Container:**
+
+```powershell
+# Windows PowerShell
+.\deploy.ps1 -Status    # Check if running
+.\deploy.ps1 -Logs      # View logs
+.\deploy.ps1 -Stop      # Stop container
+.\deploy.ps1            # Start (run again)
+```
+
+```bash
+# Linux/Mac
+./deploy.sh status      # Check if running
+./deploy.sh logs        # View logs  
+./deploy.sh stop        # Stop container
+./deploy.sh             # Start (run again)
+```
+
+**Data Persistence:**
+- All data stored in Docker volume: `flowsquad-data`
+- Survives container restarts and updates
+- Location: `/data` inside container
+  - `flowsquad.db` - Database file
+  - `vector_db/` - Code analysis embeddings
+  - `uploaded_documents/` - Generated reports
+  - `config/` - License and configuration
+
+**Backup:**
+```bash
+# Backup data volume (creates flowsquad-backup.tar.gz in current directory)
+# Note: "alpine" is a tiny Linux image used to run the tar command
+docker run --rm -v flowsquad-data:/data -v $(pwd):/backup alpine tar czf /backup/flowsquad-backup.tar.gz /data
+```
+
+**Restore:**
+```bash
+# Restore data volume from backup
+docker run --rm -v flowsquad-data:/data -v $(pwd):/backup alpine tar xzf /backup/flowsquad-backup.tar.gz -C /
+```
+
+**Alternative (using docker cp):**
+```bash
+# Backup - Copy entire data directory from container to host
+docker cp flowsquad-app:/data ./flowsquad-backup
+
+# Restore - Copy directory back into container
+docker cp ./flowsquad-backup/. flowsquad-app:/data
+```
+
+**🔑 Docker License Requirements:**
+
+Docker containers have **different machine IDs** than the host system. You'll need to:
+
+1. **First startup:** FlowSquad detects it's unlicensed and shows activation page
+2. **Request Docker License:** Contact support with your container's machine ID
+   - The machine ID is displayed on the license activation page
+   - Specify that you need a **Docker/container license**
+3. **Activate:** Support will provide a container-specific license file
+
+**Alternatively:** Run the Windows portable version on your development machine for evaluation (no separate license needed)
+
+**📁 Providing Code for Analysis:**
+
+Docker containers are isolated from your local filesystem. Choose one of these options:
+
+**Option 1: Docker CP (Easiest for Evaluation)**
+```bash
+# Copy your codebase into the running container
+docker cp /path/to/your/code flowsquad-app:/data/my-project
+
+# Then in FlowSquad UI, enter path: /data/my-project
+```
+
+**Option 2: Volume Mount (Recommended for Development)**
+
+Edit `docker-compose.yml` before starting:
+```yaml
+volumes:
+  - flowsquad-data:/data
+  - /host/path/to/code:/data/repos  # Add this line
+```
+
+Then in FlowSquad UI, enter: `/data/repos`
+
+**⚠️ Volume Limitations:**
+- Only works if Docker runs on the **same machine** as your code
+- Does **not** work with remote Docker servers (code must be accessible to Docker host)
+
+**Option 3: Git URLs (Enterprise Edition)**
+- Enterprise edition supports GitHub/GitLab/Bitbucket integration
+- Evaluation version: Local paths only
+
+**Path Format Examples:**
+- ✅ `/data/my-automation` (Docker container path)
+- ✅ `/data/repos/backend-api` (if mounted via docker-compose.yml)
+- ❌ `C:\Users\Me\Code` (Windows host path - won't work in container)
+- ❌ `~/code/project` (Host home directory - won't work)
+
+**System Requirements:**
+- Linux (native or WSL), macOS (Docker Desktop), or Windows (Docker Desktop/WSL2)
+- Docker 20.10+ and Docker Compose 2.0+
+- 4 GB RAM minimum, 8 GB recommended
+- 5 GB free disk space (more for large codebases)
+- Internet connection (for LLM API access)
+
+---
 
 ### First Time Setup
 
@@ -865,11 +1015,11 @@ Access admin features from the navigation bar:
 
 **Phase 5: Production Scale & Cloud Deployment**
 - ✅ **Multi-Platform Deployment Options**
-  - **Docker:** Containerized deployment (Docker Compose, Docker Swarm)
-  - **Linux:** Native installers (Ubuntu, RHEL, CentOS, Debian)
-  - **Cloud-Ready:** AWS, Azure, GCP deployment guides
-  - **Kubernetes:** Auto-scaling, high availability, load balancing
-  - **On-Premise:** Air-gapped environments for regulated industries
+  - ✅ **Docker:** Containerized deployment available NOW in evaluation version (see Installation section)
+  - 🔜 **Linux Native:** Installers for Ubuntu, RHEL, CentOS, Debian
+  - 🔜 **Cloud-Ready:** AWS, Azure, GCP deployment guides
+  - 🔜 **Kubernetes:** Auto-scaling, high availability, load balancing
+  - 🔜 **On-Premise:** Air-gapped environments for regulated industries
 - ✅ **Enhanced Security Features**
   - **MFA (Multi-Factor Authentication):** TOTP, SMS, email verification
   - **SSO/SAML:** Enterprise identity providers (Okta, Azure AD, Auth0)
@@ -916,7 +1066,7 @@ Access admin features from the navigation bar:
 
 **Join the Enterprise Waitlist:**
 - Visit: https://flowsquad.io/enterprise (coming soon)
-- Email: enterprise@flowsquad.com
+- Email: support@flowsquad.com
 - We'll notify you when enterprise features launch
 
 **Beta Program:**
