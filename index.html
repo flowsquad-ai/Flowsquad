@@ -3,206 +3,914 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>FlowSquad - From Code to Decisions</title>
+<title>FlowSquad - AI-Powered SDLC Intelligence Platform</title>
+<meta name="description" content="Transform your codebase into intelligent requirements, designs, and test cases. FlowSquad learns from YOUR code to generate context-aware SDLC artifacts.">
 
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
 <style>
+:root {
+  --primary-color: #0066cc;
+  --primary-dark: #0052a3;
+  --secondary-color: #6c757d;
+  --success-color: #28a745;
+  --warning-color: #ffc107;
+  --light-bg: #f8f9fa;
+  --border-color: #dee2e6;
+  --text-color: #212529;
+  --text-muted: #6c757d;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
 body {
-  margin: 0;
-  font-family: 'Inter', sans-serif;
-  background: #f9fafb;
-  color: #111;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  line-height: 1.6;
+  color: var(--text-color);
+  background: #ffffff;
 }
 
-.container {
-  max-width: 1100px;
-  margin: auto;
-  padding: 60px 20px;
+/* Navbar */
+.navbar {
+  background-color: white;
+  border-bottom: 1px solid var(--border-color);
+  padding: 1rem 0;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
 }
 
+.navbar .container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.nav-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+}
+
+.nav-brand img {
+  height: 56px;
+  width: 56px;
+}
+
+.nav-brand h1 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--primary-color);
+  margin: 0;
+}
+
+.nav-menu {
+  display: flex;
+  gap: 2rem;
+  align-items: center;
+}
+
+.nav-menu a {
+  text-decoration: none;
+  color: var(--text-color);
+  font-weight: 500;
+  transition: color 0.2s;
+}
+
+.nav-menu a:hover {
+  color: var(--primary-color);
+}
+
+/* Hero Section */
 .hero {
-  text-align: center;
-  padding: 100px 20px;
-  background: linear-gradient(135deg, #4f46e5, #7c3aed);
-  color: white;
+  background: linear-gradient(135deg, #0066cc 0%, #0052a3 100%);
+  color: white;
+  padding: 120px 20px 100px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: url('data:image/svg+xml,<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg"><circle cx="50" cy="50" r="1" fill="white" opacity="0.1"/></svg>');
+  background-size: 50px 50px;
+}
+
+.hero .container {
+  max-width: 900px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
 }
 
 .hero h1 {
-  font-size: 48px;
-  margin-bottom: 10px;
+  font-size: 3.5rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  line-height: 1.2;
 }
 
-.hero p {
-  font-size: 18px;
-  opacity: 0.9;
+.hero .subtitle {
+  font-size: 1.35rem;
+  margin-bottom: 1rem;
+  opacity: 0.95;
+  font-weight: 400;
 }
 
-.highlight {
-  margin-top: 20px;
-  font-weight: 600;
+.hero .highlight {
+  font-size: 1.1rem;
+  margin: 2rem 0;
+  opacity: 0.9;
+  font-weight: 500;
 }
 
-.buttons {
-  margin-top: 30px;
+.hero-buttons {
+  margin-top: 2.5rem;
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
 }
 
 .btn {
-  padding: 12px 22px;
-  margin: 10px;
-  border-radius: 8px;
-  font-weight: 600;
-  text-decoration: none;
+  display: inline-block;
+  padding: 0.875rem 2rem;
+  border-radius: 6px;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  border: 2px solid transparent;
 }
 
 .btn-primary {
-  background: white;
-  color: #4f46e5;
+  background: white;
+  color: var(--primary-color);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.2);
 }
 
 .btn-secondary {
-  border: 1px solid white;
-  color: white;
+  background: transparent;
+  color: white;
+  border-color: white;
 }
 
+.btn-secondary:hover {
+  background: rgba(255,255,255,0.1);
+}
+
+/* Container */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* Section */
 .section {
-  margin-top: 80px;
+  padding: 80px 20px;
 }
 
-.grid {
-  display: grid;
-  gap: 20px;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+.section-title {
+  text-align: center;
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  color: var(--text-color);
 }
 
-.card {
-  background: white;
-  padding: 25px;
-  border-radius: 12px;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.05);
-  transition: 0.2s;
+.section-subtitle {
+  text-align: center;
+  font-size: 1.2rem;
+  color: var(--text-muted);
+  margin-bottom: 3rem;
+  max-width: 700px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
-.card:hover {
-  transform: translateY(-5px);
+/* Problem/Solution */
+.problem-solution {
+  background: var(--light-bg);
 }
 
 .split {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 40px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3rem;
+  margin-top: 2rem;
 }
 
+.split h3 {
+  font-size: 1.75rem;
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.split ul {
+  list-style: none;
+}
+
+.split li {
+  padding: 1rem 0;
+  border-bottom: 1px solid var(--border-color);
+  font-size: 1.05rem;
+  display: flex;
+  align-items: start;
+  gap: 0.75rem;
+}
+
+.split li:last-child {
+  border-bottom: none;
+}
+
+/* Grid Layout */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2rem;
+  margin-top: 3rem;
+}
+
+.card {
+  background: white;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  transition: all 0.3s ease;
+  border: 1px solid var(--border-color);
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 24px rgba(0,102,204,0.15);
+  border-color: var(--primary-color);
+}
+
+.card h3 {
+  font-size: 1.3rem;
+  margin-bottom: 0.75rem;
+  color: var(--text-color);
+}
+
+.card p {
+  color: var(--text-muted);
+  font-size: 1rem;
+}
+
+.card .icon {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+  display: block;
+}
+
+/* Features Section */
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1.5rem;
+  margin-top: 3rem;
+}
+
+.feature-card {
+  background: white;
+  padding: 1.75rem;
+  border-radius: 10px;
+  border: 2px solid var(--border-color);
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.feature-card:hover {
+  border-color: var(--primary-color);
+  transform: translateY(-3px);
+}
+
+.feature-card .icon {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+}
+
+.feature-card h3 {
+  font-size: 1.1rem;
+  margin-bottom: 0.5rem;
+  color: var(--text-color);
+}
+
+.feature-card p {
+  color: var(--text-muted);
+  font-size: 0.95rem;
+}
+
+/* How It Works */
+.how-it-works {
+  background: var(--light-bg);
+}
+
+.steps {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2rem;
+  margin-top: 3rem;
+}
+
+.step {
+  position: relative;
+  background: white;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+.step-number {
+  position: absolute;
+  top: -20px;
+  left: 2rem;
+  width: 40px;
+  height: 40px;
+  background: var(--primary-color);
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 1.2rem;
+}
+
+.step h3 {
+  margin-top: 1rem;
+  margin-bottom: 0.75rem;
+  color: var(--text-color);
+}
+
+.step p {
+  color: var(--text-muted);
+}
+
+/* Deployment */
+.deployment-options {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 2rem;
+  margin-top: 3rem;
+}
+
+.deployment-card {
+  background: white;
+  padding: 2.5rem;
+  border-radius: 12px;
+  border: 2px solid var(--border-color);
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.deployment-card:hover {
+  border-color: var(--primary-color);
+  box-shadow: 0 8px 24px rgba(0,102,204,0.15);
+}
+
+.deployment-card .icon {
+  font-size: 4rem;
+  margin-bottom: 1.5rem;
+  display: block;
+}
+
+.deployment-card h3 {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  color: var(--text-color);
+}
+
+.deployment-card p {
+  color: var(--text-muted);
+  margin-bottom: 1.5rem;
+}
+
+.deployment-card ul {
+  text-align: left;
+  list-style: none;
+  margin-bottom: 1.5rem;
+}
+
+.deployment-card li {
+  padding: 0.5rem 0;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.deployment-card li::before {
+  content: '✓';
+  color: var(--success-color);
+  font-weight: bold;
+}
+
+/* CTA Section */
+.cta-section {
+  background: linear-gradient(135deg, #0066cc 0%, #0052a3 100%);
+  color: white;
+  text-align: center;
+  padding: 80px 20px;
+}
+
+.cta-section h2 {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+}
+
+.cta-section p {
+  font-size: 1.2rem;
+  margin-bottom: 2rem;
+  opacity: 0.9;
+}
+
+/* Footer */
 .footer {
-  text-align: center;
-  padding: 40px;
-  color: #777;
+  background: var(--text-color);
+  color: white;
+  padding: 3rem 0 2rem;
+  text-align: center;
 }
 
-@media(max-width: 768px) {
-  .split {
-    grid-template-columns: 1fr;
-  }
-  .hero h1 {
-    font-size: 34px;
-  }
+.footer p {
+  opacity: 0.8;
+  margin-bottom: 0.5rem;
+}
+
+.footer a {
+  color: white;
+  text-decoration: none;
+}
+
+.footer a:hover {
+  text-decoration: underline;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .hero h1 {
+    font-size: 2.5rem;
+  }
+  
+  .hero .subtitle {
+    font-size: 1.1rem;
+  }
+  
+  .split {
+    grid-template-columns: 1fr;
+  }
+  
+  .grid,
+  .features-grid,
+  .steps,
+  .deployment-options {
+    grid-template-columns: 1fr;
+  }
+  
+  .section-title {
+    font-size: 2rem;
+  }
+  
+  .nav-menu {
+    gap: 1rem;
+  }
 }
 </style>
 </head>
 
 <body>
 
-<!-- HERO -->
+<!-- Navbar -->
+<nav class="navbar">
+  <div class="container">
+    <a href="#" class="nav-brand">
+      <img src="static/icon.png" alt="FlowSquad">
+      <h1>FlowSquad</h1>
+    </a>
+    <div class="nav-menu">
+      <a href="#features">Features</a>
+      <a href="#how-it-works">How It Works</a>
+      <a href="#learn-more">Videos</a>
+      <a href="#deployment">Deployment</a>
+      <a href="#download">Download</a>
+    </div>
+  </div>
+</nav>
+
+<!-- Hero Section -->
 <section class="hero">
-  <h1>From Code to Decisions</h1>
-  <p>AI-powered SDLC intelligence for requirements, design, testing, and estimation.</p>
-
-  <div class="highlight">
-    Works with your existing repositories — no code changes required.<br/>
-    Analyze once. Reuse intelligence.
-  </div>
-
-  <div class="buttons">
-    <a href="https://github.com/flowsquad-ai/flowsquad/releases" class="btn btn-primary">Download for Windows</a>
-    <a href="https://github.com/flowsquad-ai/flowsquad" class="btn btn-secondary">Deploy with Docker</a>
-  </div>
+  <div class="container">
+    <h1>From Code to Decisions</h1>
+    <p class="subtitle">AI-powered SDLC intelligence that learns from YOUR codebase</p>
+    <p class="highlight">
+      Works with your existing repositories — no code changes required.<br/>
+      <strong>Analyze once. Reuse intelligence.</strong>
+    </p>
+    <div class="hero-buttons">
+      <a href="#download" class="btn btn-primary">Download Free Evaluation</a>
+      <a href="#how-it-works" class="btn btn-secondary">See How It Works</a>
+    </div>
+  </div>
 </section>
 
-<!-- PROBLEM / SOLUTION -->
-<div class="container section split">
-  <div>
-    <h2>❌ Without FlowSquad</h2>
-    <p>AI lacks context and produces generic outputs.</p>
-    <p>Repeated analysis wastes time and cost.</p>
-    <p>Results don’t align with real systems.</p>
-  </div>
+<!-- Problem / Solution -->
+<section class="section problem-solution">
+  <div class="container">
+    <h2 class="section-title">The SDLC Documentation Challenge</h2>
+    <div class="split">
+      <div>
+        <h3>❌ Without FlowSquad</h3>
+        <ul>
+          <li>🔴 AI lacks context and produces generic outputs</li>
+          <li>🔴 Repeated analysis wastes time and cost</li>
+          <li>🔴 Results don't align with real systems</li>
+          <li>🔴 Manual documentation creates silos</li>
+          <li>🔴 No quality visibility or risk analysis</li>
+        </ul>
+      </div>
+      <div>
+        <h3>✅ With FlowSquad</h3>
+        <ul>
+          <li>🎯 Deep understanding of YOUR codebase</li>
+          <li>🎯 Persistent intelligence — no reprocessing</li>
+          <li>🎯 Outputs aligned with your architecture</li>
+          <li>🎯 Quality gates built into every step</li>
+          <li>🎯 Complete pipeline for every team member</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
 
-  <div>
-    <h2>✅ With FlowSquad</h2>
-    <p>Deep understanding of your codebase.</p>
-    <p>Persistent intelligence — no reprocessing.</p>
-    <p>Outputs aligned with your architecture.</p>
-  </div>
-</div>
+<!-- Features -->
+<section id="features" class="section">
+  <div class="container">
+    <h2 class="section-title">Complete SDLC Intelligence Pipeline</h2>
+    <p class="section-subtitle">From code analysis to production-ready artifacts in minutes, not days</p>
+    
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="icon">📊</div>
+        <h3>Code Analysis</h3>
+        <p>Parse any language. Extract modules, dependencies, complexity, and patterns.</p>
+      </div>
+      
+      <div class="feature-card">
+        <div class="icon">📝</div>
+        <h3>Requirements</h3>
+        <p>Transform vague ideas into complete requirements with AI-powered completeness scoring.</p>
+      </div>
+      
+      <div class="feature-card">
+        <div class="icon">🏗</div>
+        <h3>Technical Design</h3>
+        <p>Auto-generate architecture diagrams, API contracts, and database schemas.</p>
+      </div>
+      
+      <div class="feature-card">
+        <div class="icon">🧪</div>
+        <h3>Test Generation</h3>
+        <p>Create test cases that match your existing testing patterns and frameworks.</p>
+      </div>
+      
+      <div class="feature-card">
+        <div class="icon">📈</div>
+        <h3>Quality Scoring</h3>
+        <p>Get 0-100 completeness scores, risk analysis, and prioritized recommendations.</p>
+      </div>
+      
+      <div class="feature-card">
+        <div class="icon">🧠</div>
+        <h3>Persistent Intelligence</h3>
+        <p>Vector database stores your code intelligence. No repeated processing.</p>
+      </div>
+    </div>
+  </div>
+</section>
 
-<!-- FEATURES -->
-<div class="container section">
-  <h2>From Code to Intelligence</h2>
+<!-- Who Should Use -->
+<section class="section" style="background: var(--light-bg);">
+  <div class="container">
+    <h2 class="section-title">Who Should Use FlowSquad?</h2>
+    <p class="section-subtitle">Built for every role in the software development lifecycle</p>
+    
+    <div class="grid">
+      <div class="card">
+        <div class="icon">👔</div>
+        <h3>Product Managers</h3>
+        <p>Transform vague ideas into complete user stories with AI-powered acceptance criteria and dependency mapping.</p>
+      </div>
+      
+      <div class="card">
+        <div class="icon">📊</div>
+        <h3>Business Analysts</h3>
+        <p>Document requirements with completeness scoring (0-100) and automated refinement suggestions.</p>
+      </div>
+      
+      <div class="card">
+        <div class="icon">🏛</div>
+        <h3>Software Architects</h3>
+        <p>Auto-generate technical designs, architecture diagrams, and API contracts aligned with existing systems.</p>
+      </div>
+      
+      <div class="card">
+        <div class="icon">👨‍💻</div>
+        <h3>Development Teams</h3>
+        <p>5-500 developers building features faster with less documentation overhead and more context.</p>
+      </div>
+      
+      <div class="card">
+        <div class="icon">📈</div>
+        <h3>Engineering Managers</h3>
+        <p>Gain visibility into quality metrics, technical debt, and risk analysis across all projects.</p>
+      </div>
+      
+      <div class="card">
+        <div class="icon">🧪</div>
+        <h3>QA Teams</h3>
+        <p>Automate test case creation, track automation coverage, and learn from existing test patterns.</p>
+      </div>
+      
+      <div class="card">
+        <div class="icon">🏢</div>
+        <h3>System Integrators</h3>
+        <p>Handle repetitive patterns with codebase-aware AI that learns your conventions and frameworks.</p>
+      </div>
+      
+      <div class="card">
+        <div class="icon">🏥</div>
+        <h3>Regulated Industries</h3>
+        <p>Finance, healthcare, government teams needing comprehensive documentation and audit trails.</p>
+      </div>
+    </div>
+  </div>
+</section>
 
-  <div class="grid">
-    <div class="card"><h3>📌 Requirements</h3><p>Understand what your system does.</p></div>
-    <div class="card"><h3>🏗 Design</h3><p>Architecture aligned with reality.</p></div>
-    <div class="card"><h3>🧪 Testing</h3><p>Identify test scenarios & gaps.</p></div>
-    <div class="card"><h3>📊 Quality</h3><p>Detect risks and complexity.</p></div>
-    <div class="card"><h3>⏱ Estimation</h3><p>Plan effort with confidence.</p></div>
-  </div>
-</div>
+<!-- How It Works -->
+<section id="how-it-works" class="section how-it-works">
+  <div class="container">
+    <h2 class="section-title">How FlowSquad Works</h2>
+    <p class="section-subtitle">Simple 5-step process from codebase to intelligent artifacts</p>
+    
+    <div class="steps">
+      <div class="step">
+        <div class="step-number">1</div>
+        <h3>Analyze Your Code</h3>
+        <p>Point FlowSquad to your repository (GitHub, local folder, or upload). Supports all major languages.</p>
+      </div>
+      
+      <div class="step">
+        <div class="step-number">2</div>
+        <h3>AI Deep Analysis</h3>
+        <p>FlowSquad parses your code, extracts modules, dependencies, patterns, and stores embeddings in vector database.</p>
+      </div>
+      
+      <div class="step">
+        <div class="step-number">3</div>
+        <h3>Refine Requirements</h3>
+        <p>Enter vague ideas. AI transforms them into complete requirements with acceptance criteria, dependencies, and completeness scores.</p>
+      </div>
+      
+      <div class="step">
+        <div class="step-number">4</div>
+        <h3>Generate Designs & Tests</h3>
+        <p>Auto-create technical designs, architecture diagrams, and test cases aligned with YOUR codebase patterns.</p>
+      </div>
+      
+      <div class="step">
+        <div class="step-number">5</div>
+        <h3>Score Quality</h3>
+        <p>Get quality metrics, risk analysis (low/medium/high), and prioritized recommendations for improvement.</p>
+      </div>
+    </div>
+  </div>
+</section>
 
-<!-- PERSISTENT INTELLIGENCE -->
-<div class="container section">
-  <h2>🧠 Persistent Intelligence</h2>
-  <p>FlowSquad analyzes your code once and reuses that intelligence across workflows.</p>
+<!-- Enterprise Features -->
+<section class="section">
+  <div class="container">
+    <h2 class="section-title">Enterprise-Ready Features</h2>
+    <p class="section-subtitle">Scale from evaluation to production with enterprise capabilities</p>
+    
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="icon">🔐</div>
+        <h3>Multi-Tenant Architecture</h3>
+        <p>Organization-level data isolation with RBAC (Role-Based Access Control) for teams.</p>
+      </div>
+      
+      <div class="feature-card">
+        <div class="icon">🔄</div>
+        <h3>Git Integrations</h3>
+        <p>Connect GitHub, GitLab, Bitbucket. Auto-sync code changes and trigger re-analysis.</p>
+      </div>
+      
+      <div class="feature-card">
+        <div class="icon">📋</div>
+        <h3>Jira & Azure Boards</h3>
+        <p>Export requirements and test cases directly to your issue tracking system.</p>
+      </div>
+      
+      <div class="feature-card">
+        <div class="icon">💬</div>
+        <h3>Slack & Teams</h3>
+        <p>Real-time notifications for analysis completion, quality alerts, and team collaboration.</p>
+      </div>
+      
+      <div class="feature-card">
+        <div class="icon">📄</div>
+        <h3>Confluence Export</h3>
+        <p>One-click export of requirements and designs to Confluence, Notion, or Markdown.</p>
+      </div>
+      
+      <div class="feature-card">
+        <div class="icon">🔍</div>
+        <h3>Advanced Analytics</h3>
+        <p>Track trends, quality improvements, and technical debt across sprints and releases.</p>
+      </div>
+      
+      <div class="feature-card">
+        <div class="icon">🏢</div>
+        <h3>SSO & LDAP</h3>
+        <p>Enterprise authentication with SAML, OAuth, and Active Directory integration.</p>
+      </div>
+      
+      <div class="feature-card">
+        <div class="icon">📊</div>
+        <h3>Audit Trails</h3>
+        <p>Complete history of all changes, approvals, and AI recommendations for compliance.</p>
+      </div>
+    </div>
+    
+    <div style="text-align: center; margin-top: 3rem;">
+      <p style="color: var(--text-muted); font-size: 1.1rem; margin-bottom: 1.5rem;">
+        Enterprise features available in commercial version. <a href="mailto:sales@flowsquad.ai" style="color: var(--primary-color); text-decoration: none; font-weight: 600;">Contact Sales</a> for pricing and demos.
+      </p>
+    </div>
+  </div>
+</section>
 
-  <div class="grid">
-    <div class="card">One-time deep analysis</div>
-    <div class="card">No repeated processing</div>
-    <div class="card">Faster responses</div>
-    <div class="card">Lower cost</div>
-  </div>
-</div>
+<!-- Deployment -->
+<section id="deployment" class="section">
+  <div class="container">
+    <h2 class="section-title">Run FlowSquad Your Way</h2>
+    <p class="section-subtitle">Choose the deployment option that fits your environment</p>
+    
+    <div class="deployment-options">
+      <div class="deployment-card">
+        <div class="icon">💻</div>
+        <h3>Windows Portable</h3>
+        <p>Zero installation. Extract and run.</p>
+        <ul>
+          <li>No dependencies to install</li>
+          <li>Double-click to start</li>
+          <li>Perfect for quick evaluation</li>
+          <li>Runs on Windows 10/11</li>
+        </ul>
+        <a href="#download" class="btn btn-primary">Download .ZIP</a>
+      </div>
+      
+      <div class="deployment-card">
+        <div class="icon">🐳</div>
+        <h3>Docker Container</h3>
+        <p>Cross-platform deployment for teams.</p>
+        <ul>
+          <li>Linux, macOS, Windows (WSL)</li>
+          <li>Server deployment ready</li>
+          <li>Persistent data volumes</li>
+          <li>One-command deployment</li>
+        </ul>
+        <a href="#download" class="btn btn-primary">Download Docker</a>
+      </div>
+    </div>
+  </div>
+</section>
 
-<!-- DEPLOYMENT -->
-<div class="container section">
-  <h2>Run FlowSquad Your Way</h2>
+<!-- Persistent Intelligence Highlight -->
+<section class="section" style="background: var(--light-bg);">
+  <div class="container">
+    <h2 class="section-title">🧠 Persistent Intelligence</h2>
+    <p class="section-subtitle">Analyze once. Reuse intelligence forever. No repeated processing.</p>
+    
+    <div class="grid">
+      <div class="card">
+        <h3>One-Time Analysis</h3>
+        <p>FlowSquad analyzes your codebase once and stores intelligence in vector database. Future operations use cached embeddings.</p>
+      </div>
+      
+      <div class="card">
+        <h3>Faster Responses</h3>
+        <p>No waiting for code re-analysis. Requirements, designs, and test cases generated in seconds, not minutes.</p>
+      </div>
+      
+      <div class="card">
+        <h3>Lower Costs</h3>
+        <p>Reduce LLM API costs by 80%. Reusable embeddings mean fewer tokens sent to OpenAI/Anthropic/GitHub.</p>
+      </div>
+      
+      <div class="card">
+        <h3>Always Current</h3>
+        <p>Re-analyze specific modules when code changes. Incremental updates keep intelligence fresh without full re-processing.</p>
+      </div>
+    </div>
+  </div>
+</section>
 
-  <div class="grid">
-    <div class="card">
-      <h3>💻 Windows</h3>
-      <p>Quick start. No installation required.</p>
-    </div>
-
-    <div class="card">
-      <h3>🐳 Docker</h3>
-      <p>Deploy for teams and scale easily.</p>
-    </div>
-  </div>
-</div>
+<!-- Learn More - Videos -->
+<section id="learn-more" class="section how-it-works">
+  <div class="container">
+    <h2 class="section-title">Learn More</h2>
+    <p class="section-subtitle">Watch our videos to see FlowSquad in action</p>
+    
+    <div class="steps">
+      <div class="step">
+        <div class="step-number">📺</div>
+        <h3>Product Concept</h3>
+        <p>Understand the vision behind FlowSquad and how it transforms SDLC workflows.</p>
+        <div style="margin-top: 1rem; padding: 1rem; background: var(--light-bg); border-radius: 8px; text-align: center;">
+          <a href="https://youtube.com/@flowsquad" target="_blank" style="color: var(--primary-color); text-decoration: none; font-weight: 600;">▶️ Watch on YouTube</a>
+        </div>
+      </div>
+      
+      <div class="step">
+        <div class="step-number">🎯</div>
+        <h3>Product Overview</h3>
+        <p>Complete walkthrough of all features: analysis, requirements, design, testing, and quality scoring.</p>
+        <div style="margin-top: 1rem; padding: 1rem; background: var(--light-bg); border-radius: 8px; text-align: center;">
+          <a href="https://youtube.com/@flowsquad" target="_blank" style="color: var(--primary-color); text-decoration: none; font-weight: 600;">▶️ Watch on YouTube</a>
+        </div>
+      </div>
+      
+      <div class="step">
+        <div class="step-number">🚀</div>
+        <h3>Live Demo</h3>
+        <p>See FlowSquad analyze a real codebase and generate requirements, designs, and test cases.</p>
+        <div style="margin-top: 1rem; padding: 1rem; background: var(--light-bg); border-radius: 8px; text-align: center;">
+          <a href="https://youtube.com/@flowsquad" target="_blank" style="color: var(--primary-color); text-decoration: none; font-weight: 600;">▶️ Watch on YouTube</a>
+        </div>
+      </div>
+    </div>
+    
+    <div style="text-align: center; margin-top: 3rem;">
+      <p style="color: var(--text-muted); font-size: 1rem;">
+        More tutorials and deep-dives available on our <a href="https://youtube.com/@flowsquad" target="_blank" style="color: var(--primary-color); text-decoration: none; font-weight: 600;">YouTube channel</a>
+      </p>
+    </div>
+  </div>
+</section>
 
 <!-- CTA -->
-<div class="container section" style="text-align:center;">
-  <h2>Stop re-analyzing your codebase.</h2>
-  <p>Start building with intelligence.</p>
+<section id="download" class="cta-section">
+  <div class="container">
+    <h2>Stop Re-Analyzing Your Codebase</h2>
+    <p>Start building with intelligence.</p>
+    <div class="hero-buttons">
+      <a href="https://github.com/flowsquad-ai/flowsquad/releases" class="btn btn-primary">Download for Windows</a>
+      <a href="https://github.com/flowsquad-ai/flowsquad/releases" class="btn btn-secondary">Get Docker Version</a>
+    </div>
+    <p style="margin-top: 2rem; font-size: 0.95rem; opacity: 0.8">
+      <strong>Evaluation includes:</strong> 45-day license • Maximum 2 products • Windows Portable + Docker • Full feature access
+    </p>
+  </div>
+</section>
 
-  <a href="https://github.com/flowsquad-ai/flowsquad/releases" class="btn btn-primary">
-    Download Now
-  </a>
-</div>
-
-<!-- FOOTER -->
-<div class="footer">
-  support@flowsquad.ai<br/>
-  © 2026 FlowSquad
-</div>
+<!-- Footer -->
+<footer class="footer">
+  <div class="container">
+    <p><strong>FlowSquad</strong> — From Code to Intelligent Artifacts & Decisions</p>
+    <p>Powered by AI • Built for Engineering Teams</p>
+    <p style="margin-top: 1rem;">
+      <a href="mailto:support@flowsquad.ai">support@flowsquad.ai</a> • 
+      <a href="https://flowsquad.ai">flowsquad.ai</a>
+    </p>
+    <p style="font-size: 0.875rem; margin-top: 1.5rem; opacity: 0.6">
+      © 2026 FlowSquad. All rights reserved.
+    </p>
+  </div>
+</footer>
 
 </body>
 </html>
