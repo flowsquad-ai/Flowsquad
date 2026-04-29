@@ -80,6 +80,24 @@ FlowSquad transforms your codebase into:
 
 ---
 
+## 🐳 Deployment Options
+
+FlowSquad can be used in multiple ways:
+
+### 💻 Local (Windows)
+- Portable EXE  
+- No installation required  
+- Ideal for individual users  
+
+### 🐳 Containerized (Docker)
+- Run on Linux servers  
+- Suitable for teams and internal deployments  
+- Easy to deploy and scale  
+
+Works seamlessly in both environments.
+
+---
+
 ## 🚀 Features
 
 - AI-powered codebase analysis  
@@ -88,17 +106,31 @@ FlowSquad transforms your codebase into:
 - Test case suggestions  
 - Semantic quality and coverage analysis  
 - Effort estimation and risk detection  
+- Docker-based deployment for team and enterprise environments  
 
 ---
 
 ## ⚙️ How to Use
 
+### Option 1: Windows (Recommended for Quick Start)
+
 1. Download the ZIP file  
 2. Extract contents  
 3. Run `FlowSquad-Setup.exe`  
-4. Add your preffered AI API key  
+4. Add your preferred AI API key  
 5. Provide repository path or URL  
 6. Start analysis  
+
+---
+
+### Option 2: Docker (Linux / Teams)
+
+1. Pull the FlowSquad Docker image  
+2. Run the container  
+3. Access via browser (http://localhost:5000)  
+4. Complete setup and start analysis  
+
+*(Detailed Docker instructions available in USER_GUIDE.md)*
 
 ---
 
