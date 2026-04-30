@@ -51,6 +51,7 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  position: relative;
 }
 
 .nav-brand {
@@ -94,6 +95,9 @@ body {
   flex-direction: column;
   cursor: pointer;
   gap: 4px;
+  order: -1;
+  margin-right: auto;
+  margin-left: 0;
 }
 
 .hamburger span {
@@ -288,14 +292,7 @@ body {
   padding: 2rem;
   border-radius: 12px;
   box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-  transition: all 0.3s ease;
   border: 1px solid var(--border-color);
-}
-
-.card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 8px 24px rgba(0,102,204,0.15);
-  border-color: var(--primary-color);
 }
 
 .card h3 {
@@ -329,12 +326,6 @@ body {
   border-radius: 10px;
   border: 2px solid var(--border-color);
   text-align: center;
-  transition: all 0.3s ease;
-}
-
-.feature-card:hover {
-  border-color: var(--primary-color);
-  transform: translateY(-3px);
 }
 
 .feature-card .icon {
@@ -413,10 +404,9 @@ body {
   border-radius: 12px;
   border: 2px solid var(--border-color);
   text-align: center;
-  transition: all 0.3s ease;
 }
 
-.deployment-card:hover {
+.deployment-card.featured:hover {
   border-color: var(--primary-color);
   box-shadow: 0 8px 24px rgba(0,102,204,0.15);
 }
@@ -520,15 +510,15 @@ body {
 
   .nav-menu {
     position: fixed;
-    right: -60%;
+    left: -60%;
     top: 70px;
     flex-direction: column;
     background-color: white;
     width: 60%;
     max-width: 300px;
     text-align: left;
-    transition: right 0.3s ease;
-    box-shadow: -2px 0 10px rgba(0, 0, 0, 0.1);
+    transition: left 0.3s ease;
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
     gap: 0;
     padding: 20px 0;
     z-index: 999;
@@ -537,7 +527,7 @@ body {
   }
 
   .nav-menu.active {
-    right: 0;
+    left: 0;
   }
 
   .nav-menu a {
@@ -615,11 +605,6 @@ body {
   /* Make cards more compact on mobile */
   .card {
     padding: 1.25rem;
-    transform: none !important;
-  }
-
-  .card:hover {
-    transform: none !important;
   }
 
   .card .icon {
@@ -638,11 +623,6 @@ body {
 
   .feature-card {
     padding: 1.25rem;
-    transform: none !important;
-  }
-
-  .feature-card:hover {
-    transform: none !important;
   }
 
   .feature-card .icon {
@@ -681,11 +661,6 @@ body {
 
   .deployment-card {
     padding: 1.5rem;
-    transform: none !important;
-  }
-
-  .deployment-card:hover {
-    transform: none !important;
   }
 
   .deployment-card .icon {
