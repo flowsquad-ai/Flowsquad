@@ -89,6 +89,20 @@ body {
   color: var(--primary-color);
 }
 
+.hamburger {
+  display: none;
+  flex-direction: column;
+  cursor: pointer;
+  gap: 4px;
+}
+
+.hamburger span {
+  width: 25px;
+  height: 3px;
+  background-color: var(--text-color);
+  transition: 0.3s;
+}
+
 /* Hero Section */
 .hero {
   background: linear-gradient(135deg, #0066cc 0%, #0052a3 100%);
@@ -471,14 +485,71 @@ body {
 
 /* Responsive */
 @media (max-width: 768px) {
+  .navbar .container {
+    padding: 0 15px;
+  }
+
+  .nav-brand img {
+    height: 50px;
+    width: 120px;
+  }
+
+  .nav-brand h1 {
+    font-size: 1.2rem;
+  }
+
+  .hamburger {
+    display: flex;
+  }
+
+  .nav-menu {
+    position: fixed;
+    left: -100%;
+    top: 70px;
+    flex-direction: column;
+    background-color: white;
+    width: 100%;
+    text-align: center;
+    transition: 0.3s;
+    box-shadow: 0 10px 27px rgba(0, 0, 0, 0.05);
+    gap: 0;
+    padding: 20px 0;
+  }
+
+  .nav-menu.active {
+    left: 0;
+  }
+
+  .nav-menu a {
+    padding: 15px;
+    border-bottom: 1px solid var(--border-color);
+  }
+
+  .hero {
+    padding: 80px 20px 60px;
+  }
+
   .hero h1 {
-    font-size: 2.5rem;
+    font-size: 2rem;
   }
   
   .hero .subtitle {
-    font-size: 1.1rem;
+    font-size: 1rem;
+  }
+
+  .hero .highlight {
+    font-size: 0.95rem;
   }
   
+  .hero-buttons {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .hero-buttons .btn {
+    width: 100%;
+  }
+
   .split {
     grid-template-columns: 1fr;
   }
@@ -491,11 +562,15 @@ body {
   }
   
   .section-title {
-    font-size: 2rem;
+    font-size: 1.75rem;
   }
-  
-  .nav-menu {
-    gap: 1rem;
+
+  .section {
+    padding: 60px 20px;
+  }
+
+  .container {
+    padding: 0 15px;
   }
 }
 </style>
@@ -518,6 +593,11 @@ body {
       <a href="#learn-more">Videos</a>
       <a href="#deployment">Deployment</a>
       <a href="#download">Download</a>
+    </div>
+    <div class="hamburger">
+      <span></span>
+      <span></span>
+      <span></span>
     </div>
   </div>
 </nav>
@@ -959,6 +1039,23 @@ body {
     </p>
   </div>
 </footer>
+
+<script>
+// Mobile menu toggle
+const hamburger = document.querySelector('.hamburger');
+const navMenu = document.querySelector('.nav-menu');
+
+hamburger.addEventListener('click', () => {
+  navMenu.classList.toggle('active');
+});
+
+// Close menu when a link is clicked
+document.querySelectorAll('.nav-menu a').forEach(link => {
+  link.addEventListener('click', () => {
+    navMenu.classList.remove('active');
+  });
+});
+</script>
 
 </body>
 </html>
