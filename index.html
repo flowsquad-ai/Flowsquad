@@ -103,6 +103,22 @@ body {
   transition: 0.3s;
 }
 
+.nav-backdrop {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 998;
+  transition: opacity 0.3s;
+}
+
+.nav-backdrop.active {
+  display: block;
+}
+
 /* Hero Section */
 .hero {
   background: linear-gradient(135deg, #0066cc 0%, #0052a3 100%);
@@ -504,25 +520,30 @@ body {
 
   .nav-menu {
     position: fixed;
-    left: -100%;
+    right: -60%;
     top: 70px;
     flex-direction: column;
     background-color: white;
-    width: 100%;
-    text-align: center;
-    transition: 0.3s;
-    box-shadow: 0 10px 27px rgba(0, 0, 0, 0.05);
+    width: 60%;
+    max-width: 300px;
+    text-align: left;
+    transition: right 0.3s ease;
+    box-shadow: -2px 0 10px rgba(0, 0, 0, 0.1);
     gap: 0;
     padding: 20px 0;
+    z-index: 999;
+    height: calc(100vh - 70px);
+    overflow-y: auto;
   }
 
   .nav-menu.active {
-    left: 0;
+    right: 0;
   }
 
   .nav-menu a {
-    padding: 15px;
+    padding: 15px 20px;
     border-bottom: 1px solid var(--border-color);
+    display: block;
   }
 
   .hero {
@@ -552,6 +573,16 @@ body {
 
   .split {
     grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .split h3 {
+    font-size: 1.3rem;
+  }
+
+  .split li {
+    padding: 0.75rem 0;
+    font-size: 0.95rem;
   }
   
   .grid,
@@ -559,10 +590,18 @@ body {
   .steps,
   .deployment-options {
     grid-template-columns: 1fr;
+    gap: 1.25rem;
+    margin-top: 2rem;
   }
   
   .section-title {
     font-size: 1.75rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .section-subtitle {
+    font-size: 1rem;
+    margin-bottom: 2rem;
   }
 
   .section {
@@ -571,6 +610,95 @@ body {
 
   .container {
     padding: 0 15px;
+  }
+
+  /* Make cards more compact on mobile */
+  .card {
+    padding: 1.25rem;
+    transform: none !important;
+  }
+
+  .card:hover {
+    transform: none !important;
+  }
+
+  .card .icon {
+    font-size: 2rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .card h3 {
+    font-size: 1.1rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .card p {
+    font-size: 0.9rem;
+  }
+
+  .feature-card {
+    padding: 1.25rem;
+    transform: none !important;
+  }
+
+  .feature-card:hover {
+    transform: none !important;
+  }
+
+  .feature-card .icon {
+    font-size: 2rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .feature-card h3 {
+    font-size: 1rem;
+  }
+
+  .feature-card p {
+    font-size: 0.85rem;
+  }
+
+  .step {
+    padding: 1.5rem;
+    padding-top: 2.5rem;
+  }
+
+  .step-number {
+    width: 35px;
+    height: 35px;
+    font-size: 1rem;
+    top: -17px;
+  }
+
+  .step h3 {
+    font-size: 1.1rem;
+    margin-top: 0.5rem;
+  }
+
+  .step p {
+    font-size: 0.9rem;
+  }
+
+  .deployment-card {
+    padding: 1.5rem;
+    transform: none !important;
+  }
+
+  .deployment-card:hover {
+    transform: none !important;
+  }
+
+  .deployment-card .icon {
+    font-size: 2rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .deployment-card h3 {
+    font-size: 1.1rem;
+  }
+
+  .deployment-card p {
+    font-size: 0.9rem;
   }
 }
 </style>
@@ -601,6 +729,9 @@ body {
     </div>
   </div>
 </nav>
+
+<!-- Mobile Navigation Backdrop -->
+<div class="nav-backdrop"></div>
 
 <!-- Hero Section -->
 <section class="hero">
@@ -1044,16 +1175,28 @@ body {
 // Mobile menu toggle
 const hamburger = document.querySelector('.hamburger');
 const navMenu = document.querySelector('.nav-menu');
+const navBackdrop = document.querySelector('.nav-backdrop');
 
-hamburger.addEventListener('click', () => {
+function toggleMenu() {
   navMenu.classList.toggle('active');
-});
+  navBackdrop.classList.toggle('active');
+  document.body.style.overflow = navMenu.classList.contains('active') ? 'hidden' : '';
+}
+
+function closeMenu() {
+  navMenu.classList.remove('active');
+  navBackdrop.classList.remove('active');
+  document.body.style.overflow = '';
+}
+
+hamburger.addEventListener('click', toggleMenu);
+
+// Close menu when backdrop is clicked
+navBackdrop.addEventListener('click', closeMenu);
 
 // Close menu when a link is clicked
 document.querySelectorAll('.nav-menu a').forEach(link => {
-  link.addEventListener('click', () => {
-    navMenu.classList.remove('active');
-  });
+  link.addEventListener('click', closeMenu);
 });
 </script>
 
