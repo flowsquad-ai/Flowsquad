@@ -14,13 +14,18 @@
 :root {
   --primary-color: #0066cc;
   --primary-dark: #0052a3;
+  --primary-light: #e6f2ff;
   --secondary-color: #6c757d;
   --success-color: #28a745;
   --warning-color: #ffc107;
   --light-bg: #f8f9fa;
+  --lighter-bg: #fafbfc;
   --border-color: #dee2e6;
   --text-color: #212529;
   --text-muted: #6c757d;
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.06);
+  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.08);
+  --shadow-lg: 0 8px 24px rgba(0, 102, 204, 0.12);
 }
 
 * {
@@ -210,6 +215,8 @@ body {
 
 .btn-secondary:hover {
   background: rgba(255,255,255,0.1);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(255, 255, 255, 0.2);
 }
 
 /* Container */
@@ -222,14 +229,28 @@ body {
 /* Section */
 .section {
   padding: 80px 20px;
+  position: relative;
+}
+
+.section::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80%;
+  max-width: 1000px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--border-color), transparent);
 }
 
 .section-title {
   text-align: center;
   font-size: 2.5rem;
-  font-weight: 700;
+  font-weight: 800;
   margin-bottom: 1rem;
   color: var(--text-color);
+  letter-spacing: -0.02em;
 }
 
 .section-subtitle {
@@ -244,7 +265,7 @@ body {
 
 /* Problem/Solution */
 .problem-solution {
-  background: var(--light-bg);
+  background: var(--lighter-bg);
 }
 
 .split {
@@ -291,8 +312,14 @@ body {
   background: white;
   padding: 2rem;
   border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  box-shadow: var(--shadow-sm);
   border: 1px solid var(--border-color);
+  transition: all 0.3s ease;
+}
+
+.card:hover {
+  box-shadow: var(--shadow-md);
+  border-color: var(--primary-light);
 }
 
 .card h3 {
@@ -309,7 +336,14 @@ body {
 .card .icon {
   font-size: 2.5rem;
   margin-bottom: 1rem;
-  display: block;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 70px;
+  height: 70px;
+  background: var(--primary-light);
+  border-radius: 16px;
+  color: var(--primary-color);
 }
 
 /* Features Section */
@@ -323,14 +357,30 @@ body {
 .feature-card {
   background: white;
   padding: 1.75rem;
-  border-radius: 10px;
-  border: 2px solid var(--border-color);
+  border-radius: 12px;
+  border: 1px solid var(--border-color);
   text-align: center;
+  box-shadow: var(--shadow-sm);
+  transition: all 0.3s ease;
+}
+
+.feature-card:hover {
+  box-shadow: var(--shadow-md);
+  border-color: var(--primary-light);
+  transform: translateY(-3px);
 }
 
 .feature-card .icon {
-  font-size: 2.5rem;
+  font-size: 2rem;
   margin-bottom: 1rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 60px;
+  height: 60px;
+  background: linear-gradient(135deg, var(--primary-light) 0%, #f0f8ff 100%);
+  border-radius: 12px;
+  color: var(--primary-color);
 }
 
 .feature-card h3 {
@@ -346,7 +396,7 @@ body {
 
 /* How It Works */
 .how-it-works {
-  background: var(--light-bg);
+  background: var(--lighter-bg);
 }
 
 .steps {
@@ -361,7 +411,14 @@ body {
   background: white;
   padding: 2rem;
   border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--border-color);
+  transition: all 0.3s ease;
+}
+
+.step:hover {
+  box-shadow: var(--shadow-md);
+  border-color: var(--primary-light);
 }
 
 .step-number {
@@ -370,7 +427,7 @@ body {
   left: 2rem;
   width: 40px;
   height: 40px;
-  background: var(--primary-color);
+  background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
   color: white;
   border-radius: 50%;
   display: flex;
@@ -378,6 +435,7 @@ body {
   justify-content: center;
   font-weight: 700;
   font-size: 1.2rem;
+  box-shadow: var(--shadow-md);
 }
 
 .step h3 {
@@ -402,19 +460,34 @@ body {
   background: white;
   padding: 2.5rem;
   border-radius: 12px;
-  border: 2px solid var(--border-color);
+  border: 1px solid var(--border-color);
   text-align: center;
+  box-shadow: var(--shadow-sm);
+  transition: all 0.3s ease;
+}
+
+.deployment-card:hover {
+  box-shadow: var(--shadow-md);
+  border-color: var(--primary-light);
+  transform: translateY(-3px);
 }
 
 .deployment-card.featured:hover {
   border-color: var(--primary-color);
-  box-shadow: 0 8px 24px rgba(0,102,204,0.15);
+  box-shadow: var(--shadow-lg);
 }
 
 .deployment-card .icon {
-  font-size: 4rem;
-  margin-bottom: 1.5rem;
-  display: block;
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 80px;
+  height: 80px;
+  background: linear-gradient(135deg, var(--primary-light) 0%, #f0f8ff 100%);
+  border-radius: 20px;
+  color: var(--primary-color);
 }
 
 .deployment-card h3 {
@@ -727,7 +800,8 @@ body {
 <!-- Problem / Solution -->
 <section class="section problem-solution">
   <div class="container">
-    <h2 class="section-title">The SDLC Documentation Challenge</h2>
+    <h2 class="section-title">The Gap Between Code and Decisions</h2>
+    <p class="section-subtitle">Code evolves fast. Documentation doesn't. Decisions suffer.</p>
     <div class="split">
       <div>
         <h3>❌ Without FlowSquad</h3>
