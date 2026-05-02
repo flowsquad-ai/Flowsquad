@@ -1,1 +1,1721 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FlowSquad - Documentation</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
+<style>
+:root {
+  --primary-color: #0066cc;
+  --primary-dark: #0052a3;
+  --primary-light: #e6f2ff;
+  --secondary-color: #6c757d;
+  --success-color: #28a745;
+  --warning-color: #ffc107;
+  --info-color: #17a2b8;
+  --danger-color: #dc3545;
+  --light-bg: #f8f9fa;
+  --lighter-bg: #fafbfc;
+  --border-color: #dee2e6;
+  --text-color: #212529;
+  --text-muted: #6c757d;
+  --code-bg: #1e1e1e;
+  --code-text: #d4d4d4;
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.06);
+  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.08);
+  --shadow-lg: 0 8px 24px rgba(0, 102, 204, 0.12);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  line-height: 1.6;
+  color: var(--text-color);
+  background: #ffffff;
+}
+
+/* Navbar */
+.navbar {
+  background-color: white;
+  border-bottom: 1px solid var(--border-color);
+  padding: 1rem 0;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.navbar .container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+}
+
+.nav-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+}
+
+.nav-brand img {
+  height: 75px;
+  width: 180px;
+}
+
+.nav-brand h1 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--primary-color);
+  margin: 0;
+}
+
+.nav-menu {
+  display: flex;
+  gap: 2rem;
+  align-items: center;
+}
+
+.nav-menu a {
+  text-decoration: none;
+  color: var(--text-color);
+  font-weight: 500;
+  transition: color 0.2s;
+}
+
+.nav-menu a:hover {
+  color: var(--primary-color);
+}
+
+.hamburger {
+  display: none;
+  flex-direction: column;
+  cursor: pointer;
+  gap: 4px;
+  order: -1;
+  margin-right: auto;
+  margin-left: 0;
+}
+
+.hamburger span {
+  width: 25px;
+  height: 3px;
+  background-color: var(--text-color);
+  transition: 0.3s;
+}
+
+.nav-backdrop {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 998;
+  transition: opacity 0.3s;
+}
+
+.nav-backdrop.active {
+  display: block;
+}
+
+/* Content Container */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.content-wrapper {
+  max-width: 1400px;
+  margin: 3rem auto;
+  padding: 0 20px;
+  display: flex;
+  gap: 3rem;
+}
+
+/* Table of Contents Sidebar */
+.toc-sidebar {
+  position: sticky;
+  top: 90px;
+  align-self: flex-start;
+  width: 280px;
+  flex-shrink: 0;
+  max-height: calc(100vh - 120px);
+  overflow-y: auto;
+  background: white;
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: var(--shadow-md);
+  border: 1px solid var(--border-color);
+}
+
+.toc-sidebar h3 {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-color);
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid var(--primary-light);
+}
+
+.toc-links {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.toc-links li {
+  margin: 0;
+}
+
+.toc-links a {
+  display: block;
+  padding: 0.5rem 0.75rem;
+  color: var(--text-muted);
+  text-decoration: none;
+  font-size: 0.9rem;
+  border-radius: 6px;
+  transition: all 0.2s;
+}
+
+.toc-links a:hover {
+  background: var(--primary-light);
+  color: var(--primary-color);
+  text-decoration: none;
+}
+
+.toc-links a.active {
+  background: var(--primary-light);
+  color: var(--primary-color);
+  font-weight: 600;
+}
+
+.main-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.content-card {
+  background: white;
+  padding: 3rem;
+  border-radius: 12px;
+  box-shadow: var(--shadow-md);
+}
+
+/* Download Buttons */
+.download-buttons {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+}
+
+.btn-download {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  background: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-decoration: none;
+}
+
+.btn-download:hover {
+  background: var(--primary-dark);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+  text-decoration: none;
+}
+
+.btn-download.secondary {
+  background: var(--secondary-color);
+}
+
+.btn-download.secondary:hover {
+  background: #5a6268;
+}
+
+/* Hero Section */
+.docs-hero {
+  text-align: center;
+  padding-bottom: 2rem;
+  border-bottom: 2px solid var(--light-bg);
+  margin-bottom: 3rem;
+}
+
+.docs-hero h1 {
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: var(--text-color);
+  margin-bottom: 0.5rem;
+}
+
+.docs-hero p {
+  font-size: 1.2rem;
+  color: var(--text-muted);
+}
+
+/* Quick Start Box */
+.quick-start {
+  background: linear-gradient(135deg, var(--primary-light) 0%, #f0f8ff 100%);
+  border-left: 4px solid var(--primary-color);
+  padding: 1.5rem;
+  border-radius: 8px;
+  margin: 2rem 0;
+}
+
+.quick-start h3 {
+  color: var(--primary-color);
+  margin-bottom: 1rem;
+  font-size: 1.3rem;
+}
+
+/* Callout Boxes */
+.callout {
+  padding: 1rem 1.5rem;
+  border-radius: 6px;
+  margin: 1.5rem 0;
+  border-left: 4px solid;
+}
+
+.callout-info {
+  background: #e7f3ff;
+  border-color: var(--info-color);
+}
+
+.callout-warning {
+  background: #fff4e5;
+  border-color: var(--warning-color);
+}
+
+.callout-success {
+  background: #d4edda;
+  border-color: var(--success-color);
+}
+
+.callout-danger {
+  background: #f8d7da;
+  border-color: var(--danger-color);
+}
+
+.callout strong {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+}
+
+/* Typography */
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 700;
+  line-height: 1.3;
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+  color: var(--text-color);
+}
+
+h1 {
+  font-size: 2.5rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid var(--light-bg);
+}
+
+h2 {
+  font-size: 2rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--border-color);
+  margin-top: 3rem;
+}
+
+h3 {
+  font-size: 1.5rem;
+  margin-top: 2rem;
+}
+
+h4 {
+  font-size: 1.25rem;
+}
+
+p {
+  margin-bottom: 1rem;
+}
+
+ul, ol {
+  margin-left: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+li {
+  margin-bottom: 0.5rem;
+}
+
+/* Code Blocks */
+code {
+  background: var(--code-bg);
+  color: var(--code-text);
+  padding: 0.2rem 0.4rem;
+  border-radius: 4px;
+  font-family: 'Courier New', monospace;
+  font-size: 0.9em;
+}
+
+pre {
+  background: var(--code-bg);
+  color: var(--code-text);
+  padding: 1.5rem;
+  border-radius: 8px;
+  overflow-x: auto;
+  margin: 1.5rem 0;
+}
+
+pre code {
+  background: none;
+  padding: 0;
+}
+
+/* Tables */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.5rem 0;
+  background: white;
+}
+
+th, td {
+  padding: 0.75rem;
+  text-align: left;
+  border-bottom: 1px solid var(--border-color);
+}
+
+th {
+  background: var(--lighter-bg);
+  font-weight: 600;
+  color: var(--text-color);
+}
+
+tr:hover {
+  background: var(--lighter-bg);
+}
+
+/* Links */
+a {
+  color: var(--primary-color);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* Strong/Bold */
+strong {
+  font-weight: 600;
+}
+
+/* Blockquote */
+blockquote {
+  border-left: 4px solid var(--primary-color);
+  padding-left: 1rem;
+  margin: 1.5rem 0;
+  font-style: italic;
+  color: var(--text-muted);
+}
+
+/* Section Dividers */
+hr {
+  border: none;
+  border-top: 1px solid var(--border-color);
+  margin: 2rem 0;
+}
+
+/* Footer */
+.footer {
+  background: var(--text-color);
+  color: white;
+  padding: 2rem 0;
+  text-align: center;
+  margin-top: 4rem;
+}
+
+.footer p {
+  opacity: 0.8;
+  margin: 0;
+}
+
+/* Responsive */@media (max-width: 1024px) {
+  .toc-sidebar {
+    display: none;
+  }
+
+  .content-wrapper {
+    display: block;
+  }
+}
+@media (max-width: 768px) {
+  .navbar .container {
+    padding: 0 15px;
+  }
+
+  .nav-brand img {
+    height: 50px;
+    width: 120px;
+  }
+
+  .nav-brand h1 {
+    font-size: 1.2rem;
+  }
+
+  .hamburger {
+    display: flex;
+  }
+
+  .nav-menu {
+    position: fixed;
+    left: -60%;
+    top: 70px;
+    flex-direction: column;
+    background-color: white;
+    width: 60%;
+    max-width: 300px;
+    text-align: left;
+    transition: left 0.3s ease;
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+    gap: 0;
+    padding: 20px 0;
+    z-index: 999;
+    height: calc(100vh - 70px);
+    overflow-y: auto;
+  }
+
+  .nav-menu.active {
+    left: 0;
+  }
+
+  .nav-menu a {
+    padding: 15px 20px;
+    border-bottom: 1px solid var(--border-color);
+    display: block;
+  }
+
+  .content-card {
+    padding: 1.5rem;
+  }
+
+  .download-buttons {
+    flex-direction: column;
+  }
+
+  .btn-download {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .docs-hero h1 {
+    font-size: 2rem;
+  }
+
+  .docs-hero p {
+    font-size: 1rem;
+  }
+
+  h2 {
+    font-size: 1.5rem;
+  }
+
+  h3 {
+    font-size: 1.25rem;
+  }
+
+  .nav-menu {
+    gap: 1rem;
+  }
+
+  pre {
+    padding: 1rem;
+    font-size: 0.85rem;
+  }
+
+  .container {
+    padding: 0 15px;
+  }
+}
+
+/* Smooth Scroll */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Anchor Links */
+h2:target, h3:target {
+  padding-top: 80px;
+  margin-top: -80px;
+}
+</style>
+</head>
+
+<body>
+
+<!-- Navbar -->
+<nav class="navbar">
+  <div class="container">
+    <a href="#" class="nav-brand">
+      <img src="data:image/png;base64,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" alt="FlowSquad">
+    </a>
+    <div class="nav-menu">
+      <a href="/">Back to Home</a>
+    </div>
+  </div>
+</nav>
+
+<!-- Main Content -->
+<div class="content-wrapper">
+  <!-- Table of Contents Sidebar -->
+  <aside class="toc-sidebar">
+    <h3>📑 Documentation</h3>
+    <ul class="toc-links">
+      <li><a href="#overview">Overview</a></li>
+      <li><a href="#installation">Installation</a></li>
+      <li><a href="#windows-portable">├─ Windows Portable</a></li>
+      <li><a href="#docker">└─ Docker</a></li>
+      <li><a href="#setup">First Time Setup</a></li>
+      <li><a href="#products">Working with Products</a></li>
+      <li><a href="#features">Main Features</a></li>
+      <li><a href="#code-analysis">├─ Code Analysis</a></li>
+      <li><a href="#requirements">├─ Requirements</a></li>
+      <li><a href="#design">├─ Design Generation</a></li>
+      <li><a href="#test-cases">├─ Test Cases</a></li>
+      <li><a href="#automation">├─ Automation Analysis</a></li>
+      <li><a href="#quality-score">└─ Quality Score</a></li>
+      <li><a href="#quality-calculation">Quality Score Explained</a></li>
+      <li><a href="#admin">Admin Features</a></li>
+      <li><a href="#tips">Tips & Best Practices</a></li>
+      <li><a href="#troubleshooting">Troubleshooting</a></li>
+      <li><a href="#support">Support</a></li>
+    </ul>
+  </aside>
+
+  <!-- Main Content Area -->
+  <div class="main-content">
+    <div class="content-card">
+    
+    <!-- Hero -->
+    <div class="docs-hero">
+      <h1>FlowSquad Documentation</h1>
+      <p>Setup, usage, and feature guide for FlowSquad</p>
+      <p style="font-size: 0.95rem; margin-top: 1rem;"><strong>Evaluation Version</strong> | 45-Day Trial | Maximum 2 Products</p>
+      
+      <!-- Download Buttons -->
+      <div class="download-buttons" style="margin-top: 1.5rem;">
+        <button class="btn-download" onclick="downloadHTML()">📄 Download as HTML</button>
+        <button class="btn-download secondary" onclick="downloadPDF()">📑 Download as PDF</button>
+      </div>
+    </div>
+
+    <!-- Quick Start Box -->
+    <div class="quick-start">
+      <h3>🚀 Quick Start</h3>
+      <ol>
+        <li><strong>Extract</strong> the portable ZIP to a folder (e.g., <code>C:\FlowSquad</code>)</li>
+        <li><strong>Run</strong> <code>FlowSquad.exe</code> (Windows) or deploy with Docker</li>
+        <li><strong>Access</strong> FlowSquad at <code>http://localhost:5000</code></li>
+        <li><strong>Complete</strong> the setup wizard (select AI provider, configure API keys)</li>
+        <li><strong>Try Demo</strong> to explore all features with sample data</li>
+      </ol>
+    </div>
+
+    <hr>
+
+    <!-- Overview -->
+    <h2 id="overview">🎯 Overview: From Code to Intelligent Design & Decisions</h2>
+    
+    <p><strong>FlowSquad</strong> is an AI-powered SDLC intelligence platform that transforms how development teams create requirements, designs, and test cases. Instead of starting from scratch or using generic AI tools, FlowSquad learns from <strong>YOUR actual codebase</strong> to generate context-aware documentation.</p>
+
+    <h3>The Problem We Solve</h3>
+
+    <p><strong>Traditional SDLC Documentation Challenges:</strong></p>
+    <ul>
+      <li>❌ <strong>Vague Requirements:</strong> "Add user login" → But what about password reset? MFA? Session management?</li>
+      <li>❌ <strong>Manual Design Docs:</strong> Hours spent creating technical designs that become outdated immediately</li>
+      <li>❌ <strong>Copy-Paste Test Cases:</strong> Rewriting the same test scenarios for every new feature</li>
+      <li>❌ <strong>No Quality Visibility:</strong> Is this release better or worse than the last? No one knows.</li>
+      <li>❌ <strong>Generic AI Guesses:</strong> ChatGPT/Copilot don't understand YOUR code patterns and conventions</li>
+    </ul>
+
+    <p><strong>FlowSquad's Approach:</strong></p>
+    <ul>
+      <li>✅ <strong>Codebase-Aware AI:</strong> Vector database learns YOUR code patterns, frameworks, and conventions</li>
+      <li>✅ <strong>Complete SDLC Pipeline:</strong> Code Analysis → Requirements → Design → Test Cases → Quality Scoring</li>
+      <li>✅ <strong>Context-Driven Generation:</strong> Every output considers your existing codebase structure</li>
+      <li>✅ <strong>Quality Gates:</strong> Completeness scores (0-100), risk analysis, automated recommendations</li>
+      <li>✅ <strong>Time Savings:</strong> 80% reduction in SDLC documentation time</li>
+    </ul>
+
+    <h3>How It Works</h3>
+
+    <pre><code>1. Analyze Your Code
+   └─> Parse any language (Python, Java, JavaScript, etc.)
+   └─> Extract modules, dependencies, complexity, patterns
+   └─> Store embeddings in vector database
+
+2. Refine Requirements
+   └─> Transform vague ideas into complete requirements
+   └─> AI adds acceptance criteria, dependencies, risks
+   └─> Completeness scoring (0-100) ensures quality
+
+3. Generate Designs
+   └─> Auto-create technical design documents
+   └─> Architecture diagrams, API contracts, database schemas
+   └─> Context-aware: knows your existing tech stack
+
+4. Create Test Cases
+   └─> Learn from your existing test patterns
+   └─> Generate new test cases that match your style
+   └─> Automation script analysis (Selenium, Pytest, Cypress, etc.)
+
+5. Score Quality
+   └─> Quality metrics (test coverage, automation %, complexity)
+   └─> Risk analysis (low/medium/high per module)
+   └─> Prioritized recommendations for improvement</code></pre>
+
+    <h3>Who Should Use FlowSquad?</h3>
+
+    <p><strong>✅ Perfect For:</strong></p>
+    <ul>
+      <li><strong>Product Managers:</strong> Transform vague ideas into complete user stories with acceptance criteria</li>
+      <li><strong>Business Analysts:</strong> Document requirements with AI-powered refinement and completeness scoring</li>
+      <li><strong>Software Architects:</strong> Auto-generate technical designs aligned with existing architecture</li>
+      <li><strong>Development teams:</strong> 5-500 developers building features faster with less documentation overhead</li>
+      <li><strong>Engineering managers:</strong> Gain visibility into quality metrics and technical debt</li>
+      <li><strong>QA teams:</strong> Automate test case creation and track automation coverage</li>
+      <li><strong>System integrators:</strong> Handle repetitive patterns with codebase-aware AI</li>
+      <li><strong>Regulated industries:</strong> Finance, healthcare, government needing comprehensive documentation</li>
+    </ul>
+
+    <div class="callout callout-success">
+      <strong>🎯 Best Results When:</strong>
+      <ul style="margin-bottom: 0;">
+        <li>You have existing codebase to analyze (FlowSquad learns from it)</li>
+        <li>You need consistent, high-quality requirements</li>
+        <li>You want to reduce manual documentation time</li>
+        <li>You need quality metrics and risk analysis</li>
+      </ul>
+    </div>
+
+    <hr>
+
+    <!-- Installation -->
+    <h2 id="installation">🚀 Installation</h2>
+
+    <p>FlowSquad Evaluation is available in two deployment options:</p>
+    <ul>
+      <li><strong>Windows Portable</strong> - No installation required, double-click to run</li>
+      <li><strong>Docker Container</strong> - Cross-platform deployment for Linux, macOS, Windows (WSL/Docker Desktop), and servers</li>
+    </ul>
+
+    <h3 id="windows-portable">Installation (Windows Portable)</h3>
+
+    <p><strong>FlowSquad Evaluation is distributed as a portable package - no installation required!</strong></p>
+
+    <p><strong>Windows:</strong></p>
+    <ol>
+      <li><strong>Extract</strong> the <code>FlowSquad-Portable-v1.0.zip</code> to a folder (e.g., <code>C:\FlowSquad</code>)
+        <ul>
+          <li>Right-click → Extract All → Choose location</li>
+          <li>⚠️ <strong>Do NOT extract to temporary folders</strong> (Downloads, Temp, Desktop)</li>
+          <li>⚠️ <strong>Avoid protected folders</strong> (Program Files, Windows, System32) - permission issues</li>
+          <li>✅ <strong>Best locations:</strong> <code>C:\FlowSquad</code>, <code>D:\FlowSquad</code>, or any user-writable directory</li>
+        </ul>
+      </li>
+      <li><strong>Run</strong> <code>FlowSquad.exe</code> from the extracted folder
+        <ul>
+          <li>Double-click <code>FlowSquad.exe</code></li>
+          <li>First launch may take 10-15 seconds (initializing Python environment)</li>
+          <li>✅ Windows Defender/Firewall: Allow access when prompted</li>
+        </ul>
+      </li>
+      <li><strong>Access</strong> FlowSquad in your browser
+        <ul>
+          <li>Browser automatically opens to <code>http://localhost:5000</code></li>
+          <li>If browser doesn't open, manually navigate to <code>http://localhost:5000</code></li>
+          <li>✅ Bookmark this URL for easy access</li>
+        </ul>
+      </li>
+      <li><strong>Complete</strong> the setup wizard on first launch</li>
+    </ol>
+
+    <div class="callout callout-info">
+      <strong>Running FlowSquad:</strong>
+      <ul style="margin-bottom: 0;">
+        <li>Keep <code>FlowSquad.exe</code> running while using the application</li>
+        <li><strong>System Tray Icon:</strong> FlowSquad appears in the system tray (bottom-right of taskbar)</li>
+        <li>Right-click the icon to quit the application</li>
+        <li>Closing the console window (if visible) will also stop FlowSquad</li>
+        <li>To restart: Double-click <code>FlowSquad.exe</code> again</li>
+      </ul>
+    </div>
+
+    <p><strong>Data Location:</strong></p>
+    <ul>
+      <li>All data stored in your local AppData folder:
+        <ul>
+          <li>Location: <code>C:\Users\[YourUsername]\AppData\Local\FlowSquad\</code></li>
+          <li><code>flowsquad.db</code> - Database file</li>
+          <li><code>vector_db/</code> - Code analysis embeddings</li>
+          <li><code>uploaded_documents/</code> - Generated reports</li>
+          <li><code>analysis_output/</code> - Analysis results</li>
+        </ul>
+      </li>
+      <li><strong>Backup:</strong> Copy the <code>AppData\Local\FlowSquad</code> folder to preserve all data</li>
+    </ul>
+
+    <p><strong>System Requirements:</strong></p>
+    <ul>
+      <li>Windows 10/11 (64-bit)</li>
+      <li>4 GB RAM minimum, 8 GB recommended</li>
+      <li>2 GB free disk space (more for large codebases)</li>
+      <li>Internet connection (for LLM API access)</li>
+    </ul>
+
+    <h3 id="docker">Installation (Docker - Linux/macOS/WSL/Server)</h3>
+
+    <p><strong>FlowSquad is available as a Docker container for cross-platform deployment!</strong></p>
+
+    <p><strong>Prerequisites:</strong></p>
+    <ul>
+      <li>Docker installed (<a href="https://docs.docker.com/get-docker/" target="_blank">Get Docker</a>)</li>
+      <li>Docker Compose (included with Docker Desktop)</li>
+      <li>4 GB RAM minimum, 8 GB recommended</li>
+      <li>Internet connection (for LLM API access)</li>
+    </ul>
+
+    <p><strong>Quick Start:</strong></p>
+
+    <ol>
+      <li><strong>Extract</strong> the <code>FlowSquad-Docker-v1.4.zip</code> to a folder</li>
+      <li><strong>Deploy</strong> using the deployment script:
+        <p><strong>Windows (PowerShell):</strong></p>
+        <pre><code>.\deploy.ps1</code></pre>
+        <p><strong>Linux/Mac:</strong></p>
+        <pre><code>chmod +x deploy.sh
+./deploy.sh</code></pre>
+      </li>
+      <li><strong>Access</strong> FlowSquad in your browser
+        <ul>
+          <li>Navigate to <strong>http://localhost:5000</strong></li>
+          <li>First launch may take 15-20 seconds (container initialization)</li>
+        </ul>
+      </li>
+      <li><strong>Complete</strong> the setup wizard on first launch</li>
+    </ol>
+
+    <p><strong>Managing the Container:</strong></p>
+
+    <pre><code># Windows PowerShell
+.\deploy.ps1 -Status    # Check if running
+.\deploy.ps1 -Logs      # View logs
+.\deploy.ps1 -Stop      # Stop container
+.\deploy.ps1            # Start (run again)</code></pre>
+
+    <pre><code># Linux/Mac
+./deploy.sh status      # Check if running
+./deploy.sh logs        # View logs  
+./deploy.sh stop        # Stop container
+./deploy.sh             # Start (run again)</code></pre>
+
+    <div class="callout callout-warning">
+      <strong>🔑 Docker License Requirements:</strong>
+      <p>Docker containers have <strong>different machine IDs</strong> than the host system. You'll need to:</p>
+      <ol style="margin-bottom: 0;">
+        <li><strong>First startup:</strong> FlowSquad detects it's unlicensed and shows activation page</li>
+        <li><strong>Request Docker License:</strong> Contact support with your container's machine ID</li>
+        <li><strong>Activate:</strong> Support will provide a container-specific license file</li>
+      </ol>
+    </div>
+
+    <p><strong>Data Persistence:</strong></p>
+    <ul>
+      <li>All data stored in Docker volume: <code>flowsquad-data</code></li>
+      <li>Survives container restarts and updates</li>
+      <li>Location: <code>/data</code> inside container</li>
+    </ul>
+
+    <p><strong>Backup:</strong></p>
+    <pre><code># Backup data volume (creates flowsquad-backup.tar.gz)
+docker run --rm -v flowsquad-data:/data -v $(pwd):/backup alpine tar czf /backup/flowsquad-backup.tar.gz /data
+
+# Restore data volume from backup
+docker run --rm -v flowsquad-data:/data -v $(pwd):/backup alpine tar xzf /backup/flowsquad-backup.tar.gz -C /</code></pre>
+
+    <hr>
+
+    <!-- Setup -->
+    <h2 id="setup">⚙️ First Time Setup</h2>
+
+    <p>The setup wizard guides you through configuration:</p>
+
+    <h3>Step 1: Select AI Provider</h3>
+    <ul>
+      <li><strong>GitHub Models</strong> pre-selected as default (recommended for evaluation)
+        <ul>
+          <li><strong>30-day free trial</strong> - perfect for testing FlowSquad</li>
+          <li>Access to GPT-4o, GPT-4o-mini, and embeddings</li>
+          <li>Requires GitHub account and Personal Access Token</li>
+        </ul>
+      </li>
+      <li>Alternative providers:
+        <ul>
+          <li><strong>OpenAI</strong> - GPT-4, GPT-3.5 Turbo, text-embedding-3-small (paid plans)</li>
+          <li><strong>Anthropic</strong> - Claude 3.5 Sonnet, Claude 3 Opus (advanced reasoning)</li>
+        </ul>
+      </li>
+    </ul>
+
+    <h3>Step 2: Configure Models & API</h3>
+    <ul>
+      <li><strong>Dynamic Instructions:</strong> Provider-specific setup steps appear automatically</li>
+      <li><strong>Get Your API Key:</strong>
+        <ul>
+          <li><strong>GitHub Models:</strong> <a href="https://github.com/settings/tokens" target="_blank">https://github.com/settings/tokens</a> (create Personal Access Token)</li>
+          <li><strong>OpenAI:</strong> <a href="https://platform.openai.com/api-keys" target="_blank">https://platform.openai.com/api-keys</a></li>
+          <li><strong>Anthropic:</strong> <a href="https://console.anthropic.com/settings/keys" target="_blank">https://console.anthropic.com/settings/keys</a></li>
+        </ul>
+      </li>
+      <li><strong>Test API Key:</strong> Click "Test Key" to validate access and fetch available models</li>
+      <li><strong>Select Models:</strong> Choose from models your API key can actually access</li>
+      <li>Set token limits (max tokens per request) and daily limits for cost control</li>
+    </ul>
+
+    <div class="callout callout-info">
+      <strong>Testing API Keys:</strong>
+      <ul style="margin-bottom: 0;">
+        <li>✅ Validates authentication AND model access (not just credentials)</li>
+        <li>✅ Fetches your actual available models from the API</li>
+        <li>✅ Detects free tier limitations and quota issues</li>
+        <li>Dropdowns populate with <strong>only accessible models</strong> after testing</li>
+      </ul>
+    </div>
+
+    <h3>Step 3: Optional LDAP Security (Recommended for Enterprise)</h3>
+    <ul>
+      <li><strong>Enable LDAP for secure authentication</strong> against Active Directory</li>
+      <li>Benefits: Centralized user management, password policies, audit trails</li>
+      <li>Configure LDAP server, port, bind credentials, and search base</li>
+      <li>Map LDAP groups to FlowSquad roles</li>
+      <li>Otherwise, use default admin/admin login (change password for security)</li>
+    </ul>
+
+    <h3>Step 4: Review & Complete</h3>
+    <ul>
+      <li>Verify settings and click "Complete Setup"</li>
+    </ul>
+
+    <p><strong>Default Login Credentials:</strong></p>
+    <ul>
+      <li><strong>Username:</strong> admin</li>
+      <li><strong>Password:</strong> admin</li>
+    </ul>
+
+    <hr>
+
+    <!-- Working with Products -->
+    <h2 id="products">📦 Working with Products</h2>
+
+    <h3>Creating a Product</h3>
+
+    <p><strong>Option 1: Try Demo (Recommended for First-Time Users)</strong></p>
+    <ol>
+      <li>Click "🎬 Try Demo" button on dashboard</li>
+      <li><strong>Real-Time Progress Tracking:</strong> Watch as FlowSquad builds your demo with detailed step-by-step progress</li>
+      <li><strong>Completion Message:</strong> "🎉 FlowSquad at your service!"
+        <ul>
+          <li><strong>Next Step:</strong> Load sample requirements from <code>demo-products/ecommerce-platform/quick-requirements.txt</code></li>
+          <li>Go to Requirements tab → Paste text → Click "Refine Requirements"</li>
+        </ul>
+      </li>
+      <li>Demo includes <strong>real analysis</strong> (not static data):
+        <ul>
+          <li>3 codebases analyzed with AI semantic analysis</li>
+          <li>Backend API: Flask REST API (Python)</li>
+          <li>Frontend: React TypeScript application</li>
+          <li>Payment Service: Node.js microservice</li>
+          <li>15 test cases loaded in VectorDB for semantic search</li>
+        </ul>
+      </li>
+      <li><strong>Try the complete workflow:</strong>
+        <ul>
+          <li><strong>Analyze Tab:</strong> View analyzed codebases and their intelligence</li>
+          <li><strong>Requirements Tab:</strong> Load sample requirements and refine with AI</li>
+          <li><strong>Design Tab:</strong> Generate technical designs from refined requirements</li>
+          <li><strong>Test Cases Tab:</strong> View loaded test cases and generate new ones</li>
+          <li><strong>QA Automation Tab:</strong> Upload automation scripts</li>
+          <li><strong>Quality Score Tab:</strong> Calculate quality score</li>
+        </ul>
+      </li>
+    </ol>
+
+    <p><strong>Option 2: Create New Product</strong></p>
+    <ol>
+      <li>Click "Add Product" from dashboard</li>
+      <li>Enter product name and description</li>
+      <li>Product admin is automatically set to "admin" (or select LDAP users if configured)</li>
+      <li>Click "Create Product"</li>
+      <li>Start adding codebases and requirements</li>
+    </ol>
+
+    <hr>
+
+    <!-- Main Features -->
+    <h2 id="features">🔧 Main Features</h2>
+
+    <h3 id="code-analysis">1. Code Analysis</h3>
+
+    <p><strong>Purpose:</strong> Understand your codebase structure, complexity, and language metrics</p>
+
+    <p><strong>How to use:</strong></p>
+    <ol>
+      <li>Go to product dashboard → Code Analysis tab</li>
+      <li>Enter Git repository URL (or upload ZIP)</li>
+      <li>Provide credentials if private repository</li>
+      <li>Click "Analyze Codebase"</li>
+      <li><strong>View comprehensive results:</strong>
+        <ul>
+          <li><strong>Language Metrics:</strong> Lines of code per language</li>
+          <li><strong>Language Distribution:</strong> Percentage breakdown and visual charts</li>
+          <li><strong>Complexity Analysis:</strong> Cyclomatic complexity, cognitive complexity</li>
+          <li><strong>Code Structure:</strong> Entry points, dependencies, architecture layers</li>
+          <li><strong>Technology Stack:</strong> Frameworks and libraries detected</li>
+          <li><strong>File Statistics:</strong> Total files, directories, module count</li>
+        </ul>
+      </li>
+      <li>Export analysis results for documentation</li>
+    </ol>
+
+    <h3 id="requirements">2. Requirements Management</h3>
+
+    <p><strong>Purpose:</strong> Refine and improve requirements quality</p>
+
+    <p><strong>How to use:</strong></p>
+    <ol>
+      <li>Go to Requirements tab</li>
+      <li>Choose input method:
+        <ul>
+          <li>Paste text directly (one-liner or full document)</li>
+          <li>Upload requirement document (.md, .txt, .pdf)</li>
+          <li>Load from Jira ticket <em>(Enterprise feature - preview only)</em></li>
+          <li>Load from Confluence page <em>(Enterprise feature - preview only)</em></li>
+        </ul>
+      </li>
+      <li>Click "Refine Requirements"</li>
+      <li>Review AI-generated refined requirements with:
+        <ul>
+          <li>Structured user stories</li>
+          <li>Acceptance criteria</li>
+          <li>Technical specifications</li>
+          <li>Priority assignments</li>
+        </ul>
+      </li>
+      <li>Download or copy results</li>
+    </ol>
+
+    <div class="callout callout-info">
+      <strong>Demo Sample Requirements:</strong>
+      <ul style="margin-bottom: 0;">
+        <li>Full document: <code>demo-products/ecommerce-platform/requirement-doc.md</code></li>
+        <li>Quick one-liners: <code>demo-products/ecommerce-platform/quick-requirements.txt</code></li>
+      </ul>
+    </div>
+
+    <h3 id="design">3. Design Generation</h3>
+
+    <p><strong>Purpose:</strong> Create technical design from requirements</p>
+
+    <p><strong>How to use:</strong></p>
+    <ol>
+      <li>Go to Design tab</li>
+      <li>Select source (refined requirements or paste manually)</li>
+      <li>Click "Generate Design"</li>
+      <li>Review architecture diagrams and specifications</li>
+      <li>Download design document</li>
+    </ol>
+
+    <h3 id="test-cases">4. Test Case Generation</h3>
+
+    <p><strong>Purpose:</strong> Generate comprehensive test scenarios and manage test data</p>
+
+    <p><strong>How to use:</strong></p>
+    <ol>
+      <li>Go to Test Cases tab</li>
+      <li><strong>Option A - Generate from Design:</strong>
+        <ul>
+          <li>Select source (design document or paste requirements)</li>
+          <li>Click "Generate Test Cases"</li>
+          <li>Review AI-generated scenarios with steps and expected results</li>
+        </ul>
+      </li>
+      <li><strong>Option B - Upload Existing Tests:</strong>
+        <ul>
+          <li>Click "Upload Test Cases" button</li>
+          <li>Select CSV or Excel file with columns: title, priority, status, description</li>
+          <li>Test cases stored for quality analysis</li>
+        </ul>
+      </li>
+      <li><strong>Manage Test Cases:</strong>
+        <ul>
+          <li>View all test cases in table format</li>
+          <li>Export to Excel/CSV for external use</li>
+          <li>Delete test cases using "Delete Test Cases" button</li>
+        </ul>
+      </li>
+      <li>View test-to-code ratio and coverage metrics</li>
+    </ol>
+
+    <h3 id="automation">5. Automation Analysis</h3>
+
+    <p><strong>Purpose:</strong> Analyze test automation scripts and measure automation coverage</p>
+
+    <p><strong>How to use:</strong></p>
+    <ol>
+      <li>Go to QA Automation tab</li>
+      <li><strong>Analyze Scripts:</strong>
+        <ul>
+          <li>Enter automation repository URL (Git)</li>
+          <li>Or upload automation scripts as ZIP</li>
+          <li>Click "Analyze Automation"</li>
+        </ul>
+      </li>
+      <li><strong>View Results:</strong>
+        <ul>
+          <li>Framework detection (Selenium, Pytest, JUnit, Cypress, etc.)</li>
+          <li>Script count and coverage metrics</li>
+          <li>Automation patterns and best practices</li>
+          <li>Recommendations for improvement</li>
+        </ul>
+      </li>
+      <li><strong>Manage Automation:</strong>
+        <ul>
+          <li>Delete automation data using "Delete Automation" button</li>
+          <li>Re-analyze after updates with "Re-Analyze" button</li>
+        </ul>
+      </li>
+    </ol>
+
+    <h3 id="quality-score">6. Quality Score Analysis</h3>
+
+    <p><strong>Purpose:</strong> Comprehensive quality metrics combining code, tests, and automation</p>
+
+    <p><strong>How to use:</strong></p>
+    <ol>
+      <li>Go to Quality Score tab</li>
+      <li><strong>Select Scan Mode:</strong>
+        <ul>
+          <li><strong>Quick Scan (Recommended):</strong> Test density analysis via keyword matching
+            <ul>
+              <li>⚡ <strong>Speed:</strong> 1-2 seconds</li>
+              <li>💰 <strong>Cost:</strong> Free</li>
+              <li>📊 <strong>Method:</strong> Measures test-to-code ratio (proxy metric)</li>
+              <li>✅ <strong>Best for:</strong> Fast quality checks, regular monitoring</li>
+            </ul>
+          </li>
+          <li><strong>Deep Scan:</strong> LLM semantic coverage analysis
+            <ul>
+              <li>⏱️ <strong>Speed:</strong> 30-60 seconds</li>
+              <li>💰 <strong>Cost:</strong> $0.10-0.30 per analysis (API costs)</li>
+              <li>📊 <strong>Method:</strong> LLM validates actual function coverage</li>
+              <li>✅ <strong>Best for:</strong> Accurate coverage assessment, pre-release audits</li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+      <li>Click "Calculate Quality Score"</li>
+      <li><strong>Review 3-Layer Scoring System:</strong>
+        <ul>
+          <li><strong>Test Density/Semantic Coverage (60 points):</strong> Quick Scan uses test-to-code ratio, Deep Scan uses actual function coverage</li>
+          <li><strong>Automation Coverage (30 points):</strong> Automated tests / Total tests</li>
+          <li><strong>Bonus (10 points):</strong> High coverage on both metrics</li>
+        </ul>
+      </li>
+      <li><strong>View Detailed Insights:</strong>
+        <ul>
+          <li>Covered vs uncovered modules</li>
+          <li>Test-to-code ratio (Quick) or function coverage (Deep)</li>
+          <li>Automation percentage (target: >70%)</li>
+          <li>Untested modules/functions requiring attention</li>
+          <li>Risk assessment and recommendations</li>
+        </ul>
+      </li>
+    </ol>
+
+    <div class="callout callout-success">
+      <strong>Quality Score Ranges:</strong>
+      <ul style="margin-bottom: 0;">
+        <li><strong>90-100:</strong> Excellent (Production-ready)</li>
+        <li><strong>75-89:</strong> Good (Minor improvements needed)</li>
+        <li><strong>60-74:</strong> Acceptable (Moderate technical debt)</li>
+        <li><strong>Below 60:</strong> Needs Improvement (High risk)</li>
+      </ul>
+    </div>
+
+    <hr>
+
+    <!-- Understanding Quality Score -->
+    <h2 id="quality-calculation">📊 Understanding Quality Score Calculation</h2>
+
+    <p><strong>FlowSquad's quality score is a weighted combination of three key metrics:</strong></p>
+
+    <h3>Formula Breakdown</h3>
+
+    <pre><code>Quality Score = (Test Density/Semantic Coverage × 0.6) + (Automation Coverage × 0.3) + Bonus (0-10 points)
+
+Where:
+- Test Density (Quick) = Based on test-to-code ratio (0-100%)
+- Semantic Coverage (Deep) = LLM-validated function coverage (0-100%)
+- Automation Coverage = (Automated Tests / Total Tests) × 100%
+- Bonus = +10 points if Code Coverage >70% AND Automation >50%</code></pre>
+
+    <h3>Component 1: Test Density / Semantic Coverage (60% weight)</h3>
+
+    <p><strong>IMPORTANT:</strong> This is NOT traditional code coverage (line/branch coverage from instrumentation tools).</p>
+
+    <p><strong>Quick Scan - Test Density:</strong></p>
+    <ul>
+      <li><strong>What it measures:</strong> Test-to-code ratio via keyword matching</li>
+      <li><strong>How it works:</strong> Counts tests mapped to each module by name similarity</li>
+      <li><strong>Accuracy:</strong> Proxy metric (doesn't validate actual test content)</li>
+      <li><strong>Speed:</strong> 1-2 seconds</li>
+      <li><strong>Cost:</strong> Free</li>
+    </ul>
+
+    <p><strong>Deep Scan - Semantic Coverage:</strong></p>
+    <ul>
+      <li><strong>What it measures:</strong> Actual function coverage using LLM</li>
+      <li><strong>How it works:</strong> LLM extracts functions from code, validates which tests cover them</li>
+      <li><strong>Accuracy:</strong> High (validates actual test-function relationships)</li>
+      <li><strong>Speed:</strong> 30-60 seconds</li>
+      <li><strong>Cost:</strong> ~$0.10-0.30 per analysis</li>
+    </ul>
+
+    <h3>Component 2: Automation Coverage (30% weight)</h3>
+
+    <p><strong>What it measures:</strong> Percentage of test cases that are automated</p>
+
+    <pre><code>Automation % = (Number of Automation Scripts / Number of Test Cases) × 100%</code></pre>
+
+    <h3>Component 3: Completeness Bonus (10 points)</h3>
+
+    <p><strong>Conditions:</strong> Both must be true:</p>
+    <ul>
+      <li>Test Density/Semantic Coverage > 70%</li>
+      <li>Automation Coverage > 50%</li>
+    </ul>
+
+    <h3>Complete Example</h3>
+
+    <p><strong>E-Commerce Demo Scenario (Quick Scan):</strong></p>
+
+    <pre><code>Initial State:
+Code Modules: 3 (Backend, Frontend, Payment Service)
+Test Cases: 15
+Automation Scripts: 0
+
+Test Density (Quick Scan):
+- Test-to-code ratio: 15/3 = 5.0
+- Density: 100% (5+ tests per module)
+- Score: 100% × 0.6 = 60 points
+
+Automation Coverage:
+- Scripts: 0/15 = 0%
+- Score: 0% × 0.3 = 0 points
+
+Bonus: 0 (automation <50%)
+
+Total Quality Score: 60/100 ⚠️
+
+After Uploading Automation:
+Test Density: 60 points
+Automation Coverage: 14/15 = 93% = 28 points
+Bonus: +10 (100% code + 93% automation)
+
+Total Quality Score: 98/100 ✅</code></pre>
+
+    <hr>
+
+    <!-- Admin Features -->
+    <h2 id="admin">👤 Admin Features</h2>
+
+    <p>Access admin features from the navigation bar:</p>
+
+    <h3>License Info (🔑 License)</h3>
+    <ul>
+      <li>View trial status and days remaining</li>
+      <li>Check product usage (evaluation limit: 2 products)</li>
+      <li>Request evaluation extension</li>
+      <li>View machine ID for support</li>
+    </ul>
+
+    <h3>Setup Configuration (⚙️ Setup)</h3>
+
+    <p><strong>AI Provider Settings:</strong></p>
+    <ul>
+      <li>Switch between OpenAI, GitHub Models, or Anthropic</li>
+      <li><strong>GitHub Models</strong> recommended for evaluation (30-day free trial)</li>
+      <li>Update API keys securely (stored encrypted)</li>
+      <li><strong>Test API Key:</strong> Validates authentication AND model access</li>
+      <li><strong>Model Selection:</strong> Choose from models your API key can actually access</li>
+      <li>Adjust token and daily limits for cost control</li>
+    </ul>
+
+    <p><strong>LDAP Security Configuration:</strong></p>
+    <ul>
+      <li>Enable/disable LDAP authentication</li>
+      <li>Update LDAP server connection details</li>
+      <li>Configure user search base and filters</li>
+      <li>Map LDAP groups to application roles</li>
+      <li>Test LDAP connectivity before saving</li>
+    </ul>
+
+    <hr>
+
+    <!-- Tips & Best Practices -->
+    <h2 id="tips">💡 Tips & Best Practices</h2>
+
+    <ol>
+      <li><strong>Security Best Practices</strong>
+        <ul>
+          <li>API keys encrypted in database (Fernet encryption)</li>
+          <li>Use separate API keys for evaluation vs production</li>
+          <li><strong>Enable LDAP</strong> for enterprise-grade authentication</li>
+          <li>Change default admin password immediately</li>
+          <li>Use LDAP groups for role-based access control</li>
+        </ul>
+      </li>
+
+      <li><strong>Try Demo First</strong>
+        <ul>
+          <li>Click "🎬 Try Demo" to see the complete FlowSquad workflow</li>
+          <li><strong>Real AI analysis</strong> runs during demo creation</li>
+          <li>Experience the full SDLC pipeline: Code → Requirements → Design → Tests → Quality</li>
+          <li>Demo includes 3 codebases, 15 test cases, sample requirements</li>
+        </ul>
+      </li>
+
+      <li><strong>Cost Management</strong>
+        <ul>
+          <li><strong>GitHub Models:</strong> 30-day free trial - best for evaluation</li>
+          <li><strong>OpenAI:</strong> Start with daily limits to control costs</li>
+          <li>Use GPT-3.5 Turbo for faster/cheaper processing</li>
+          <li>GPT-4/GPT-4o provides better quality for complex analysis</li>
+        </ul>
+      </li>
+
+      <li><strong>Quality Score Optimization</strong>
+        <ul>
+          <li>Target 3-5 test cases per code module (test-to-code ratio)</li>
+          <li>Aim for >70% automation coverage</li>
+          <li>Use descriptive test/automation names for proper mapping</li>
+          <li>Re-run quality score after improvements to track progress</li>
+        </ul>
+      </li>
+
+      <li><strong>Evaluation Limits</strong>
+        <ul>
+          <li>Maximum 2 products</li>
+          <li>45-day trial period</li>
+          <li>Full feature access during evaluation</li>
+        </ul>
+      </li>
+    </ol>
+
+    <hr>
+
+    <!-- Common Workflows -->
+    <h2 id="workflows">🔄 Common Workflows</h2>
+
+    <h3>Workflow 0: Quick Demo (First-Time Users)</h3>
+    <ol>
+      <li>Click "Try Demo" on dashboard</li>
+      <li>Explore e-commerce platform demo with complete data</li>
+      <li>Use sample requirements from <code>demo-products/ecommerce-platform/</code></li>
+      <li>Test Requirements refinement and Design generation</li>
+      <li>Delete demo product when ready for real work</li>
+    </ol>
+
+    <h3>Workflow 1: New Feature Development</h3>
+    <ol>
+      <li>Create product</li>
+      <li>Analyze existing codebase</li>
+      <li>Add feature requirements (paste or upload document)</li>
+      <li>Refine requirements with AI</li>
+      <li>Generate design document</li>
+      <li>Generate test cases</li>
+      <li>Upload or link automation repository</li>
+      <li>Review quality score and identify gaps</li>
+    </ol>
+
+    <h3>Workflow 2: Legacy Code Understanding</h3>
+    <ol>
+      <li>Create product</li>
+      <li>Analyze codebase for complexity hotspots</li>
+      <li>Review entry points and dependencies</li>
+      <li>Upload existing test cases (CSV/Excel)</li>
+      <li>Analyze automation coverage</li>
+      <li>Run quality score analysis</li>
+      <li>Get prioritized refactoring recommendations</li>
+    </ol>
+
+    <h3>Workflow 3: Complete SDLC Flow</h3>
+    <ol>
+      <li>Create product</li>
+      <li>Upload/paste requirements document</li>
+      <li>Refine requirements with AI-generated user stories</li>
+      <li>Generate technical design with architecture diagrams</li>
+      <li>Generate comprehensive test cases</li>
+      <li>Upload existing test cases or create new ones</li>
+      <li>Analyze automation repository</li>
+      <li>Calculate quality score (target: >75/100)</li>
+      <li>Iterate on gaps identified by quality analysis</li>
+    </ol>
+
+    <hr>
+
+    <!-- Troubleshooting -->
+    <h2 id="troubleshooting">🆘 Troubleshooting</h2>
+
+    <h3>"Setup Required" Error</h3>
+    <p><strong>Cause:</strong> Setup not completed or database missing</p>
+    <p><strong>Solution:</strong></p>
+    <ul>
+      <li>Complete the setup wizard</li>
+      <li>If issue persists, reinstall FlowSquad</li>
+    </ul>
+
+    <h3>"Invalid API Key" Error</h3>
+    <p><strong>Cause:</strong> API key incorrect or expired</p>
+    <p><strong>Solution:</strong></p>
+    <ol>
+      <li>Go to provider website and verify key</li>
+      <li>Generate new API key if needed</li>
+      <li>Use "Test API Key" button before saving</li>
+      <li>Check for typos or extra spaces</li>
+    </ol>
+
+    <h3>"License Expired" Error</h3>
+    <p><strong>Cause:</strong> 45-day trial period ended</p>
+    <p><strong>Solution:</strong></p>
+    <ol>
+      <li>Get machine request key from License Info</li>
+      <li>Contact support@flowsquad.com for extension</li>
+    </ol>
+
+    <h3>"Product Limit Reached" Error</h3>
+    <p><strong>Cause:</strong> Already have 2 products (evaluation max)</p>
+    <p><strong>Solution:</strong></p>
+    <ul>
+      <li>Delete an existing product from the dashboard</li>
+      <li>Product deletion removes database records AND uploaded documents folder</li>
+      <li>Contact support@flowsquad.com for increased limit</li>
+    </ul>
+
+    <h3>Code Analysis Fails</h3>
+    <p><strong>Possible Causes:</strong></p>
+    <ul>
+      <li>Unsupported language</li>
+      <li>Large codebase (memory limits)</li>
+      <li>Invalid file structure</li>
+    </ul>
+    <p><strong>Solutions:</strong></p>
+    <ol>
+      <li>Check language is supported (supports 30+ languages)</li>
+      <li>Split large codebases into modules</li>
+      <li>Ensure ZIP contains source code (not binaries)</li>
+      <li>Check logs/ folder for detailed error messages</li>
+    </ol>
+
+    <h3>LDAP Connection Fails</h3>
+    <p><strong>Possible Causes:</strong></p>
+    <ul>
+      <li>LDAP server unreachable</li>
+      <li>Incorrect bind credentials</li>
+      <li>Port blocked by firewall</li>
+      <li>Search base misconfigured</li>
+    </ul>
+    <p><strong>Solutions:</strong></p>
+    <ol>
+      <li>Verify LDAP host/port with IT department (standard: 389 for LDAP, 636 for LDAPS)</li>
+      <li>Test bind user credentials separately</li>
+      <li>Check firewall allows outbound connections</li>
+      <li>Try without SSL first (port 389) for testing</li>
+      <li>Verify search base DN matches your Active Directory structure</li>
+    </ol>
+
+    <h3>Quality Score Shows 0/100 or Low Score</h3>
+    <p><strong>Possible Causes:</strong></p>
+    <ul>
+      <li>No codebases analyzed yet</li>
+      <li>No test cases uploaded</li>
+      <li>No automation scripts analyzed</li>
+    </ul>
+    <p><strong>Solutions:</strong></p>
+    <ol>
+      <li>Analyze at least one codebase first</li>
+      <li>Upload test cases (CSV/Excel) or generate from design</li>
+      <li>Analyze automation repository for coverage metrics</li>
+      <li>Use "Try Demo" to see realistic quality metrics (80-85/100)</li>
+      <li>Re-run quality analysis after adding data</li>
+    </ol>
+
+    <hr>
+
+    <!-- FAQ -->
+    <h2 id="faq">❓ FAQ</h2>
+
+    <p><strong>Q: Should I try the demo first?</strong><br>
+    A: Yes! Click "Try Demo" to instantly explore all features with a complete e-commerce platform example. Delete it when ready for actual work.</p>
+
+    <p><strong>Q: What file formats can I upload for test cases?</strong><br>
+    A: CSV and Excel (.xlsx, .xls) files. Required columns: title, priority, status, description.</p>
+
+    <p><strong>Q: How is the Quality Score calculated?</strong><br>
+    A: Three components: Test Density/Semantic Coverage (60 points), Automation Coverage (30 points), Quality Metrics (10 points bonus). Target: >75/100 for production-ready code.</p>
+
+    <p><strong>Q: What automation frameworks are supported?</strong><br>
+    A: All major frameworks: Selenium, Pytest, JUnit, TestNG, Cypress, Playwright, Mocha, Jest, Protractor, Robot Framework, Cucumber, SpecFlow, and more.</p>
+
+    <p><strong>Q: What programming languages are supported for analysis?</strong><br>
+    A: FlowSquad supports 30+ languages including JavaScript, TypeScript, Python, Java, C#, PHP, Ruby, Swift, Kotlin, Go, Rust, and more.</p>
+
+    <p><strong>Q: Can I delete test cases or automation data?</strong><br>
+    A: Yes. Each tab has a "Delete" button to remove all uploaded data and start fresh.</p>
+
+    <p><strong>Q: Is my code sent to OpenAI/GitHub?</strong><br>
+    A: Only when explicitly requested for analysis. Code analysis happens locally. LLM is used only for documentation generation and requirements analysis.</p>
+
+    <p><strong>Q: Which AI provider should I choose?</strong><br>
+    A: <strong>GitHub Models</strong> offers 30-day free trial (recommended). <strong>OpenAI</strong> (GPT-4) offers excellent quality. <strong>Anthropic</strong> (Claude) provides superior reasoning.</p>
+
+    <p><strong>Q: Can I use offline?</strong><br>
+    A: No, evaluation version requires internet for LLM API calls. Enterprise version offers offline mode with local LLMs.</p>
+
+    <p><strong>Q: Should I enable LDAP?</strong><br>
+    A: Yes, if you have Active Directory. LDAP provides enterprise-grade security: centralized authentication, password policies, and audit trails.</p>
+
+    <p><strong>Q: Can multiple users use it simultaneously?</strong><br>
+    A: Yes. Evaluation version supports LDAP authentication for multiple users. Enterprise version provides unlimited concurrent users.</p>
+
+    <p><strong>Q: What happens after 45 days?</strong><br>
+    A: Application stops allowing new products/analysis. Contact support@flowsquad.com for extension or upgrade.</p>
+
+    <p><strong>Q: Can I migrate to a different machine?</strong><br>
+    A: Yes, but license is MAC-address locked. Contact support@flowsquad.com for a new license.</p>
+
+    <p><strong>Q: Is my data secure?</strong><br>
+    A: Yes. All data stored locally in encrypted SQLite database. API keys encrypted with Fernet.</p>
+
+    <p><strong>Q: Can I backup my data?</strong><br>
+    A: Yes. Backup the FlowSquad installation folder, especially flowsquad_engine.db file.</p>
+
+    <hr>
+
+    <!-- Enterprise Features -->
+    <h2 id="enterprise">🚀 Enterprise Features (Coming Soon)</h2>
+
+    <p><strong>FlowSquad Enterprise Edition</strong> is currently under development. Based on evaluation user feedback, we're building a production-grade platform for teams of all sizes.</p>
+
+    <h3>Enterprise Roadmap</h3>
+
+    <p><strong>Phase 1: Database Migration & Multi-Tenancy</strong></p>
+    <ul>
+      <li>✅ PostgreSQL database (scalable, production-ready)</li>
+      <li>✅ Multi-tenant architecture (organization isolation)</li>
+      <li>✅ Advanced RBAC (roles: admin, product manager, developer, viewer)</li>
+      <li>✅ Unlimited products and users</li>
+      <li>✅ Data migration from evaluation version (zero data loss)</li>
+    </ul>
+
+    <p><strong>Phase 2: Enterprise Features & Billing</strong></p>
+    <ul>
+      <li>✅ Stripe billing integration (subscription management)</li>
+      <li>✅ License management (online validation, grace periods)</li>
+      <li>✅ MFA support (TOTP via QR code)</li>
+      <li>✅ Enhanced audit logging</li>
+      <li>✅ Email notifications</li>
+      <li>✅ Organization dashboard (usage metrics, cost breakdown)</li>
+    </ul>
+
+    <p><strong>Phase 3: Advanced SDLC Pipeline - Complete Squad Workflow</strong></p>
+    <ul>
+      <li>✅ <strong>Requirements → Stories → Tasks End-to-End Flow</strong></li>
+      <li>✅ <strong>User Story Breakdown</strong> (IT + Non-IT stories)</li>
+      <li>✅ <strong>Task Generation</strong> (Development, QA, Design, DevOps, Documentation, Security)</li>
+      <li>✅ <strong>Story Point Estimation</strong> (with confidence scoring)</li>
+    </ul>
+
+    <div class="callout callout-success">
+      <strong>🎯 Why "FlowSquad"? Complete Squad Workflow</strong>
+      <ul style="margin-bottom: 0;">
+        <li><strong>Flow:</strong> Seamless Requirements → Stories → Tasks → Execution pipeline</li>
+        <li><strong>Squad:</strong> Every team member gets their tasks automatically</li>
+        <li><strong>End-to-End:</strong> From business idea to production-ready work items in minutes</li>
+      </ul>
+    </div>
+
+    <p><strong>Phase 4: Integrations</strong></p>
+    <ul>
+      <li>✅ GitHub/GitLab/Bitbucket (enhanced repository integration)</li>
+      <li>✅ Jira/Linear/Azure Boards (bidirectional sync)</li>
+      <li>✅ Confluence/Notion (auto-publish design docs)</li>
+      <li>✅ Slack/Teams (notifications, webhooks)</li>
+      <li>✅ SSO/SAML (enterprise authentication)</li>
+    </ul>
+
+    <h3>How to Stay Updated</h3>
+
+    <p><strong>Join the Enterprise Waitlist:</strong></p>
+    <ul>
+      <li>Visit: https://flowsquad.io/enterprise (coming soon)</li>
+      <li>Email: enterprise@flowsquad.com</li>
+    </ul>
+
+    <hr>
+
+    <!-- Support -->
+    <h2 id="support">📞 Support</h2>
+
+    <p><strong>Evaluation Extension:</strong></p>
+    <ul>
+      <li>Click "🔑 License" → "Request Extension"</li>
+      <li>Email generated key to support@flowsquad.com</li>
+    </ul>
+
+    <p><strong>Questions or Issues:</strong></p>
+    <ul>
+      <li>Email: support@flowsquad.com</li>
+      <li>Include your machine ID (from License page)</li>
+    </ul>
+
+    <p><strong>Upgrade to Enterprise:</strong></p>
+    <ul>
+      <li>Email: support@flowsquad.com</li>
+      <li>Unlimited products, advanced features, on-premise deployment</li>
+    </ul>
+
+    <hr>
+
+    <div style="text-align: center; padding: 2rem 0; color: var(--text-muted);">
+      <p><em>For detailed technical documentation and integration guides, contact support@flowsquad.com</em></p>
+      <p style="margin-top: 1rem;"><strong>© 2026 FlowSquad - Evaluation Version</strong></p>
+    </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+// Scroll spy for table of contents
+function updateActiveLink() {
+  const sections = document.querySelectorAll('h2[id], h3[id]');
+  const tocLinks = document.querySelectorAll('.toc-links a');
+  
+  let current = '';
+  sections.forEach(section => {
+    const sectionTop = section.offsetTop;
+    const scrollPos = window.pageYOffset + 100;
+    
+    if (scrollPos >= sectionTop) {
+      current = section.getAttribute('id');
+    }
+  });
+  
+  tocLinks.forEach(link => {
+    link.classList.remove('active');
+    if (link.getAttribute('href') === `#${current}`) {
+      link.classList.add('active');
+    }
+  });
+}
+
+window.addEventListener('scroll', updateActiveLink);
+window.addEventListener('load', updateActiveLink);
+
+// Download as HTML
+function downloadHTML() {
+  // Clone the document
+  const clone = document.documentElement.cloneNode(true);
+  
+  // Remove download buttons from clone
+  const downloadButtons = clone.querySelector('.download-buttons');
+  if (downloadButtons) downloadButtons.remove();
+  
+  // Get the HTML content
+  const htmlContent = '<!DOCTYPE html>\\n' + clone.outerHTML;
+  
+  // Create blob and download
+  const blob = new Blob([htmlContent], { type: 'text/html' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'FlowSquad-Documentation.html';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+// Download as PDF
+function downloadPDF() {
+  // Show loading message
+  const originalText = event.target.innerHTML;
+  event.target.innerHTML = '⏳ Generating PDF...';
+  event.target.disabled = true;
+  
+  // Use browser's print to PDF
+  setTimeout(() => {
+    window.print();
+    event.target.innerHTML = originalText;
+    event.target.disabled = false;
+  }, 100);
+}
+
+// Print styles for PDF
+const printStyles = `
+@media print {
+  .navbar, .toc-sidebar, .download-buttons, .footer { display: none !important; }
+  .content-wrapper { display: block; max-width: 100%; }
+  .content-card { box-shadow: none; border: none; }
+  body { background: white; }
+  a { color: #0066cc; text-decoration: underline; }
+  h2 { page-break-after: avoid; }
+  pre { page-break-inside: avoid; }
+}
+`;
+const styleSheet = document.createElement('style');
+styleSheet.textContent = printStyles;
+document.head.appendChild(styleSheet);
+</script>
+
+<!-- Footer -->
+<footer class="footer">
+  <div class="container">
+    <p><strong>FlowSquad</strong> — From Code to Intelligent Artifacts & Decisions</p>
+    <p style="margin-top: 0.5rem; opacity: 0.6">© 2026 FlowSquad. All rights reserved.</p>
+  </div>
+</footer>
+
+</body>
+</html>
+</html>
