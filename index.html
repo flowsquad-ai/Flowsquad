@@ -228,7 +228,7 @@ body {
 
 /* Section */
 .section {
-  padding: 80px 20px;
+  padding: 100px 20px;
   position: relative;
 }
 
@@ -320,6 +320,7 @@ body {
 .card:hover {
   box-shadow: var(--shadow-md);
   border-color: var(--primary-light);
+  transform: translateY(-5px);
 }
 
 .card h3 {
@@ -467,9 +468,9 @@ body {
 }
 
 .deployment-card:hover {
-  box-shadow: var(--shadow-md);
+  box-shadow: var(--shadow-lg);
   border-color: var(--primary-light);
-  transform: translateY(-3px);
+  transform: translateY(-5px);
 }
 
 .deployment-card.featured:hover {
@@ -668,7 +669,7 @@ body {
   }
 
   .section {
-    padding: 60px 20px;
+    padding: 70px 20px;
   }
 
   .container {
@@ -769,12 +770,13 @@ body {
       <!--<h1>FlowSquad</h1>-->
     </a>
     <div class="nav-menu">
-      <a href="#features">Features</a>
+      <a href="#features">Features</a>      
       <a href="#use-cases">Use Cases</a>
       <a href="#how-it-works">How It Works</a>
       <a href="#learn-more">Videos</a>
       <a href="#deployment">Deployment</a>
       <a href="#download">Download</a>
+      <a href="/docs">Documentation</a>
     </div>
     <div class="hamburger">
       <span></span>
@@ -790,15 +792,27 @@ body {
 <!-- Hero Section -->
 <section class="hero">
   <div class="container">
-    <h1>From Code to Decisions</h1>
-    <p class="subtitle">Turn your codebase into requirements, design, and test intelligence.</p>
+    <h1>Turn Your Codebase into Requirements, Designs & Test Cases — Instantly</h1>
+    <p class="subtitle">FlowSquad analyzes your code once and generates context-aware SDLC artifacts aligned with your system.</p>
     <p class="highlight">
-      FlowSquad understands your system — so outputs actually match your architecture.<br/>
-      <strong>Analyze once. Reuse intelligence.</strong>
+      <strong>Analyze once. Reuse intelligence. No repeated LLM cost.</strong>
     </p>
     <div class="hero-buttons">
       <a href="#download" class="btn btn-primary">Download Free Evaluation</a>
-      <a href="#how-it-works" class="btn btn-secondary">See How It Works</a>
+      <a href="#demo" class="btn btn-secondary">Watch 2-min Demo</a>
+    </div>
+  </div>
+</section>
+
+<!-- Demo Section -->
+<section id="demo" class="section" style="background: var(--lighter-bg);">
+  <div class="container">
+    <h2 class="section-title">See FlowSquad in Action</h2>
+    <div style="max-width: 800px; margin: 0 auto; text-align: center;">
+      <div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%; background: #000; border-radius: 12px; margin-bottom: 1.5rem;">
+        <iframe style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;" src="https://www.youtube.com/embed/dQw4w9WgXcQ" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+      </div>
+      <p style="color: var(--text-muted); font-size: 1.1rem;">From codebase to complete SDLC artifacts in minutes</p>
     </div>
   </div>
 </section>
@@ -806,29 +820,61 @@ body {
 <!-- Problem / Solution -->
 <section class="section problem-solution">
   <div class="container">
-    <h2 class="section-title">The Gap Between Code and Decisions</h2>
-    <p class="section-subtitle">Code evolves fast. Documentation doesn't. Decisions suffer.</p>
+    <h2 class="section-title">The Real Problem</h2>
+    <p class="section-subtitle">You keep explaining the same codebase to AI — over and over</p>
     <div class="split">
       <div>
         <h3>❌ Without FlowSquad</h3>
         <ul>
-          <li>🔴 AI lacks context and produces generic outputs</li>
-          <li>🔴 Repeated analysis wastes time and cost</li>
-          <li>🔴 Results don't align with real systems</li>
-          <li>🔴 Manual documentation creates silos</li>
-          <li>🔴 No quality visibility or risk analysis</li>
+          <li>🔴 You re-explain your codebase to AI every time</li>
+          <li>🔴 Outputs look correct but don't match your system</li>
+          <li>🔴 Architecture knowledge lives in people's heads</li>
+          <li>🔴 Documentation is outdated or missing</li>
         </ul>
       </div>
       <div>
         <h3>✅ With FlowSquad</h3>
         <ul>
-          <li>🎯 Deep understanding of YOUR codebase</li>
-          <li>🎯 Persistent intelligence — no reprocessing</li>
-          <li>🎯 Outputs aligned with your architecture</li>
-          <li>🎯 Quality gates built into every step</li>
-          <li>🎯 Complete pipeline for every team member</li>
+          <li>🎯 AI understands YOUR actual codebase</li>
+          <li>🎯 Outputs align with real architecture</li>
+          <li>🎯 Knowledge becomes persistent and reusable</li>
+          <li>🎯 No repeated analysis or prompt engineering</li>
         </ul>
       </div>
+    </div>
+  </div>
+</section>
+
+<!-- Core Differentiator -->
+<section class="section" style="background: linear-gradient(135deg, #e6f2ff 0%, #f0f8ff 100%); border-left: 4px solid var(--primary-color);">
+  <div class="container">
+    <h2 class="section-title">No More Repeated AI Cost</h2>
+    <p class="section-subtitle">Traditional AI reprocesses everything. FlowSquad analyzes once and reuses forever.</p>
+    
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="icon">🔄</div>
+        <h3>One-Time Code Analysis</h3>
+        <p>FlowSquad parses your repository once and builds a semantic understanding stored in vector DB.</p>
+      </div>
+      
+      <div class="feature-card">
+        <div class="icon">💾</div>
+        <h3>Stored Semantic Understanding</h3>
+        <p>Your codebase intelligence is preserved. Requirements, designs, and tests pull from cached knowledge.</p>
+      </div>
+      
+      <div class="feature-card">
+        <div class="icon">♻️</div>
+        <h3>Reused Across All Artifacts</h3>
+        <p>Generate requirements, technical designs, and test cases — all using the same cached intelligence.</p>
+      </div>
+    </div>
+    
+    <div style="text-align: center; margin-top: 2rem; padding: 1.5rem; background: white; border-radius: 12px; box-shadow: var(--shadow-md);">
+      <p style="font-size: 1.2rem; color: var(--text-color); margin: 0;">
+        <strong>Result:</strong> <span style="color: var(--primary-color);">80% cost reduction</span> on LLM API calls. <span style="color: var(--primary-color);">90% faster</span> artifact generation.
+      </p>
     </div>
   </div>
 </section>
@@ -842,96 +888,96 @@ body {
     <div class="features-grid">
       <div class="feature-card">
         <div class="icon">📊</div>
-        <h3>Code Analysis</h3>
+        <h3>Understand Any Codebase in Minutes</h3>
         <p>Parse any language. Extract modules, dependencies, complexity, and patterns.</p>
       </div>
       
       <div class="feature-card">
         <div class="icon">📝</div>
-        <h3>Requirements</h3>
+        <h3>Generate Complete Requirements</h3>
         <p>Transform vague ideas into complete requirements with AI-powered completeness scoring.</p>
       </div>
       
       <div class="feature-card">
         <div class="icon">🏗</div>
-        <h3>Technical Design</h3>
+        <h3>Create Implementable Designs</h3>
         <p>Auto-generate architecture diagrams, API contracts, and database schemas.</p>
       </div>
       
       <div class="feature-card">
         <div class="icon">🧪</div>
-        <h3>Test Generation</h3>
+        <h3>Generate Real Test Cases</h3>
         <p>Create test cases that match your existing testing patterns and frameworks.</p>
       </div>
       
       <div class="feature-card">
         <div class="icon">📈</div>
-        <h3>Quality Scoring</h3>
+        <h3>Measure What's Missing</h3>
         <p>Get 0-100 completeness scores, risk analysis, and prioritized recommendations.</p>
       </div>
       
       <div class="feature-card">
         <div class="icon">🧠</div>
-        <h3>Persistent Intelligence</h3>
+        <h3>Never Re-analyze Again</h3>
         <p>Vector database stores your code intelligence. No repeated processing.</p>
       </div>
     </div>
   </div>
 </section>
 
-<!-- Who Should Use -->
-<section class="section" style="background: var(--light-bg);">
+<!-- Use Cases -->
+<section id="use-cases" class="section" style="background: var(--light-bg);">
   <div class="container">
-    <h2 class="section-title">Who Should Use FlowSquad?</h2>
-    <p class="section-subtitle">Built for every role in the software development lifecycle</p>
+    <h2 class="section-title">Where FlowSquad Helps</h2>
+    <p class="section-subtitle">Real problems. Real solutions. Real teams.</p>
     
     <div class="grid">
       <div class="card">
-        <div class="icon">👔</div>
-        <h3>Product Managers</h3>
-        <p>Transform vague ideas into complete user stories with AI-powered acceptance criteria and dependency mapping.</p>
+        <div class="icon">💡</div>
+        <h3>Vague requirement?</h3>
+        <p>→ FlowSquad makes it concrete</p>
       </div>
       
       <div class="card">
-        <div class="icon">📊</div>
-        <h3>Business Analysts</h3>
-        <p>Document requirements with completeness scoring (0-100) and automated refinement suggestions.</p>
+        <div class="icon">📚</div>
+        <h3>Legacy code?</h3>
+        <p>→ FlowSquad explains everything</p>
       </div>
       
       <div class="card">
-        <div class="icon">🏛</div>
-        <h3>Software Architects</h3>
-        <p>Auto-generate technical designs, architecture diagrams, and API contracts aligned with existing systems.</p>
+        <div class="icon">🏛️</div>
+        <h3>Architect unavailable?</h3>
+        <p>→ FlowSquad designs</p>
       </div>
       
       <div class="card">
-        <div class="icon">👨‍💻</div>
-        <h3>Development Teams</h3>
-        <p>5-500 developers building features faster with less documentation overhead and more context.</p>
+        <div class="icon">⏱️</div>
+        <h3>QA overloaded?</h3>
+        <p>→ FlowSquad generates tests</p>
       </div>
       
       <div class="card">
-        <div class="icon">📈</div>
-        <h3>Engineering Managers</h3>
-        <p>Gain visibility into quality metrics, technical debt, and risk analysis across all projects.</p>
+        <div class="icon">👥</div>
+        <h3>New developer onboarding?</h3>
+        <p>→ Instant system understanding</p>
       </div>
       
       <div class="card">
-        <div class="icon">🧪</div>
-        <h3>QA Teams</h3>
-        <p>Automate test case creation, track automation coverage, and learn from existing test patterns.</p>
+        <div class="icon">📅</div>
+        <h3>Sprint planning?</h3>
+        <p>→ Real estimates from real code</p>
       </div>
       
       <div class="card">
-        <div class="icon">🏢</div>
-        <h3>System Integrators</h3>
-        <p>Handle repetitive patterns with codebase-aware AI that learns your conventions and frameworks.</p>
+        <div class="icon">⚠️</div>
+        <h3>Risk analysis?</h3>
+        <p>→ Know what breaks before shipping</p>
       </div>
       
       <div class="card">
-        <div class="icon">🏥</div>
-        <h3>Regulated Industries</h3>
-        <p>Finance, healthcare, government teams needing comprehensive documentation and audit trails.</p>
+        <div class="icon">📋</div>
+        <h3>Documentation debt?</h3>
+        <p>→ Auto-generate from codebase</p>
       </div>
     </div>
   </div>
@@ -977,112 +1023,36 @@ body {
   </div>
 </section>
 
-<!-- Use Cases -->
-<section id="use-cases" class="section" style="background: var(--light-bg);">
+<!-- Trust & Privacy -->
+<section class="section" style="background: var(--lighter-bg);">
   <div class="container">
-    <h2 class="section-title">Use Cases - Where FlowSquad Delivers</h2>
-    <p class="section-subtitle">Real-world scenarios where teams rely on FlowSquad every day</p>
+    <h2 class="section-title">Built for Real Engineering Teams</h2>
+    <p class="section-subtitle">Your code stays yours. Zero cloud uploads required.</p>
     
     <div class="grid">
       <div class="card">
-        <div class="icon">💡</div>
-        <h3>Vague Request</h3>
-        <p>From vague idea to clear requirements - instantly</p>
+        <div class="icon">🔒</div>
+        <h3>Runs Locally</h3>
+        <p>100% local execution on your machine. No code ever leaves your system.</p>
       </div>
       
       <div class="card">
-        <div class="icon">🏛️</div>
-        <h3>Architect Missing</h3>
-        <p>No architect? Get designs aligned with your codebase</p>
+        <div class="icon">🚫</div>
+        <h3>Your Code Never Leaves</h3>
+        <p>Zero cloud uploads. Your intellectual property remains private and secure.</p>
       </div>
       
       <div class="card">
-        <div class="icon">⏱️</div>
-        <h3>QA Busy</h3>
-        <p>No time for QA? Generate test cases in seconds.</p>
+        <div class="icon">🔗</div>
+        <h3>Works with Existing Repos</h3>
+        <p>GitHub, GitLab, Bitbucket, or local folders. No code changes required.</p>
       </div>
       
       <div class="card">
-        <div class="icon">📚</div>
-        <h3>Legacy Code</h3>
-        <p>Don't know the code? FlowSquad does.</p>
+        <div class="icon">⚙️</div>
+        <h3>No Code Changes</h3>
+        <p>Pure analysis. FlowSquad reads your code but never modifies it.</p>
       </div>
-      
-      <div class="card">
-        <div class="icon">📅</div>
-        <h3>Sprint Planning</h3>
-        <p>Estimate effort using real code context - not guesses.</p>
-      </div>
-      
-      <div class="card">
-        <div class="icon">⚠️</div>
-        <h3>Risk Analysis</h3>
-        <p>Know what breaks before you ship</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- Enterprise Features -->
-<section class="section">
-  <div class="container">
-    <h2 class="section-title">Enterprise-Ready Features</h2>
-    <p class="section-subtitle">Scale from evaluation to production with enterprise capabilities</p>
-    
-    <div class="features-grid">
-      <div class="feature-card">
-        <div class="icon">🔐</div>
-        <h3>Multi-Tenant Architecture</h3>
-        <p>Organization-level data isolation with RBAC (Role-Based Access Control) for teams.</p>
-      </div>
-      
-      <div class="feature-card">
-        <div class="icon">🔄</div>
-        <h3>Git Integrations</h3>
-        <p>Connect GitHub, GitLab, Bitbucket. Auto-sync code changes and trigger re-analysis.</p>
-      </div>
-      
-      <div class="feature-card">
-        <div class="icon">📋</div>
-        <h3>Jira & Azure Boards</h3>
-        <p>Export requirements and test cases directly to your issue tracking system.</p>
-      </div>
-      
-      <div class="feature-card">
-        <div class="icon">💬</div>
-        <h3>Slack & Teams</h3>
-        <p>Real-time notifications for analysis completion, quality alerts, and team collaboration.</p>
-      </div>
-      
-      <div class="feature-card">
-        <div class="icon">📄</div>
-        <h3>Confluence Export</h3>
-        <p>One-click export of requirements and designs to Confluence, Notion, or Markdown.</p>
-      </div>
-      
-      <div class="feature-card">
-        <div class="icon">🔍</div>
-        <h3>Advanced Analytics</h3>
-        <p>Track trends, quality improvements, and technical debt across sprints and releases.</p>
-      </div>
-      
-      <div class="feature-card">
-        <div class="icon">🏢</div>
-        <h3>SSO & LDAP</h3>
-        <p>Enterprise authentication with SAML, OAuth, and Active Directory integration.</p>
-      </div>
-      
-      <div class="feature-card">
-        <div class="icon">📊</div>
-        <h3>Audit Trails</h3>
-        <p>Complete history of all changes, approvals, and AI recommendations for compliance.</p>
-      </div>
-    </div>
-    
-    <div style="text-align: center; margin-top: 3rem;">
-      <p style="color: var(--text-muted); font-size: 1.1rem; margin-bottom: 1.5rem;">
-        Enterprise features available in commercial version. <a href="mailto:sales@flowsquad.ai" style="color: var(--primary-color); text-decoration: none; font-weight: 600;">Contact Sales</a> for pricing and demos.
-      </p>
     </div>
   </div>
 </section>
@@ -1099,10 +1069,11 @@ body {
         <h3>Windows Portable</h3>
         <p>Zero installation. Extract and run.</p>
         <ul>
-          <li>No dependencies to install</li>
+          <li>No installation required</li>
+          <li>Runs locally on your machine</li>
           <li>Double-click to start</li>
           <li>Perfect for quick evaluation</li>
-          <li>Runs on Windows 10/11</li>
+          <li>Windows 10/11 supported</li>
         </ul>
         <a href="#download" class="btn btn-primary">Download .ZIP</a>
       </div>
@@ -1112,42 +1083,13 @@ body {
         <h3>Docker Container</h3>
         <p>Cross-platform deployment for teams.</p>
         <ul>
+          <li>Works locally</li>
           <li>Linux, macOS, Windows (WSL)</li>
           <li>Server deployment ready</li>
           <li>Persistent data volumes</li>
           <li>One-command deployment</li>
         </ul>
         <a href="#download" class="btn btn-primary">Download Docker</a>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- Persistent Intelligence Highlight -->
-<section class="section" style="background: var(--light-bg);">
-  <div class="container">
-    <h2 class="section-title">🧠 Persistent Intelligence</h2>
-    <p class="section-subtitle">Analyze once. Reuse intelligence forever. No repeated processing.</p>
-    
-    <div class="grid">
-      <div class="card">
-        <h3>One-Time Analysis</h3>
-        <p>FlowSquad analyzes your codebase once and stores intelligence in vector database. Future operations use cached embeddings.</p>
-      </div>
-      
-      <div class="card">
-        <h3>Faster Responses</h3>
-        <p>No waiting for code re-analysis. Requirements, designs, and test cases generated in seconds, not minutes.</p>
-      </div>
-      
-      <div class="card">
-        <h3>Lower Costs</h3>
-        <p>Reduce LLM API costs by 80%. Reusable embeddings mean fewer tokens sent to OpenAI/Anthropic/GitHub.</p>
-      </div>
-      
-      <div class="card">
-        <h3>Always Current</h3>
-        <p>Re-analyze specific modules when code changes. Incremental updates keep intelligence fresh without full re-processing.</p>
       </div>
     </div>
   </div>
@@ -1199,11 +1141,18 @@ body {
 <!-- CTA -->
 <section id="download" class="cta-section">
   <div class="container">
-    <h2>Stop Re-Analyzing Your Codebase</h2>
-    <p>Start building with intelligence.</p>
+    <h2>Ready to Stop Re-Analyzing Your Codebase?</h2>
+    <p>Download FlowSquad and start building with intelligence.</p>
+    
+    <div style="text-align: center; margin: 2rem 0; padding: 1.5rem; background: rgba(255,255,255,0.1); border-radius: 12px;">
+      <p style="font-size: 1.1rem; margin: 0.5rem 0;"><strong>✓</strong> No installation required</p>
+      <p style="font-size: 1.1rem; margin: 0.5rem 0;"><strong>✓</strong> Runs locally</p>
+      <p style="font-size: 1.1rem; margin: 0.5rem 0;"><strong>✓</strong> Windows & Docker supported</p>
+    </div>
+    
     <div class="hero-buttons">
-      <a href="https://github.com/flowsquad-ai/flowsquad/releases" class="btn btn-primary">Download for Windows</a>
-      <a href="https://github.com/flowsquad-ai/flowsquad/releases" class="btn btn-secondary">Get Docker Version</a>
+      <a href="https://github.com/flowsquad-ai/flowsquad/releases" class="btn btn-primary">Download Windows (.zip)</a>
+      <a href="https://github.com/flowsquad-ai/flowsquad/releases" class="btn btn-secondary">Download Docker (.zip)</a>
     </div>
     <p style="margin-top: 2rem; font-size: 0.95rem; opacity: 0.8">
       <strong>Evaluation includes:</strong> 45-day license • Maximum 2 products • Windows Portable + Docker • Full feature access
