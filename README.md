@@ -16,7 +16,8 @@ FlowSquad is an AI-powered platform that analyzes your codebase and transforms i
 
 ## 🎥 Demo
 
-(Coming soon — add your YouTube video here)
+👉 https://youtu.be/M56-Kezxxio
+
 
 ---
 
