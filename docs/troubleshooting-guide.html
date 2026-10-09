@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Troubleshooting Guide -- FlowSquad Enterprise Docs</title>
+<meta name="description" content="FlowSquad Troubleshooting Index: Quick-access cross-guide index for all common FlowSquad issues -- installation, database, authentication, LLM errors, integration failures, UI behavior, and encryption. Includes Diagnostic Quick Reference." />
+<meta name="keywords" content="FlowSquad troubleshooting, error index, startup failure, database error, auth failure, LLM error, integration failure, diagnostic reference" />
+<meta property="og:title" content="FlowSquad Enterprise Troubleshooting Guide" />
+<meta property="og:description" content="Cross-guide troubleshooting index for FlowSquad Enterprise -- find any issue and jump directly to the embedded resolution in the relevant guide." />
+<meta property="og:type" content="article" />
+<link rel="canonical" href="https://flowsquad.ai/docs/troubleshooting-guide" />
+  <link rel="stylesheet" href="docs.css" />
+  <script src="docs-theme.js"></script>
+</head>
+<body>
+
+<nav class="docs-nav">
+  <button class="hamburger" aria-label="Toggle menu">&#9776;</button>
+  <a href="https://flowsquad.ai" class="nav-logo" target="_blank" rel="noopener noreferrer">
+    <img src="icon.png" alt="FlowSquad">
+  </a>
+  <span class="nav-label">Docs</span>
+  <button class="nav-theme-btn" id="docs-theme-btn" title="Toggle dark / light mode"></button>
+  <a href="index.html" class="nav-back">&#8592; All Guides</a>
+</nav>
+
+<!-- ---- Download Toolbar -------------------------------------------------------------- -->
+<div class="docs-download-bar">
+  <span class="dl-label">Download:</span>
+  <button class="docs-dl-btn" id="dlHtmlBtn" title="Save this page as HTML">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm-1 1.5L18.5 9H13V3.5zM6 20V4h5v7h7v9H6z"/></svg>
+    HTML
+  </button>
+  <button class="docs-dl-btn" id="dlPdfBtn" title="Print / Save as PDF">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2zm-7 3a4 4 0 1 1 0 8 4 4 0 0 1 0-8zm0 10c-2.67 0-8 1.34-8 4v1h16v-1c0-2.66-5.33-4-8-4z"/></svg>
+    PDF
+  </button>
+</div>
+<script>
+document.getElementById('dlHtmlBtn').addEventListener('click', function() {
+  var blob = new Blob([document.documentElement.outerHTML], {type: 'text/html'});
+  var a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = (document.title || 'page').replace(/[^a-z0-9_-]/gi, '_') + '.html';
+  a.click();
+  URL.revokeObjectURL(a.href);
+});
+document.getElementById('dlPdfBtn').addEventListener('click', function() {
+  window.print();
+});
+</script>
+
+
+<div class="sidebar-overlay"></div>
+
+<div class="docs-shell">
+
+  <aside class="docs-sidebar">
+    <div class="sidebar-section-label">Guides</div>
+    <nav class="sidebar-nav">
+      <a href="install-guide.html" class="guide-link">Installation Guide</a>
+      <a href="setup-guide.html" class="guide-link">Setup Guide</a>
+      <a href="admin-guide.html" class="guide-link">Admin Guide</a>
+      <a href="user-guide.html" class="guide-link">User Guide</a>
+      <a href="troubleshooting-guide.html" class="guide-link active">Troubleshooting</a>
+      <a href="security-guide.html" class="guide-link">Security Reference</a>
+      <a href="integration-guide.html" class="guide-link">Integration Guide</a>
+      <a href="reference-guide.html" class="guide-link">Reference Guide</a>
+    </nav>
+    <hr class="sidebar-divider">
+    <div class="sidebar-section-label">On This Page</div>
+    <nav class="sidebar-nav">
+      <a href="#how-to-use" class="toc-link">How to Use This Page</a>
+      <a href="#install-issues" class="toc-link">Installation Issues</a>
+      <a href="#database-problems" class="toc-link">Database Problems</a>
+      <a href="#setup-wizard-issues" class="toc-link">Setup Wizard Issues</a>
+      <a href="#auth-failures" class="toc-link">Auth Failures</a>
+      <a href="#llm-errors" class="toc-link">LLM API Errors</a>
+      <a href="#ssl-issues" class="toc-link">SSL / TLS Issues</a>
+      <a href="#performance" class="toc-link">Performance</a>
+      <a href="#integration-failures" class="toc-link">Integration Failures</a>
+      <a href="#docker-issues" class="toc-link">Docker Issues</a>
+      <a href="#license-issues" class="toc-link">License Issues</a>
+      <a href="#ui-behavior" class="toc-link">Tab &amp; UI Behavior</a>
+      <a href="#diagnostic-reference" class="toc-link">Diagnostic Quick Reference</a>
+    </nav>
+  </aside>
+
+  <main class="docs-content">
+    <h1>Troubleshooting Guide</h1>
+    <p class="page-subtitle">Cross-guide index of all known issues -- each entry links directly to the embedded resolution in the relevant guide. Includes a Diagnostic Quick Reference at the bottom.</p>
+
+    <!-- ---- How to use -------------------------------------------------------------------------------- -->
+    <h2 id="how-to-use">How to Use This Page</h2>
+    <p>Each issue below is documented in full inside the guide where it is most contextually relevant. Click the <strong>-> Go to resolution</strong> link to jump to the step-by-step fix. The Diagnostic Quick Reference at the bottom of this page is useful for initial triage when you don't yet know which category an error falls into.</p>
+
+    <div class="callout callout-info">
+      <span class="callout-icon">&#x2139;&#xFE0F;</span>
+      <div class="callout-body">
+        <strong>Can't find your issue?</strong><br />
+        Enable Debug Mode (Admin Panel -> top nav bar -> Debug toggle) for verbose logs, then email <a href="mailto:support@flowsquad.ai">support@flowsquad.ai</a> with your FlowSquad version, the exact error message, and the last 50 lines of your log file.
+      </div>
+    </div>
+
+    <hr>
+
+    <!-- ---- Installation Issues ---------------------------------------------------------------- -->
+    <h2 id="install-issues">Installation Issues</h2>
+    <div class="table-wrap"><table>
+      <thead>
+        <tr><th>Symptom</th><th>Likely Cause</th><th>Resolution</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Windows: <code>FlowSquad.exe</code> does nothing or exits immediately</td>
+          <td>Port 5000 already in use, or missing dependencies</td>
+          <td><a href="install-guide.html#troubleshooting">-> Install Guide -- Troubleshooting</a></td>
+        </tr>
+        <tr>
+          <td>Docker: container shows "Exited (1)" immediately after start</td>
+          <td>Volume permission issue or bad DATABASE_URL</td>
+          <td><a href="install-guide.html#troubleshooting">-> Install Guide -- Troubleshooting</a></td>
+        </tr>
+        <tr>
+          <td>SSL / TLS browser warning ("Not Secure" or <code>NET::ERR_CERT_AUTHORITY_INVALID</code>)</td>
+          <td>Self-signed certificate or expired Let's Encrypt certificate</td>
+          <td><a href="install-guide.html#troubleshooting">-> Install Guide -- Troubleshooting</a></td>
+        </tr>
+        <tr>
+          <td>WebSocket connection failing; real-time features not working</td>
+          <td>Nginx not forwarding <code>Upgrade</code> / <code>Connection</code> headers</td>
+          <td><a href="install-guide.html#troubleshooting">-> Install Guide -- Troubleshooting</a></td>
+        </tr>
+        <tr>
+          <td>Linux: systemd service fails to start</td>
+          <td>Binary not executable, data directory permissions, or missing dependencies</td>
+          <td><a href="install-guide.html#linux">-> Install Guide -- Linux Installer</a></td>
+        </tr>
+      </tbody>
+    </table></div>
+
+    <hr>
+
+    <!-- ---- Database Problems ---------------------------------------------------------------- -->
+    <h2 id="database-problems">Database Connection Problems</h2>
+    <div class="table-wrap"><table>
+      <thead>
+        <tr><th>Symptom</th><th>Likely Cause</th><th>Resolution</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>PostgreSQL: <code>could not connect to server: Connection refused</code></td>
+          <td>PostgreSQL service not running, wrong port, or firewall blocking connection</td>
+          <td><a href="setup-guide.html#troubleshooting">-> Setup Guide -- Troubleshooting</a></td>
+        </tr>
+        <tr>
+          <td>MySQL: <code>Access denied for user 'flowsquad'@'localhost'</code></td>
+          <td>Incorrect password or user lacks permissions</td>
+          <td><a href="setup-guide.html#troubleshooting">-> Setup Guide -- Troubleshooting</a></td>
+        </tr>
+        <tr>
+          <td><code>OperationalError: database is locked</code></td>
+          <td>Using SQLite under concurrent write load -- not supported for multi-user use</td>
+          <td>Migrate to PostgreSQL or MySQL. See <a href="setup-guide.html#step1-database">Setup Guide -- Step 1</a></td>
+        </tr>
+        <tr>
+          <td>Docker: <code>could not translate host name "postgres" to address</code></td>
+          <td>Service name in DATABASE_URL doesn't match the docker-compose service name</td>
+          <td><a href="install-guide.html#troubleshooting">-> Install Guide -- Docker Troubleshooting</a></td>
+        </tr>
+        <tr>
+          <td>Slow queries; product list takes 10+ seconds to load</td>
+          <td>Missing database indexes or PostgreSQL misconfiguration</td>
+          <td><a href="admin-guide.html#troubleshooting">-> Admin Guide -- Performance Troubleshooting</a></td>
+        </tr>
+      </tbody>
+    </table></div>
+
+    <hr>
+
+    <!-- ---- Setup Wizard Issues ------------------------------------------------------------ -->
+    <h2 id="setup-wizard-issues">Setup Wizard Issues</h2>
+    <div class="table-wrap"><table>
+      <thead>
+        <tr><th>Symptom</th><th>Likely Cause</th><th>Resolution</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Setup Wizard does not appear on first load</td>
+          <td>Previous partial setup or wizard in intermediate state</td>
+          <td><a href="setup-guide.html#troubleshooting">-> Setup Guide -- Troubleshooting</a></td>
+        </tr>
+        <tr>
+          <td>Database Test Connection fails in Step 1</td>
+          <td>Service not running, firewall, or wrong credentials</td>
+          <td><a href="setup-guide.html#troubleshooting">-> Setup Guide -- Troubleshooting</a></td>
+        </tr>
+        <tr>
+          <td>LLM "Invalid API Key" (401) in Step 3</td>
+          <td>API key invalid, expired, or has leading/trailing spaces</td>
+          <td><a href="setup-guide.html#troubleshooting">-> Setup Guide -- Troubleshooting</a></td>
+        </tr>
+        <tr>
+          <td>License "Machine ID Mismatch" in Step 8</td>
+          <td><code>FLOWSQUAD_CLUSTER_ID</code> not set correctly for Docker/Kubernetes</td>
+          <td><a href="setup-guide.html#troubleshooting">-> Setup Guide -- Troubleshooting</a></td>
+        </tr>
+      </tbody>
+    </table></div>
+
+    <hr>
+
+    <!-- ---- Auth Failures ------------------------------------------------------------------------ -->
+    <h2 id="auth-failures">Authentication Failures</h2>
+    <div class="table-wrap"><table>
+      <thead>
+        <tr><th>Symptom</th><th>Likely Cause</th><th>Resolution</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>LDAP: correct password still returns "Invalid credentials"</td>
+          <td>Wrong Bind DN format, expired service account password, or LDAPS cert not trusted</td>
+          <td><a href="setup-guide.html#troubleshooting">-> Setup Guide -- LDAP Troubleshooting</a></td>
+        </tr>
+        <tr>
+          <td>SAML / OAuth2: clicking &ldquo;Login with SAML&rdquo; or &ldquo;Login with Keycloak&rdquo; gives a <strong>404</strong> on the IdP URL</td>
+          <td>The reverse proxy (nginx or IIS ARR) is rewriting the <code>Location</code> header of FlowSquad&rsquo;s 302 redirect, replacing the IdP hostname with the FlowSquad hostname. The browser follows the rewritten redirect back to FlowSquad, which has no <code>/realms/...</code> route.</td>
+          <td>
+            <strong>nginx:</strong> add <code>proxy_redirect off;</code> inside the <code>location /</code> block &mdash; see <a href="reference-guide.html#nginx">Reference Guide &mdash; nginx</a>.<br/>
+            <strong>IIS ARR:</strong> (1) in IIS Manager &rarr; server node &rarr; Application Request Routing Cache &rarr; Server Proxy Settings &rarr; <strong>uncheck &ldquo;Reverse rewrite host in response headers&rdquo;</strong> &rarr; Apply; (2) add the <code>FlowSquad-PreserveIdPLocation</code> outbound rule to <code>web.config</code> &mdash; see <a href="reference-guide.html#iis">Reference Guide &mdash; IIS</a>.
+          </td>
+        </tr>
+        <tr>
+          <td>SAML: "Invalid SAML response" or "Signature validation failed"</td>
+          <td>SP Entity ID mismatch, SP certificate not imported in IdP, or wrong attribute mapping</td>
+          <td><a href="setup-guide.html#troubleshooting">-&gt; Setup Guide &mdash; SAML Troubleshooting</a> &bull; <a href="reference-guide.html#keycloak-saml">Reference Guide &mdash; Keycloak SAML</a></td>
+        </tr>
+        <tr>
+          <td>SAML: <code>[Errno 2] No such file or directory: &hellip;onelogin\saml2\schemas\saml-schema-protocol-2.0.xsd</code></td>
+          <td>Running a build older than v1.1 where the <code>onelogin</code> package XML schema files were not bundled into the installer. The frozen executable cannot find the schema files it needs to validate the SAML response.</td>
+          <td>Upgrade to the latest FlowSquad build. The fix is in all three installer specs (<code>collect_all('onelogin')</code>) and the <code>custom_base_path</code> passed to <code>OneLogin_Saml2_Auth</code>.</td>
+        </tr>
+        <tr>
+          <td>OAuth2: <code>SSLError: certificate verify failed: self-signed certificate</code></td>
+          <td>The Identity Provider (Keycloak, Okta, etc.) is using a self-signed TLS certificate. FlowSquad verifies SSL by default when calling the token and userinfo endpoints.</td>
+          <td>In Setup Wizard &rarr; Step 4 &rarr; OAuth2, uncheck <strong>&ldquo;Verify SSL certificate when connecting to Identity Provider&rdquo;</strong> and save. Only do this in non-production environments; the correct long-term fix is to install a CA-signed certificate on the IdP.</td>
+        </tr>
+        <tr>
+          <td>OAuth2: "Invalid client ID" or "Unauthorized client"</td>
+          <td>Wrong Client ID/Secret, redirect URI mismatch, or Azure admin consent not granted</td>
+          <td><a href="setup-guide.html#troubleshooting">-> Setup Guide -- OAuth2 Troubleshooting</a></td>
+        </tr>
+        <tr>
+          <td>SAML: Keycloak redirect loop</td>
+          <td>SP Entity ID / ACS URL port mismatch between Keycloak and FlowSquad</td>
+          <td><a href="reference-guide.html#keycloak-saml">-&gt; Reference Guide &mdash; Keycloak SAML Troubleshooting</a></td>
+        </tr>
+      </tbody>
+    </table></div>
+
+    <hr>
+
+    <!-- ---- LLM Errors ------------------------------------------------------------------------------ -->
+    <h2 id="llm-errors">LLM API Errors</h2>
+    <div class="table-wrap"><table>
+      <thead>
+        <tr><th>Symptom</th><th>Likely Cause</th><th>Resolution</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>OpenAI 429 "Rate limit exceeded"</td>
+          <td>Tier 1 account limits (3 RPM) or token budget exhausted</td>
+          <td><a href="admin-guide.html#troubleshooting">-> Admin Guide -- Performance / LLM</a></td>
+        </tr>
+        <tr>
+          <td>Anthropic 401 "Invalid API key"</td>
+          <td>Key expired, wrong workspace, or billing inactive</td>
+          <td><a href="admin-guide.html#llm-config">-> Admin Guide -- LLM Configuration</a></td>
+        </tr>
+        <tr>
+          <td>GitHub Models "Free tier limit exceeded"</td>
+          <td>15 RPM / 150 RPD free tier exhausted</td>
+          <td><a href="admin-guide.html#llm-config">-> Admin Guide -- LLM Configuration</a></td>
+        </tr>
+        <tr>
+          <td>Generation returns empty or partial output</td>
+          <td>LLM returned incomplete response; no session context loaded</td>
+          <td><a href="user-guide.html#troubleshooting">-> User Guide -- Troubleshooting</a></td>
+        </tr>
+      </tbody>
+    </table></div>
+
+    <hr>
+
+    <!-- ---- SSL / TLS Issues ------------------------------------------------------------------ -->
+    <h2 id="ssl-issues">SSL / TLS Certificate Issues</h2>
+    <div class="table-wrap"><table>
+      <thead>
+        <tr><th>Symptom</th><th>Likely Cause</th><th>Resolution</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Browser "Your connection is not private" (<code>NET::ERR_CERT_AUTHORITY_INVALID</code>)</td>
+          <td>Self-signed certificate not trusted by browser</td>
+          <td><a href="install-guide.html#security">-> Install Guide -- Security / TLS</a></td>
+        </tr>
+        <tr>
+          <td>Certificate expired (<code>NET::ERR_CERT_DATE_INVALID</code>)</td>
+          <td>Let's Encrypt auto-renewal failed, or commercial certificate not renewed</td>
+          <td><a href="install-guide.html#security">-> Install Guide -- Security / TLS</a></td>
+        </tr>
+        <tr>
+          <td>Certificate chain incomplete -- some browsers show warning</td>
+          <td>Intermediate CA certificate not concatenated into full-chain PEM</td>
+          <td><a href="install-guide.html#deployment-models">-> Install Guide -- Deployment Models</a></td>
+        </tr>
+      </tbody>
+    </table></div>
+
+    <hr>
+
+    <!-- ---- Performance -------------------------------------------------------------------------- -->
+    <h2 id="performance">Performance Problems</h2>
+    <div class="table-wrap"><table>
+      <thead>
+        <tr><th>Symptom</th><th>Likely Cause</th><th>Resolution</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Requirement refinement takes 30+ seconds</td>
+          <td>Using GPT-4o for high-volume operations; long input; high LLM latency</td>
+          <td><a href="admin-guide.html#troubleshooting">-> Admin Guide -- Performance Troubleshooting</a></td>
+        </tr>
+        <tr>
+          <td>Product list or dashboard loads slowly (10+ seconds)</td>
+          <td>Missing PostgreSQL indexes or insufficient connection pool size</td>
+          <td><a href="admin-guide.html#troubleshooting">-> Admin Guide -- Performance Troubleshooting</a></td>
+        </tr>
+      </tbody>
+    </table></div>
+
+    <hr>
+
+    <!-- ---- Integration Failures -------------------------------------------------------- -->
+    <h2 id="integration-failures">Integration Failures</h2>
+    <div class="table-wrap"><table>
+      <thead>
+        <tr><th>Symptom</th><th>Likely Cause</th><th>Resolution</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Jira Push -> 401 Unauthorized</td>
+          <td>Jira API token expired or wrong email used</td>
+          <td><a href="user-guide.html#troubleshooting">-> User Guide -- Troubleshooting</a></td>
+        </tr>
+        <tr>
+          <td>GitHub "Repository not found" for private repo</td>
+          <td>PAT missing <code>repo</code> scope or org SSO not authorized</td>
+          <td><a href="user-guide.html#troubleshooting">-> User Guide -- Troubleshooting</a></td>
+        </tr>
+        <tr>
+          <td>Confluence URL shows as blank in Analyze tab</td>
+          <td>Settings tested before being saved</td>
+          <td><a href="integration-guide.html#confluence">-> Integration Guide -- Confluence</a></td>
+        </tr>
+        <tr>
+          <td>Webhook events not being delivered</td>
+          <td>Endpoint URL unreachable or HMAC secret mismatch</td>
+          <td><a href="integration-guide.html#webhooks">-> Integration Guide -- Webhooks</a></td>
+        </tr>
+      </tbody>
+    </table></div>
+
+    <hr>
+
+    <!-- ---- Docker Issues ------------------------------------------------------------------------ -->
+    <h2 id="docker-issues">Docker-Specific Issues</h2>
+    <div class="table-wrap"><table>
+      <thead>
+        <tr><th>Symptom</th><th>Likely Cause</th><th>Resolution</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>PermissionError: [Errno 13] Permission denied: '/data/logs/flowsquad.log'</code></td>
+          <td>Volume owned by root instead of container user (UID 1000)</td>
+          <td><a href="install-guide.html#troubleshooting">-> Install Guide -- Docker Troubleshooting</a></td>
+        </tr>
+        <tr>
+          <td>Cannot connect to PostgreSQL on <code>postgres:5432</code></td>
+          <td>DB service not started or service name mismatch in DATABASE_URL</td>
+          <td><a href="install-guide.html#troubleshooting">-> Install Guide -- Docker Troubleshooting</a></td>
+        </tr>
+      </tbody>
+    </table></div>
+
+    <hr>
+
+    <!-- ---- License Issues ---------------------------------------------------------------------- -->
+    <h2 id="license-issues">License Issues</h2>
+    <div class="table-wrap"><table>
+      <thead>
+        <tr><th>Symptom</th><th>Likely Cause</th><th>Resolution</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Red banner: "License expired on [date]"</td>
+          <td>License validity date has passed</td>
+          <td><a href="admin-guide.html#troubleshooting">-> Admin Guide -- License Upload Errors</a></td>
+        </tr>
+        <tr>
+          <td>Upload error: "Invalid signature"</td>
+          <td>License file corrupted or tampered</td>
+          <td><a href="admin-guide.html#troubleshooting">-> Admin Guide -- License Upload Errors</a></td>
+        </tr>
+        <tr>
+          <td>Upload error: "Machine ID mismatch"</td>
+          <td>License issued for a different machine or cluster ID</td>
+          <td><a href="admin-guide.html#troubleshooting">-> Admin Guide -- License Upload Errors</a></td>
+        </tr>
+      </tbody>
+    </table></div>
+
+    <hr>
+
+    <!-- ---- UI Behavior ---------------------------------------------------------------------------- -->
+    <h2 id="ui-behavior">Tab &amp; UI Behavior</h2>
+    <div class="table-wrap"><table>
+      <thead>
+        <tr><th>Symptom</th><th>Likely Cause</th><th>Resolution</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Generation returns empty results or spinner never stops</td>
+          <td>No codebase loaded, no session context, or LLM rate-limited</td>
+          <td><a href="user-guide.html#troubleshooting">-> User Guide -- Troubleshooting</a></td>
+        </tr>
+        <tr>
+          <td>Quality Score tab returns error immediately</td>
+          <td>No codebase loaded in Analyze tab</td>
+          <td><a href="user-guide.html#analyze-tab">-> User Guide -- Analyze Tab</a></td>
+        </tr>
+        <tr>
+          <td>AskProduct: "no knowledge sources found"</td>
+          <td>No codebase or documents loaded for this product</td>
+          <td><a href="user-guide.html#analyze-tab">-> User Guide -- Analyze Tab</a></td>
+        </tr>
+        <tr>
+          <td>Session artifacts lost after page refresh</td>
+          <td>Session data is in-memory only; page refresh clears unsaved session</td>
+          <td><a href="user-guide.html#troubleshooting">-> User Guide -- Session Data Lost</a></td>
+        </tr>
+        <tr>
+          <td>Confluence URL blank in Analyze tab even after configuring</td>
+          <td>Confluence settings were tested before being saved</td>
+          <td><a href="integration-guide.html#confluence">-> Integration Guide -- Confluence</a></td>
+        </tr>
+        <tr>
+          <td>Design tab "Load from Database" does not populate session</td>
+          <td>Browser cached old scripts after an upgrade</td>
+          <td>Hard-reload: <code>Ctrl+Shift+R</code> (Windows/Linux) or <code>Cmd+Shift+R</code> (Mac)</td>
+        </tr>
+        <tr>
+          <td>Session shows <code>{ original_text, refined_text }</code> as raw JSON</td>
+          <td>Artifact saved in old format from a previous version</td>
+          <td>Re-open Refine tab -> load from DB -> Save to Session again</td>
+        </tr>
+        <tr>
+          <td>Product Admin cannot see the Analyze tab</td>
+          <td>Admin assignment registered by old version; needs re-save</td>
+          <td>Admin Panel -> Products -> Edit -> re-save the admin list</td>
+        </tr>
+      </tbody>
+    </table></div>
+
+    <hr>
+
+    <!-- ---- Diagnostic Quick Reference -------------------------------------------- -->
+    <h2 id="diagnostic-reference">Diagnostic Quick Reference</h2>
+
+    <h3>Log File Locations</h3>
+    <div class="table-wrap"><table>
+      <thead>
+        <tr><th>Deployment Type</th><th>Log Location / Command</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Windows Portable / Installer</td><td><code>%LOCALAPPDATA%\FlowSquad\logs\flowsquad.log</code></td></tr>
+        <tr><td>Windows Service</td><td><code>C:\Program Files\FlowSquad\logs\flowsquad.log</code></td></tr>
+        <tr><td>Linux (systemd)</td><td><code>sudo journalctl -u flowsquad -f</code></td></tr>
+        <tr><td>Linux (Nginx access)</td><td><code>/var/log/nginx/flowsquad-access.log</code></td></tr>
+        <tr><td>Linux (Nginx errors)</td><td><code>/var/log/nginx/flowsquad-error.log</code></td></tr>
+        <tr><td>Docker</td><td><code>docker compose logs -f flowsquad</code></td></tr>
+      </tbody>
+    </table></div>
+
+    <h3>Enabling Debug Mode</h3>
+    <p>Global Admins see a <strong>Debug toggle</strong> in the top navigation bar. Click it to enable verbose logging -- the indicator turns green when active. Debug logs include detailed API call timing, LLM request/response summaries, and database query information.</p>
+    <div class="callout callout-warn">
+      <span class="callout-icon">&#x26A0;&#xFE0F;</span>
+      <div class="callout-body"><strong>Production Warning</strong> -- Debug mode exposes sensitive request details in logs. Enable only during active troubleshooting and disable immediately afterwards.</div>
+    </div>
+
+    <h3>Quick Health Checks</h3>
+    <div class="table-wrap"><table>
+      <thead>
+        <tr><th>Check</th><th>Where</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>LLM provider connectivity</td><td>Admin Panel -> LLM Configuration -> <strong>Test</strong> button next to each provider</td></tr>
+        <tr><td>Database connection status</td><td>Admin Panel -> Database Settings -> <strong>Connection Status</strong></td></tr>
+        <tr><td>License validity and expiry</td><td>Admin Panel -> License Management</td></tr>
+        <tr><td>Active user sessions</td><td>Admin Panel -> Analytics -> Active Users</td></tr>
+        <tr><td>Audit log for suspicious activity</td><td>Admin Panel -> Audit Logs -> filter by severity: Warning / Error</td></tr>
+      </tbody>
+    </table></div>
+
+    <h3>Common Error Strings -> Root Cause Map</h3>
+    <div class="table-wrap"><table>
+      <thead>
+        <tr><th>Error String (in logs or UI)</th><th>Root Cause</th><th>Where to Fix</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>License validation failed: Machine ID does not match</code></td><td>Server migrated or wrong cluster ID</td><td><a href="admin-guide.html#troubleshooting">Admin Guide</a></td></tr>
+        <tr><td><code>could not connect to server: Connection refused</code></td><td>PostgreSQL not running or wrong port</td><td><a href="setup-guide.html#troubleshooting">Setup Guide</a></td></tr>
+        <tr><td><code>LDAP bind failed</code></td><td>Wrong Bind DN, expired service account, or LDAPS cert untrusted</td><td><a href="setup-guide.html#troubleshooting">Setup Guide</a></td></tr>
+        <tr><td><code>Invalid SAML response</code> / <code>Signature validation failed</code></td><td>SP Entity ID mismatch or SP cert not imported in IdP</td><td><a href="setup-guide.html#troubleshooting">Setup Guide</a></td></tr>
+        <tr><td><code>Rate limit exceeded</code> (429)</td><td>OpenAI / GitHub Models free tier or Tier 1 limits</td><td><a href="admin-guide.html#llm-config">Admin Guide -- LLM Config</a></td></tr>
+        <tr><td><code>Authentication error: Invalid API key</code> (401 -- Anthropic)</td><td>API key expired or wrong workspace</td><td><a href="admin-guide.html#llm-config">Admin Guide -- LLM Config</a></td></tr>
+        <tr><td><code>PermissionError: [Errno 13] Permission denied</code> (Docker)</td><td>Volume owned by root; container user (1000) cannot write</td><td><a href="install-guide.html#troubleshooting">Install Guide</a></td></tr>
+        <tr><td><code>Jira API call failed: 401 Unauthorized</code></td><td>Jira API token expired or wrong Jira type (Cloud vs. Server)</td><td><a href="user-guide.html#troubleshooting">User Guide</a></td></tr>
+      </tbody>
+    </table></div>
+
+    <h3>Contacting Support</h3>
+    <p>Email <a href="mailto:support@flowsquad.ai">support@flowsquad.ai</a> and include:</p>
+    <ol>
+      <li>FlowSquad version (Admin Panel -> License Management)</li>
+      <li>Exact error message text (copy from the UI or log)</li>
+      <li>Log file excerpt -- last 50 lines from the log file location above</li>
+      <li>Deployment type: Windows / Linux / Docker / Kubernetes</li>
+      <li>Steps to reproduce the issue</li>
+    </ol>
+    <p>Response times: <strong>24 hours</strong> (Enterprise), <strong>7 days</strong> (Evaluation).</p>
+
+  </main>
+
+</div>
+
+<footer class="docs-footer">
+  <span>(C) FlowSquad. All rights reserved.</span>
+  <span class="footer-sep">|</span>
+  <a href="mailto:support@flowsquad.ai">support@flowsquad.ai</a>
+  <span class="footer-sep">|</span>
+  <a href="#">Privacy Policy</a>
+</footer>
+
+</body>
+</html>

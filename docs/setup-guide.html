@@ -1,0 +1,825 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Setup Guide &mdash; FlowSquad Enterprise Docs</title>
+  <meta name="description" content="FlowSquad Enterprise Setup Guide: Complete the 10-step Setup Wizard after installation &mdash; SSL/TLS, database, vector DB, LLM provider, authentication (LDAP/SAML/OAuth2/MFA), source control, Jira/Confluence, admin users, license, and system settings." />
+  <meta name="keywords" content="FlowSquad setup wizard, database configuration, LLM provider setup, LDAP setup, SAML setup, OAuth2 setup, Jira setup, Confluence setup, license activation, FlowSquad first-run, admin account" />
+  <meta property="og:title" content="FlowSquad Enterprise Setup Guide" />
+  <meta property="og:description" content="Step-by-step first-run configuration guide for FlowSquad Enterprise &mdash; covering every field, every wizard step, pre-requisites, and inline troubleshooting." />
+  <meta property="og:type" content="article" />
+  <link rel="canonical" href="https://flowsquad.ai/docs/setup-guide" />
+  <link rel="stylesheet" href="docs.css" />
+  <script src="docs-theme.js"></script>
+</head>
+<body>
+
+<!-- ---- Top Navigation -------------------------------------------------------------------------------- -->
+<nav class="docs-nav">
+  <button class="hamburger" aria-label="Toggle sidebar">&#9776;</button>
+  <a href="https://flowsquad.ai" class="nav-logo" target="_blank" rel="noopener noreferrer">
+    <img src="icon.png" alt="FlowSquad Logo" />
+  </a>
+  <span class="nav-label">Docs</span>
+  <button class="nav-theme-btn" id="docs-theme-btn" title="Toggle dark / light mode"></button>
+  <a href="index.html" class="nav-back">&larr; All Guides</a>
+</nav>
+
+<!-- ---- Download Toolbar -------------------------------------------------------------- -->
+<div class="docs-download-bar">
+  <span class="dl-label">Download:</span>
+  <button class="docs-dl-btn" id="dlHtmlBtn" title="Save this page as HTML">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm-1 1.5L18.5 9H13V3.5zM6 20V4h5v7h7v9H6z"/></svg>
+    HTML
+  </button>
+  <button class="docs-dl-btn" id="dlPdfBtn" title="Print / Save as PDF">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2zm-7 3a4 4 0 1 1 0 8 4 4 0 0 1 0-8zm0 10c-2.67 0-8 1.34-8 4v1h16v-1c0-2.66-5.33-4-8-4z"/></svg>
+    PDF
+  </button>
+</div>
+<script>
+document.getElementById('dlHtmlBtn').addEventListener('click', function() {
+  var blob = new Blob([document.documentElement.outerHTML], {type: 'text/html'});
+  var a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = (document.title || 'page').replace(/[^a-z0-9_-]/gi, '_') + '.html';
+  a.click();
+  URL.revokeObjectURL(a.href);
+});
+document.getElementById('dlPdfBtn').addEventListener('click', function() {
+  window.print();
+});
+</script>
+
+
+<!-- ---- Mobile Overlay -------------------------------------------------------------------------------- -->
+<div class="sidebar-overlay"></div>
+
+<!-- ---- Page Shell ---------------------------------------------------------------------------------------- -->
+<div class="docs-shell">
+
+  <!-- ---- Left Sidebar -------------------------------------------------------------------------------- -->
+  <aside class="docs-sidebar">
+    <div class="sidebar-section-label">Guides</div>
+    <nav class="sidebar-nav">
+      <a href="install-guide.html" class="guide-link">Installation Guide</a>
+      <a href="setup-guide.html" class="guide-link active">Setup Guide</a>
+      <a href="admin-guide.html" class="guide-link">Admin Guide</a>
+      <a href="user-guide.html" class="guide-link">User Guide</a>
+      <a href="troubleshooting-guide.html" class="guide-link">Troubleshooting</a>
+      <a href="security-guide.html" class="guide-link">Security Reference</a>
+      <a href="integration-guide.html" class="guide-link">Integration Guide</a>
+      <a href="reference-guide.html" class="guide-link">Reference Guide</a>
+    </nav>
+
+    <hr class="sidebar-divider" />
+
+    <div class="sidebar-section-label">On This Page</div>
+    <nav class="sidebar-nav">
+      <a href="#before-you-begin" class="toc-link">Before You Begin</a>
+      <a href="#step1-database" class="toc-link">Step 1 &mdash; Infrastructure &amp; DB</a>
+      <a href="#step2-vectordb" class="toc-link">Step 2 &mdash; Vector DB</a>
+      <a href="#step3-llm" class="toc-link">Step 3 &mdash; LLM Provider</a>
+      <a href="#step4-auth" class="toc-link">Step 4 &mdash; Authentication</a>
+      <a href="#step5-source-control" class="toc-link">Step 5 &mdash; Source Control</a>
+      <a href="#step6-collab" class="toc-link">Step 6 &mdash; Collaboration</a>
+      <a href="#step7-admin-users" class="toc-link">Step 7 &mdash; Admin Users</a>
+      <a href="#step8-license" class="toc-link">Step 8 &mdash; License</a>
+      <a href="#step9-settings" class="toc-link">Step 9 &mdash; System Settings</a>
+      <a href="#step10-complete" class="toc-link">Step 10 &mdash; Complete Setup</a>
+      <a href="#post-setup-checklist" class="toc-link">Post-Setup Checklist</a>
+      <a href="#troubleshooting" class="toc-link">Troubleshooting</a>
+    </nav>
+  </aside>
+
+  <!-- ---- Main Content ------------------------------------------------------------------------------------ -->
+  <main class="docs-content">
+
+    <h1>Setup Guide</h1>
+    <p class="page-subtitle">Complete the 10-step Setup Wizard after installing FlowSquad &mdash; covering every field, every pre-requisite, and every configuration option from SSL/TLS to license activation.</p>
+
+    <div class="callout callout-info">
+      <span class="callout-icon">&#x2139;&#xFE0F;</span>
+      <div class="callout-body">
+        <strong>This guide follows installation</strong><br />
+        You must have FlowSquad installed and running before starting this guide. If you have not yet installed FlowSquad, start with the <a href="install-guide.html">Installation Guide</a>. Once the application starts and you open it in a browser for the first time, the Setup Wizard launches automatically.
+      </div>
+    </div>
+
+    <!-- ======================================================== -->
+    <h2 id="before-you-begin">Before You Begin</h2>
+
+    <p>Gather the following credentials and settings before starting the wizard. Having everything ready avoids partial completions and reduces the chance of needing to re-run individual steps.</p>
+
+    <div class="table-wrap"><table>
+      <thead>
+        <tr><th>Required For</th><th>What to Have Ready</th><th>Where to Get It</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Step 1 &mdash; Infrastructure &amp; Database</td><td>SSL/TLS certificate + private key paths (if using direct HTTPS). PostgreSQL or MySQL hostname, port, database name, username, password</td><td>Your CA-issued certificate files; your DBA or cloud database service console</td></tr>
+        <tr><td>Step 2 &mdash; Vector DB</td><td>ChromaDB (nothing needed &mdash; runs locally)</td><td>Nothing required &mdash; ChromaDB is bundled</td></tr>
+        <tr><td>Step 3 &mdash; LLM Provider</td><td>API key for at least one provider: OpenAI, Anthropic, GitHub Models, or Ollama URL</td><td>platform.openai.com / console.anthropic.com / github.com/marketplace?type=models</td></tr>
+        <tr><td>Step 4 &mdash; Authentication</td><td>LDAP: server URL, bind DN, bind password, user search base. SAML: IdP SSO URL, Entity ID, X.509 certificate. OAuth2: Client ID + Secret from provider's developer console</td><td>Your IT / identity team; IdP admin console</td></tr>
+        <tr><td>Step 5 &mdash; Source Control</td><td>Personal access token or App Password for your Git provider (GitHub, GitLab, Bitbucket Cloud, Bitbucket Server, Azure DevOps, or Gitea)</td><td>github.com/settings/tokens &bull; GitLab: User Settings &rarr; Access Tokens &bull; Bitbucket: Personal Settings &rarr; App passwords</td></tr>
+        <tr><td>Step 6 &mdash; Collaboration</td><td>Jira: URL + email + API token. Confluence: URL + email + API token</td><td>id.atlassian.com -> API tokens</td></tr>
+        <tr><td>Step 7 &mdash; Admin Users</td><td>Full name, email, and temporary password for each initial admin</td><td>Decide before starting</td></tr>
+        <tr><td>Step 8 &mdash; License</td><td><code>.lic</code> license file</td><td>Provided by your FlowSquad account manager or partner portal</td></tr>
+        <tr><td>Step 9 &mdash; System Settings</td><td>SMTP hostname, port, credentials (required for MFA email OTP and password resets)</td><td>Your email provider or IT team; audit retention period decision</td></tr>
+      </tbody>
+    </table></div>
+
+    <div class="callout callout-warn">
+      <span class="callout-icon">&#x26A0;&#xFE0F;</span>
+      <div class="callout-body">
+        <strong>Only Global Admins can run the wizard</strong><br />
+        The Setup Wizard opens automatically on first launch and can be re-opened at any time via the <strong>&#x2699;&#xFE0F; Setup</strong> button in the top navigation bar (visible to admins only). Only the initial administrator (created in Step 7) or a subsequent Global Admin can access it. Changes made in the wizard take effect immediately.
+      </div>
+    </div>
+
+    <hr />
+
+    <!-- ======================================================== -->
+    <h2 id="step1-database">Step 1 &mdash; Infrastructure &amp; Database</h2>
+
+    <p>Step 1 covers two independent sub-sections: <strong>SSL/TLS Configuration</strong> and <strong>Database Configuration</strong>. Both can be configured in either order.</p>
+
+    <h3>SSL/TLS Configuration (Optional â€” Direct HTTPS)</h3>
+
+    <div class="callout callout-info">
+      <span class="callout-icon">&#x2139;&#xFE0F;</span>
+      <div class="callout-body">
+        <strong>Only needed for direct HTTPS (Model B)</strong><br />
+        If you are using a <strong>reverse proxy</strong> (nginx, IIS, or a cloud load balancer) to terminate TLS in front of FlowSquad, you do <em>not</em> configure SSL here â€” TLS is handled at the proxy layer and FlowSquad runs plain HTTP internally. Configure this section only if FlowSquad must terminate TLS directly (e.g. a standalone Windows server with no reverse proxy). See the <a href="install-guide.html#deployment-models">Installation Guide &mdash; Deployment Models</a> for guidance on choosing the right model.
+      </div>
+    </div>
+
+    <div class="table-wrap"><table>
+      <thead>
+        <tr><th>Field</th><th>Description</th><th>Example</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>Enable HTTPS/SSL</strong></td><td>Toggle to enable direct TLS termination inside FlowSquad.</td><td>Check only for Model B deployments</td></tr>
+        <tr><td><strong>SSL Certificate Path</strong></td><td>Full path to the PEM-format certificate file (<code>.crt</code>, <code>.pem</code>, or <code>.cer</code>). Must include the full chain (certificate + intermediates).</td><td><code>/var/lib/flowsquad/ssl/flowsquad.crt</code></td></tr>
+        <tr><td><strong>SSL Private Key Path</strong></td><td>Full path to the PEM-format private key file (<code>.key</code> or <code>.pem</code>). Must be readable by the FlowSquad process and not readable by other users.</td><td><code>/var/lib/flowsquad/ssl/flowsquad.key</code></td></tr>
+        <tr><td><strong>CA Bundle Path</strong></td><td>Optional. Full path to the intermediate CA bundle if provided separately by your CA. If the certificate file already includes the full chain, leave this blank.</td><td><code>/var/lib/flowsquad/ssl/ca-bundle.crt</code></td></tr>
+      </tbody>
+    </table></div>
+
+    <p>Click <strong>Test SSL Configuration</strong> to validate the certificate and key can be loaded, then click <strong>Save SSL Configuration</strong>. FlowSquad will restart on port 443 after the full wizard completes.</p>
+
+    <div class="callout callout-warn">
+      <span class="callout-icon">&#x26A0;&#xFE0F;</span>
+      <div class="callout-body">
+        <strong>Production certificates only</strong><br />
+        Self-signed certificates must not be used in production. Use a certificate issued by your enterprise CA or a publicly trusted CA (Let's Encrypt, DigiCert, etc.). Self-signed certificates may be used for local development only.
+      </div>
+    </div>
+
+    <h3>Database Configuration</h3>
+
+    <p>FlowSquad requires an external PostgreSQL or MySQL database to store all product data, requirements, artifacts, and users. A small SQLite configuration database (<code>flowsquad_engine.db</code>) is created automatically alongside the application &mdash; you do not configure this here.</p>
+
+    <h3>Pre-requisites</h3>
+    <ul>
+      <li>A running PostgreSQL 14+ or MySQL 8.0+ server accessible from the FlowSquad host</li>
+      <li>A dedicated database and a dedicated user account created in advance (recommended) &mdash; or FlowSquad can create the database for you if the user has CREATE DATABASE privileges</li>
+      <li>The firewall allows TCP on port 5432 (PostgreSQL) or 3306 (MySQL) from the FlowSquad server IP</li>
+    </ul>
+
+    <h3>Creating the Database User (PostgreSQL &mdash; recommended)</h3>
+    <pre><code>sudo -u postgres psql
+
+CREATE DATABASE flowsquad;
+CREATE USER flowsquad_app WITH PASSWORD 'replace-with-strong-password';
+GRANT CONNECT ON DATABASE flowsquad TO flowsquad_app;
+\c flowsquad
+GRANT USAGE, CREATE ON SCHEMA public TO flowsquad_app;
+GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO flowsquad_app;
+GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public TO flowsquad_app;
+ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL ON TABLES TO flowsquad_app;
+ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL ON SEQUENCES TO flowsquad_app;
+\q</code></pre>
+
+    <h3>Creating the Database User (MySQL)</h3>
+    <pre><code>sudo mysql -u root
+CREATE DATABASE flowsquad CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+CREATE USER 'flowsquad_app'@'%' IDENTIFIED BY 'replace-with-strong-password';
+GRANT ALL PRIVILEGES ON flowsquad.* TO 'flowsquad_app'@'%';
+FLUSH PRIVILEGES;
+EXIT;</code></pre>
+
+    <h3>Fields in the Wizard</h3>
+    <div class="table-wrap"><table>
+      <thead>
+        <tr><th>Field</th><th>Description</th><th>Example</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>Database Type</strong></td><td>Choose PostgreSQL (recommended for production) or MySQL/MariaDB</td><td>PostgreSQL</td></tr>
+        <tr><td><strong>Host</strong></td><td>Hostname or IP of your database server. Use <code>localhost</code> if on the same machine, <code>host.docker.internal</code> if FlowSquad runs in Docker on Mac/Windows</td><td><code>db.internal.company.com</code></td></tr>
+        <tr><td><strong>Port</strong></td><td>Default 5432 for PostgreSQL, 3306 for MySQL</td><td><code>5432</code></td></tr>
+        <tr><td><strong>Database Name</strong></td><td>The name of the database you created above</td><td><code>flowsquad</code></td></tr>
+        <tr><td><strong>Username</strong></td><td>The dedicated application database user</td><td><code>flowsquad_app</code></td></tr>
+        <tr><td><strong>Password</strong></td><td>The password for the database user. Stored encrypted in the configuration database.</td><td>&mdash;</td></tr>
+      </tbody>
+    </table></div>
+
+    <p>Click <strong>Test Connection</strong> to validate the credentials. FlowSquad applies all required database schema migrations automatically if the connection test passes. Click <strong>Save &amp; Continue</strong>.</p>
+
+    <div class="callout callout-tip">
+      <span class="callout-icon">&#x1F4A1;</span>
+      <div class="callout-body">
+        <strong>Test Connection must pass before you can proceed</strong><br />
+        The wizard enforces a successful connection test before allowing you to continue to Step 2. If the test fails, check that the database service is running, the firewall permits the connection, and the credentials are correct.
+      </div>
+    </div>
+
+    <hr />
+
+    <!-- ======================================================== -->
+    <h2 id="step2-vectordb">Step 2 &mdash; Vector Database</h2>
+
+    <p>The vector database stores the semantic embeddings of your codebase and documents. It powers all AI retrieval &mdash; Analyze, AskProduct, Quality Score, and Security Scan all query this store.</p>
+
+    <h3>Options</h3>
+    <div class="table-wrap"><table>
+      <thead>
+        <tr><th>Option</th><th>Description</th><th>Best For</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>ChromaDB</strong> (default)</td>
+          <td>Runs locally inside FlowSquad with zero additional setup. Persists data to the FlowSquad data directory.</td>
+          <td>All deployments, including air-gapped. The recommended default choice.</td>
+        </tr>
+      </tbody>
+    </table></div>
+
+    <h3>Fields &mdash; ChromaDB</h3>
+    <p>No fields required. Select <strong>ChromaDB (Local)</strong> and click <strong>Save &amp; Continue</strong>.</p>
+
+    <hr />
+
+    <!-- ======================================================== -->
+    <h2 id="step3-llm">Step 3 &mdash; LLM Provider</h2>
+
+    <p>FlowSquad requires at least one AI (LLM) provider to generate requirements, epics, stories, designs, and test cases. You must configure the global default here; per-product overrides can be set later from the Admin Panel.</p>
+
+    <h3>Supported Providers</h3>
+    <div class="table-wrap"><table>
+      <thead>
+        <tr><th>Provider</th><th>Models Available</th><th>Pre-requisite</th><th>Notes</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>OpenAI</strong></td><td>GPT-4o, GPT-4o-mini, GPT-4-turbo, GPT-4, GPT-3.5-turbo</td><td>OpenAI account with billing enabled</td><td>Most widely used. GPT-4o-mini is recommended for cost-efficiency.</td></tr>
+        <tr><td><strong>Anthropic Claude</strong></td><td>Claude 3.5 Sonnet, Claude 3 Opus, Claude 3 Sonnet, Claude 3 Haiku</td><td>Anthropic account with API access</td><td>Excellent for long-context reasoning and design generation.</td></tr>
+        <tr><td><strong>GitHub Models</strong></td><td>GPT-4o, GPT-4o-mini, GPT-4-turbo</td><td>GitHub account with Models marketplace access</td><td>Free tier: 15 RPM / 150 RPD. Suitable for low-volume or trial use.</td></tr>
+        <tr><td><strong>Ollama</strong> (Enterprise)</td><td>Llama 3, Mistral, Code Llama, and any locally pulled model</td><td>Ollama server running locally or on a reachable host</td><td>Fully offline &mdash; suitable for air-gapped deployments. Enterprise tier only.</td></tr>
+      </tbody>
+    </table></div>
+
+    <h3>Fields &mdash; OpenAI</h3>
+    <div class="table-wrap"><table>
+      <thead>
+        <tr><th>Field</th><th>Description</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>API Key</strong></td><td>Starts with <code>sk-...</code>. Obtain from platform.openai.com -> API keys. Stored encrypted in the configuration database.</td></tr>
+        <tr><td><strong>Default Model</strong></td><td>Select the model to use for all operations unless overridden per product. <strong>GPT-4o-mini</strong> is recommended for cost efficiency; <strong>GPT-4o</strong> for highest quality.</td></tr>
+      </tbody>
+    </table></div>
+
+    <h3>Fields &mdash; GitHub Models</h3>
+    <div class="table-wrap"><table>
+      <thead><tr><th>Field</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Token</strong></td><td>A fine-grained Personal Access Token (starts with <code>github_pat_</code>). Create at <a href="https://github.com/settings/personal-access-tokens/new" target="_blank">github.com/settings/personal-access-tokens/new</a> &rarr; under <em>Permissions</em> expand <strong>Copilot Request</strong> and set to <strong>Read-only</strong>. No repository access is needed. Classic PATs are not supported by this endpoint.</td></tr>
+        <tr><td><strong>Text Model</strong></td><td>Select from the models returned after a successful Test Connection (e.g. GPT-4o, GPT-4o-mini, Llama 3.1).</td></tr>
+        <tr><td><strong>Enrollment required</strong></td><td>Your GitHub account must be enrolled in the <a href="https://github.com/marketplace?type=models" target="_blank">GitHub Models marketplace</a> (free). Enterprise-managed user (EMU) accounts cannot access GitHub Models &mdash; use a personal GitHub account.</td></tr>
+      </tbody>
+    </table></div>
+
+    <h3>Fields &mdash; Anthropic Claude</h3>
+    <div class="table-wrap"><table>
+      <thead><tr><th>Field</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td><strong>API Key</strong></td><td>Starts with <code>sk-ant-...</code>. Obtain from console.anthropic.com -> API Keys.</td></tr>
+        <tr><td><strong>Default Model</strong></td><td>Claude 3.5 Sonnet recommended for best quality/cost balance.</td></tr>
+      </tbody>
+    </table></div>
+
+    <h3>Fields &mdash; Ollama</h3>
+    <div class="table-wrap"><table>
+      <thead><tr><th>Field</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Ollama URL</strong></td><td>Base URL of your Ollama instance. Default: <code>http://localhost:11434</code>. Must be reachable from the FlowSquad server.</td></tr>
+        <tr><td><strong>Model</strong></td><td>Auto-detected from the Ollama server. Select from the available pulled models.</td></tr>
+      </tbody>
+    </table></div>
+
+    <p>Click <strong>Test Connection</strong> to verify the API key is valid and the provider is reachable. Click <strong>Save &amp; Continue</strong>.</p>
+
+    <hr />
+
+    <!-- ======================================================== -->
+    <h2 id="step4-auth">Step 4 &mdash; Authentication</h2>
+
+    <p>Choose how users will sign in to FlowSquad. Multiple authentication methods can be enabled simultaneously &mdash; for example, Local Accounts (always on) plus LDAP for corporate users, plus SAML for executive accounts. Each method is independently configured and tested.</p>
+
+    <h3>Local Accounts (Always Active)</h3>
+    <p>Local authentication is always enabled and cannot be disabled. It provides the initial admin account and is the fallback if SSO is unavailable. Passwords are stored using bcrypt (12 rounds) &mdash; never in plain text.</p>
+    <ul>
+      <li>Minimum password length is configurable (default: 8 characters)</li>
+      <li>Password complexity rules are configurable in Admin Panel -> Settings -> Security after setup</li>
+      <li>No external dependencies</li>
+    </ul>
+
+    <h3>LDAP / Active Directory</h3>
+    <p><strong>Pre-requisites:</strong> A dedicated LDAP service account with read-only directory access. The FlowSquad server must be able to reach the LDAP server on port 389 (LDAP) or port 636 (LDAPS).</p>
+
+    <div class="table-wrap"><table>
+      <thead>
+        <tr><th>Field</th><th>Description</th><th>Example</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>LDAP Server URL</strong></td><td>Full URL including protocol and port. Use <code>ldaps://</code> for encrypted connections.</td><td><code>ldaps://dc.company.com:636</code></td></tr>
+        <tr><td><strong>Bind DN</strong></td><td>Distinguished Name of the service account used to search the directory.</td><td><code>CN=svc-flowsquad,OU=ServiceAccounts,DC=company,DC=com</code></td></tr>
+        <tr><td><strong>Bind Password</strong></td><td>Password for the service account. Stored encrypted.</td><td>&mdash;</td></tr>
+        <tr><td><strong>User Search Base</strong></td><td>The LDAP subtree to search for user objects. Broader base = more users found.</td><td><code>OU=Users,DC=company,DC=com</code></td></tr>
+        <tr><td><strong>User Search Filter</strong></td><td>LDAP filter to locate a specific user. <code>{username}</code> is replaced with the login name at runtime.</td><td><code>(sAMAccountName={username})</code></td></tr>
+        <tr><td><strong>Username Attribute</strong></td><td>The LDAP attribute containing the user's login name.</td><td><code>sAMAccountName</code> (Active Directory) / <code>uid</code> (OpenLDAP)</td></tr>
+        <tr><td><strong>Email Attribute</strong></td><td>The attribute containing the user's email address.</td><td><code>mail</code></td></tr>
+        <tr><td><strong>Group Search Base</strong></td><td>Required for group-to-role mapping. The subtree containing group objects.</td><td><code>OU=Groups,DC=company,DC=com</code></td></tr>
+        <tr><td><strong>Group Member Attribute</strong></td><td>Attribute on the user object listing their group memberships.</td><td><code>memberOf</code></td></tr>
+      </tbody>
+    </table></div>
+
+    <h4>Group-to-Role Mapping</h4>
+    <p>Map AD/LDAP groups to FlowSquad roles. Users in the mapped groups automatically receive the corresponding role on every login.</p>
+    <ul>
+      <li><code>CN=FlowSquad-Admins,OU=Groups,DC=company,DC=com</code> -> <strong>Global Admin</strong></li>
+      <li><code>CN=FlowSquad-ProdAdmins,OU=Groups,DC=company,DC=com</code> -> <strong>Product Admin</strong></li>
+      <li><code>CN=FlowSquad-Users,OU=Groups,DC=company,DC=com</code> -> <strong>Regular User</strong></li>
+    </ul>
+
+    <h3>SAML 2.0 SSO</h3>
+    <p><strong>Pre-requisites:</strong> You need IdP metadata (SSO URL and X.509 certificate) from your identity provider &mdash; Keycloak, Okta, Azure AD, OneLogin, ADFS, Google Workspace, or any standard SAML 2.0 IdP.</p>
+
+    <p>There are <strong>three fields</strong> to fill in. Everything else is auto-generated.</p>
+    <div class="table-wrap"><table>
+      <thead>
+        <tr><th>Field</th><th>Description</th><th>Where to Find</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>Service Provider Entity ID</strong></td><td>The public URL of this FlowSquad server ending in <code>/saml/metadata</code>. Register this exact value as the Client ID in your IdP.</td><td>You enter this &mdash; use the URL users actually access FlowSquad from</td></tr>
+        <tr><td><strong>IdP SSO URL</strong></td><td>The endpoint to which FlowSquad sends SAML authentication requests.</td><td>IdP metadata &mdash; <code>SingleSignOnService Location</code> attribute. For Keycloak: <em>Realm Settings &rarr; Keys &rarr; Endpoints &rarr; SAML 2.0 Identity Provider Metadata</em></td></tr>
+        <tr><td><strong>IdP x509 Certificate</strong></td><td>The signing certificate from your IdP (base64, no PEM headers). Used to verify SAML assertion signatures.</td><td>For Keycloak: <em>Realm Settings &rarr; Keys &rarr; RS256 row &rarr; &ldquo;Certificate&rdquo; button</em>. Or copy <code>&lt;ds:X509Certificate&gt;</code> value from IdP metadata XML.</td></tr>
+        <tr><td><strong>Designated Global Admins</strong></td><td>Optional. Comma-separated <strong>email addresses</strong> automatically promoted to Global Admin on first SAML login. Must be email addresses &mdash; FlowSquad uses the IdP email attribute as the user identifier.</td><td>Decide before configuring</td></tr>
+      </tbody>
+    </table></div>
+
+    <p>The SP fields (SP Entity ID, ACS URL <code>/saml/callback</code>, Single Logout URL <code>/saml/logout</code>) are <strong>auto-generated</strong> from the Entity ID you enter and displayed as read-only values to copy into your IdP. There is no separate &ldquo;Attribute Mapping&rdquo; section &mdash; FlowSquad automatically reads the <code>email</code> SAML attribute. For a full Keycloak SAML walkthrough, see the <a href="reference-guide.html#keycloak-saml">Reference Guide &mdash; Keycloak SAML</a>.</p>
+
+    <h3>OAuth2 Social / Enterprise Login</h3>
+    <p><strong>Pre-requisites:</strong> An OAuth2 application registered in your provider's developer console with the correct redirect URI.</p>
+
+    <p>The redirect URI to register in each provider's console is:</p>
+    <pre><code>https://flowsquad.yourcompany.com/oauth2/&lt;provider&gt;/callback
+
+# Examples:
+https://flowsquad.yourcompany.com/oauth2/github/callback
+https://flowsquad.yourcompany.com/oauth2/google/callback
+https://flowsquad.yourcompany.com/oauth2/microsoft/callback
+https://flowsquad.yourcompany.com/oauth2/okta/callback
+https://flowsquad.yourcompany.com/oauth2/keycloak/callback
+https://flowsquad.yourcompany.com/oauth2/custom/callback</code></pre>
+
+    <div class="table-wrap"><table>
+      <thead>
+        <tr><th>Provider</th><th>Where to Create the App</th><th>Required Fields</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>GitHub</strong></td><td>Settings &rarr; Developer Settings &rarr; OAuth Apps &rarr; New OAuth App</td><td>Client ID, Client Secret</td></tr>
+        <tr><td><strong>Google</strong></td><td>console.cloud.google.com &rarr; APIs &rarr; Credentials &rarr; OAuth 2.0 Client ID</td><td>Client ID, Client Secret</td></tr>
+        <tr><td><strong>Microsoft (Azure AD)</strong></td><td>portal.azure.com &rarr; App registrations &rarr; New registration</td><td>Application (Client) ID, Client Secret</td></tr>
+        <tr><td><strong>Okta</strong></td><td>Okta Admin &rarr; Applications &rarr; Create App Integration &rarr; OIDC / OAuth2</td><td>Client ID, Client Secret</td></tr>
+        <tr><td><strong>Keycloak</strong></td><td>Keycloak Admin &rarr; Clients &rarr; Create client (type: OpenID Connect) &rarr; enable Client Authentication &rarr; Credentials tab</td><td>Server URL, Realm, Client ID, Client Secret</td></tr>
+        <tr><td><strong>Custom Provider</strong></td><td>Any standards-compliant OAuth2 / OIDC provider. Supply Authorization URL, Token URL, User Info URL, and scopes.</td><td>Client ID, Client Secret, endpoint URLs</td></tr>
+      </tbody>
+    </table></div>
+
+    <div class="callout callout-tip">
+      <span class="callout-icon">&#x1F4A1;</span>
+      <div class="callout-body">
+        <strong>Test each method before saving</strong><br />
+        The wizard provides a <strong>Test Connection</strong> or <strong>Test SAML Login</strong> button for each authentication method. Always test before clicking Save &mdash; a misconfigured auth provider can lock users out.
+      </div>
+    </div>
+
+    <h3>Multi-Factor Authentication (MFA)</h3>
+    <p>MFA is configured in <strong>Setup Wizard Step 4</strong>. When enabled, users can enrol MFA from the <strong>&#128273; MFA</strong> button in the navigation bar. Enforcement policies can make MFA mandatory for all users or admins only.</p>
+
+    <h4>MFA Methods</h4>
+    <div class="table-wrap"><table>
+      <thead>
+        <tr><th>Method</th><th>Description</th><th>Pre-requisite</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>TOTP (Authenticator App)</strong></td><td>Time-based one-time password compatible with Google Authenticator, Microsoft Authenticator, Authy, and any RFC 6238 app. Recommended &mdash; works offline.</td><td>None &mdash; no external service required</td></tr>
+        <tr><td><strong>Email OTP</strong></td><td>A one-time code sent to the user's registered email address on each login.</td><td>SMTP configured (Setup Wizard step or Admin Panel &rarr; Settings &rarr; Email)</td></tr>
+        <tr><td><strong>SMS OTP</strong></td><td>A one-time code sent by SMS. Enterprise deployments with an SMS gateway configured.</td><td>SMS gateway credentials entered in Settings</td></tr>
+      </tbody>
+    </table></div>
+
+    <h4>Enforcement Policies</h4>
+    <div class="table-wrap"><table>
+      <thead>
+        <tr><th>Policy</th><th>Effect</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>Require MFA for Global Admins</strong></td><td>Forces all Global Administrator accounts to enrol MFA on next login. Recommended for all production deployments.</td></tr>
+        <tr><td><strong>Require MFA for All Users</strong></td><td>Forces every user account to enrol MFA on next login. Enables organisation-wide MFA compliance.</td></tr>
+      </tbody>
+    </table></div>
+
+    <div class="callout callout-tip">
+      <span class="callout-icon">&#x1F4A1;</span>
+      <div class="callout-body">
+        <strong>MFA enrolment flow</strong><br />
+        After MFA is enabled and an enforcement policy is set, users are prompted to enrol on their next login. They can also self-enrol at any time via the navbar <strong>&#128273; MFA</strong> button &rarr; Set up MFA. Backup codes are generated at enrolment time and should be stored securely.
+      </div>
+    </div>
+
+    <hr />
+
+    <!-- ======================================================== -->
+    <h2 id="step5-source-control">Step 5 &mdash; Source Control</h2>
+
+    <p>Connect FlowSquad to your source control provider to enable direct codebase loading via Git URL in the Analyze tab. This step is <strong>optional</strong> &mdash; you can also load codebases via ZIP file or local path without any configuration here.</p>
+
+    <h3>Pre-requisites</h3>
+    <ul>
+      <li>A personal access token (PAT) or service account token with read-only repository access</li>
+      <li>The token must be authorised for your organisation if SAML SSO is enforced on GitHub</li>
+    </ul>
+
+    <div class="table-wrap"><table>
+      <thead>
+        <tr><th>Provider</th><th>Token Type</th><th>Required Scope / Permission</th><th>Where to Create</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>GitHub Cloud / Enterprise</strong></td><td>Personal Access Token (classic or fine-grained)</td><td><code>repo</code> (private repos) or <code>public_repo</code></td><td>github.com &rarr; Settings &rarr; Developer settings &rarr; Personal access tokens</td></tr>
+        <tr><td><strong>GitLab Cloud / Self-hosted</strong></td><td>Personal Access Token</td><td><code>read_repository</code></td><td>GitLab &rarr; User Settings &rarr; Access Tokens</td></tr>
+        <tr><td><strong>Bitbucket Cloud</strong></td><td>App Password (not account password)</td><td>Repositories: Read</td><td>bitbucket.org &rarr; Personal Settings &rarr; App passwords</td></tr>
+        <tr><td><strong>Bitbucket Server / Data Center</strong></td><td>HTTP Basic or project PAT</td><td>Repository read access</td><td>Bitbucket Server &rarr; Manage account &rarr; Personal access tokens</td></tr>
+        <tr><td><strong>Azure DevOps</strong></td><td>Personal Access Token</td><td>Code: Read</td><td>dev.azure.com &rarr; User Settings &rarr; Personal access tokens</td></tr>
+        <tr><td><strong>Gitea / Forgejo</strong></td><td>API Token</td><td>Repository read access</td><td>Gitea &rarr; Settings &rarr; Applications &rarr; Access tokens</td></tr>
+      </tbody>
+    </table></div>
+
+    <p>Enter the token and click <strong>Test Connection</strong>. FlowSquad attempts to list repositories accessible to the token to confirm it is valid. Click <strong>Save &amp; Continue</strong> (or <strong>Skip</strong> if not configuring source control now).</p>
+
+    <hr />
+
+    <!-- ======================================================== -->
+    <h2 id="step6-collab">Step 6 &mdash; Collaboration Tools</h2>
+
+    <p>Connect FlowSquad to Jira and Confluence to enable pushing generated artifacts (Epics, Stories, Tasks, Designs) directly to your project management and documentation tools. Both integrations are optional and can be configured or updated later via Admin Panel -> Settings.</p>
+
+    <h3>Jira Setup</h3>
+    <p><strong>Pre-requisites:</strong> A Jira account (Cloud or Server/Data Center). For Jira Cloud, you need an API token (not your account password). For Jira Server, you use your username and password.</p>
+
+    <div class="table-wrap"><table>
+      <thead>
+        <tr><th>Field</th><th>Description</th><th>Example</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>Jira Type</strong></td><td>Select Jira Cloud or Jira Server/Data Center. This changes the authentication method used.</td><td>Jira Cloud</td></tr>
+        <tr><td><strong>Jira URL</strong></td><td>The base URL of your Jira instance.</td><td><code>https://yourcompany.atlassian.net</code></td></tr>
+        <tr><td><strong>Email / Username</strong></td><td>Cloud: your Atlassian email. Server: your Jira username.</td><td><code>john.doe@company.com</code></td></tr>
+        <tr><td><strong>API Token / Password</strong></td><td>Cloud: API token from id.atlassian.com -> API tokens. Server: your Jira password.</td><td>&mdash;</td></tr>
+        <tr><td><strong>Default Project Key</strong></td><td>Optional. The Jira project key where artifacts are pushed by default. Can be overridden per product.</td><td><code>ENG</code></td></tr>
+      </tbody>
+    </table></div>
+
+    <h3>Confluence Setup</h3>
+    <p><strong>Pre-requisites:</strong> A Confluence account with create-page permissions in your target space.</p>
+
+    <div class="table-wrap"><table>
+      <thead>
+        <tr><th>Field</th><th>Description</th><th>Example</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>Confluence URL</strong></td><td>For Confluence Cloud, include the <code>/wiki</code> path.</td><td><code>https://yourcompany.atlassian.net/wiki</code></td></tr>
+        <tr><td><strong>Email / Username</strong></td><td>Your Atlassian email (Cloud) or Confluence username (Server).</td><td><code>john.doe@company.com</code></td></tr>
+        <tr><td><strong>API Token / Password</strong></td><td>Same API token as Jira if using Atlassian Cloud (the token works for both).</td><td>&mdash;</td></tr>
+        <tr><td><strong>Default Space Key</strong></td><td>Optional. The Confluence space key where design documents are published by default.</td><td><code>ENG</code></td></tr>
+      </tbody>
+    </table></div>
+
+    <div class="callout callout-warn">
+      <span class="callout-icon">&#x26A0;&#xFE0F;</span>
+      <div class="callout-body">
+        <strong>Save Confluence settings before testing</strong><br />
+        Always click <strong>Save</strong> before clicking <strong>Test Connection</strong> for Confluence. If you test without saving, the Confluence URL may show as blank in the Analyze tab even if testing appeared to succeed.
+      </div>
+    </div>
+
+    <hr />
+
+    <!-- ======================================================== -->
+    <h2 id="step7-admin-users">Step 7 &mdash; Create Admin Users</h2>
+
+    <p>Create the initial administrator account(s). Accounts created here receive the <strong>Global Administrator</strong> role, which grants unrestricted access to all products, all user management functions, and all system settings.</p>
+
+    <h3>Fields</h3>
+    <div class="table-wrap"><table>
+      <thead>
+        <tr><th>Field</th><th>Description</th><th>Requirements</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>Full Name</strong></td><td>Display name shown in the UI and audit logs.</td><td>Required</td></tr>
+        <tr><td><strong>Email Address</strong></td><td>Used for login and system notifications. Must be unique.</td><td>Required, valid email format</td></tr>
+        <tr><td><strong>Password</strong></td><td>Initial password for local authentication. The admin should change this on first login.</td><td>Minimum 12 characters; mix of uppercase, lowercase, numbers, and symbols recommended</td></tr>
+      </tbody>
+    </table></div>
+
+    <p>You can create multiple admins in this step by clicking <strong>+ Add Another Admin</strong>. At least one admin account is required to proceed.</p>
+
+    <div class="callout callout-warn">
+      <span class="callout-icon">&#x26A0;&#xFE0F;</span>
+      <div class="callout-body">
+        <strong>Global Admin accounts are powerful</strong><br />
+        Limit Global Admin accounts to 2-3 trusted individuals. The system prevents the last remaining Global Admin from being demoted or deleted &mdash; this is a safety measure to prevent lockout. Additional admins can be created later from Admin Panel -> User Management.
+      </div>
+    </div>
+
+    <hr />
+
+    <!-- ======================================================== -->
+    <h2 id="step8-license">Step 8 &mdash; License Activation</h2>
+
+    <p>Upload your FlowSquad Enterprise license file (<code>.lic</code>). License validation is performed locally &mdash; no internet access is required.</p>
+
+    <h3>Pre-requisites</h3>
+    <ul>
+      <li>A valid <code>.lic</code> license file from your FlowSquad account manager or the partner portal</li>
+      <li>For Docker or Kubernetes deployments: the <code>FLOWSQUAD_CLUSTER_ID</code> environment variable must match the ID used when the license was generated</li>
+      <li>For Linux bare-metal or Windows: <code>/etc/machine-id</code> (Linux) or the Windows machine GUID is used automatically</li>
+    </ul>
+
+    <h3>Uploading the License</h3>
+    <ol class="step-list">
+      <li>Click <strong>Upload License File</strong> and select your <code>.lic</code> file.</li>
+      <li>FlowSquad validates the RSA-4096 signature, expiration date, and machine ID binding.</li>
+      <li>If valid, license details are displayed: license type, company name, maximum products, and validity period.</li>
+      <li>Click <strong>Activate &amp; Continue</strong>.</li>
+    </ol>
+
+    <div class="callout callout-info">
+      <span class="callout-icon">&#x2139;&#xFE0F;</span>
+      <div class="callout-body">
+        <strong>Need a license?</strong><br />
+        FlowSquad ships with a bundled evaluation license (1 product, 30 days, full feature access) that activates automatically &mdash; no action needed to start evaluating. Contact <a href="mailto:support@flowsquad.ai">support@flowsquad.ai</a> to obtain an enterprise license for production use.
+      </div>
+    </div>
+
+    <hr />
+
+    <!-- ======================================================== -->
+    <h2 id="step9-settings">Step 9 &mdash; System Settings</h2>
+
+    <p>Step 9 configures system-level services. Both sub-sections are optional but <strong>Email (SMTP)</strong> is strongly recommended &mdash; it is required for MFA email OTP, password reset emails, and audit alert notifications.</p>
+
+    <h3>Email Server (SMTP)</h3>
+
+    <div class="table-wrap"><table>
+      <thead>
+        <tr><th>Field</th><th>Description</th><th>Example</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>Enable Email Server</strong></td><td>Toggle to enable outbound email. Must be on for MFA email OTP and password resets to work.</td><td>Recommended: ON</td></tr>
+        <tr><td><strong>SMTP Host</strong></td><td>Hostname of your SMTP server.</td><td><code>smtp.office365.com</code>, <code>smtp.gmail.com</code>, <code>smtp.sendgrid.net</code></td></tr>
+        <tr><td><strong>SMTP Port</strong></td><td>587 for STARTTLS (recommended), 465 for SSL/TLS, 25 for unauthenticated relay.</td><td><code>587</code></td></tr>
+        <tr><td><strong>Security</strong></td><td>STARTTLS (recommended) upgrades the connection after EHLO. SSL/TLS uses implicit TLS from the start. None uses plain-text with auto-upgrade if the server supports it.</td><td>STARTTLS</td></tr>
+        <tr><td><strong>SMTP Authentication</strong></td><td>Enable if your SMTP server requires a username and password.</td><td>ON for most cloud providers</td></tr>
+        <tr><td><strong>SMTP Username</strong></td><td>Your SMTP account email or username.</td><td><code>noreply@company.com</code></td></tr>
+        <tr><td><strong>SMTP Password</strong></td><td>SMTP account password or app password. Stored encrypted. For Gmail, generate an App Password at myaccount.google.com &rarr; Security.</td><td>&mdash;</td></tr>
+        <tr><td><strong>From Email Address</strong></td><td>The &ldquo;From&rdquo; address shown on all system emails.</td><td><code>noreply@company.com</code></td></tr>
+        <tr><td><strong>From Name</strong></td><td>Display name on outbound emails.</td><td><code>FlowSquad Notifications</code></td></tr>
+      </tbody>
+    </table></div>
+
+    <p>Click <strong>Send Test Email</strong> to verify the SMTP configuration, then click <strong>Save Configuration</strong>.</p>
+
+    <h3>Audit Logging</h3>
+
+    <p>Audit logging is <strong>always enabled</strong> and cannot be disabled &mdash; it is a compliance requirement. You can configure retention and alert behaviour:</p>
+
+    <div class="table-wrap"><table>
+      <thead>
+        <tr><th>Field</th><th>Description</th><th>Default</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>Retention Period (Days)</strong></td><td>How long audit log entries are kept. Minimum 30 days.</td><td>365 days</td></tr>
+        <tr><td><strong>Failed Login Alert Threshold</strong></td><td>Show a warning in the Admin Panel after N consecutive failed login attempts for the same account.</td><td>5</td></tr>
+        <tr><td><strong>Allow CSV Export</strong></td><td>Permits Global Admins to download audit logs as a CSV file from Admin Panel &rarr; Audit Logs.</td><td>ON</td></tr>
+        <tr><td><strong>Alert on Privilege Escalation</strong></td><td>Show an Admin Panel alert when any user&rsquo;s role is changed.</td><td>ON</td></tr>
+        <tr><td><strong>Alert on User Deletion</strong></td><td>Show an Admin Panel alert when a user account is deleted.</td><td>ON</td></tr>
+        <tr><td><strong>Enable Email Alerts</strong></td><td>Send email notifications for critical audit events (privilege escalation, account deletion). Requires SMTP to be configured above.</td><td>OFF (requires SMTP)</td></tr>
+      </tbody>
+    </table></div>
+
+    <hr />
+
+    <!-- ======================================================== -->
+    <h2 id="step10-complete">Step 10 &mdash; Complete Setup</h2>
+
+    <p>The final step presents a summary of your complete configuration. Review each section:</p>
+
+    <ul>
+      <li><strong>SSL/TLS</strong> &mdash; enabled/disabled; certificate path (if direct HTTPS)</li>
+      <li><strong>Database</strong> &mdash; type, host, port, database name (password redacted)</li>
+      <li><strong>Vector Database</strong> &mdash; ChromaDB (local)</li>
+      <li><strong>LLM Provider</strong> &mdash; provider name and selected default model</li>
+      <li><strong>Authentication</strong> &mdash; enabled methods and their test status; MFA enforcement policy</li>
+      <li><strong>Source Control</strong> &mdash; connected provider (if configured)</li>
+      <li><strong>Collaboration Tools</strong> &mdash; Jira and/or Confluence connection status</li>
+      <li><strong>Admin Accounts</strong> &mdash; list of created Global Admin emails</li>
+      <li><strong>License</strong> &mdash; type, validity, and product limit</li>
+      <li><strong>System Settings</strong> &mdash; SMTP email status; audit log retention</li>
+    </ul>
+
+    <h3>Configuration Database Security</h3>
+    <p>The configuration database (<code>flowsquad_engine.db</code>) stores API keys, credentials, and license information. All sensitive values are automatically encrypted at the field level before storage â€” no additional configuration is required. Click <strong>Complete Setup</strong> to finish.</p>
+
+    <p>Click <strong>Complete Setup</strong>. FlowSquad saves the configuration and applies any final database migrations. You are redirected to the login page.</p>
+
+    <div class="callout callout-tip">
+      <span class="callout-icon">&#x1F4A1;</span>
+      <div class="callout-body">
+        <strong>Wizard can be re-run at any time</strong><br />
+        Global Admins can re-open the Setup Wizard at any time from the top navigation bar (the <strong>&#x2699;&#xFE0F; Setup</strong> button). Changes take effect immediately &mdash; no restart is required. This is the correct way to change your database, LLM provider, or integration settings after initial setup.
+      </div>
+    </div>
+
+    <hr />
+
+    <!-- ======================================================== -->
+    <h2 id="post-setup-checklist">Post-Setup Checklist</h2>
+
+    <p>After completing the wizard, verify the following before onboarding users:</p>
+
+    <ul class="checklist">
+      <li>Login with the Global Admin account you created succeeds</li>
+      <li>Admin Panel is accessible at <code>/admin</code> after login</li>
+      <li>License Management shows the correct license type, company name, and validity dates</li>
+      <li>LLM Configuration shows the provider as connected (green status)</li>
+      <li>Database Settings shows the product database as connected</li>
+      <li>If SSO is configured: test login via each enabled SSO method</li>
+      <li>Create a test product and run a test AI generation to confirm the LLM pipeline works end-to-end</li>
+      <li>MFA enabled on the Global Admin account (User Preferences -> Security -> Enable MFA)</li>
+      <li>Admin password changed from the setup temporary value (if applicable)</li>
+      <li>SMTP email configured for system notifications (Admin Panel -> Settings -> Email)</li>
+    </ul>
+
+    <hr />
+
+    <!-- ======================================================== -->
+    <h2 id="troubleshooting">Troubleshooting</h2>
+
+    <h3>Database Connection Failed</h3>
+    <p><strong>Symptoms:</strong> "Connection refused" or "could not connect to server" when clicking Test Connection in Step 1.</p>
+    <p><strong>Solutions:</strong></p>
+    <ol>
+      <li>Confirm the database service is running: <code>sudo systemctl status postgresql</code> (Linux) or <code>Get-Service postgresql*</code> (Windows)</li>
+      <li>Check that <code>listen_addresses</code> in <code>postgresql.conf</code> includes the FlowSquad server's IP (or <code>'*'</code>)</li>
+      <li>Verify the firewall allows the database port from the FlowSquad host: <code>sudo ufw allow 5432/tcp</code></li>
+      <li>Test the connection manually: <code>psql -h &lt;host&gt; -U flowsquad_app -d flowsquad</code></li>
+    </ol>
+
+    <h3>LLM "Invalid API Key" (401)</h3>
+    <p><strong>Symptoms:</strong> Test Connection returns authentication error in Step 3.</p>
+    <p><strong>Solutions:</strong></p>
+    <ol>
+      <li>Verify there are no leading/trailing spaces in the pasted API key</li>
+      <li>For OpenAI: check billing is active and the key is not restricted to specific IPs at platform.openai.com -> API keys</li>
+      <li>For Anthropic: confirm the key starts with <code>sk-ant-</code> and was created in the correct workspace</li>
+      <li>Generate a new key from the provider's console and re-enter it</li>
+    </ol>
+
+    <h3>LDAP "Invalid Credentials" (Correct Password)</h3>
+    <p><strong>Symptoms:</strong> Test Connection fails with "LDAP bind failed" even though the service account password is correct.</p>
+    <p><strong>Solutions:</strong></p>
+    <ol>
+      <li>Verify the Bind DN format exactly &mdash; use <code>ldapsearch</code> to confirm: <code>ldapsearch -H ldap://ad.company.com -D "CN=svc-flowsquad,OU=ServiceAccounts,DC=company,DC=com" -W -b "DC=company,DC=com" "(sAMAccountName=svc-flowsquad)"</code></li>
+      <li>Check the service account password has not expired in Active Directory</li>
+      <li>If using LDAPS (port 636), ensure the server's certificate is trusted: import the CA certificate to the FlowSquad server's trust store</li>
+      <li>Broaden the User Search Base to <code>DC=company,DC=com</code> to cover users across all OUs</li>
+    </ol>
+
+    <h3>SAML "Invalid SAML Response"</h3>
+    <p><strong>Symptoms:</strong> User authenticates at IdP but FlowSquad shows "Invalid SAML response" or "Signature validation failed".</p>
+    <p><strong>Solutions:</strong></p>
+    <ol>
+      <li>Verify the SP Entity ID in your IdP matches the auto-filled value in FlowSquad exactly, including port number: <code>https://flowsquad.company.com:5000/saml/metadata</code></li>
+      <li>Download the SP certificate from FlowSquad (Step 4 -> SAML -> "Generate SP Certificate" -> Download) and import it into your IdP</li>
+      <li>Confirm both "Sign Assertions" and "Sign Document" are enabled in your IdP</li>
+      <li>Check that the Email Attribute name in FlowSquad matches the attribute name your IdP sends</li>
+    </ol>
+
+    <h3>License "Validation Failed &mdash; Machine ID Mismatch"</h3>
+    <p><strong>Symptoms:</strong> License upload fails with machine ID or cluster ID mismatch error in Step 8.</p>
+    <p><strong>Solutions:</strong></p>
+    <ol>
+      <li>For Docker: verify <code>FLOWSQUAD_CLUSTER_ID</code> environment variable in <code>docker-compose.yml</code> matches the ID provided when the license was issued</li>
+      <li>For Linux: check <code>/etc/machine-id</code> is correctly mounted into the container: <code>- /etc/machine-id:/etc/host-machine-id:ro</code></li>
+      <li>For Kubernetes: confirm the <code>flowsquad-machine</code> secret contains the correct cluster ID</li>
+      <li>Contact <a href="mailto:support@flowsquad.ai">support@flowsquad.ai</a> with your deployment type and machine ID if re-issuance is needed</li>
+    </ol>
+
+    <h3>Setup Wizard Does Not Appear on First Load</h3>
+    <p><strong>Symptoms:</strong> Navigating to FlowSquad shows a login page or a blank page instead of the Setup Wizard.</p>
+    <p><strong>Solutions:</strong></p>
+    <ol>
+      <li>If the wizard was previously partially completed, navigate to <code>/setup</code> directly</li>
+      <li>If the wizard is locked due to a previous failed run, stop FlowSquad, remove the <code>flowsquad_engine.db</code> file from the data directory, and restart &mdash; this resets all setup state (<strong>warning: all previous settings are lost</strong>)</li>
+      <li>Check the application logs for startup errors: Linux: <code>sudo journalctl -u flowsquad -f</code>; Docker: <code>docker compose logs -f</code></li>
+    </ol>
+
+    <hr />
+
+    <!-- ======================================================== -->
+    <!-- Next Step CTA -->
+    <div class="callout callout-tip">
+      <span class="callout-icon">-></span>
+      <div class="callout-body">
+        <strong>Setup complete &mdash; next step: Admin Guide</strong><br />
+        Your FlowSquad instance is now configured across all 10 steps. Proceed to the <a href="admin-guide.html">Admin Guide</a> to create your first product, assign Product Admins, configure per-product LLM settings, manage users, and review audit logs.
+      </div>
+    </div>
+
+  </main>
+
+</div><!-- /.docs-shell -->
+
+<!-- ========================================================== -->
+<!-- FAQ &mdash; Structured for AI crawlers -->
+<!-- ========================================================== -->
+<section id="faq" itemscope itemtype="https://schema.org/FAQPage">
+  <h2>Frequently Asked Questions</h2>
+
+  <article itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+    <h3 itemprop="name">When does the Setup Wizard appear?</h3>
+    <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+      <p itemprop="text" style="color:var(--text);margin:0;">The Setup Wizard launches automatically the first time you access FlowSquad in a browser after installation. It is also accessible to Global Admins at any time via the <strong>&#x2699;&#xFE0F; Setup</strong> button in the top navigation bar, or by navigating directly to <code>/setup</code>. The wizard must be fully completed before any other functionality is available on first run.</p>
+    </div>
+  </article>
+
+  <article itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+    <h3 itemprop="name">Can I skip optional wizard steps?</h3>
+    <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+      <p itemprop="text" style="color:var(--text);margin:0;">Steps 5 (Source Control) and 6 (Collaboration Tools) are optional &mdash; they can be skipped and configured later from Admin Panel -> Settings. Steps 1 (Database), 3 (LLM Provider), 7 (Admin Users), and 8 (License) are mandatory and must be completed before you can finish the wizard. Step 4 (Authentication) requires at minimum Local Accounts, which is already active by default.</p>
+    </div>
+  </article>
+
+  <article itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+    <h3 itemprop="name">What database does FlowSquad require?</h3>
+    <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+      <p itemprop="text" style="color:var(--text);margin:0;">FlowSquad uses two databases. The configuration database (<code>flowsquad_engine.db</code>) is always a local SQLite file &mdash; it is created automatically and requires no setup. The application database &mdash; which stores all product data, requirements, artifacts, and users &mdash; must be PostgreSQL 14+ or MySQL 8.0+. You must provision this database and user before running the Setup Wizard.</p>
+    </div>
+  </article>
+
+  <article itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+    <h3 itemprop="name">Can I change the LLM provider after setup?</h3>
+    <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+      <p itemprop="text" style="color:var(--text);margin:0;">Yes. Re-run the Setup Wizard via the <strong>&#x2699;&#xFE0F; Setup</strong> button in the top navigation bar to change the global default LLM provider. Per-product LLM overrides are available in each product's Settings -> LLM Configuration page without requiring a wizard re-run.</p>
+    </div>
+  </article>
+
+  <article itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+    <h3 itemprop="name">How are API keys and passwords protected in the configuration database?</h3>
+    <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+      <p itemprop="text" style="color:var(--text);margin:0;">All sensitive values â€” API keys, integration passwords, SAML keys â€” are encrypted at the field level using Fernet AES-128-CBC before being written to the database. This is done automatically; no configuration is required. The encryption key is derived from a per-installation secret stored in the same database.</p>
+    </div>
+  </article>
+
+  <article itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+    <h3 itemprop="name">Can multiple authentication methods be active at the same time?</h3>
+    <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+      <p itemprop="text" style="color:var(--text);margin:0;">Yes. FlowSquad supports multiple authentication methods simultaneously. Local Accounts are always active. You can additionally enable LDAP, SAML 2.0, and/or OAuth2 &mdash; all at the same time. The login page shows login buttons for each enabled method. Users are matched to their account based on the email address returned by the authentication provider.</p>
+    </div>
+  </article>
+</section>
+
+<!-- ---- Footer ------------------------------------------------------------------------------------------------ -->
+<footer class="docs-footer">
+  <span>(C) FlowSquad. All rights reserved.</span>
+  <span class="footer-sep">|</span>
+  <a href="mailto:support@flowsquad.ai">support@flowsquad.ai</a>
+  <span class="footer-sep">|</span>
+  <a href="#">Privacy Policy</a>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Integration Guide -- FlowSquad Enterprise Docs</title>
+<meta name="description" content="FlowSquad Integration Guide: Connect FlowSquad Enterprise to Jira, Confluence, GitHub, GitLab, Bitbucket, Gitea, Azure DevOps, LDAP/Active Directory, SAML 2.0 IdPs (Okta, Azure AD, Keycloak, OneLogin, ADFS), and OAuth2 providers (GitHub, Google, Microsoft, Okta, Keycloak, Custom). Export epics, stories, and tasks directly to your project management tools." />
+<meta name="keywords" content="FlowSquad integrations, Jira integration, Confluence integration, GitHub integration, GitLab integration, Bitbucket Cloud integration, Gitea integration, Azure DevOps integration, LDAP integration, SAML SSO, OAuth2, export to Jira, push artifacts, source control, CI/CD" />
+<meta property="og:title" content="FlowSquad Enterprise Integration Guide" />
+<meta property="og:description" content="Complete integration reference for FlowSquad Enterprise -- connecting to Jira, Confluence, Git providers, LDAP, SAML, and OAuth2 for seamless workflow automation." />
+<meta property="og:type" content="article" />
+<link rel="canonical" href="https://flowsquad.ai/docs/integration-guide" />
+  <link rel="stylesheet" href="docs.css" />
+  <script src="docs-theme.js"></script>
+</head>
+<body>
+
+<nav class="docs-nav">
+  <button class="hamburger" aria-label="Toggle menu">&#9776;</button>
+  <a href="https://flowsquad.ai" class="nav-logo" target="_blank" rel="noopener noreferrer">
+    <img src="icon.png" alt="FlowSquad">
+  </a>
+  <span class="nav-label">Docs</span>
+  <button class="nav-theme-btn" id="docs-theme-btn" title="Toggle dark / light mode"></button>
+  <a href="index.html" class="nav-back">&#8592; All Guides</a>
+</nav>
+
+<!-- ---- Download Toolbar -------------------------------------------------------------- -->
+<div class="docs-download-bar">
+  <span class="dl-label">Download:</span>
+  <button class="docs-dl-btn" id="dlHtmlBtn" title="Save this page as HTML">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm-1 1.5L18.5 9H13V3.5zM6 20V4h5v7h7v9H6z"/></svg>
+    HTML
+  </button>
+  <button class="docs-dl-btn" id="dlPdfBtn" title="Print / Save as PDF">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2zm-7 3a4 4 0 1 1 0 8 4 4 0 0 1 0-8zm0 10c-2.67 0-8 1.34-8 4v1h16v-1c0-2.66-5.33-4-8-4z"/></svg>
+    PDF
+  </button>
+</div>
+<script>
+document.getElementById('dlHtmlBtn').addEventListener('click', function() {
+  var blob = new Blob([document.documentElement.outerHTML], {type: 'text/html'});
+  var a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = (document.title || 'page').replace(/[^a-z0-9_-]/gi, '_') + '.html';
+  a.click();
+  URL.revokeObjectURL(a.href);
+});
+document.getElementById('dlPdfBtn').addEventListener('click', function() {
+  window.print();
+});
+</script>
+
+
+<div class="sidebar-overlay"></div>
+
+<div class="docs-shell">
+
+  <aside class="docs-sidebar">
+    <div class="sidebar-section-label">Guides</div>
+    <nav class="sidebar-nav">
+      <a href="install-guide.html" class="guide-link">Installation Guide</a>
+      <a href="setup-guide.html" class="guide-link">Setup Guide</a>
+      <a href="admin-guide.html" class="guide-link">Admin Guide</a>
+      <a href="user-guide.html" class="guide-link">User Guide</a>
+      <a href="troubleshooting-guide.html" class="guide-link">Troubleshooting Index</a>
+      <a href="security-guide.html" class="guide-link">Security Reference</a>
+      <a href="integration-guide.html" class="guide-link active">Integration Guide</a>
+      <a href="reference-guide.html" class="guide-link">Reference Guide</a>
+    </nav>
+    <hr class="sidebar-divider">
+    <div class="sidebar-section-label">On This Page</div>
+    <nav class="sidebar-nav">
+      <a href="#overview" class="toc-link">Overview</a>
+      <a href="#jira" class="toc-link">Jira</a>
+      <a href="#confluence" class="toc-link">Confluence</a>
+      <a href="#source-control" class="toc-link">Source Control (Git)</a>
+      <a href="#ldap" class="toc-link">LDAP / Active Directory</a>
+      <a href="#saml-overview" class="toc-link">SAML 2.0 SSO</a>
+      <a href="#oauth2" class="toc-link">OAuth2 Providers</a>
+      <a href="#webhooks" class="toc-link">Webhooks</a>
+      <a href="#session-backend" class="toc-link">Session Backend (Redis)</a>
+      <a href="#troubleshooting-integrations" class="toc-link">Troubleshooting</a>
+    </nav>
+  </aside>
+
+  <main class="docs-content">
+    <h1>Integration Guide</h1>
+    <p class="page-subtitle">Connect FlowSquad to Jira, Confluence, GitHub, GitLab, Bitbucket, Gitea, Azure DevOps, LDAP/AD, SAML 2.0 (any IdP), and OAuth2 providers. For a full Keycloak reference walkthrough, see the <a href="reference-guide.html">Reference Guide</a>.</p>
+
+    <!-- ---- Section 1 -------------------------------------------------------------------------------- -->
+    <h2 id="overview">1. Integration Overview</h2>
+
+    <p>FlowSquad integrates with your existing toolchain to eliminate context-switching and keep all your artefacts in sync. Integrations are configured in two places:</p>
+    <ul>
+      <li><strong>Setup Wizard steps 5-6</strong> -- during initial deployment</li>
+      <li><strong>Admin Panel -> Settings</strong> -- at any time after setup</li>
+    </ul>
+
+    <h3>Supported Integrations</h3>
+    <div class="table-wrap"><table>
+      <thead>
+        <tr><th>Integration</th><th>Category</th><th>What It Enables</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Jira</td><td>Project Management</td><td>Import tickets as requirements; push Epics, Stories, Tasks, and Design cards back to Jira</td></tr>
+        <tr><td>Confluence</td><td>Documentation</td><td>Import pages as source documents; publish design documents to Confluence spaces</td></tr>
+        <tr><td>GitHub (Cloud + Enterprise)</td><td>Source Control</td><td>Clone and analyse private repositories for codebase insights</td></tr>
+        <tr><td>GitLab (Cloud + Self-hosted)</td><td>Source Control</td><td>Clone and analyse repositories using personal access tokens or OAuth</td></tr>
+        <tr><td>Bitbucket Cloud (bitbucket.org)</td><td>Source Control</td><td>Clone repositories using username and App Password via the Bitbucket v2.0 API</td></tr>
+        <tr><td>Bitbucket Server / Data Center</td><td>Source Control</td><td>Clone repositories on self-hosted Atlassian Bitbucket via the v1.0 REST API</td></tr>
+        <tr><td>Azure DevOps</td><td>Source Control</td><td>Clone repositories using Personal Access Token (PAT) via the Azure DevOps REST API</td></tr>
+        <tr><td>Gitea / Forgejo (Self-hosted)</td><td>Source Control</td><td>Clone repositories from Gitea or Forgejo instances using token-based authentication</td></tr>
+        <tr><td>LDAP / Active Directory</td><td>Identity</td><td>Authenticate enterprise users; auto-assign FlowSquad roles from AD groups</td></tr>
+        <tr><td>SAML 2.0</td><td>SSO</td><td>Single Sign-On with any SAML 2.0 compliant identity provider</td></tr>
+        <tr><td>OAuth2</td><td>SSO</td><td>Social or enterprise login via GitHub, Google, Microsoft, Okta, and custom OAuth2 providers</td></tr>
+      </tbody>
+    </table></div>
+
+    <hr>
+
+    <!-- ---- Section 2 -------------------------------------------------------------------------------- -->
+    <h2 id="jira">2. Jira Integration</h2>
+
+    <h3>Setup</h3>
+    <ol>
+      <li>Go to <strong>Admin Panel -> Settings -> Jira</strong> (or Setup Wizard Step 6)</li>
+      <li>Enter your <strong>Jira URL</strong> (e.g. <code>https://yourcompany.atlassian.net</code>)</li>
+      <li>Enter your Jira <strong>account email</strong> and an <strong>API token</strong> (generate at <a href="https://id.atlassian.com/manage-profile/security/api-tokens" target="_blank">id.atlassian.com -> API tokens</a>)</li>
+      <li>Click <strong>Test Connection</strong> to verify -- a green status confirms success</li>
+      <li>Click <strong>Save</strong></li>
+    </ol>
+
+    <div class="callout callout-info">
+      <span class="callout-icon">&#x2139;&#xFE0F;</span>
+      <div class="callout-body"><strong>Jira Cloud vs. Jira Server</strong><p>Jira Cloud uses email + API token authentication. Jira Server (self-hosted) uses username + password. Select the correct type in the Jira settings.</p></div>
+    </div>
+
+    <h3>Using Jira in FlowSquad</h3>
+
+    <h4>Smart Import</h4>
+    <p>In the <strong>Analyze</strong> or <strong>Refine</strong> tab, click "Import from Jira". You can:</p>
+    <ul>
+      <li>Enter a single ticket key (e.g. <code>PROJ-123</code>) to import one requirement</li>
+      <li>Enter a JQL query (e.g. <code>project = PROJ AND sprint in openSprints()</code>) for bulk import</li>
+    </ul>
+    <p>FlowSquad maps the Jira summary and description into a structured requirement ready for refinement.</p>
+
+    <h4>Push Artefacts to Jira</h4>
+    <p>Every <strong>Epic</strong>, <strong>Story</strong>, <strong>Task</strong>, and <strong>Design</strong> card has a "Push to Jira" button. Click it to create a corresponding Jira issue. The card then displays the created Jira issue key for easy cross-reference.</p>
+
+    <h4>Bulk Export</h4>
+    <p>Select multiple artefacts using the bulk action bar and choose "Export to Jira" to push them all in one operation.</p>
+
+    <div class="callout callout-tip">
+      <span class="callout-icon">&#x1F4A1;</span>
+      <div class="callout-body"><strong>Tip</strong><p>You can push individual artefacts to Jira one at a time using the per-card button -- a full bulk export is not required.</p></div>
+    </div>
+
+    <hr>
+
+    <!-- ---- Section 3 -------------------------------------------------------------------------------- -->
+    <h2 id="confluence">3. Confluence Integration</h2>
+
+    <h3>Setup</h3>
+    <ol>
+      <li>Go to <strong>Admin Panel -> Settings -> Confluence</strong></li>
+      <li>Enter the full <strong>Confluence base URL</strong> -- include the <code>/wiki</code> path for Confluence Cloud:</li>
+    </ol>
+    <pre><code>https://yourcompany.atlassian.net/wiki</code></pre>
+    <ol start="3">
+      <li>Enter your Confluence <strong>account email</strong> and <strong>API token</strong></li>
+      <li>Click <strong>Save</strong> first, then click <strong>Test Connection</strong></li>
+    </ol>
+
+    <div class="callout callout-warn">
+      <span class="callout-icon">&#x26A0;&#xFE0F;</span>
+      <div class="callout-body"><strong>Save Before Testing</strong><p>You must click <strong>Save</strong> before clicking Test Connection. If you test without saving, the Confluence URL may show as blank in the Analyze tab even if testing appeared to succeed.</p></div>
+    </div>
+
+    <h3>Using Confluence in FlowSquad</h3>
+
+    <h4>Import Documents from Confluence</h4>
+    <p>In the <strong>Analyze</strong> tab, under "Load Documents", enter a Confluence page URL. FlowSquad fetches the page content and makes it available as a knowledge source for AskProduct and requirement generation.</p>
+
+    <h4>Push Design Documents to Confluence</h4>
+    <p>In the <strong>Design</strong> tab, open a design card and click "Push to Confluence". FlowSquad publishes the formatted design document to your Confluence space, creating or updating the page automatically.</p>
+
+    <hr>
+
+    <!-- ---- Section 4 -------------------------------------------------------------------------------- -->
+    <h2 id="source-control">4. Source Control Integration</h2>
+
+    <p>FlowSquad automatically detects your Git provider from the repository URL you supply. Six providers are supported out of the box. All use HTTPS with token-based authentication -- SSH is not required.</p>
+
+    <div class="table-wrap"><table>
+      <thead>
+        <tr><th>Provider</th><th>URL Pattern</th><th>Auth Type</th><th>Token / Credential Required</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>GitHub Cloud</strong></td><td><code>github.com/...</code></td><td>PAT (classic or fine-grained)</td><td>Scope: <code>repo</code> (private repos) or <code>public_repo</code> (public)</td></tr>
+        <tr><td><strong>GitHub Enterprise</strong></td><td><code>github.yourcompany.com/...</code></td><td>PAT</td><td>Same scopes as GitHub Cloud; enterprise host auto-detected</td></tr>
+        <tr><td><strong>GitLab Cloud</strong></td><td><code>gitlab.com/...</code></td><td>PAT</td><td>Scope: <code>read_repository</code></td></tr>
+        <tr><td><strong>GitLab Self-hosted</strong></td><td><code>gitlab.yourcompany.com/...</code></td><td>PAT</td><td>Scope: <code>read_repository</code></td></tr>
+        <tr><td><strong>Bitbucket Cloud</strong></td><td><code>bitbucket.org/...</code></td><td>App Password</td><td>Permission: Repositories &gt; Read (generate at bitbucket.org -> Personal Settings -> App passwords)</td></tr>
+        <tr><td><strong>Bitbucket Server / DC</strong></td><td><code>bitbucket.yourcompany.com/...</code></td><td>HTTP Basic / PAT</td><td>Username + password or project-scoped token</td></tr>
+        <tr><td><strong>Azure DevOps</strong></td><td><code>dev.azure.com/org/...</code></td><td>PAT</td><td>Scope: Code &gt; Read (generate in Azure DevOps -> User Settings -> Personal access tokens)</td></tr>
+        <tr><td><strong>Gitea / Forgejo</strong></td><td><code>gitea.yourcompany.com/...</code></td><td>API Token</td><td>Generate in Gitea -> Settings -> Applications -> Access tokens</td></tr>
+      </tbody>
+    </table></div>
+
+    <h3>Setup</h3>
+    <ol>
+      <li>Go to <strong>Admin Panel -> Settings -> Source Control</strong> (or Setup Wizard Step 5)</li>
+      <li>Enter the <strong>Git base URL</strong> (e.g. <code>https://github.com</code> or <code>https://bitbucket.org</code>)</li>
+      <li>Enter your <strong>username</strong> and the appropriate <strong>token or App Password</strong> for your provider (see table above)</li>
+      <li>Enter the <strong>Project / Repository key</strong> in the format required by your provider (see below)</li>
+      <li>Click <strong>Test Connection</strong> to validate access and load available branches, then click <strong>Save</strong></li>
+    </ol>
+
+    <h3>Project Key Format by Provider</h3>
+    <div class="table-wrap"><table>
+      <thead>
+        <tr><th>Provider</th><th>Project Key Format</th><th>Example</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>GitHub</td><td><code>owner/repo</code></td><td><code>acme-corp/backend-api</code></td></tr>
+        <tr><td>GitLab</td><td><code>group/project</code> or numeric project ID</td><td><code>acme/backend-api</code></td></tr>
+        <tr><td>Bitbucket Cloud</td><td><code>workspace/repo-slug</code></td><td><code>acme-workspace/backend-api</code></td></tr>
+        <tr><td>Bitbucket Server</td><td><code>PROJECT/repo-slug</code> (PROJECT is uppercase key)</td><td><code>BACKEND/api-service</code></td></tr>
+        <tr><td>Azure DevOps</td><td><code>project/repo</code></td><td><code>MyProject/backend-api</code></td></tr>
+        <tr><td>Gitea / Forgejo</td><td><code>owner/repo</code></td><td><code>acme/backend-api</code></td></tr>
+      </tbody>
+    </table></div>
+
+    <h3>Using Source Control in FlowSquad</h3>
+    <p>In the <strong>Analyze</strong> tab, click "Add Codebase" and enter the full Git repository URL. FlowSquad detects the provider automatically and uses the stored credentials to clone and analyse the codebase. The analysis results power Quality Score, AskProduct, and Security Scan.</p>
+
+    <div class="callout callout-info">
+      <span class="callout-icon">&#9432;</span>
+      <div class="callout-body"><strong>Bitbucket Cloud: App Password, not Account Password</strong><p>Bitbucket Cloud does not accept your account password over HTTPS. You must generate an <strong>App Password</strong> at bitbucket.org &rarr; Personal Settings &rarr; App passwords with the <em>Repositories: Read</em> permission.</p></div>
+    </div>
+
+    <div class="callout callout-info">
+      <span class="callout-icon">&#9432;</span>
+      <div class="callout-body"><strong>GitHub Organisation SSO</strong><p>If your organisation enforces SAML SSO, you must also authorise the personal access token for that organisation via github.com/settings/tokens &rarr; Configure SSO.</p></div>
+    </div>
+
+    <div class="callout callout-info">
+      <span class="callout-icon">&#9432;</span>
+      <div class="callout-body"><strong>Gitea / Forgejo Token Auth</strong><p>FlowSquad passes the token as both an HTTP Basic password and a Bearer token header, so both classic Gitea and newer Forgejo instances are supported without any additional configuration.</p></div>
+    </div>
+
+    <hr>
+
+    <!-- ---- Section 5 -------------------------------------------------------------------------------- -->
+    <h2 id="ldap">5. LDAP / Active Directory</h2>
+
+    <h3>Setup</h3>
+    <ol>
+      <li>Go to <strong>Setup Wizard Step 4 &rarr; LDAP / Active Directory</strong></li>
+      <li>Fill in the following fields:</li>
+    </ol>
+
+    <div class="table-wrap"><table>
+      <thead>
+        <tr><th>Field</th><th>Example Value</th><th>Notes</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>LDAP Server URL</td><td><code>ldap://ad.company.com:389</code></td><td>Use <code>ldaps://</code> on port 636 for secure connections</td></tr>
+        <tr><td>Bind DN</td><td><code>CN=svc-flowsquad,OU=Users,DC=company,DC=com</code></td><td>Service account used to search the directory</td></tr>
+        <tr><td>Bind Password</td><td>(service account password)</td><td>Stored encrypted in the config database</td></tr>
+        <tr><td>User Search Base</td><td><code>OU=Users,DC=company,DC=com</code></td><td>Use <code>DC=company,DC=com</code> to search the entire domain</td></tr>
+        <tr><td>User Object Class</td><td><code>person</code></td><td>Typically <code>person</code> or <code>user</code></td></tr>
+        <tr><td>Username Attribute</td><td><code>sAMAccountName</code></td><td>Use <code>uid</code> for OpenLDAP</td></tr>
+        <tr><td>Email Attribute</td><td><code>mail</code></td><td>Used to populate the user's email in FlowSquad</td></tr>
+        <tr><td>Group Search Base</td><td><code>OU=Groups,DC=company,DC=com</code></td><td>Required for group-to-role mapping</td></tr>
+        <tr><td>Group Member Attribute</td><td><code>memberOf</code></td><td>Attribute on the user object listing group memberships</td></tr>
+      </tbody>
+    </table></div>
+
+    <h3>Group-to-Role Mapping</h3>
+    <p>Map Active Directory or LDAP groups to FlowSquad roles. Assignments are re-evaluated on every login.</p>
+    <ul>
+      <li><code>CN=FlowSquad-Admins,OU=Groups,DC=company,DC=com</code> -> <strong>Global Admin</strong></li>
+      <li><code>CN=FlowSquad-ProdAdmins,OU=Groups,DC=company,DC=com</code> -> <strong>Product Admin</strong></li>
+      <li><code>CN=FlowSquad-Users,OU=Groups,DC=company,DC=com</code> -> <strong>Regular User</strong></li>
+    </ul>
+    <p>Manual role assignments made in the Admin Panel take precedence over group-based assignments.</p>
+
+    <h3>Testing the Connection</h3>
+    <p>Click <strong>Test Connection</strong> in the LDAP settings. FlowSquad validates the bind credentials and fetches a sample user from the directory. A successful test shows the user's attributes, confirming that attribute mapping is correct.</p>
+
+    <hr>
+
+    <!-- ---- Section 6 -------------------------------------------------------------------------------- -->
+    <h2 id="saml-overview">6. SAML 2.0 SSO -- Overview</h2>
+
+    <h3>How It Works</h3>
+    <p>FlowSquad implements SP-initiated SAML 2.0 SSO:</p>
+    <ol>
+      <li>User clicks "Login with SAML" on the FlowSquad login page</li>
+      <li>FlowSquad (the Service Provider) redirects the user to the configured Identity Provider (IdP)</li>
+      <li>The user authenticates at the IdP</li>
+      <li>The IdP sends a signed SAML assertion back to FlowSquad's ACS (Assertion Consumer Service) URL</li>
+      <li>FlowSquad validates the assertion and creates a session -- the user lands on the Dashboard</li>
+    </ol>
+
+    <h3>Supported Identity Providers</h3>
+    <p>Any SAML 2.0 compliant IdP is supported, including: Keycloak, Okta, Azure AD, OneLogin, ADFS, Google Workspace, Ping Identity, and custom implementations.</p>
+
+    <h3>Configuration Location</h3>
+    <p>SAML is configured in <strong>Setup Wizard Step 4 &rarr; Authentication &rarr; SAML</strong>.</p>
+
+    <h3>Required Configuration Fields</h3>
+    <div class="table-wrap"><table>
+      <thead>
+        <tr><th>Field</th><th>Where to Find It</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>IdP SSO URL</td><td>IdP metadata -- the <code>SingleSignOnService Location</code> value</td></tr>
+        <tr><td>IdP Entity ID</td><td>IdP metadata -- the <code>entityID</code> attribute</td></tr>
+        <tr><td>IdP Certificate</td><td>IdP admin console -- X.509 signing certificate in PEM format</td></tr>
+        <tr><td>SP Entity ID</td><td>Auto-filled: <code>https://yourflowsquad.com:5000/saml/metadata</code></td></tr>
+        <tr><td>SP ACS URL</td><td>Auto-filled: <code>https://yourflowsquad.com:5000/saml/callback</code></td></tr>
+        <tr><td>Attribute Mapping</td><td>Map IdP attribute names to: <code>username</code>, <code>email</code>, <code>firstName</code>, <code>lastName</code></td></tr>
+      </tbody>
+    </table></div>
+
+    <h3>Optional Features</h3>
+    <ul>
+      <li><strong>Designated Admin Auto-Promotion</strong> -- comma-separated list of usernames or emails that are automatically granted Global Admin on first SAML login</li>
+      <li><strong>SAML Request Signing</strong> -- FlowSquad generates an RSA key pair; upload the public certificate to your IdP to verify requests</li>
+      <li><strong>Single Logout (SLO)</strong> -- logging out of FlowSquad also terminates the IdP session</li>
+    </ul>
+
+    <hr>
+
+    <!-- ---- Section 7 -------------------------------------------------------------------------------- -->
+    <h2 id="oauth2">7. OAuth2 Providers</h2>
+
+    <p>FlowSquad supports OAuth2 login for: <strong>GitHub, Google, Microsoft (Azure AD), Okta, Keycloak</strong>, and custom OAuth2 providers.</p>
+
+    <h3>General Setup</h3>
+    <ol>
+      <li>Create an OAuth app in the provider's developer console (see provider-specific steps below)</li>
+      <li>Set the <strong>redirect / callback URI</strong> to:</li>
+    </ol>
+    <pre><code>https://yourflowsquad.com/oauth2/&lt;provider&gt;/callback
+
+# Examples:
+https://flowsquad.yourcompany.com/oauth2/github/callback
+https://flowsquad.yourcompany.com/oauth2/google/callback
+https://flowsquad.yourcompany.com/oauth2/microsoft/callback
+https://flowsquad.yourcompany.com/oauth2/okta/callback
+https://flowsquad.yourcompany.com/oauth2/keycloak/callback
+https://flowsquad.yourcompany.com/oauth2/custom/callback</code></pre>
+    <ol start="3">
+      <li>Copy the Client ID and Client Secret</li>
+      <li>Enter them in <strong>Setup Wizard Step 4 &rarr; OAuth2 &rarr; [Provider]</strong> &rarr; Test &rarr; Save</li>
+    </ol>
+
+    <h3>GitHub</h3>
+    <ol>
+      <li>github.com -> <strong>Settings -> Developer settings -> OAuth Apps -> New OAuth App</strong></li>
+      <li>Application Name: <code>FlowSquad</code></li>
+      <li>Homepage URL: <code>https://flowsquad.yourcompany.com</code></li>
+      <li>Authorization callback URL: <code>https://flowsquad.yourcompany.com/oauth2/github/callback</code></li>
+      <li>Click "Register application" -> copy Client ID and generate a Client Secret</li>
+    </ol>
+
+    <h3>Google</h3>
+    <ol>
+      <li><a href="https://console.cloud.google.com" target="_blank">console.cloud.google.com</a> -> <strong>APIs &amp; Services -> Credentials -> Create Credentials -> OAuth 2.0 Client ID</strong></li>
+      <li>Application type: Web application</li>
+      <li>Authorised redirect URI: <code>https://flowsquad.yourcompany.com/oauth2/google/callback</code></li>
+      <li>Copy Client ID and Client Secret</li>
+    </ol>
+
+    <h3>Microsoft (Azure AD)</h3>
+    <ol>
+      <li><a href="https://portal.azure.com" target="_blank">portal.azure.com</a> -> <strong>Azure Active Directory -> App registrations -> New registration</strong></li>
+      <li>Redirect URI (Web): <code>https://flowsquad.yourcompany.com/oauth2/microsoft/callback</code></li>
+      <li>After registering: <strong>Certificates &amp; secrets -> New client secret</strong> -> copy the value</li>
+      <li>Copy the Application (client) ID from the Overview page</li>
+      <li>Grant admin consent: App registrations -> FlowSquad -> API permissions -> "Grant admin consent for [Tenant]"</li>
+    </ol>
+
+    <h3>Okta</h3>
+    <ol>
+      <li>Okta Admin -> <strong>Applications -> Create App Integration -> OIDC / OAuth2 -> Web Application</strong></li>
+      <li>Sign-in redirect URI: <code>https://flowsquad.yourcompany.com/oauth2/okta/callback</code></li>
+      <li>Copy Client ID and Client Secret -> enter in FlowSquad -> OAuth2 -> Okta section</li>
+    </ol>
+
+    <h3>Keycloak (OAuth2 / OIDC)</h3>
+    <ol>
+      <li>Keycloak Admin -> select your realm -> <strong>Clients -> Create client</strong></li>
+      <li>Client type: <strong>OpenID Connect</strong>, Client ID: <code>flowsquad-oauth2</code></li>
+      <li>Enable <strong>Client authentication</strong> (Confidential access type)</li>
+      <li>Under <strong>Valid redirect URIs</strong>, add: <code>https://flowsquad.yourcompany.com/oauth2/keycloak/callback</code></li>
+      <li>Go to <strong>Credentials</strong> tab -> copy the <strong>Client Secret</strong></li>
+      <li>Enter in FlowSquad -> OAuth2 -> Keycloak section:
+        <ul>
+          <li><strong>Keycloak Server URL:</strong> <code>https://keycloak.yourcompany.com</code></li>
+          <li><strong>Realm:</strong> <code>master</code> (or your custom realm name)</li>
+          <li><strong>Client ID:</strong> <code>flowsquad-oauth2</code></li>
+          <li><strong>Client Secret:</strong> (copied from Credentials tab)</li>
+        </ul>
+      </li>
+    </ol>
+    <div class="callout callout-info">
+      <span class="callout-icon">&#9432;</span>
+      <div class="callout-body"><strong>Full Keycloak Reference</strong><p>For a complete step-by-step Keycloak configuration covering SAML, OAuth2, and LDAP together, see the <a href="reference-guide.html">Reference Guide &mdash; Keycloak Configuration</a>.</p></div>
+    </div>
+
+    <h3>Custom OAuth2 Provider</h3>
+    <p>FlowSquad supports any standards-compliant OAuth2 / OIDC provider. Configure in <strong>Setup Wizard Step 4 &rarr; OAuth2 &rarr; Custom Provider</strong>:</p>
+    <div class="table-wrap"><table>
+      <thead>
+        <tr><th>Field</th><th>Description</th><th>Where to Find It</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>Provider Name</strong></td><td>Display name shown on the login button</td><td>Choose any label (e.g. "Acme SSO")</td></tr>
+        <tr><td><strong>Authorization URL</strong></td><td>The OAuth2 authorization endpoint</td><td>Provider's developer docs or <code>/.well-known/openid-configuration</code></td></tr>
+        <tr><td><strong>Token URL</strong></td><td>Endpoint to exchange the code for a token</td><td>Provider's developer docs</td></tr>
+        <tr><td><strong>User Info URL</strong></td><td>Endpoint to fetch the authenticated user's profile</td><td>Provider's developer docs</td></tr>
+        <tr><td><strong>Client ID</strong></td><td>Application ID from the provider's console</td><td>Provider's OAuth app settings</td></tr>
+        <tr><td><strong>Client Secret</strong></td><td>Secret key for the application</td><td>Provider's OAuth app settings</td></tr>
+        <tr><td><strong>Scopes</strong></td><td>Space-separated OAuth2 scopes to request</td><td>Typically <code>openid email profile</code></td></tr>
+        <tr><td><strong>Callback URL</strong></td><td>Register this in the provider console</td><td><code>https://yourflowsquad.com/oauth2/custom/callback</code></td></tr>
+      </tbody>
+    </table></div>
+
+    <hr>
+
+    <!-- ---- Section 8 -------------------------------------------------------------------------------- -->
+    <h2 id="webhooks">8. Webhook Configuration</h2>
+
+    <div class="callout callout-info">
+      <span class="callout-icon">&#9432;</span>
+      <div class="callout-body"><strong>Coming Soon</strong><p>Outbound webhook configuration is planned for an upcoming release. When available, it will be accessible from <strong>Admin Panel &rarr; Settings &rarr; Webhooks</strong>. This section will be updated with full setup instructions when the feature ships.</p></div>
+    </div>
+
+    <h3>Planned Events</h3>
+    <p>The following events are planned for the initial webhook release:</p>
+    <div class="table-wrap"><table>
+      <thead>
+        <tr><th>Event</th><th>Triggered When</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>artifact_generated</code></td><td>An AI-generated artefact (design, test case, etc.) is produced</td></tr>
+        <tr><td><code>artifact_saved_to_db</code></td><td>An artefact is saved to the product database</td></tr>
+        <tr><td><code>jira_pushed</code></td><td>An artefact is pushed to Jira</td></tr>
+        <tr><td><code>quality_scan_complete</code></td><td>A Quality Score analysis finishes</td></tr>
+        <tr><td><code>security_scan_complete</code></td><td>A Security Scan analysis finishes</td></tr>
+      </tbody>
+    </table></div>
+
+    <hr>
+
+    <!-- ---- Section 10 ----------------------------------------------------------------------------- -->
+    <h2 id="session-backend">10. Session Backend &mdash; Redis Opt-In</h2>
+
+    <p>By default FlowSquad stores user sessions in its built-in <strong>SQLAlchemy config database</strong> (<code>flowsquad_engine.db</code>). This works out of the box on every deployment type with no extra software and survives server restarts. <strong>Most deployments never need to change this.</strong></p>
+
+    <p>If you already run Redis in your infrastructure, or simply prefer sessions stored outside the application database, you can switch to <strong>Redis</strong> by installing Redis on your system and setting one environment variable.</p>
+
+    <h3>When to Consider Redis</h3>
+
+    <div class="table-wrap"><table>
+      <thead>
+        <tr><th>Scenario</th><th>Recommended Backend</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Standard single-node deployment</td><td>SQLAlchemy (default) &mdash; no action needed</td></tr>
+        <tr><td>You already run Redis in your infrastructure</td><td>Redis &mdash; reuse your existing server</td></tr>
+        <tr><td>You prefer sessions stored outside the application database</td><td>Redis</td></tr>
+        <tr><td>Air-gapped / no external services allowed</td><td>SQLAlchemy (default)</td></tr>
+      </tbody>
+    </table></div>
+
+    <h3>Step 1 &mdash; Install Redis on your system</h3>
+
+    <p>Redis is a separate open-source service. Install it on the same host as FlowSquad, or point to any reachable Redis server on your network:</p>
+
+    <div class="table-wrap"><table>
+      <thead>
+        <tr><th>Platform</th><th>How to install</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Ubuntu / Debian</td>
+          <td><code>sudo apt-get install -y redis-server &amp;&amp; sudo systemctl enable --now redis</code></td>
+        </tr>
+        <tr>
+          <td>RHEL / Rocky / Alma Linux</td>
+          <td><code>sudo dnf install -y redis &amp;&amp; sudo systemctl enable --now redis</code></td>
+        </tr>
+        <tr>
+          <td>Windows</td>
+          <td>Download and run the <a href="https://github.com/tporadowski/redis/releases" target="_blank" rel="noopener noreferrer">Windows Redis installer</a> (community port), or run Redis inside <a href="https://learn.microsoft.com/en-us/windows/wsl/" target="_blank" rel="noopener noreferrer">WSL2</a> using the Ubuntu command above</td>
+        </tr>
+        <tr>
+          <td>Docker sidecar</td>
+          <td><code>docker run -d --name redis -p 6379:6379 --restart unless-stopped redis:7-alpine</code></td>
+        </tr>
+        <tr>
+          <td>Existing Redis server</td>
+          <td>No installation needed &mdash; use its hostname and port in Step 2</td>
+        </tr>
+      </tbody>
+    </table></div>
+
+    <h3>Step 2 &mdash; Set the <code>SESSION_REDIS_URL</code> environment variable</h3>
+
+    <p>Set this variable on the machine where FlowSquad runs, before starting or restarting it:</p>
+
+    <pre><code>SESSION_REDIS_URL=redis://&lt;host&gt;:&lt;port&gt;/&lt;db-index&gt;</code></pre>
+
+    <div class="table-wrap"><table>
+      <thead>
+        <tr><th>Scenario</th><th>Value</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Redis on the same machine, no password</td><td><code>redis://localhost:6379/0</code></td></tr>
+        <tr><td>Redis on a separate server</td><td><code>redis://192.168.1.50:6379/0</code></td></tr>
+        <tr><td>Redis with a password</td><td><code>redis://:yourpassword@localhost:6379/0</code></td></tr>
+        <tr><td>Redis with TLS (Redis 6+)</td><td><code>rediss://localhost:6380/0</code> &nbsp;(note the double <code>s</code>)</td></tr>
+      </tbody>
+    </table></div>
+
+    <h4>Windows installer &mdash; System Environment Variables</h4>
+    <p>Open <strong>Start &rarr; System Properties &rarr; Advanced &rarr; Environment Variables</strong> and add a new <em>System variable</em>, or run this in PowerShell as Administrator:</p>
+    <pre><code>[System.Environment]::SetEnvironmentVariable('SESSION_REDIS_URL', 'redis://localhost:6379/0', 'Machine')</code></pre>
+
+    <h4>Linux installer / portable package</h4>
+    <pre><code># Add to /etc/flowsquad/flowsquad.env (loaded automatically by the FlowSquad service)
+SESSION_REDIS_URL=redis://localhost:6379/0</code></pre>
+
+    <h4>Docker</h4>
+    <pre><code># docker run
+docker run -e SESSION_REDIS_URL=redis://redis:6379/0 ... flowsquad
+
+# docker-compose.yml
+services:
+  flowsquad:
+    environment:
+      - SESSION_REDIS_URL=redis://redis:6379/0
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped</code></pre>
+
+    <h3>Step 3 &mdash; Restart FlowSquad</h3>
+
+    <p>Restart the FlowSquad service normally. On startup the log confirms the active backend:</p>
+
+    <pre><code>INFO  Session backend = redis (localhost:6379/0)</code></pre>
+
+    <p>That is all. FlowSquad detects the variable automatically and switches to Redis. No reinstall, no rebuild, no other files to change.</p>
+
+    <div class="callout callout-info">
+      <span class="callout-icon">&#9432;</span>
+      <div class="callout-body"><strong>Safe fallback.</strong> If Redis is unreachable at startup, FlowSquad logs a warning and continues with SQLAlchemy. It will never fail to start because of a Redis issue.</div>
+    </div>
+
+    <h3>Reverting to SQLAlchemy</h3>
+
+    <p>Remove or unset <code>SESSION_REDIS_URL</code> and restart FlowSquad. No data migration needed. Users currently logged in will need to log in again (their session no longer exists in the new backend).</p>
+
+    <div class="callout callout-info">
+      <span class="callout-icon">&#9432;</span>
+      <div class="callout-body"><strong>Legacy filesystem sessions.</strong> Setting <code>SESSION_TYPE=filesystem</code> forces the old file-based backend. This is <strong>not recommended</strong> &mdash; session files accumulate on disk without bound and cannot be shared across multiple FlowSquad nodes.</div>
+    </div>
+
+    <hr>
+
+    <!-- ---- Section 11 (was 9) ------------------------------------------------------------------------------ -->
+    <h2 id="troubleshooting-integrations">11. Troubleshooting Integrations</h2>
+
+    <div class="table-wrap"><table>
+      <thead>
+        <tr><th>Symptom</th><th>Cause</th><th>Resolution</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Confluence URL not saving / shows blank in Analyze tab</td>
+          <td>Settings were not saved before testing</td>
+          <td>Re-enter the Confluence URL and click <strong>Save</strong> before clicking Test Connection</td>
+        </tr>
+        <tr>
+          <td>Jira API returns 401 Unauthorized</td>
+          <td>API token is incorrect or has expired</td>
+          <td>Generate a new Jira API token and update it in <strong>Admin Panel -> Settings -> Jira</strong>; verify you are using your email address, not a username</td>
+        </tr>
+        <tr>
+          <td>GitHub "Repository not found" for a private repo</td>
+          <td>Personal access token does not have <code>repo</code> scope</td>
+          <td>Edit the token at github.com/settings/tokens &rarr; enable <code>repo</code> scope &rarr; update in FlowSquad</td>
+        </tr>
+        <tr>
+          <td>SAML "Invalid SAML Response"</td>
+          <td>SP certificate not uploaded to the IdP, or ACS URL mismatch</td>
+          <td>Upload the SP certificate to your IdP; verify the ACS URL matches exactly including port</td>
+        </tr>
+        <tr>
+          <td>LDAP "Invalid Credentials"</td>
+          <td>Bind DN format is incorrect or the service account password has expired</td>
+          <td>Verify the Bind DN is in full DN format: <code>CN=svc-account,DC=company,DC=com</code>; reset the service account password if expired</td>
+        </tr>
+        <tr>
+          <td>OAuth2 "redirect_uri_mismatch"</td>
+          <td>The callback URL registered in the OAuth app does not match FlowSquad's</td>
+          <td>Update the OAuth app's redirect URI to exactly match: <code>https://yourflowsquad.com/oauth2/&lt;provider&gt;/callback</code></td>
+        </tr>
+        <tr>
+          <td>Bitbucket Cloud "401 Unauthorized"</td>
+          <td>Account password used instead of App Password</td>
+          <td>Go to bitbucket.org &rarr; Personal Settings &rarr; App passwords, create a new App Password with Repositories: Read, and use that as the password in FlowSquad</td>
+        </tr>
+        <tr>
+          <td>Gitea repository not found</td>
+          <td>Token lacks repository read permission or wrong project key format</td>
+          <td>Verify the token at Gitea &rarr; Settings &rarr; Applications and confirm the project key is in <code>owner/repo</code> format</td>
+        </tr>
+        <tr>
+          <td>Azure DevOps "TF401019: Repository not found"</td>
+          <td>PAT scope is too narrow or the repository name is incorrect</td>
+          <td>Re-generate the PAT with Code &rarr; Read scope; use format <code>project/repo</code> for the project key</td>
+        </tr>
+      </tbody>
+    </table></div>
+
+  </main>
+
+</div>
+
+<footer class="docs-footer">
+  <span>(C) FlowSquad. All rights reserved.</span>
+  <span class="footer-sep">|</span>
+  <a href="mailto:support@flowsquad.ai">support@flowsquad.ai</a>
+  <span class="footer-sep">|</span>
+  <a href="#">Privacy Policy</a>
+</footer>
+
+
+
+</body>
+</html>

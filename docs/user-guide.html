@@ -1,0 +1,1040 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>User Guide -- FlowSquad Enterprise Docs</title>
+  <meta name="description" content="FlowSquad User Guide: Learn how to use every feature of FlowSquad Enterprise -- from the 9-step Setup Wizard and product creation to generating requirements, epics, user stories, tasks, solution designs, test cases, and querying your product knowledge with AskProduct." />
+  <meta name="keywords" content="FlowSquad user guide, setup wizard, analyze tab, refine requirements, epics, user stories, tasks, design, test cases, AskProduct, quality score, security scan, SDLC automation" />
+  <meta property="og:title" content="FlowSquad Enterprise User Guide" />
+  <meta property="og:description" content="Step-by-step instructions for using all FlowSquad Enterprise workflow tabs: Analyze, Refine, Epic, Story, Task, Design, Test Cases, Quality Score, Security Scan, and AskProduct." />
+  <meta property="og:type" content="article" />
+  <link rel="canonical" href="https://flowsquad.ai/docs/user-guide" />
+  <link rel="stylesheet" href="docs.css" />
+  <script src="docs-theme.js"></script>
+</head>
+<body>
+
+<!-- ---- Top Navigation -------------------------------------------------------------------------------- -->
+<nav class="docs-nav">
+  <button class="hamburger" aria-label="Toggle navigation">&#9776;</button>
+  <a class="nav-logo" href="https://flowsquad.ai" target="_blank" rel="noopener noreferrer">
+    <img src="icon.png" alt="FlowSquad logo" />
+  </a>
+  <span class="nav-label">Docs</span>
+  <button class="nav-theme-btn" id="docs-theme-btn" title="Toggle dark / light mode"></button>
+  <a class="nav-back" href="index.html">&larr; All Guides</a>
+</nav>
+
+<!-- ---- Download Toolbar -------------------------------------------------------------- -->
+<div class="docs-download-bar">
+  <span class="dl-label">Download:</span>
+  <button class="docs-dl-btn" id="dlHtmlBtn" title="Save this page as HTML">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm-1 1.5L18.5 9H13V3.5zM6 20V4h5v7h7v9H6z"/></svg>
+    HTML
+  </button>
+  <button class="docs-dl-btn" id="dlPdfBtn" title="Print / Save as PDF">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2zm-7 3a4 4 0 1 1 0 8 4 4 0 0 1 0-8zm0 10c-2.67 0-8 1.34-8 4v1h16v-1c0-2.66-5.33-4-8-4z"/></svg>
+    PDF
+  </button>
+</div>
+<script>
+document.getElementById('dlHtmlBtn').addEventListener('click', function() {
+  var blob = new Blob([document.documentElement.outerHTML], {type: 'text/html'});
+  var a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = (document.title || 'page').replace(/[^a-z0-9_-]/gi, '_') + '.html';
+  a.click();
+  URL.revokeObjectURL(a.href);
+});
+document.getElementById('dlPdfBtn').addEventListener('click', function() {
+  window.print();
+});
+</script>
+
+
+<!-- ---- Sidebar Overlay (mobile) ---------------------------------------------------------- -->
+<div class="sidebar-overlay"></div>
+
+<!-- ---- Page Shell -------------------------------------------------------------------------------------- -->
+<div class="docs-shell">
+
+  <!-- ---- Left Sidebar ------------------------------------------------------------------------------ -->
+  <aside class="docs-sidebar">
+    <div class="sidebar-section-label">Guides</div>
+    <nav class="sidebar-nav">
+      <a class="guide-link" href="install-guide.html">Installation Guide</a>
+      <a class="guide-link" href="setup-guide.html">Setup Guide</a>
+      <a class="guide-link" href="admin-guide.html">Admin Guide</a>
+      <a class="guide-link active" href="user-guide.html">User Guide</a>
+      <a class="guide-link" href="troubleshooting-guide.html">Troubleshooting</a>
+      <a class="guide-link" href="security-guide.html">Security Reference</a>
+      <a class="guide-link" href="integration-guide.html">Integration Guide</a>
+      <a class="guide-link" href="reference-guide.html">Reference Guide</a>
+    </nav>
+    <hr class="sidebar-divider" />
+    <div class="sidebar-section-label">On This Page</div>
+    <nav class="sidebar-nav">
+      <a class="toc-link" href="#overview">Overview</a>
+      <a class="toc-link" href="#product-admin">Part A -- Product Admin</a>
+      <a class="toc-link" href="#analyze-tab">Part B -- Analyze Tab</a>
+      <a class="toc-link" href="#refine-tab">Refine Tab</a>
+      <a class="toc-link" href="#epic-tab">Epic Tab</a>
+      <a class="toc-link" href="#story-tab">Story Tab</a>
+      <a class="toc-link" href="#task-tab">Task Tab</a>
+      <a class="toc-link" href="#design-tab">Design Tab</a>
+      <a class="toc-link" href="#testcases-tab">Test Cases Tab</a>
+      <a class="toc-link" href="#quality-tab">Quality Score Tab</a>
+      <a class="toc-link" href="#security-scan-tab">Security Scan Tab</a>
+      <a class="toc-link" href="#askproduct-tab">AskProduct Tab</a>
+      <a class="toc-link" href="#session-workflow">Session Workflow</a>
+      <a class="toc-link" href="#exporting">Exporting</a>
+      <a class="toc-link" href="#troubleshooting">Troubleshooting</a>
+    </nav>
+  </aside>
+
+  <!-- ---- Main Content ------------------------------------------------------------------------------ -->
+  <main class="docs-content">
+
+    <h1>User Guide</h1>
+    <p class="page-subtitle">Complete reference for Product Admins and team members -- product configuration, the Analyze tab in depth, and all ten SDLC workflow tabs.</p>
+
+    <!-- ==================================================== -->
+    <h2 id="overview">1. Overview &amp; Enterprise vs Evaluation</h2>
+
+    <p>FlowSquad Enterprise is an AI-powered SDLC intelligence platform that transforms the way engineering teams produce and maintain software development artifacts. By connecting your codebase, documentation, and project tools into a single workspace, FlowSquad enables you to generate requirements, epics, user stories, tasks, solution designs, and test cases -- all grounded in your actual product knowledge.</p>
+
+    <p>FlowSquad ships with ten fully operational workflow tabs: Analyze, Refine, Epic, Story, Task, Design, Test Cases, Quality Score, Security Scan, and AskProduct. Every tab is production-ready and designed to support real engineering teams working at scale.</p>
+
+    <h3>Enterprise vs Evaluation</h3>
+
+    <div class="table-wrap"><table>
+      <thead>
+        <tr>
+          <th>Feature</th>
+          <th>Evaluation <small>(30 days, 1 product)</small></th>
+          <th>Enterprise</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>All workflow tabs</td><td>&#10003;</td><td>&#10003;</td></tr>
+        <tr><td>Multi-product workspaces</td><td>1 product</td><td>&#10003; Unlimited</td></tr>
+        <tr><td>User accounts &amp; team members</td><td>Single user</td><td>&#10003; Full RBAC</td></tr>
+        <tr><td>LDAP / Active Directory SSO</td><td>--</td><td>&#10003;</td></tr>
+        <tr><td>SAML 2.0 SSO</td><td>--</td><td>&#10003;</td></tr>
+        <tr><td>OAuth2 social login</td><td>--</td><td>&#10003;</td></tr>
+        <tr><td>Multi-factor authentication (MFA)</td><td>--</td><td>&#10003; TOTP &amp; Email OTP</td></tr>
+        <tr><td>Per-product LLM provider config</td><td>--</td><td>&#10003;</td></tr>
+        <tr><td>Jira integration (push artifacts)</td><td>--</td><td>&#10003;</td></tr>
+        <tr><td>Confluence integration</td><td>--</td><td>&#10003;</td></tr>
+        <tr><td>Database encryption at rest</td><td>--</td><td>&#10003;</td></tr>
+        <tr><td>Audit logging</td><td>--</td><td>&#10003;</td></tr>
+        <tr><td>PostgreSQL / MySQL support</td><td>Single-user database</td><td>&#10003;</td></tr>
+        <tr><td>Kubernetes / Docker deployment</td><td>--</td><td>&#10003;</td></tr>
+        <tr><td>License management</td><td>--</td><td>&#10003;</td></tr>
+        <tr><td>Priority support</td><td>--</td><td>&#10003;</td></tr>
+      </tbody>
+    </table></div>
+
+    <div class="callout callout-tip">
+      <span class="callout-icon">&#x1F4A1;</span>
+      <div class="callout-body">
+        <strong>Getting the most from FlowSquad</strong>
+        Start in the Analyze tab to load your codebase and documentation. All downstream tabs -- Refine, Epic, Story, Task, Design, Test Cases, Quality Score, Security Scan, and AskProduct -- draw from the knowledge base built there.
+      </div>
+    </div>
+
+    <!-- ==================================================== -->
+    <h2 id="product-admin">2. Part A -- Product Admin</h2>
+
+    <div class="callout callout-info">
+      <span class="callout-icon">&#x2139;&#xFE0F;</span>
+      <div class="callout-body">
+        <strong>This section is for Product Admins</strong><br />
+        Product Admins have full control within their assigned products: team management, LLM configuration per tab, artifact deletion, and integration overrides. Regular Users should skip to <a href="#analyze-tab">Part B -- Analyze Tab</a>.
+      </div>
+    </div>
+
+    <h3>Your Dashboard</h3>
+    <p>After login, the FlowSquad dashboard shows all products you have access to. Product Admins see a gear icon on their products linking directly to Product Settings.</p>
+
+    <h3>Product Configuration</h3>
+    <p>Navigate to your product -> <strong>Settings</strong>. As a Product Admin you can change:</p>
+    <ul>
+      <li><strong>Product name, description, and logo</strong></li>
+      <li><strong>LLM model per tab</strong> -- assign different AI models to each of the 10 operations. Example: use GPT-4o for Design (high quality, low volume) and GPT-4o-mini for Refine (high volume, cost efficiency). See the LLM Configuration table below.</li>
+      <li><strong>Jira project key override</strong> -- override the global Jira project for this product specifically</li>
+      <li><strong>Danger Zone</strong> -- archive or permanently delete the product</li>
+    </ul>
+
+    <h4>Configuring LLM per Tab</h4>
+    <p>Navigate to Product -> Settings -> <strong>LLM Configuration</strong>. For each operation select a provider and model:</p>
+    <div class="table-wrap"><table>
+      <thead><tr><th>Operation</th><th>Description</th><th>Recommended Model</th></tr></thead>
+      <tbody>
+        <tr><td>Analyze</td><td>Codebase parsing and indexing</td><td>GPT-4o-mini (high volume)</td></tr>
+        <tr><td>Refine</td><td>Requirement refinement</td><td>GPT-4o-mini or Claude 3 Haiku</td></tr>
+        <tr><td>Epic</td><td>Epic generation</td><td>GPT-4o-mini</td></tr>
+        <tr><td>Story</td><td>User story generation</td><td>GPT-4o-mini</td></tr>
+        <tr><td>Task</td><td>Task breakdown</td><td>GPT-4o-mini</td></tr>
+        <tr><td>Design</td><td>Solution design generation</td><td>GPT-4o or Claude 3.5 Sonnet (complex reasoning)</td></tr>
+        <tr><td>Test Cases</td><td>Test case generation</td><td>GPT-4o-mini</td></tr>
+        <tr><td>Quality</td><td>Quality scoring</td><td>GPT-4o (Deep Scan) / GPT-4o-mini (Quick Scan)</td></tr>
+        <tr><td>Security Scan</td><td>OWASP vulnerability analysis</td><td>GPT-4o</td></tr>
+        <tr><td>AskProduct</td><td>Q&amp;A over knowledge base</td><td>GPT-4o-mini</td></tr>
+      </tbody>
+    </table></div>
+
+    <h3>Managing Team Members</h3>
+    <p>Navigate to Product -> <strong>Manage Users</strong>:</p>
+    <ul>
+      <li><strong>Add member:</strong> Search by name or email -> assign role (Regular User or Product Admin) -> Add</li>
+      <li><strong>Change role:</strong> Click user row -> change role -> Save</li>
+      <li><strong>Remove member:</strong> Click user row -> Remove from Product</li>
+      <li><strong>Add co-admin:</strong> Assign the Product Admin role to another user. There is no limit on the number of Product Admins per product.</li>
+    </ul>
+
+    <h3>Deleting Artifacts (Product Admin Only)</h3>
+    <p>Product Admins can permanently delete any artifact from the database. Regular Users cannot delete -- they can only remove artifacts from their current session.</p>
+    <ul>
+      <li>In any tab, open the <strong>View All [Artifacts] in Database</strong> panel</li>
+      <li>Select the artifact(s) to delete</li>
+      <li>Click <strong>Delete from Database</strong> -- this is permanent and cannot be undone</li>
+    </ul>
+
+    <div class="callout callout-warn">
+      <span class="callout-icon">&#x26A0;&#xFE0F;</span>
+      <div class="callout-body">
+        <strong>Deletions are permanent</strong><br />
+        Artifacts deleted from the database cannot be recovered. Use the session-level remove action if you only want to clear an artifact from the current working context -- this does not affect the database.
+      </div>
+    </div>
+
+    <h3>Product Roles -- What Each Can Do</h3>
+    <div class="callout callout-info">
+      <span class="callout-icon">&#x2139;</span>
+      <div class="callout-body">
+        <strong>Tabs are available once the product has been analyzed</strong><br />
+        All 10 workflow tabs are visible to Regular Users, but generation in most tabs requires that a Product Admin (or Global Admin) has first run the Analyze step to build the product knowledge base. Before analysis, tabs will show a prompt to load a codebase.
+      </div>
+    </div>
+    <div class="table-wrap"><table>
+      <thead>
+        <tr><th>Action</th><th>Regular User</th><th>Product Admin</th><th>Global Admin</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Use all 10 workflow tabs</td><td>&#10003;</td><td>&#10003;</td><td>&#10003;</td></tr>
+        <tr><td>Generate &amp; save artifacts to DB</td><td>&#10003;</td><td>&#10003;</td><td>&#10003;</td></tr>
+        <tr><td>Push to Jira / Confluence</td><td>&#10003;</td><td>&#10003;</td><td>&#10003;</td></tr>
+        <tr><td>Delete artifacts from DB</td><td>--</td><td>&#10003;</td><td>&#10003;</td></tr>
+        <tr><td>Manage team members</td><td>--</td><td>&#10003;</td><td>&#10003;</td></tr>
+        <tr><td>Configure LLM per tab</td><td>--</td><td>&#10003;</td><td>&#10003;</td></tr>
+        <tr><td>Edit product settings</td><td>--</td><td>&#10003;</td><td>&#10003;</td></tr>
+        <tr><td>Run Analyze (load codebase)</td><td>--</td><td>&#10003;</td><td>&#10003;</td></tr>
+        <tr><td>Delete the product</td><td>--</td><td>--</td><td>&#10003;</td></tr>
+        <tr><td>Access Admin Panel</td><td>--</td><td>--</td><td>&#10003;</td></tr>
+      </tbody>
+    </table></div>
+
+    <!-- ==================================================== -->
+    <h2 id="analyze-tab">3. Part B &mdash; The Analyze Tab (In Depth)</h2>
+
+    <div class="callout callout-warn">
+      <span class="callout-icon">&#x26A0;&#xFE0F;</span>
+      <div class="callout-body">
+        <strong>Product Admin action required before Regular Users can generate</strong><br />
+        The Analyze tab must be set up by a Product Admin or Global Admin first. Until at least one codebase has been loaded and analyzed, all downstream tabs (Refine, Epic, Story, Task, Design, Test Cases, Quality Score, Security Scan, AskProduct) display a &ldquo;Please analyze the product first&rdquo; warning and generation is blocked. Once analysis is complete the knowledge base is persistent &mdash; Regular Users can generate freely without re-analyzing.
+      </div>
+    </div>
+
+    <p>The Analyze tab is divided into four sections: <strong>Product Codebases</strong>, <strong>Test Case Management</strong>, <strong>QA Automation Frameworks</strong>, and <strong>Product Documents</strong>.</p>
+
+    <hr class="section-hr" />
+
+    <h3>Section 1 &mdash; Product Codebases</h3>
+
+    <p>A product can have multiple codebases (backend API, React frontend, mobile app, microservices, etc.). Click <strong>&#xFF0B; Add Codebase</strong> to open the codebase dialog.</p>
+
+    <h4>Codebase Input Methods</h4>
+    <p>Two source types are available. Select the radio button that matches your setup:</p>
+    <div class="table-wrap"><table>
+      <thead>
+        <tr><th>Method</th><th>When to Use</th><th>Example</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>&#128193; Local Path</strong></td>
+          <td>The codebase directory is accessible on the same host as FlowSquad. Use the full absolute path on disk.</td>
+          <td><strong>Windows installer:</strong> <code>C:\Projects\MyApp\backend</code><br /><strong>Docker:</strong> copy code in first &mdash; <code>docker cp /local/path flowsquad-app:/data/my-codebase</code> &mdash; then use path <code>/data/my-codebase</code></td>
+        </tr>
+        <tr>
+          <td><strong>&#128279; Clone from Git</strong></td>
+          <td>Clone directly from any Git server: GitHub, GitLab, Bitbucket, Azure DevOps, Gitea, self-hosted, etc. FlowSquad clones the repository on first Analyze and stores only the analysis index &mdash; the original Git URL is preserved permanently.</td>
+          <td>Git URL + username + password or Personal Access Token. Source control credentials from Setup Wizard Step&nbsp;5 are pre-filled if configured.</td>
+        </tr>
+      </tbody>
+    </table></div>
+
+    <div class="callout callout-tip">
+      <span class="callout-icon">&#x1F4A1;</span>
+      <div class="callout-body">
+        <strong>Git credentials are session-only</strong><br />
+        Git credentials are never written to the database. They are stored in your browser session and are required on first Analyze and again after session expiry. On Refresh, FlowSquad prompts for credentials if they are no longer in session.
+      </div>
+    </div>
+
+    <h4>Analysis Configuration &mdash; Budget</h4>
+    <p>Expand <strong>&#x2699;&#xFE0F; Analysis Configuration</strong> in the codebase dialog to set the LLM spend cap. The default of <strong>$3.00</strong> covers most small-to-medium codebases. Raise it for large monorepos or lower it to limit cost during trial. Range: $0.50&ndash;$50.</p>
+    <p>Before every LLM call, FlowSquad checks the accumulated cost. If it has reached the budget, the remaining files are skipped and the analysis completes with the files already processed. Increasing budget after a partial analysis and clicking <strong>Re-analyze</strong> will resume from scratch with the higher cap.</p>
+
+    <h4>Analysis Configuration &mdash; Exclude File Types</h4>
+    <p>Four pre-built exclusion rules are provided as checkboxes, all enabled by default. Unchecking a rule includes those files back into analysis.</p>
+    <div class="table-wrap"><table>
+      <thead>
+        <tr><th>Checkbox</th><th>Files Skipped</th><th>Recommended</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>Test Files</strong></td><td><code>test/</code>, <code>*_test.*</code>, <code>*Test.*</code>, <code>*Spec.*</code></td><td>&#10003; Leave on &mdash; focuses analysis on production code</td></tr>
+        <tr><td><strong>Configuration Files</strong></td><td><code>*.json</code>, <code>*.xml</code>, <code>*.yml</code>, <code>*.ini</code>, <code>*.properties</code></td><td>&#10003; Leave on &mdash; config rarely contains business logic</td></tr>
+        <tr><td><strong>Build Files</strong></td><td><code>Makefile</code>, <code>*.gradle</code>, <code>pom.xml</code>, <code>CMake*</code></td><td>&#10003; Leave on &mdash; build scripts add noise, not insight</td></tr>
+        <tr><td><strong>Generated / Migration Files</strong></td><td><code>migrations/</code>, <code>generated/</code>, <code>dist/</code>, <code>build/</code></td><td>&#10003; Leave on &mdash; generated code inflates LLM cost with no benefit</td></tr>
+      </tbody>
+    </table></div>
+
+    <h4>Analysis Configuration &mdash; Custom Exclude Folders</h4>
+    <p>Enter a comma-separated list of folder names to skip entirely. FlowSquad matches against the folder name anywhere in the path &mdash; you do not need to specify a full path.</p>
+    <p><strong>Examples:</strong></p>
+    <ul>
+      <li><code>docs, Installers, License-tools</code> &mdash; skip documentation and packaging folders</li>
+      <li><code>.venv, tests, fixtures</code> &mdash; skip a virtual environment and test data</li>
+      <li><code>legacy, deprecated, archive</code> &mdash; skip old code that is no longer active</li>
+    </ul>
+    <p>Folder names are matched case-sensitively on Linux/Docker and case-insensitively on Windows. Use the exact folder name as it appears on disk.</p>
+
+    <h4>Analysis Configuration &mdash; Custom Exclude File Types</h4>
+    <p>Enter a comma-separated list of file suffixes or exact filenames to skip. Both glob-style suffixes and exact filenames are supported.</p>
+    <p><strong>Examples:</strong></p>
+    <ul>
+      <li><code>*.md</code> &mdash; skip all Markdown files</li>
+      <li><code>__init__.py</code> &mdash; skip Python package init files (usually empty)</li>
+      <li><code>*.min.js, *.bundle.js</code> &mdash; skip minified/bundled JavaScript</li>
+      <li><code>*.pb.go, *_generated.py</code> &mdash; skip protobuf-generated files</li>
+    </ul>
+
+    <h4>Analysis Configuration &mdash; System Directory Exclusions</h4>
+    <p>FlowSquad automatically skips a curated set of well-known system and tooling directories that never contain meaningful business logic. These are displayed as checkboxes in the <strong>&#128193; System Directory Exclusions</strong> section, all pre-checked. You can uncheck any entry to include it in analysis if your project genuinely stores source code there.</p>
+    <div class="table-wrap"><table>
+      <thead>
+        <tr><th>Group</th><th>Directories Excluded</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>Version Control</strong></td><td><code>.git</code>, <code>.svn</code>, <code>.hg</code></td></tr>
+        <tr><td><strong>Python Tooling</strong></td><td><code>__pycache__</code>, <code>.tox</code>, <code>.mypy_cache</code>, <code>.pytest_cache</code>, <code>.ruff_cache</code></td></tr>
+        <tr><td><strong>Virtual Environments</strong></td><td><code>venv</code>, <code>.venv</code>, <code>env</code>, <code>.env</code>, <code>site-packages</code></td></tr>
+        <tr><td><strong>JavaScript / Node</strong></td><td><code>node_modules</code>, <code>.npm</code>, <code>.yarn</code>, <code>.pnp</code></td></tr>
+        <tr><td><strong>JVM Build Output</strong></td><td><code>target</code>, <code>.gradle</code>, <code>.m2</code></td></tr>
+        <tr><td><strong>.NET Build Output</strong></td><td><code>bin</code>, <code>obj</code>, <code>packages</code></td></tr>
+        <tr><td><strong>IDE Metadata</strong></td><td><code>.idea</code>, <code>.vscode</code>, <code>.eclipse</code></td></tr>
+        <tr><td><strong>CI / Infra</strong></td><td><code>.github</code>, <code>.gitlab</code>, <code>.circleci</code>, <code>.terraform</code></td></tr>
+        <tr><td><strong>Coverage / Reports</strong></td><td><code>coverage</code>, <code>.coverage</code>, <code>htmlcov</code>, <code>reports</code></td></tr>
+        <tr><td><strong>AI / Vector Tools</strong></td><td><code>.bob</code>, <code>.cursor</code>, <code>chroma</code>, <code>chromadb</code></td></tr>
+      </tbody>
+    </table></div>
+    <p>These exclusions are applied before any file is read or scored, so they save both time and LLM cost. The pre-checked state is saved per codebase, so your customisations persist across re-analyses.</p>
+
+    <h4>Analysis Configuration &mdash; Analyse All Files</h4>
+    <p>The <strong>&#128203; Analyse all files</strong> checkbox bypasses the priority scoring algorithm. When checked:</p>
+    <ul>
+      <li>All files that survive the exclusion filters are sent to the LLM in filesystem discovery order, not ranked order.</li>
+      <li>The LLM budget cap still applies &mdash; analysis stops when the budget is reached, regardless of how many files remain.</li>
+      <li>The Priority Weights section is greyed out (not used).</li>
+    </ul>
+    <p>Use this mode when you want to guarantee that every file is considered (e.g. a small codebase where all files matter, or when priority ranking produces unexpected results). For large codebases, leaving this off and using priority weights is more cost-effective.</p>
+
+    <h4>Analysis Configuration &mdash; Priority Weights</h4>
+    <p>When <strong>Analyse all files</strong> is off, FlowSquad scores every file before selecting which ones to send to the LLM. Each file accumulates points based on its characteristics:</p>
+    <div class="table-wrap"><table>
+      <thead>
+        <tr><th>Characteristic</th><th>Condition</th><th>Default Points</th><th>What it means</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>&#127919; Entry Point</strong></td>
+          <td>File is detected as a main program, command handler, app entrypoint, or route registration file</td>
+          <td>100</td>
+          <td>These files define <em>what the application does</em> at a high level &mdash; highest priority</td>
+        </tr>
+        <tr>
+          <td><strong>&#128196; High LOC</strong></td>
+          <td>File has more lines of code than the Min LOC Threshold</td>
+          <td>50</td>
+          <td>Larger files tend to contain more logic worth understanding semantically</td>
+        </tr>
+        <tr>
+          <td><strong>&#128279; High Dependencies</strong></td>
+          <td>File is imported by many other files (a hub module)</td>
+          <td>30</td>
+          <td>Hub modules affect many parts of the system &mdash; understanding them has high leverage</td>
+        </tr>
+        <tr>
+          <td><strong>&#129520; High Complexity</strong></td>
+          <td>File has many decision points (cyclomatic complexity)</td>
+          <td>40</td>
+          <td>Complex files are more likely to contain nuanced business logic</td>
+        </tr>
+        <tr>
+          <td><strong>&#128207; Min LOC Threshold</strong></td>
+          <td>Lines of code threshold for &ldquo;High LOC&rdquo; classification</td>
+          <td>500</td>
+          <td>Files below this line count do not qualify for the High LOC bonus</td>
+        </tr>
+      </tbody>
+    </table></div>
+    <p><strong>Scoring example:</strong> A file that is both an entry point (100) and exceeds the LOC threshold (50) and is imported by 20 other files (30) scores <strong>180 points</strong> and is ranked near the top of the LLM selection list.</p>
+    <p>You can raise or lower individual weights to tune the selection for your codebase. For example, if your project has many thin entry points but business logic lives in service files, reducing the Entry Point weight and raising High Complexity will shift focus to the right files.</p>
+    <p>Click <strong>&#x1F504; Reset All to Defaults</strong> to restore factory values.</p>
+
+    <h4>Pre-Analysis Preview</h4>
+    <p>Before any LLM calls are made, FlowSquad shows a <strong>Pre-Analysis Preview</strong> modal when you click <strong>Analyze</strong>. This gives you a full breakdown of what will happen:</p>
+    <div class="table-wrap"><table>
+      <thead>
+        <tr><th>Row</th><th>What it shows</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>Total files discovered</strong></td><td>All files found in the codebase directory (before any filters)</td></tr>
+        <tr><td><strong>After system dir exclusions</strong></td><td>Files remaining after removing <code>node_modules</code>, <code>.git</code>, <code>venv</code>, etc.</td></tr>
+        <tr><td><strong>After rule-based exclusions</strong></td><td>Files remaining after applying test/config/build/migration/custom rules</td></tr>
+        <tr><td><strong>After priority filtering</strong></td><td>Files with a priority score above zero (or all files if &ldquo;Analyse all files&rdquo; is on)</td></tr>
+        <tr><td><strong>Files for LLM (estimated)</strong></td><td>The final count that will be sent for semantic analysis, capped by your budget</td></tr>
+        <tr><td><strong>Estimated cost</strong></td><td>Approximate LLM spend based on average file size and your configured model</td></tr>
+      </tbody>
+    </table></div>
+    <p>If the preview shows fewer files than expected, check your exclusion settings and adjust before proceeding. Click <strong>Proceed with Analysis</strong> to start, or <strong>Review Config</strong> to go back and change settings.</p>
+
+    <h4>Managing Existing Codebases</h4>
+    <ul>
+      <li><strong>Edit</strong> &mdash; click the pencil icon on a codebase card to update name, path, Git credentials, or any analysis configuration. Editing metadata alone does not trigger re-analysis.</li>
+      <li><strong>Analyze</strong> &mdash; runs the full analysis pipeline. Shows the Pre-Analysis Preview before committing to LLM cost.</li>
+      <li><strong>Refresh (&#x21BB;)</strong> &mdash; incremental update. For Git codebases, FlowSquad fetches the latest commits first, then runs analysis only on files that changed since the last analysis. For local codebases, it compares file checksums directly. Much faster and cheaper than a full re-analysis.</li>
+      <li><strong>Re-analyze</strong> &mdash; full fresh analysis from scratch. Use this after major structural refactors or after changing the LLM model in product settings. Deletes the previous index and rebuilds it entirely.</li>
+      <li><strong>Delete (Product Admin only)</strong> &mdash; permanently removes the codebase index from the vector database. The source code itself is never stored by FlowSquad &mdash; only the analysis index is deleted.</li>
+    </ul>
+
+    <h4>How Analysis Works</h4>
+    <p>FlowSquad performs five passes over the codebase. All exclusion rules are applied in Pass 1, so excluded files never consume any compute or LLM budget:</p>
+    <ol>
+      <li><strong>Discovery &amp; Exclusion</strong> &mdash; walks the directory tree, applies system dir exclusions, rule-based exclusions (test/config/build/migration), custom folder exclusions, and custom filetype exclusions. Only the surviving files proceed.</li>
+      <li><strong>Structural parse (tree-sitter)</strong> &mdash; extracts function signatures, class definitions, imports, and module boundaries from all surviving files. Language-agnostic and very fast. Produces complexity scores, dependency counts, and layer classifications (UI / API / Service / Data / Utility).</li>
+      <li><strong>Priority scoring &amp; file selection</strong> &mdash; scores each file using the configured priority weights (or skips scoring if &ldquo;Analyse all files&rdquo; is on) and selects the highest-value files within the LLM budget estimate.</li>
+      <li><strong>Semantic analysis (LLM)</strong> &mdash; reads the selected files to understand intent, business logic, data flows, and API contracts. This is where LLM cost is incurred, capped by your budget. Each file is checked against the budget before the call is made.</li>
+      <li><strong>Vector indexing (ChromaDB)</strong> &mdash; embeds all extracted knowledge as vectors in the product knowledge base. All downstream tabs query this index at generation time.</li>
+    </ol>
+    <p>The resulting knowledge is persistent &mdash; it survives page reloads and restarts. You only need to Refresh or Re-analyze when the codebase changes.</p>
+
+    <hr class="section-hr" />
+
+    <h3>Section 2 &mdash; Test Case Management</h3>
+    <p>Manage test cases for the product. These are used in the Quality Score tab for coverage calculations. Three ways to add test cases:</p>
+    <div class="table-wrap"><table>
+      <thead>
+        <tr><th>Method</th><th>Description</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>&#xFF0B; Add Test Case</strong></td><td>Manually enter a single test case with name, description, module, and link to a codebase or automation framework.</td></tr>
+        <tr><td><strong>&#128202; Import from Excel</strong></td><td>Bulk import from an <code>.xlsx</code> file. Download the template from the import dialog for the required column layout. One row per test case.</td></tr>
+        <tr><td><strong>&#128279; Import from Jira</strong></td><td>Import test cases using a JQL query. Visible only when Jira integration is configured in Setup Wizard Step&nbsp;6. Example: <code>project = ENG AND issuetype = "Test"</code>.</td></tr>
+      </tbody>
+    </table></div>
+    <p>Each test case can be linked to a specific codebase (for unit/integration tests) or an automation framework (for E2E tests). Imported test cases appear in the Test Cases list with tracking for status, priority, and metrics.</p>
+
+    <hr class="section-hr" />
+
+    <h3>Section 3 &mdash; QA Automation Frameworks</h3>
+    <p>Track the automated test frameworks your project uses. FlowSquad uses these to identify automation scripts and calculate the Automation Coverage score in the Quality Score tab.</p>
+    <p>Click <strong>&#xFF0B; Add Automation Framework</strong> and provide:</p>
+    <ul>
+      <li><strong>Framework Name</strong> &mdash; descriptive label (e.g. &ldquo;Web UI Automation&rdquo;, &ldquo;API Test Suite&rdquo;)</li>
+      <li><strong>Automation Type</strong> &mdash; Web UI, API, Mobile, Performance, Security, E2E, Integration, or Unit</li>
+      <li><strong>Source</strong> &mdash; Git Repository (clone URL + credentials) or Local Folder (absolute path)</li>
+    </ul>
+    <p>Multiple frameworks can be registered per product (e.g. Playwright for UI + Pytest for API). Each framework supports the same full Analysis Configuration panel as a production codebase, including custom excludes, system dir exclusions, and priority weights.</p>
+
+    <hr class="section-hr" />
+
+    <h3>Section 4 &mdash; Product Documents</h3>
+    <p>Upload supporting documents into the product knowledge base. These are indexed alongside the codebase and are available to all AI generation tabs and AskProduct queries.</p>
+
+    <div class="table-wrap"><table>
+      <thead>
+        <tr><th>Method</th><th>Supported Formats</th><th>Typical Use</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>&#xFF0B; Upload Document</strong></td><td>PDF, DOCX, TXT, MD</td><td>Requirements specs, architecture docs, API references, runbooks</td></tr>
+        <tr><td><strong>&#128279; Import from Confluence</strong></td><td>Confluence page URL or page ID</td><td>Import any Confluence page directly &mdash; requires Confluence integration configured in Setup Wizard Step&nbsp;6</td></tr>
+      </tbody>
+    </table></div>
+    <p>To remove a document, click the <strong>trash icon</strong> on the document row.</p>
+
+    <div class="callout callout-tip">
+      <span class="callout-icon">&#x1F4A1;</span>
+      <div class="callout-body">
+        <strong>Analyze once, use everywhere</strong><br />
+        FlowSquad's core promise: load your codebase and documents once per release cycle. All downstream tabs &mdash; Refine, Epic, Story, Task, Design, Test Cases, Quality Score, Security Scan, and AskProduct &mdash; draw from this shared knowledge base at no additional analysis cost.
+      </div>
+    </div>
+
+    <div class="callout callout-info">
+      <span class="callout-icon">&#x2139;</span>
+      <div class="callout-body">
+        <strong>Multiple input sources &mdash; available on every generation tab</strong><br />
+        Each generation tab (Refine, Epic, Story, Task, Design, Test Cases, Security Scan) has a <strong>Smart Import</strong> panel at the top. You can combine any of the following sources in a single generation request:
+        <ul style="margin:0.5rem 0 0 1.2rem;">
+          <li><strong>&#9997;&#65039; Manual Text Input</strong> &mdash; paste or type any free-form text</li>
+          <li><strong>&#128196; Upload Document</strong> &mdash; <code>.doc</code>, <code>.docx</code>, <code>.pdf</code>, or <code>.txt</code></li>
+          <li><strong>Jira ticket import</strong> &mdash; enter a ticket ID to pull description &amp; acceptance criteria (visible only when Jira is configured)</li>
+          <li><strong>Confluence page import</strong> &mdash; enter a page ID or URL (visible only when Confluence is configured)</li>
+          <li><strong>Session artifacts from prior tabs</strong> &mdash; e.g. &ldquo;Use Requirement from Refine Tab&rdquo;, &ldquo;Use Epics from Epics Tab&rdquo;, &ldquo;Use Stories from Stories Tab&rdquo;, etc. Only options that have data in the current session are shown.</li>
+        </ul>
+        An <strong>Additional Context</strong> text box below the sources lets you add clarifications or instructions that apply across all selected inputs.
+      </div>
+    </div>
+
+    <!-- ==================================================== -->
+    <h2 id="refine-tab">4. The Refine Tab</h2>
+
+    <p>The Refine tab transforms raw, unstructured requirements into clean, structured, AI-refined requirement statements. This is typically the first generation step after loading your codebase in the Analyze tab.</p>
+
+    <div class="callout callout-warn">
+      <span class="callout-icon">&#x26A0;&#xFE0F;</span>
+      <div class="callout-body">
+        <strong>Requires analyzed product</strong><br />
+        If the Analyze tab has not been set up by a Product Admin, this tab displays a &ldquo;Please analyze the product first&rdquo; warning and generation is disabled.
+      </div>
+    </div>
+
+    <h3>Providing Input</h3>
+    <p>Use the <strong>Smart Import</strong> panel to select one or more input sources (Manual Text, Upload Document, Jira, Confluence). All selected sources are combined and sent to the AI together. Click <strong>Generate</strong> once your sources are selected.</p>
+
+    <h3>Generating Refined Requirements</h3>
+    <p>FlowSquad's AI analyzes the input in the context of your loaded codebase and documents, removes ambiguity, resolves conflicts, and produces structured requirement statements with clarification questions. Answer all questions, then click <strong>Generate Refined Requirement</strong>.</p>
+
+    <h3>Saving Requirements</h3>
+    <div class="table-wrap"><table>
+      <thead>
+        <tr><th>Action</th><th>Effect</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Save to Session</strong></td>
+          <td>Makes the refined requirements available to all other tabs in the current session (Epic, Story, Task, Design, Test Cases). Requirements are held in memory and do not persist after logout.</td>
+        </tr>
+        <tr>
+          <td><strong>Save to DB</strong></td>
+          <td>Persists the refined requirements to the database permanently. They will be available in future sessions under <em>View All in Database</em> on the Refine tab.</td>
+        </tr>
+        <tr>
+          <td><strong>Remove from Session</strong></td>
+          <td>Clears the currently loaded requirements from the session without deleting database records. Use this to load a different set of requirements in the same session.</td>
+        </tr>
+      </tbody>
+    </table></div>
+
+    <div class="callout callout-tip">
+      <span class="callout-icon">&#x1F4A1;</span>
+      <div class="callout-body">
+        <strong>Save to Session before generating epics</strong>
+        Always click <strong>Save to Session</strong> after generating refined requirements. The Epic tab reads requirements from the session -- without this step, the AI will not have access to your latest requirements when generating epics.
+      </div>
+    </div>
+
+    <!-- ==================================================== -->
+    <h2 id="epic-tab">7. The Epic Tab</h2>
+
+    <p>The Epic tab generates high-level work packages (epics) from your refined requirements. Epics represent major areas of functionality that will be broken down into stories in the next tab.</p>
+
+    <h3>Generating Epics</h3>
+    <p>Ensure refined requirements are loaded in the session (use <strong>Save to Session</strong> in the Refine tab first). Click <strong>Generate Epics</strong>. FlowSquad produces a set of epics grounded in your requirements and codebase context.</p>
+
+    <h3>IT vs Non-IT Card View</h3>
+    <p>Generated epics are displayed as cards in two tabs: <strong>IT</strong> (technical epics related to software development, infrastructure, or integrations) and <strong>Non-IT</strong> (business process, compliance, or documentation epics). Use the tab switcher to navigate between views.</p>
+
+    <h3>Per-Card Actions</h3>
+    <p>Each epic card provides the following actions:</p>
+    <ul>
+      <li><strong>View</strong> -- Open the full epic detail in a modal.</li>
+      <li><strong>Edit</strong> -- Edit the epic title, description, and acceptance criteria inline.</li>
+      <li><strong>Delete</strong> -- Remove the epic from the current view.</li>
+      <li><strong>Push to Jira</strong> -- Create a Jira epic directly from this card using your configured Jira integration.</li>
+      <li><strong>Download</strong> -- Download this epic as a Word document.</li>
+      <li><strong>Save to Session</strong> -- Add this epic to the current session so it is available for story generation.</li>
+      <li><strong>Save to DB</strong> -- Persist this epic to the database permanently.</li>
+      <li><strong>Distribute</strong> -- Split this epic into multiple smaller epics.</li>
+      <li><strong>Merge</strong> -- Combine this epic with one or more other epics into a single epic.</li>
+    </ul>
+
+    <h3>Bulk Actions</h3>
+    <p>The <strong>bulk action bar</strong> appears when you select one or more cards using the checkbox in the top-left corner of each card. Bulk actions available: <strong>Select All</strong>, <strong>Bulk Save to Session</strong>, <strong>Bulk Save to DB</strong>, and <strong>Bulk Export</strong> (downloads all selected epics as a single Excel file).</p>
+
+    <h3>View All Panels</h3>
+    <p>At the bottom of the tab, two buttons provide access to persisted epics:</p>
+    <ul>
+      <li><strong>View All Epics in Session</strong> -- Displays all epics currently held in the session.</li>
+      <li><strong>View All Epics in Database</strong> -- Displays all epics saved to the database for this product. From here you can load epics back into the session or delete them (Product Admins only).</li>
+    </ul>
+
+    <!-- ==================================================== -->
+    <h2 id="story-tab">8. The Story Tab</h2>
+
+    <p>The Story tab breaks epics down into individual user stories -- discrete, user-facing requirements with clear acceptance criteria. Stories follow the same card-based interface as epics.</p>
+
+    <h3>Generating Stories</h3>
+    <p>Stories can be generated from two sources:</p>
+    <ul>
+      <li><strong>From epics in session</strong> -- The primary path. Ensure epics are saved to the session in the Epic tab, then click <strong>Generate Stories</strong>.</li>
+      <li><strong>From refined requirements directly</strong> -- If you prefer to skip epics, FlowSquad can generate stories directly from requirements in the session.</li>
+    </ul>
+
+    <h3>IT vs Non-IT Card View</h3>
+    <p>Same as the Epic tab -- generated stories are categorized as IT or Non-IT and displayed in separate tabs.</p>
+
+    <h3>Per-Card Actions</h3>
+    <p>Each story card offers: <strong>View</strong>, <strong>Edit</strong>, <strong>Delete</strong>, <strong>Push to Jira</strong> (creates a Jira Story issue), <strong>Download</strong> (Word), <strong>Save to Session</strong>, <strong>Save to DB</strong>, <strong>Distribute</strong> (split story into sub-stories), and <strong>Merge</strong> (combine stories).</p>
+
+    <h3>Bulk Actions &amp; Proceed</h3>
+    <p>The bulk action bar mirrors the Epic tab. Click <strong>Proceed</strong> at the bottom of the tab to navigate directly to the Task tab with the current session context intact.</p>
+
+    <!-- ==================================================== -->
+    <h2 id="task-tab">9. The Task Tab</h2>
+
+    <p>The Task tab decomposes user stories into granular, assignable tasks -- the individual units of work for developers. Tasks follow the same card-based interface as epics and stories.</p>
+
+    <h3>Generating Tasks</h3>
+    <p>Ensure stories are saved to the session in the Story tab, then click <strong>Generate Tasks</strong>. FlowSquad produces implementation-level tasks, including technical details drawn from your loaded codebase.</p>
+
+    <h3>IT vs Non-IT Card View</h3>
+    <p>Tasks are categorized as IT or Non-IT, displayed in separate views.</p>
+
+    <h3>Per-Card Actions</h3>
+    <p>Each task card provides 9 actions: <strong>View</strong>, <strong>Edit</strong>, <strong>Delete</strong>, <strong>Push to Jira</strong> (creates a Jira Task issue), <strong>Download</strong> (Word), <strong>Save to Session</strong>, <strong>Save to DB</strong>, <strong>Distribute</strong>, and <strong>Merge</strong>.</p>
+
+    <h3>Bulk Actions</h3>
+    <p>The bulk action bar provides: <strong>Select All</strong>, <strong>Bulk Save to Session</strong>, <strong>Bulk Save to DB</strong>, <strong>Bulk Export</strong>, and <strong>Download Excel</strong> -- exports all tasks in the current view to a structured Excel workbook. This Excel export is formatted for direct import into project management tools.</p>
+
+    <div class="callout callout-tip">
+      <span class="callout-icon">&#x1F4A1;</span>
+      <div class="callout-body">
+        <strong>Download Excel for sprint planning</strong>
+        Use the <strong>Download Excel</strong> button to export your full task list into a spreadsheet. This is useful for sprint planning sessions where stakeholders prefer to work in Excel before tasks are created in Jira.
+      </div>
+    </div>
+
+    <!-- ==================================================== -->
+    <h2 id="design-tab">10. The Design Tab</h2>
+
+    <p>The Design tab generates a comprehensive <strong>Solution Design Document</strong> from your refined requirements and codebase context. The design document describes the proposed architecture, component interactions, data flows, and technical decisions in a format suitable for technical review and stakeholder sign-off.</p>
+
+    <h3>Generating a Design -- Two-Step Flow</h3>
+    <p>Design generation uses a two-step process to produce more accurate and contextually grounded documents:</p>
+    <ol>
+      <li><strong>Step 1 -- Technical Questions:</strong> Click <strong>Generate Technical Questions</strong>. FlowSquad queries your analyzed codebase and asks the LLM to produce 5-8 architect-level clarification questions about the requirement. Review these questions -- they highlight ambiguous or under-specified areas that would affect the design.</li>
+      <li><strong>Step 2 -- Design Document:</strong> Answer the technical questions (or skip them) and click <strong>Generate Design</strong>. FlowSquad uses both the requirement and your question answers to produce a structured design document grounded in your codebase architecture.</li>
+    </ol>
+    <p>You can skip Step 1 and click <strong>Generate Design</strong> directly from a requirement -- the technical questions step is optional but produces better results when requirements are complex or loosely defined.</p>
+
+    <h3>Design Actions</h3>
+    <ul>
+      <li><strong>Save to DB</strong> -- Persist the design document to the database. Future sessions can retrieve it from <em>View All Designs in Database</em>.</li>
+      <li><strong>Push to Jira</strong> -- Create a Jira ticket containing the design document. The ticket is linked to your configured Jira project.</li>
+      <li><strong>Push to Confluence</strong> -- Publish the design document as a Confluence page in your configured space. The page is created with proper headings and formatted for readability.</li>
+      <li><strong>Download as Word</strong> -- Export the design document as a Word-compatible <code>.doc</code> file for distribution or offline editing.</li>
+    </ul>
+
+    <div class="callout callout-tip">
+      <span class="callout-icon">&#x1F4A1;</span>
+      <div class="callout-body">
+        <strong>Design feeds Test Cases</strong>
+        After saving a design to the session or database, the Test Cases tab can use it as a source for generating test cases. A design-driven approach typically produces more comprehensive test coverage than requirements-only generation.
+      </div>
+    </div>
+
+    <!-- ==================================================== -->
+    <h2 id="testcases-tab">11. The Test Cases Tab</h2>
+
+    <p>The Test Cases tab generates a comprehensive suite of test cases from your design document or refined requirements. Test cases are displayed as cards and can be saved, exported, and pushed to Jira.</p>
+
+    <h3>Generating Test Cases</h3>
+    <p>Two generation sources are available:</p>
+    <ul>
+      <li><strong>From design document</strong> -- Preferred. Generates test cases aligned with the solution design, covering component interfaces, edge cases, and integration points.</li>
+      <li><strong>From refined requirements</strong> -- Generates functional test cases directly from requirements statements.</li>
+    </ul>
+    <p>Click <strong>Generate Test Cases</strong> after selecting the source.</p>
+
+    <h3>Per-Card Actions</h3>
+    <p>Each test case card provides: <strong>View</strong> (full test case detail in modal), <strong>Delete</strong>, <strong>Save to Session</strong>, and <strong>Save to DB</strong>.</p>
+
+    <h3>Bulk Actions &amp; Export</h3>
+    <p>The bulk action bar provides: <strong>Select All</strong>, <strong>Bulk Save to Session</strong>, <strong>Bulk Save to DB</strong>, <strong>Download Excel</strong> (exports all selected test cases to a structured Excel workbook), and <strong>Proceed</strong> (navigates to the Quality Score tab).</p>
+
+    <h3>View All Panels</h3>
+    <ul>
+      <li><strong>View All Test Cases in Session</strong> -- Shows all test cases in the current session.</li>
+      <li><strong>View All Test Cases in Database</strong> -- Shows all test cases saved to the database for this product.</li>
+    </ul>
+
+    <!-- ==================================================== -->
+    <h2 id="quality-tab">12. The Quality Score Tab</h2>
+
+    <p>The Quality Score tab provides an objective, multi-dimensional measurement of your product's test quality. It combines structural analysis of your codebase with semantic analysis of your test cases to produce an actionable score.</p>
+
+    <div class="callout callout-warn">
+      <span class="callout-icon">&#x26A0;&#xFE0F;</span>
+      <div class="callout-body">
+        <strong>Prerequisites</strong>
+        Before running a quality scan, ensure that: (1) a codebase is loaded in the Analyze tab, and (2) test cases have been imported or generated and saved to the session or database.
+      </div>
+    </div>
+
+    <h3>Scoring Model</h3>
+    <p>The Quality Score is calculated across three layers, with a maximum total of 100 points:</p>
+
+    <div class="table-wrap"><table>
+      <thead>
+        <tr><th>Layer</th><th>Max Points</th><th>What It Measures</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Layer 1 -- Test Density / Semantic Coverage</strong></td>
+          <td>60 pts</td>
+          <td>How thoroughly your test cases cover the codebase. Two scan modes available.</td>
+        </tr>
+        <tr>
+          <td><strong>Layer 2 -- Automation Coverage</strong></td>
+          <td>30 pts</td>
+          <td>The ratio of automated test scripts to total test cases.</td>
+        </tr>
+        <tr>
+          <td><strong>Layer 3 -- Bonus</strong></td>
+          <td>10 pts</td>
+          <td>Awarded when both Layer 1 and Layer 2 scores exceed 80%.</td>
+        </tr>
+      </tbody>
+    </table></div>
+
+    <h3>Layer 1 Scan Modes</h3>
+    <ul>
+      <li><strong>Quick Scan</strong> -- Calculates test density using the ratio of test cases to code modules. Fast (typically seconds) and suitable for a high-level coverage baseline. Does not verify that individual functions are tested.</li>
+      <li><strong>Deep Scan</strong> -- Uses AI to verify per-function test coverage. Reads each function in the codebase and determines whether a corresponding test case exists. Slower (minutes for large codebases) but produces a precise semantic coverage percentage.</li>
+    </ul>
+
+    <h3>Layer 2 -- Automation Coverage</h3>
+    <p>FlowSquad counts the automated test scripts identified in your codebase (using the QA framework specified in the Analyze tab) and divides by the total number of test cases imported or generated. This ratio is scaled to the 30-point maximum.</p>
+
+    <h3>Score Bands</h3>
+    <div class="table-wrap"><table>
+      <thead>
+        <tr><th>Score Range</th><th>Band</th><th>Recommended Action</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>90 &ndash; 100</td><td><span style="color:#22863a;font-weight:600;">&#10003; Excellent</span></td><td>Maintain current coverage discipline.</td></tr>
+        <tr><td>80 &ndash; 89</td><td><span style="color:#22863a;font-weight:600;">&#10003; Good</span></td><td>Minor gaps remain; target specific low-coverage modules.</td></tr>
+        <tr><td>70 &ndash; 79</td><td><span style="color:#b08800;font-weight:600;">&#9888; Fair</span></td><td>Coverage is acceptable but improvement is recommended before release.</td></tr>
+        <tr><td>60 &ndash; 69</td><td><span style="color:#e36209;font-weight:600;">&#9679; Poor</span></td><td>Significant untested areas; prioritize test case authoring for high-risk modules.</td></tr>
+        <tr><td>&lt; 60</td><td><span style="color:#cb2431;font-weight:600;">&#10007; Critical</span></td><td>Coverage is insufficient. Do not ship until coverage is improved.</td></tr>
+      </tbody>
+    </table></div>
+
+    <div class="callout callout-tip">
+      <span class="callout-icon">&#x1F4A1;</span>
+      <div class="callout-body">
+        <strong>Use Deep Scan for release gates</strong>
+        For release readiness decisions, always run a Deep Scan. The Quick Scan is useful during development sprints for a fast feedback loop, but only Deep Scan confirms that individual functions are actually covered by test cases.
+      </div>
+    </div>
+
+    <!-- ==================================================== -->
+    <h2 id="security-scan-tab">13. The Security Scan Tab</h2>
+
+    <p>The Security Scan tab performs an automated vulnerability analysis of your loaded codebase against the <strong>OWASP Top 10</strong> -- the industry-standard list of the most critical web application security risks. No additional configuration is required beyond having a codebase loaded in the Analyze tab.</p>
+
+    <h3>How It Works</h3>
+    <p>FlowSquad's AI security scanner reads your codebase and identifies patterns associated with common vulnerability categories. The scan checks for:</p>
+    <ul>
+      <li>SQL injection and NoSQL injection vulnerabilities</li>
+      <li>Cross-site scripting (XSS) risks</li>
+      <li>Authentication and session management flaws</li>
+      <li>Insecure direct object references</li>
+      <li>Security misconfiguration patterns</li>
+      <li>Sensitive data exposure (e.g., hardcoded credentials, unencrypted secrets)</li>
+      <li>XML External Entity (XXE) processing risks</li>
+      <li>Broken access control patterns</li>
+      <li>Use of components with known vulnerabilities</li>
+      <li>Insufficient logging and monitoring indicators</li>
+    </ul>
+
+    <h3>Running a Scan</h3>
+    <p>Ensure a codebase is loaded in the Analyze tab. Navigate to the Security Scan tab and click <strong>Run Security Scan</strong>. The scan typically completes in 1-5 minutes depending on codebase size. Results are displayed as a vulnerability report with findings grouped by OWASP category, severity level, and affected file.</p>
+
+    <h3>Viewing and Exporting Results</h3>
+    <p>Each finding includes: the vulnerability category, affected file and line number (where applicable), a description of the risk, and a recommended remediation. Click <strong>Export Report</strong> to download the full vulnerability report as an Excel file suitable for security review meetings or compliance documentation.</p>
+
+    <div class="callout callout-warn">
+      <span class="callout-icon">&#x26A0;&#xFE0F;</span>
+      <div class="callout-body">
+        <strong>AI-assisted analysis</strong>
+        The Security Scan provides AI-assisted pattern analysis. It is a development-time aid to highlight areas for review -- it does not replace a formal security audit or penetration test. Always validate findings with your security team before making remediation decisions.
+      </div>
+    </div>
+
+    <!-- ==================================================== -->
+    <h2 id="askproduct-tab">14. The AskProduct Tab</h2>
+
+    <p>The AskProduct tab is a conversational AI interface that lets you ask free-text questions about your product. FlowSquad searches across your entire loaded knowledge base -- codebase, uploaded documents, and generated artifacts -- and provides a precise answer with source references.</p>
+
+    <h3>Asking Questions</h3>
+    <p>Type a question in natural language into the chat input and press <strong>Enter</strong> or click <strong>Send</strong>. FlowSquad uses retrieval-augmented generation (RAG) to find the most relevant sections of your knowledge base and constructs an answer grounded in that content.</p>
+
+    <p>Example questions you can ask:</p>
+    <ul>
+      <li>"What authentication methods does this product support?"</li>
+      <li>"Which modules handle payment processing?"</li>
+      <li>"What are the main API endpoints for user management?"</li>
+      <li>"Does this product currently implement rate limiting?"</li>
+      <li>"What does the requirements document say about offline mode?"</li>
+    </ul>
+
+    <h3>Chat History</h3>
+    <p>Conversation history is maintained for the duration of your session, allowing follow-up questions and multi-turn conversations. The AI has context from previous turns in the same conversation. Chat history is cleared when you log out or start a new session.</p>
+
+    <h3>Knowledge Sources</h3>
+    <p>AskProduct searches across four distinct knowledge collections simultaneously:</p>
+    <ul>
+      <li><strong>Codebase</strong> -- Architecture, APIs, functions, and module relationships from your analyzed codebase.</li>
+      <li><strong>Documents</strong> -- Requirements, specifications, and any uploaded supporting files.</li>
+      <li><strong>Test Cases</strong> -- All test scenarios imported or generated for this product.</li>
+      <li><strong>Automation</strong> -- Test scripts and automation framework analysis from your QA codebase.</li>
+    </ul>
+    <p>The <strong>Knowledge Sources</strong> panel on the right side of the AskProduct tab shows all data currently indexed for this product. If a source is missing, return to the Analyze tab to load it before asking questions about that area.</p>
+
+    <div class="callout callout-tip">
+      <span class="callout-icon">&#x1F4A1;</span>
+      <div class="callout-body">
+        <strong>No extra setup needed</strong>
+        AskProduct uses the same knowledge base built in the Analyze tab. Load your codebase and documents once, and AskProduct is ready to use immediately -- no separate indexing step or vector store configuration required.
+      </div>
+    </div>
+
+    <!-- ==================================================== -->
+    <h2 id="session-workflow">15. Session &amp; Database Workflow</h2>
+
+    <p>Understanding how FlowSquad manages data across sessions is essential for effective use of the platform. FlowSquad uses a two-tier data model: <strong>Session</strong> (temporary, in-memory) and <strong>Database</strong> (permanent, persisted).</p>
+
+    <h3>How Artifacts Flow Through the Workflow</h3>
+
+    <ol>
+      <li><strong>Analyze tab loads data</strong> -- Codebase, documents, and test cases are indexed and become available as context for all generation steps.</li>
+      <li><strong>Generate artifacts</strong> -- In each tab (Refine, Epic, Story, Task, Design, Test Cases), click Generate to produce artifacts. Generated artifacts exist in the current view but are not yet persisted.</li>
+      <li><strong>Save to Session</strong> -- Click <em>Save to Session</em> on individual artifacts or use bulk save. Artifacts saved to the session are available across all tabs in the current session. The session persists until you log out.</li>
+      <li><strong>Save to DB</strong> -- Click <em>Save to DB</em> to permanently persist artifacts to the database. These artifacts will be available in all future sessions for this product.</li>
+    </ol>
+
+    <h3>Loading from Database into a New Session</h3>
+    <p>When you start a new session, previously generated artifacts are not automatically loaded. To resume work from a prior session:</p>
+    <ul>
+      <li>In each tab, click <strong>View All [Artifacts] in Database</strong></li>
+      <li>Select the artifacts you want to use in the current session</li>
+      <li>Click <strong>Load to Session</strong> -- the selected artifacts are added to your session context and become available for the next generation step</li>
+    </ul>
+
+    <h3>The Proceed Button Chain</h3>
+    <p>The <strong>Proceed</strong> button at the bottom of each tab navigates to the next tab in the workflow sequence: Refine -> Epic -> Story -> Task -> Design -> Test Cases -> Quality Score. Clicking Proceed does not automatically save artifacts -- ensure you have saved to session or database before proceeding if you want to use the current artifacts in the next tab.</p>
+
+    <div class="callout callout-info">
+      <span class="callout-icon">&#x2139;&#xFE0F;</span>
+      <div class="callout-body">
+        <strong>Session timeout</strong>
+        Sessions expire after the inactivity timeout configured by your administrator (default: 8 hours). Unsaved session data is lost on timeout. Save important artifacts to the database during long working sessions to avoid data loss.
+      </div>
+    </div>
+
+    <!-- ==================================================== -->
+    <h2 id="exporting">16. Exporting &amp; Integrations</h2>
+
+    <p>FlowSquad provides multiple export and integration options to move generated artifacts into your existing toolchain.</p>
+
+    <h3>Download Formats</h3>
+    <div class="table-wrap"><table>
+      <thead>
+        <tr><th>Format</th><th>Available From</th><th>Contents</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Word (.doc)</strong></td>
+          <td>Design tab, individual artifact cards (Epic, Story, Task)</td>
+          <td>Formatted document suitable for review and distribution.</td>
+        </tr>
+        <tr>
+          <td><strong>Excel (.xlsx)</strong></td>
+          <td>Task tab (Download Excel), Test Cases tab (Download Excel)</td>
+          <td>Structured workbook with one row per artifact, all fields as columns.</td>
+        </tr>
+        <tr>
+          <td><strong>CSV</strong></td>
+          <td>Test Cases bulk export</td>
+          <td>Comma-separated test cases for import into test management tools.</td>
+        </tr>
+      </tbody>
+    </table></div>
+
+    <h3>Push to Jira</h3>
+    <p>Jira integration is available from individual artifact cards (Epics, Stories, Tasks, Designs) and from the bulk action bar. When you click <strong>Push to Jira</strong>:</p>
+    <ul>
+      <li>FlowSquad creates a Jira issue of the appropriate type (Epic, Story, Task, or generic issue for Designs) in your configured Jira project.</li>
+      <li>The issue title, description, and acceptance criteria are populated from the FlowSquad artifact.</li>
+      <li>A link to the newly created Jira issue is shown in the card for confirmation.</li>
+      <li>If Jira Push fails (e.g., due to permissions or field validation), an error message is shown with the reason from Jira's API.</li>
+    </ul>
+
+    <div class="callout callout-info">
+      <span class="callout-icon">&#x2139;&#xFE0F;</span>
+      <div class="callout-body">
+        <strong>Jira project configuration</strong>
+        The target Jira project is set in Admin &gt; Integrations &gt; Jira. Product Admins can override the default project per product in Product Settings &gt; Integrations.
+      </div>
+    </div>
+
+    <h3>Push to Confluence</h3>
+    <p>The Design tab provides a <strong>Push to Confluence</strong> action. FlowSquad creates a new Confluence page in your configured space using the design document content. The page is formatted with proper headings, sections, and a title derived from the design artifact name. The Confluence page URL is displayed after a successful push.</p>
+
+    <div class="callout callout-tip">
+      <span class="callout-icon">&#x1F4A1;</span>
+      <div class="callout-body">
+        <strong>Combine export formats for stakeholder reviews</strong>
+        For release planning, push epics and stories to Jira for the engineering team, push the design document to Confluence for the architecture review, and download the test case Excel for the QA team -- all from a single FlowSquad session.
+      </div>
+    </div>
+
+    <hr />
+
+    <!-- ==================================================== -->
+    <h2 id="troubleshooting">Troubleshooting: Tab &amp; UI Issues</h2>
+
+    <h3>AI Generation Returns No Results or Empty Output</h3>
+    <p><strong>Common causes and fixes:</strong></p>
+    <ul>
+      <li><strong>No codebase loaded:</strong> Return to the Analyze tab and load your codebase before using generation tabs.</li>
+      <li><strong>Nothing saved to session:</strong> In each tab, generated artifacts must be explicitly saved to Session or DB. Check that the previous tab's artifacts were saved to session before generating the next level (e.g., requirements must be in session before generating epics).</li>
+      <li><strong>LLM API key expired or rate-limited:</strong> Ask your Product Admin or Global Admin to check Admin Panel -> LLM Configuration -> Test Connection.</li>
+    </ul>
+
+    <h3>Jira Push Fails -- "401 Unauthorized"</h3>
+    <p>The Jira API token has expired or is invalid.</p>
+    <ol>
+      <li>Go to <a href="https://id.atlassian.com/manage-profile/security/api-tokens" target="_blank">id.atlassian.com -> API tokens</a></li>
+      <li>Create a new token named "FlowSquad Production"</li>
+      <li>Update it in Admin Panel -> Settings -> Jira -> API Token -> Test Connection -> Save</li>
+    </ol>
+    <p>Also verify you are using your <strong>email address</strong> (not just username) and that the Jira type is set correctly (Cloud vs. Server).</p>
+
+    <h3>GitHub "Repository Not Found" for Private Repo</h3>
+    <ul>
+      <li>Verify the PAT has the <code>repo</code> scope: <a href="https://github.com/settings/tokens" target="_blank">github.com/settings/tokens</a> -> edit token -> enable "repo"</li>
+      <li>If your organisation enforces SAML SSO: go to the token settings -> Configure SSO -> Authorize next to your organisation</li>
+      <li>Update the token in Admin Panel -> Settings -> Source Control -> Test Connection</li>
+    </ul>
+
+    <h3>Quality Score Tab -- "No test cases loaded"</h3>
+    <p>Import or generate test cases in the Analyze tab or Test Cases tab and save them to the Session or Database before running the Quality Score scan.</p>
+
+    <h3>AskProduct Returns "I don't have information about this"</h3>
+    <ul>
+      <li>The knowledge base may be incomplete. Return to the Analyze tab and verify a codebase and relevant documents are loaded.</li>
+      <li>Rephrase the question more specifically -- AskProduct performs best with targeted questions about specific features, APIs, or modules.</li>
+      <li>If documents were recently added, wait 30 seconds for indexing to complete before querying.</li>
+    </ul>
+
+    <h3>Session Data Lost After Page Refresh</h3>
+    <p>Session data (artifacts not yet saved to DB) is held in memory. A full page refresh or session timeout clears it. Always click <strong>Save to DB</strong> for artifacts you want to keep. The default session timeout is 8 hours of inactivity (configurable by your admin).</p>
+
+    <div class="callout callout-tip">
+      <span class="callout-icon">&#x1F4A1;</span>
+      <div class="callout-body">
+        <strong>More troubleshooting</strong><br />
+        The <a href="troubleshooting-guide.html">Troubleshooting Guide</a> contains a full cross-guide index and Diagnostic Quick Reference. Contact <a href="mailto:support@flowsquad.ai">support@flowsquad.ai</a> for enterprise support.
+      </div>
+    </div>
+
+  </main>
+
+</div><!-- /.docs-shell -->
+
+<!-- ========================================================== -->
+<!-- FAQ -- Structured for AI crawlers (ChatGPT, Gemini, Perplexity) -->
+<!-- ========================================================== -->
+<section id="faq" itemscope itemtype="https://schema.org/FAQPage">
+  <h2>Frequently Asked Questions</h2>
+
+  <article itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+    <h3 itemprop="name">How do I get started with FlowSquad?</h3>
+    <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+      <p itemprop="text" style="color:var(--text);margin:0;">On first access after installation, FlowSquad automatically launches the 9-step Setup Wizard. This wizard walks you through configuring your application database (PostgreSQL or MySQL), vector database (ChromaDB), LLM provider (OpenAI, Anthropic Claude, GitHub Models, or Ollama), authentication method, source control, collaboration tools, admin account, license key, and optional database encryption. Once the wizard completes, you are taken to the main dashboard where you can create your first product.</p>
+    </div>
+  </article>
+
+  <article itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+    <h3 itemprop="name">How does the Analyze tab work?</h3>
+    <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+      <p itemprop="text" style="color:var(--text);margin:0;">The Analyze tab is the knowledge intake hub. You load your codebase (from a Git URL, ZIP file, or local path), upload documents (PDFs, Word files, text files), and optionally load from Confluence. FlowSquad analyzes the codebase using tree-sitter parsing for syntax structure, LLM semantic analysis for understanding intent, and heuristic weighting. The resulting knowledge base is stored in the vector database and used by all downstream tabs -- Refine, Epic, Story, Task, Design, Test Cases, Quality Score, Security Scan, and AskProduct.</p>
+    </div>
+  </article>
+
+  <article itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+    <h3 itemprop="name">What is AskProduct and how do I use it?</h3>
+    <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+      <p itemprop="text" style="color:var(--text);margin:0;">AskProduct is FlowSquad's natural language Q&amp;A interface. It queries your product's knowledge base -- which includes the analyzed codebase, uploaded documents, saved test cases, and automation artifacts -- and returns answers grounded in your actual product. To use it: load a codebase and documents in the Analyze tab first, then go to the AskProduct tab and type your question. Answers cite the source knowledge they drew from.</p>
+    </div>
+  </article>
+
+  <article itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+    <h3 itemprop="name">What is the difference between Quick Scan and Deep Scan in the Quality Score tab?</h3>
+    <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+      <p itemprop="text" style="color:var(--text);margin:0;"><strong>Quick Scan</strong> uses keyword matching and rule-based analysis to return a quality assessment in approximately 1-2 seconds with no LLM cost. <strong>Deep Scan</strong> uses LLM semantic analysis to deeply evaluate requirement quality, clarity, completeness, and testability -- taking approximately 30-60 seconds and costing approximately <!-- ---- Footer.10-<!-- ---- Footer.30 per scan. Use Quick Scan for rapid feedback during authoring; use Deep Scan for pre-sprint quality gates.</p>
+    </div>
+  </article>
+
+  <article itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+    <h3 itemprop="name">How does the Design tab generate solution designs?</h3>
+    <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+      <p itemprop="text" style="color:var(--text);margin:0;">The Design tab uses a two-step flow. First, click <strong>Generate Technical Questions</strong> -- FlowSquad analyzes your selected requirements and generates clarifying technical questions to ensure the design addresses all key decisions. Review and answer these questions. Then click <strong>Generate Design</strong> -- FlowSquad produces a solution design document that incorporates your answers, creating a design that is grounded in your actual requirements and codebase context.</p>
+    </div>
+  </article>
+
+  <article itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+    <h3 itemprop="name">Can I push epics, stories, and tasks to Jira from FlowSquad?</h3>
+    <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+      <p itemprop="text" style="color:var(--text);margin:0;">Yes. FlowSquad Enterprise integrates directly with Jira. Once your Jira connection is configured (base URL, user email, and API token in the Setup Wizard or Admin Panel), you can push generated epics, user stories, and tasks to your Jira project with one click from each respective tab. The exported items include all generated content and are created as Jira issues in the configured project.</p>
+    </div>
+  </article>
+
+  <article itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+    <h3 itemprop="name">What user roles exist in FlowSquad?</h3>
+    <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+      <p itemprop="text" style="color:var(--text);margin:0;">FlowSquad has three system roles: <strong>Global Admin</strong> -- full platform administration, manages all products, users, and system settings; <strong>Product Admin</strong> -- administers a specific product, can configure LLMs, manage product members, and view all artifacts for that product; <strong>Developer</strong> -- can use all workflow tabs and generate artifacts for products they are members of. Roles can be scoped globally or per product.</p>
+    </div>
+  </article>
+</section>
+
+<!-- ---- Footer ---------------------------------------------------------------------------------------------- -->
+<footer class="docs-footer">
+  <span>(C) FlowSquad. All rights reserved.</span>
+  <span class="footer-sep">|</span>
+  <a href="mailto:support@flowsquad.ai">support@flowsquad.ai</a>
+  <span class="footer-sep">|</span>
+  <a href="#">Privacy Policy</a>
+</footer>
+
+
+
+
+</body>
+</html>

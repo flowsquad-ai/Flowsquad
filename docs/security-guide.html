@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Security Reference -- FlowSquad Enterprise Docs</title>
+<meta name="description" content="FlowSquad Security Reference: Quick-access security cheat sheet with links to TLS/HTTPS configuration, Fernet database encryption, RBAC, audit logs, and the security hardening checklist -- for auditors and compliance teams." />
+<meta name="keywords" content="FlowSquad security, TLS HTTPS, Fernet encryption, RBAC, audit log, security hardening, SOC2, HIPAA, GDPR, compliance" />
+<meta property="og:title" content="FlowSquad Enterprise Security Reference" />
+<meta property="og:description" content="One-page security reference for FlowSquad Enterprise -- cheat sheet, deep links to TLS, encryption, RBAC, and audit log content, compliance framework coverage." />
+<meta property="og:type" content="article" />
+<link rel="canonical" href="https://flowsquad.ai/docs/security-guide" />
+  <link rel="stylesheet" href="docs.css" />
+  <script src="docs-theme.js"></script>
+</head>
+<body>
+
+<nav class="docs-nav">
+  <button class="hamburger" aria-label="Toggle menu">&#9776;</button>
+  <a href="https://flowsquad.ai" class="nav-logo" target="_blank" rel="noopener noreferrer">
+    <img src="icon.png" alt="FlowSquad">
+  </a>
+  <span class="nav-label">Docs</span>
+  <button class="nav-theme-btn" id="docs-theme-btn" title="Toggle dark / light mode"></button>
+  <a href="index.html" class="nav-back">&#8592; All Guides</a>
+</nav>
+
+<!-- ---- Download Toolbar -------------------------------------------------------------- -->
+<div class="docs-download-bar">
+  <span class="dl-label">Download:</span>
+  <button class="docs-dl-btn" id="dlHtmlBtn" title="Save this page as HTML">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm-1 1.5L18.5 9H13V3.5zM6 20V4h5v7h7v9H6z"/></svg>
+    HTML
+  </button>
+  <button class="docs-dl-btn" id="dlPdfBtn" title="Print / Save as PDF">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2zm-7 3a4 4 0 1 1 0 8 4 4 0 0 1 0-8zm0 10c-2.67 0-8 1.34-8 4v1h16v-1c0-2.66-5.33-4-8-4z"/></svg>
+    PDF
+  </button>
+</div>
+<script>
+document.getElementById('dlHtmlBtn').addEventListener('click', function() {
+  var blob = new Blob([document.documentElement.outerHTML], {type: 'text/html'});
+  var a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = (document.title || 'page').replace(/[^a-z0-9_-]/gi, '_') + '.html';
+  a.click();
+  URL.revokeObjectURL(a.href);
+});
+document.getElementById('dlPdfBtn').addEventListener('click', function() {
+  window.print();
+});
+</script>
+
+
+<div class="sidebar-overlay"></div>
+
+<div class="docs-shell">
+
+  <aside class="docs-sidebar">
+    <div class="sidebar-section-label">Guides</div>
+    <nav class="sidebar-nav">
+      <a href="install-guide.html" class="guide-link">Installation Guide</a>
+      <a href="setup-guide.html" class="guide-link">Setup Guide</a>
+      <a href="admin-guide.html" class="guide-link">Admin Guide</a>
+      <a href="user-guide.html" class="guide-link">User Guide</a>
+      <a href="troubleshooting-guide.html" class="guide-link">Troubleshooting</a>
+      <a href="security-guide.html" class="guide-link active">Security Reference</a>
+      <a href="integration-guide.html" class="guide-link">Integration Guide</a>
+      <a href="reference-guide.html" class="guide-link">Reference Guide</a>
+    </nav>
+    <hr class="sidebar-divider">
+    <div class="sidebar-section-label">On This Page</div>
+    <nav class="sidebar-nav">
+      <a href="#overview" class="toc-link">Security Overview</a>
+      <a href="#quick-reference" class="toc-link">Quick Reference Cheat Sheet</a>
+      <a href="#tls-https" class="toc-link">TLS / HTTPS</a>
+      <a href="#database-encryption" class="toc-link">Database Encryption</a>
+      <a href="#session-secret-key" class="toc-link">Session Secret Key</a>
+      <a href="#rbac" class="toc-link">RBAC &amp; Least Privilege</a>
+      <a href="#audit-logs" class="toc-link">Audit Logs &amp; Compliance</a>
+      <a href="#hardening-checklist" class="toc-link">Hardening Checklist</a>
+    </nav>
+  </aside>
+
+  <main class="docs-content">
+    <h1>Security Reference</h1>
+    <p class="page-subtitle">A single printable reference for security auditors, compliance teams, and IT leads -- with deep links into the guides where each control is configured.</p>
+
+    <div class="callout callout-info">
+      <span class="callout-icon">&#x2139;&#xFE0F;</span>
+      <div class="callout-body">
+        <strong>This page is for auditors and compliance teams</strong><br />
+        Security configuration is split across guides where it is most contextually useful. This page provides a one-stop overview and links to the detailed configuration steps. If you are implementing security for the first time, follow the guides in order: <a href="install-guide.html#security">Install Guide -> Security</a>, then <a href="setup-guide.html">Setup Guide</a>, then <a href="admin-guide.html#security-practices">Admin Guide -> Security</a>.
+      </div>
+    </div>
+
+    <!-- ---- Security Overview ------------------------------------------------------------------ -->
+    <h2 id="overview">Security Overview</h2>
+
+    <p>FlowSquad uses a <strong>dual-database architecture</strong>. Understanding this separation is the foundation of the security model:</p>
+
+    <div class="table-wrap"><table>
+      <thead>
+        <tr><th>Database</th><th>Default Name</th><th>What It Stores</th><th>How to Protect</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Config DB</strong></td>
+          <td><code>flowsquad_engine.db</code></td>
+          <td>Admin credentials, LDAP bind passwords, LLM API keys, license keys, auth configuration</td>
+          <td>OS file permissions + field-level encryption for sensitive values. <a href="install-guide.html#security">-> Install Guide</a></td>
+        </tr>
+        <tr>
+          <td><strong>Product DB</strong></td>
+          <td>PostgreSQL / MySQL</td>
+          <td>All product data: requirements, designs, test cases, artifacts</td>
+          <td>Dedicated DB user, SSL connections, DB-level audit logging. <a href="admin-guide.html#database-management">-> Admin Guide</a></td>
+        </tr>
+      </tbody>
+    </table></div>
+
+    <h3>Security Features Always Active (No Configuration Required)</h3>
+    <div class="table-wrap"><table>
+      <thead>
+        <tr><th>Feature</th><th>Details</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Password hashing</td><td>All local user passwords hashed with <strong>bcrypt</strong> (cost factor 12)</td></tr>
+        <tr><td>LDAP credential encryption</td><td>LDAP bind passwords encrypted with Fernet before storage</td></tr>
+        <tr><td>LLM API key encryption</td><td>All AI provider API keys encrypted at rest in the config database</td></tr>
+        <tr><td>CSRF protection</td><td>All state-changing endpoints protected against Cross-Site Request Forgery</td></tr>
+        <tr><td>Input validation</td><td>All API endpoints validate and sanitise inputs to prevent injection attacks</td></tr>
+        <tr><td>Session security</td><td>Secure session cookies with HttpOnly and SameSite attributes. Session signing key is <strong>unique per installation</strong> — derived from a randomly-generated <code>installation_id</code> created on first start and stored encrypted in <code>flowsquad_engine.db</code>.</td></tr>
+      </tbody>
+    </table></div>
+
+    <hr>
+
+    <!-- ---- Quick Reference Cheat Sheet -------------------------------------------- -->
+    <h2 id="quick-reference">Quick Reference Cheat Sheet</h2>
+
+    <h3>Three Security Layers at a Glance</h3>
+    <div class="table-wrap"><table>
+      <thead>
+        <tr><th>Layer</th><th>Key Action</th><th>Where Configured</th><th>Priority</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>1. File Permissions</strong></td>
+          <td>Linux: <code>chmod 600 flowsquad_engine.db</code><br>Windows: <code>icacls</code> to remove Everyone access</td>
+          <td><a href="install-guide.html#security">Install Guide -- Security</a></td>
+          <td>Required -- every deployment</td>
+        </tr>
+        <tr>
+          <td><strong>2. Field-Level Encryption</strong></td>
+          <td>Enabled automatically -- all sensitive values (API keys, passwords, tokens) encrypted before storage</td>
+          <td><a href="install-guide.html#security">Install Guide -- Security</a></td>
+          <td>Active by default -- no configuration required</td>
+        </tr>
+        <tr>
+          <td><strong>3. HTTPS / TLS</strong></td>
+          <td>Nginx + Let's Encrypt (Model A) or direct TLS in Setup Wizard (Model B)</td>
+          <td><a href="install-guide.html#security">Install Guide -- Security</a> * <a href="install-guide.html#deployment-models">Deployment Models</a></td>
+          <td>Required -- all production</td>
+        </tr>
+      </tbody>
+    </table></div>
+
+    <h3>Configuration Database Security</h3>
+    <p>All sensitive values (API keys, passwords, SAML keys, tokens) are encrypted at the field level before storage using Fernet AES-128-CBC. No whole-file database encryption is available. For at-rest protection of the entire database file, use LUKS/dm-crypt (Linux), BitLocker (Windows), or place the Docker named volume on an encrypted filesystem.</p>
+
+    <h3>Password Storage Rules</h3>
+    <div class="table-wrap"><table>
+      <thead>
+        <tr><th>Store Here [OK]</th><th>Never Here [FAIL]</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Password manager (1Password, Bitwarden, LastPass)</td><td>Hardcoded in any file</td></tr>
+        <tr><td>Enterprise vault (HashiCorp Vault, AWS Secrets Manager, Azure Key Vault)</td><td>Committed to a Git repository</td></tr>
+        <tr><td>Secure credentials register (documented, access-controlled)</td><td>Plain text file</td></tr>
+        <tr><td>OS-level secrets store (Secret Service, Windows Credential Manager)</td><td>Sent via email or chat</td></tr>
+      </tbody>
+    </table></div>
+
+    <hr>
+
+    <!-- ---- TLS / HTTPS ------------------------------------------------------------------------------ -->
+    <h2 id="tls-https">TLS / HTTPS Configuration</h2>
+
+    <p>All production deployments must use HTTPS. Three options are available:</p>
+
+    <div class="table-wrap"><table>
+      <thead>
+        <tr><th>Option</th><th>Use Case</th><th>Configuration Location</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Nginx reverse proxy + Let's Encrypt</strong> (recommended)</td>
+          <td>Public domain, internet-accessible Linux/Docker deployment</td>
+          <td><a href="install-guide.html#deployment-models">Install Guide -- Deployment Models (Model A)</a></td>
+        </tr>
+        <tr>
+          <td><strong>Nginx reverse proxy + Commercial CA</strong></td>
+          <td>Internal or air-gapped deployments with corporate CA</td>
+          <td><a href="install-guide.html#deployment-models">Install Guide -- Deployment Models (Model A)</a></td>
+        </tr>
+        <tr>
+          <td><strong>Direct TLS in FlowSquad</strong></td>
+          <td>Standalone Windows or environments without a reverse proxy</td>
+          <td><a href="install-guide.html#deployment-models">Install Guide -- Deployment Models (Model B)</a></td>
+        </tr>
+      </tbody>
+    </table></div>
+
+    <p>TLS cipher suites configured in the Nginx template in the Install Guide achieve an <strong>A+ rating</strong> on SSL Labs. Protocols: TLSv1.2 and TLSv1.3. SSLv3, TLSv1.0, and TLSv1.1 are not permitted.</p>
+
+    <hr>
+
+    <!-- ---- Database Encryption ------------------------------------------------------------ -->
+    <h2 id="database-encryption">Database Encryption</h2>
+
+    <div class="table-wrap"><table>
+      <thead>
+        <tr><th>What to Encrypt</th><th>Method</th><th>Where Configured</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Configuration database</strong> (<code>flowsquad_engine.db</code>)</td>
+          <td>Field-level Fernet AES-128-CBC encryption for all sensitive values (API keys, passwords, tokens). No whole-file database encryption. For full at-rest encryption use filesystem-level encryption (LUKS, BitLocker, encrypted Docker volume).</td>
+          <td><a href="install-guide.html#security">Install Guide -- Security</a></td>
+        </tr>
+        <tr>
+          <td><strong>Product database in transit</strong> (PostgreSQL/MySQL)</td>
+          <td>SSL/TLS: use <code>sslmode=require</code> (PostgreSQL) or <code>ssl_ca=...</code> (MySQL) in Setup Wizard connection string</td>
+          <td><a href="setup-guide.html#step1-database">Setup Guide -- Step 1</a></td>
+        </tr>
+        <tr>
+          <td><strong>Product database at rest</strong></td>
+          <td>Use your database platform's native capabilities: <code>pgcrypto</code> extension or filesystem encryption (PostgreSQL); InnoDB tablespace encryption (MySQL)</td>
+          <td>Managed outside FlowSquad -- configure in your database server</td>
+        </tr>
+      </tbody>
+    </table></div>
+
+    <hr>
+
+    <!-- ---- Session Secret Key -------------------------------------------------------------------- -->
+    <h2 id="session-secret-key">Session Secret Key</h2>
+
+    <p>FlowSquad signs all browser session cookies with a cryptographic secret key. A weak or shared key allows an attacker to forge valid session cookies and impersonate any user.</p>
+
+    <h3>How It Works</h3>
+    <div class="table-wrap"><table>
+      <thead>
+        <tr><th>Concept</th><th>Detail</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong><code>installation_id</code></strong></td>
+          <td>A 256-bit random value generated <strong>once on first start</strong> and stored encrypted in <code>flowsquad_engine.db</code>. It never changes unless the database is wiped. It is <em>not</em> the machine ID — it is scoped purely to this installation.</td>
+        </tr>
+        <tr>
+          <td><strong>Default session secret</strong></td>
+          <td>Derived automatically as <code>SHA-256("flask-secret:" + installation_id)</code>. Unique per installation, requires no admin action, and survives app restarts, license upgrades, and server migrations (as long as the config database is carried over).</td>
+        </tr>
+        <tr>
+          <td><strong>Admin override</strong></td>
+          <td>Available in <strong>Setup Wizard &rarr; Step 9 &rarr; Session Secret Key</strong>. Stores a flag (<code>flask_secret_key_override=true</code>) so the override is not silently replaced on the next restart. Use only when required by policy — for example, a value pinned in HashiCorp Vault or AWS Secrets Manager.</td>
+        </tr>
+        <tr>
+          <td><strong>Session invalidation</strong></td>
+          <td>Any change to the secret key — whether via the admin UI or by wiping the database — <strong>immediately invalidates all active user sessions</strong>. Every logged-in user will be signed out. Plan key rotations outside active usage hours.</td>
+        </tr>
+      </tbody>
+    </table></div>
+
+    <h3>Migration Behaviour</h3>
+    <p>The session secret travels with <code>flowsquad_engine.db</code>, not with the hardware. Migrating to a new server:</p>
+    <ul>
+      <li><strong>Config DB carried over</strong> &rarr; <code>installation_id</code> is the same &rarr; session secret is unchanged &rarr; <strong>no session disruption</strong>.</li>
+      <li><strong>Fresh install (DB wiped)</strong> &rarr; new <code>installation_id</code> generated &rarr; new session secret &rarr; all users re-login (expected for a fresh install).</li>
+    </ul>
+    <p>This is intentionally decoupled from the license machine ID. A license re-issue for a new machine has no effect on session continuity.</p>
+
+    <h3>Hardening Recommendations</h3>
+    <ul>
+      <li>Protect <code>flowsquad_engine.db</code> with <code>chmod 600</code> (Linux) / <code>icacls</code> (Windows) — anyone who can read the file can extract the <code>installation_id</code> if they also have the source code. <a href="install-guide.html#security">&rarr; Install Guide</a></li>
+      <li>Do not rotate the session secret routinely — it invalidates all sessions with no security benefit unless a breach is suspected.</li>
+      <li>If a breach of the config database is suspected: rotate via Setup Wizard &rarr; Step 9 &rarr; Session Secret Key &rarr; <em>Generate a new random key</em>, then rotate all other stored credentials (API keys, LDAP bind password, OAuth2 secrets).</li>
+      <li>For load-balanced / multi-node deployments: all nodes must share the same <code>flowsquad_engine.db</code> (or use the custom key option to pin an identical value from a shared secrets manager).</li>
+    </ul>
+
+    <hr>
+
+    <!-- ---- RBAC -------------------------------------------------------------------------------------------- -->
+    <h2 id="rbac">Role-Based Access Control (RBAC)</h2>
+
+    <div class="table-wrap"><table>
+      <thead>
+        <tr><th>Role</th><th>Scope</th><th>Recommended Count</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Global Administrator</strong></td>
+          <td>Full unrestricted system access -- database, auth, LLMs, all products, license, audit logs</td>
+          <td>2-3 trusted IT staff only</td>
+        </tr>
+        <tr>
+          <td><strong>Product Administrator</strong></td>
+          <td>Scoped to assigned products -- team management, LLM config, artifact deletion. No system-wide access.</td>
+          <td>1-2 per product (team lead or project owner)</td>
+        </tr>
+        <tr>
+          <td><strong>Regular User</strong></td>
+          <td>Read/write on assigned products -- all 10 workflow tabs, generate and save artifacts</td>
+          <td>All other team members</td>
+        </tr>
+      </tbody>
+    </table></div>
+
+    <p>Full RBAC configuration guide: <a href="admin-guide.html#roles">Admin Guide -- Administrator Roles</a> and <a href="admin-guide.html#security-practices">Admin Guide -- Security Best Practices</a>.</p>
+
+    <h3>LDAP / SAML Group-Based Role Assignment</h3>
+    <p>Roles can be assigned automatically based on group membership -- no manual per-user assignment needed:</p>
+    <ul>
+      <li><strong>LDAP/AD:</strong> Setup Wizard Step 4 &rarr; LDAP &rarr; Group Mappings. <a href="admin-guide.html#auth-config">&rarr; Admin Guide &mdash; LDAP</a></li>
+      <li><strong>SAML/Keycloak:</strong> Setup Wizard Step 4 &rarr; SAML &rarr; Group Mappings. <a href="reference-guide.html#keycloak-saml">&rarr; Reference Guide &mdash; Keycloak SAML</a></li>
+    </ul>
+
+    <hr>
+
+    <!-- ---- Audit Logs -------------------------------------------------------------------------------- -->
+    <h2 id="audit-logs">Audit Logs &amp; Compliance</h2>
+
+    <p>FlowSquad logs all security-relevant and data-mutating events automatically. Full audit log documentation: <a href="admin-guide.html#audit-logs">Admin Guide -- Audit Logs</a>.</p>
+
+    <h3>Event Categories Logged</h3>
+    <ul>
+      <li><strong>Authentication:</strong> All logins (success/failure), logouts, MFA setup/reset, brute-force detection</li>
+      <li><strong>User Management:</strong> User created/updated/deleted, role assignments changed</li>
+      <li><strong>Product Actions:</strong> Product created/deleted, requirement/design/test case created, edited, or deleted</li>
+      <li><strong>System Actions:</strong> License uploaded, LLM provider added/removed, database/auth settings changed</li>
+      <li><strong>Security Events:</strong> Privilege escalation, API key creation/deletion, configuration exports</li>
+    </ul>
+
+    <h3>Export Formats</h3>
+    <ul>
+      <li><strong>CSV</strong> -- for compliance audits and Excel analysis</li>
+      <li><strong>JSON</strong> -- for SIEM integration (Splunk, Elastic, Datadog)</li>
+      <li><strong>PDF</strong> -- formatted report for management review</li>
+    </ul>
+
+    <h3>Compliance Framework Coverage</h3>
+    <div class="table-wrap"><table>
+      <thead>
+        <tr><th>Framework</th><th>FlowSquad Controls That Apply</th><th>Retention Requirement</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>SOC 2</strong></td>
+          <td>Audit logs, MFA for admins, database encryption, RBAC</td>
+          <td>12 months (configure in Admin Panel -> Settings)</td>
+        </tr>
+        <tr>
+          <td><strong>HIPAA</strong></td>
+          <td>HTTPS, database encryption at rest and in transit, access logs, RBAC</td>
+          <td>6 years minimum</td>
+        </tr>
+        <tr>
+          <td><strong>GDPR</strong></td>
+          <td>User data export, user deletion (right to be forgotten), audit log of data access, configurable retention</td>
+          <td>Retain only as long as necessary; test user deletion capability</td>
+        </tr>
+      </tbody>
+    </table></div>
+
+    <hr>
+
+    <!-- ---- Hardening Checklist -------------------------------------------------------------- -->
+    <h2 id="hardening-checklist">Security Hardening Checklist</h2>
+
+    <h3>Minimum -- Required for All Deployments</h3>
+    <ul class="checklist">
+      <li>File permissions set on <code>flowsquad_engine.db</code>: <code>chmod 600</code> (Linux) / <code>icacls</code> (Windows). <a href="install-guide.html#security">-> Install Guide</a></li>
+      <li>HTTPS enabled -- never run on plain HTTP in production. <a href="install-guide.html#security">-> Install Guide</a></li>
+      <li>MFA (TOTP) enabled for all Global Admin accounts. <a href="admin-guide.html#user-management">-> Admin Guide</a></li>
+      <li>All passwords and API keys stored as environment variables -- never hardcoded</li>
+      <li>Audit logs reviewed regularly for suspicious activity. <a href="admin-guide.html#audit-logs">-> Admin Guide</a></li>
+      <li>Session secret key is installation-unique by default (auto-generated <code>installation_id</code>) -- no manual action required. <a href="#session-secret-key">-> Session Secret Key</a></li>
+    </ul>
+
+    <h3>Enhanced -- Recommended for Production</h3>
+    <ul class="checklist">
+      <li>Sensitive credentials verified in Settings (API keys, passwords encrypted at field level by default)</li>
+      <li>PostgreSQL or MySQL used (not SQLite) for the product database in multi-user environments. <a href="setup-guide.html#step1-database">-> Setup Guide</a></li>
+      <li>Let's Encrypt or commercial CA-signed SSL certificate (not self-signed). <a href="install-guide.html#deployment-models">-> Install Guide</a></li>
+      <li>LDAP or SAML SSO configured to avoid managing local passwords for enterprise users. <a href="admin-guide.html#auth-config">-> Admin Guide</a></li>
+      <li>Automated encrypted backups of both config database and product database scheduled. <a href="admin-guide.html#backup-recovery">-> Admin Guide</a></li>
+      <li>Global Admin accounts limited to 2-3 trusted people; Product Admin used for day-to-day management. <a href="admin-guide.html#roles">-> Admin Guide</a></li>
+      <li>LLM API keys rotated quarterly. <a href="admin-guide.html#llm-config">-> Admin Guide</a></li>
+    </ul>
+
+    <h3>Enterprise -- High-Security Environments</h3>
+    <ul class="checklist">
+      <li>Encryption password managed via HashiCorp Vault, AWS Secrets Manager, or Azure Key Vault</li>
+      <li>Network firewall restricts database port access to FlowSquad server IP only</li>
+      <li>FlowSquad runs as a dedicated low-privilege OS user (non-root, no sudo). <a href="install-guide.html#linux">-> Install Guide -- Linux</a></li>
+      <li>Audit log JSON export integrated with SIEM (Splunk, Elastic, Datadog). <a href="admin-guide.html#audit-logs">-> Admin Guide</a></li>
+      <li>Quarterly access reviews: remove inactive users, verify Global Admin list</li>
+      <li>DB-level audit logging enabled on PostgreSQL/MySQL independently of FlowSquad</li>
+      <li>Run the built-in Security Scan tab on your codebase to identify vulnerabilities in your own products. <a href="user-guide.html#security-scan-tab">-> User Guide</a></li>
+    </ul>
+
+    <h3>Incident Response</h3>
+    <p>If you suspect the configuration database has been compromised:</p>
+    <ol>
+      <li><strong>Rotate the session secret key:</strong> Setup Wizard &rarr; Step 9 &rarr; Session Secret Key &rarr; <em>Generate a new random key</em>. This invalidates all active sessions immediately. <a href="#session-secret-key">&rarr; Session Secret Key</a></li>
+      <li><strong>Immediately rotate all stored credentials:</strong> admin passwords, LDAP bind password, all LLM API keys, Jira/Confluence API tokens</li>
+      <li>Rotate API keys and integration passwords through the Setup Wizard when a credential is compromised</li>
+      <li><strong>Review audit logs</strong> for the suspected time period: Admin Panel &rarr; Audit Logs &rarr; filter by date</li>
+      <li><strong>Notify affected users</strong> to change their passwords</li>
+    </ol>
+
+  </main>
+
+</div>
+
+<footer class="docs-footer">
+  <span>(C) FlowSquad. All rights reserved.</span>
+  <span class="footer-sep">|</span>
+  <a href="mailto:support@flowsquad.ai">support@flowsquad.ai</a>
+  <span class="footer-sep">|</span>
+  <a href="#">Privacy Policy</a>
+</footer>
+
+</body>
+</html>

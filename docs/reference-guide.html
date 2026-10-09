@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Reference Guide &mdash; FlowSquad Enterprise Docs</title>
+  <meta name="description" content="FlowSquad Enterprise Reference Guide: Step-by-step reference implementations for Keycloak SAML, OAuth2, and LDAP configuration; nginx reverse proxy with HTTPS; IIS Application Request Routing (ARR) reverse proxy and HTTPS termination on Windows." />
+  <meta name="keywords" content="FlowSquad reference, Keycloak SAML configuration, Keycloak OAuth2, Keycloak LDAP, nginx reverse proxy, IIS ARR reverse proxy, HTTPS, FlowSquad enterprise deployment" />
+  <meta property="og:title" content="FlowSquad Enterprise Reference Guide" />
+  <meta property="og:description" content="Reference implementations for Keycloak (SAML, OAuth2, LDAP), nginx HTTPS reverse proxy, and IIS ARR reverse proxy for FlowSquad Enterprise." />
+  <meta property="og:type" content="article" />
+  <link rel="canonical" href="https://flowsquad.ai/docs/reference-guide" />
+  <link rel="stylesheet" href="docs.css" />
+  <script src="docs-theme.js"></script>
+</head>
+<body>
+
+<!-- ---- Top Navigation -------------------------------------------------------------------------------- -->
+<nav class="docs-nav">
+  <button class="hamburger" aria-label="Toggle sidebar">&#9776;</button>
+  <a href="https://flowsquad.ai" class="nav-logo" target="_blank" rel="noopener noreferrer">
+    <img src="icon.png" alt="FlowSquad Logo" />
+  </a>
+  <span class="nav-label">Docs</span>
+  <button class="nav-theme-btn" id="docs-theme-btn" title="Toggle dark / light mode"></button>
+  <a href="index.html" class="nav-back">&larr; All Guides</a>
+</nav>
+
+<!-- ---- Download Toolbar -------------------------------------------------------------- -->
+<div class="docs-download-bar">
+  <span class="dl-label">Download:</span>
+  <button class="docs-dl-btn" id="dlHtmlBtn" title="Save this page as HTML">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm-1 1.5L18.5 9H13V3.5zM6 20V4h5v7h7v9H6z"/></svg>
+    HTML
+  </button>
+  <button class="docs-dl-btn" id="dlPdfBtn" title="Print / Save as PDF">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2zm-7 3a4 4 0 1 1 0 8 4 4 0 0 1 0-8zm0 10c-2.67 0-8 1.34-8 4v1h16v-1c0-2.66-5.33-4-8-4z"/></svg>
+    PDF
+  </button>
+</div>
+<script>
+document.getElementById('dlHtmlBtn').addEventListener('click', function() {
+  var blob = new Blob([document.documentElement.outerHTML], {type: 'text/html'});
+  var a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = (document.title || 'page').replace(/[^a-z0-9_-]/gi, '_') + '.html';
+  a.click();
+  URL.revokeObjectURL(a.href);
+});
+document.getElementById('dlPdfBtn').addEventListener('click', function() {
+  window.print();
+});
+</script>
+
+
+<!-- ---- Mobile Overlay -------------------------------------------------------------------------------- -->
+<div class="sidebar-overlay"></div>
+
+<!-- ---- Page Shell ------------------------------------------------------------------------------------ -->
+<div class="docs-shell">
+
+  <!-- ---- Left Sidebar ------------------------------------------------------------------------------ -->
+  <aside class="docs-sidebar">
+    <div class="sidebar-section-label">Guides</div>
+    <nav class="sidebar-nav">
+      <a href="install-guide.html" class="guide-link">Installation Guide</a>
+      <a href="setup-guide.html" class="guide-link">Setup Guide</a>
+      <a href="admin-guide.html" class="guide-link">Admin Guide</a>
+      <a href="user-guide.html" class="guide-link">User Guide</a>
+      <a href="troubleshooting-guide.html" class="guide-link">Troubleshooting</a>
+      <a href="security-guide.html" class="guide-link">Security Reference</a>
+      <a href="integration-guide.html" class="guide-link">Integration Guide</a>
+      <a href="reference-guide.html" class="guide-link active">Reference Guide</a>
+    </nav>
+
+    <hr class="sidebar-divider" />
+
+    <div class="sidebar-section-label">On This Page</div>
+    <nav class="sidebar-nav">
+      <a href="#overview" class="toc-link">Overview</a>
+      <a href="#keycloak-saml" class="toc-link">Keycloak &mdash; SAML 2.0</a>
+      <a href="#keycloak-oauth2" class="toc-link">Keycloak &mdash; OAuth2 / OIDC</a>
+      <a href="#keycloak-ldap" class="toc-link">Keycloak &mdash; LDAP Federation</a>
+      <a href="#nginx" class="toc-link">nginx Reverse Proxy</a>
+      <a href="#iis" class="toc-link">IIS Reverse Proxy (Windows)</a>
+    </nav>
+  </aside>
+
+  <!-- ---- Main Content ------------------------------------------------------------------------------ -->
+  <main class="docs-content">
+
+    <h1>Reference Guide</h1>
+    <p class="page-subtitle">Step-by-step reference implementations for common enterprise scenarios. These are provided as working examples &mdash; you are not required to use Keycloak or any specific technology. FlowSquad works with any SAML 2.0, LDAP, or OAuth2 provider.</p>
+
+    <div class="callout callout-info">
+      <span class="callout-icon">&#9432;</span>
+      <div class="callout-body">
+        <strong>These are reference examples, not requirements</strong>
+        <p>FlowSquad supports any standards-compliant identity provider and any reverse proxy that can forward HTTP/HTTPS traffic. The Keycloak and nginx/IIS examples below are provided because they are commonly used in enterprise self-hosted deployments. Substitute your own IdP, proxy, or load balancer &mdash; the FlowSquad SP endpoints and attribute expectations are the same regardless of which technology you use.</p>
+      </div>
+    </div>
+
+    <hr />
+
+    <!-- ======================================================================================== -->
+    <h2 id="overview">1. Overview</h2>
+
+    <div class="table-wrap"><table>
+      <thead>
+        <tr><th>Section</th><th>What It Covers</th><th>Who Needs It</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><a href="#keycloak-saml">Keycloak &mdash; SAML 2.0</a></td><td>Full walkthrough: create SAML client, configure attribute mappers, create client scope, import SP certificate, test SSO</td><td>Organisations using Keycloak as their SAML IdP</td></tr>
+        <tr><td><a href="#keycloak-oauth2">Keycloak &mdash; OAuth2 / OIDC</a></td><td>Full walkthrough: create OIDC client, set callback URL, retrieve Client Secret</td><td>Organisations using Keycloak for OAuth2 / social login</td></tr>
+        <tr><td><a href="#keycloak-ldap">Keycloak &mdash; LDAP Federation</a></td><td>Configure Keycloak to federate Active Directory or OpenLDAP, then connect FlowSquad to Keycloak&rsquo;s built-in LDAP proxy</td><td>Organisations whose Keycloak realm manages AD/LDAP users</td></tr>
+        <tr><td><a href="#nginx">nginx Reverse Proxy</a></td><td>nginx HTTPS termination and reverse proxy for FlowSquad on Linux/Docker</td><td>Linux deployments; Docker deployments with external TLS</td></tr>
+        <tr><td><a href="#iis">IIS Reverse Proxy (Windows)</a></td><td>IIS Application Request Routing (ARR) + URL Rewrite for HTTPS termination on Windows Server</td><td>Windows Server deployments using IIS for TLS offloading</td></tr>
+      </tbody>
+    </table></div>
+
+    <hr />
+
+    <!-- ======================================================================================== -->
+    <h2 id="keycloak-saml">2. Keycloak &mdash; SAML 2.0 Configuration</h2>
+
+    <p>This walkthrough uses Keycloak 23.x / 24.x. The same FlowSquad SP endpoints apply to any SAML 2.0&ndash;compliant IdP &mdash; only the IdP-side UI steps differ.</p>
+
+    <div class="callout callout-info">
+      <span class="callout-icon">&#9432;</span>
+      <div class="callout-body">
+        <strong>Prerequisites</strong>
+        <ul style="margin:0.3rem 0 0 1.2rem;">
+          <li>Keycloak running (self-hosted or cloud) with admin access</li>
+          <li>FlowSquad deployed and reachable by users&rsquo; browsers</li>
+          <li>The FlowSquad public URL is known (e.g. <code>https://flowsquad.yourcompany.com</code>)</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Step 1 -->
+    <h3>Step 1 &mdash; Create the SAML client in Keycloak</h3>
+    <ol>
+      <li>Log in to Keycloak Admin Console &rarr; select your realm &rarr; <strong>Clients &rarr; Create client</strong></li>
+      <li>Set <strong>Client type: SAML</strong> &nbsp;<em style="color:var(--danger-text,#c0392b);">(not OpenID Connect)</em></li>
+      <li>Set <strong>Client ID</strong> to the FlowSquad public URL ending in <code>/saml/metadata</code>:
+        <pre><code>https://flowsquad.yourcompany.com/saml/metadata</code></pre>
+        This value is also shown in FlowSquad &rarr; Setup Wizard &rarr; Step 4 &rarr; SAML &rarr; <em>Entity ID / Client ID</em> box.
+      </li>
+      <li>Set <strong>Name</strong>: <code>FlowSquad Enterprise</code> &rarr; click <strong>Save</strong></li>
+    </ol>
+
+    <!-- Step 2 -->
+    <h3>Step 2 &mdash; Configure client settings in Keycloak</h3>
+    <p>In the <strong>Settings</strong> tab of the new client (replace the hostname with yours):</p>
+    <pre><code>Root URL:                    https://flowsquad.yourcompany.com
+Home URL:                    https://flowsquad.yourcompany.com
+Valid redirect URIs:         https://flowsquad.yourcompany.com/saml/callback
+Master SAML Processing URL:  https://flowsquad.yourcompany.com/saml/callback
+IDP-Initiated SSO URL name:  flowsquad</code></pre>
+
+    <p>Under <strong>SAML Capabilities</strong>:</p>
+    <pre><code>Name ID format:           email
+Sign documents:           ON
+Sign assertions:          ON
+Signature algorithm:      RSA_SHA256
+SAML signature key name:  KEY_ID
+Canonicalization method:  EXCLUSIVE
+Force POST binding:       OFF   (leave OFF — FlowSquad uses Redirect binding by default)
+Encrypt assertions:       OFF   (optional)</code></pre>
+    <p>Click <strong>Save</strong>.</p>
+
+    <div class="callout callout-warn">
+      <span class="callout-icon">&#9888;&#65039;</span>
+      <div class="callout-body">
+        <strong>Logout Service URLs (for Single Logout)</strong>
+        <p>Under <strong>Settings &rarr; Logout settings</strong> in Keycloak, set both logout binding URLs to FlowSquad&rsquo;s logout endpoint:</p>
+        <pre style="margin:0.4rem 0 0;"><code>Logout Service POST Binding URL:     https://flowsquad.yourcompany.com/saml/logout
+Logout Service Redirect Binding URL: https://flowsquad.yourcompany.com/saml/logout</code></pre>
+        <p>For Keycloak, the IdP SLO URL (entered in FlowSquad) is the <strong>same as the SSO URL</strong> &mdash; Keycloak distinguishes SSO and SLO requests by the action parameter inside the <code>SAMLRequest</code>, not by URL.</p>
+      </div>
+    </div>
+
+    <!-- Step 3 -->
+    <h3>Step 3 &mdash; Add attribute mappers</h3>
+    <p>FlowSquad expects attributes named <code>email</code>, <code>firstName</code>, and <code>lastName</code> with <strong>SAML Attribute NameFormat: Basic</strong>. These must be added to the <strong>dedicated client scope</strong>, not directly to the client.</p>
+
+    <div class="callout callout-warn">
+      <span class="callout-icon">&#9888;&#65039;</span>
+      <div class="callout-body">
+        <strong>Add mappers to the dedicated scope &mdash; not to the client directly</strong>
+        <ol style="margin:0.3rem 0 0 1.2rem;">
+          <li>Go to <strong>Client Scopes</strong> in the left navigation</li>
+          <li>Find (or create) the scope named <code>FlowSquad Enterprise-dedicated</code>
+            <ul style="margin-top:0.3rem;">
+              <li>If missing: <strong>Create client scope &rarr; Name: <code>FlowSquad Enterprise-dedicated</code> &rarr; Protocol: <code>saml</code> &rarr; Type: Default &rarr; Save</strong>, then assign it under <strong>Clients &rarr; FlowSquad Enterprise &rarr; Client Scopes</strong></li>
+              <li>If the Protocol shows <code>openid-connect</code>: delete and recreate it with Protocol set to <code>saml</code> &mdash; OIDC scopes produce token claims, not SAML attributes</li>
+            </ul>
+          </li>
+          <li>Open the scope &rarr; <strong>Mappers</strong> tab &rarr; <strong>Add mapper &rarr; By configuration &rarr; User Property</strong></li>
+        </ol>
+        <p style="margin-top:0.5rem;">Do <strong>not</strong> use <strong>Clients &rarr; [client] &rarr; Add mapper</strong> &mdash; that path creates OIDC mappers regardless of client protocol.</p>
+      </div>
+    </div>
+
+    <p>Create these four mappers (one at a time). For each: fill in <strong>Name</strong>, <strong>Property</strong>, <strong>SAML Attribute Name</strong>, set <strong>SAML Attribute NameFormat</strong> to <code>Basic</code>, click <strong>Save</strong>.</p>
+    <div class="table-wrap"><table>
+      <thead>
+        <tr><th>Name</th><th>Property</th><th>SAML Attribute Name</th><th>NameFormat</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>username</code></td><td><code>username</code></td><td><code>username</code></td><td>Basic</td></tr>
+        <tr><td><code>email</code></td><td><code>email</code></td><td><code>email</code></td><td>Basic</td></tr>
+        <tr><td><code>firstName</code></td><td><code>firstName</code></td><td><code>firstName</code></td><td>Basic</td></tr>
+        <tr><td><code>lastName</code></td><td><code>lastName</code></td><td><code>lastName</code></td><td>Basic</td></tr>
+      </tbody>
+    </table></div>
+
+    <!-- Step 4 -->
+    <h3>Step 4 &mdash; Configure FlowSquad</h3>
+    <ol>
+      <li>Open <strong>Setup Wizard &rarr; Step 4: Authentication &rarr; SAML 2.0 SSO</strong> (click the section header to expand)</li>
+      <li>Fill in the three required fields:</li>
+    </ol>
+
+    <div class="table-wrap"><table>
+      <thead>
+        <tr><th>FlowSquad Field</th><th>Value / Where to find it</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>SP Entity ID</strong></td>
+          <td>Your FlowSquad public URL ending in <code>/saml/metadata</code> — must match the Keycloak Client ID exactly (same scheme, host, port).<br><code>https://flowsquad.yourcompany.com/saml/metadata</code></td>
+        </tr>
+        <tr>
+          <td><strong>IdP SSO URL</strong></td>
+          <td>Keycloak Admin &rarr; <strong>Realm Settings &rarr; General &rarr; Endpoints &rarr; SAML 2.0 Identity Provider Metadata</strong> &rarr; copy the <code>SingleSignOnService Location</code> value.<br>Pattern: <code>https://keycloak.yourcompany.com/realms/&lt;RealmName&gt;/protocol/saml</code><br><strong>Realm name is case-sensitive.</strong></td>
+        </tr>
+        <tr>
+          <td><strong>IdP SLO URL</strong> <em>(optional)</em></td>
+          <td>For Keycloak: the <strong>same URL as the SSO URL above</strong>. Keycloak uses the same endpoint for both SSO and SLO. Leave blank to skip Single Logout.</td>
+        </tr>
+        <tr>
+          <td><strong>IdP x509 Certificate</strong></td>
+          <td>Keycloak Admin &rarr; <strong>Realm Settings &rarr; Keys &rarr; RS256 row &rarr; "Certificate" button</strong>.<br>Paste the base64 content <strong>without</strong> the <code>-----BEGIN/END CERTIFICATE-----</code> lines.</td>
+        </tr>
+        <tr>
+          <td><strong>Attribute Mapping</strong></td>
+          <td>Leave at defaults (<code>email</code>, <code>firstName</code>, <code>groups</code>) if you used the Basic name-format mappers in Step 3. Change only if your IdP sends different attribute names (e.g. ADFS uses WS-Fed URI-style names).</td>
+        </tr>
+        <tr>
+          <td><strong>Designated Global Admins</strong> <em>(optional)</em></td>
+          <td>Comma-separated <strong>email addresses</strong> that should auto-promote to Global Admin on first SAML login.<br><em>Must be email addresses, not Keycloak usernames.</em></td>
+        </tr>
+      </tbody>
+    </table></div>
+
+    <div class="callout callout-warn">
+      <span class="callout-icon">&#9888;&#65039;</span>
+      <div class="callout-body">
+        <p>The SP Entity ID in FlowSquad must match the Keycloak Client ID <strong>exactly</strong> — same protocol, hostname, and port. A mismatch (e.g. <code>http</code> vs <code>https</code>, or a missing port number) causes Keycloak to return &ldquo;Invalid Request&rdquo;.</p>
+      </div>
+    </div>
+
+    <ol start="3">
+      <li>Click <strong>Test Connection</strong> &mdash; this checks the SP Entity ID format, validates the certificate, and confirms the IdP URL is reachable from the server. Review any warnings before proceeding.</li>
+      <li>Click <strong>Save Configuration</strong>.</li>
+    </ol>
+
+    <!-- Step 5 optional -->
+    <h3>Step 5 (Optional) &mdash; Enable SAML Request Signing</h3>
+    <p>Request signing adds a cryptographic signature to every SAML AuthnRequest so Keycloak can verify it originated from FlowSquad. Required by some security policies.</p>
+    <ol>
+      <li>In FlowSquad SAML section, click <strong>Generate SP Certificate &amp; Key</strong> &rarr; then <strong>Download SP Certificate</strong> &rarr; save <code>saml_sp_cert.pem</code></li>
+      <li>In Keycloak: <strong>Clients &rarr; FlowSquad Enterprise &rarr; Keys tab &rarr; Import Certificate</strong> &rarr; Archive Format: <code>Certificate PEM</code> &rarr; upload the file</li>
+      <li>Back in FlowSquad, enable <strong>Enable SAML Request Signing</strong> &rarr; click <strong>Save Configuration</strong></li>
+    </ol>
+
+    <!-- Step 6 verify -->
+    <h3>Step 6 &mdash; Verify end-to-end login</h3>
+    <ol>
+      <li>Complete the remaining Setup Wizard steps and open the FlowSquad login page</li>
+      <li>Click <strong>Login with SAML</strong> &rarr; you are redirected to Keycloak</li>
+      <li>Authenticate with a test user &rarr; you are redirected back and logged in to FlowSquad</li>
+      <li>In <strong>Admin Panel &rarr; Users</strong> confirm the user&rsquo;s Auth Source shows <code>SAML</code></li>
+    </ol>
+
+    <!-- Optional group mapper -->
+    <h3>Optional &mdash; Group-based role assignment</h3>
+    <p>Add a <strong>Group List</strong> mapper to the dedicated client scope (same location as Step 3):</p>
+    <pre><code>Mapper type:               Group list
+Name:                      groups
+Group attribute name:      groups
+SAML Attribute NameFormat: Basic
+Single Group Attribute:    OFF
+Full group path:           OFF</code></pre>
+    <p>The attribute name <code>groups</code> matches FlowSquad&rsquo;s default <em>Groups attribute name</em> field. Create groups in Keycloak (e.g. <code>FlowSquad-Admins</code>) and assign users to them.</p>
+
+    <h3>Troubleshooting</h3>
+    <div class="table-wrap"><table>
+      <thead>
+        <tr><th>Symptom</th><th>Cause</th><th>Resolution</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>&ldquo;Invalid SAML Response&rdquo; / Signature validation failed</td><td>SP certificate not imported into Keycloak, or Sign documents/assertions are OFF</td><td>Re-import the SP certificate in Keycloak &rarr; Keys tab; confirm Sign documents and Sign assertions are ON in SAML Capabilities</td></tr>
+        <tr><td>Keycloak shows &ldquo;Invalid Request&rdquo;</td><td>SP Entity ID in FlowSquad does not match Keycloak Client ID (protocol or port differs)</td><td>Check FlowSquad logs for &ldquo;host mismatch&rdquo; warning; re-save SAML config using the exact URL users access FlowSquad from</td></tr>
+        <tr><td>User logs in but email/name is missing</td><td>Attribute mappers missing or added to wrong scope / using wrong protocol</td><td>Verify mappers are in the dedicated client scope with Protocol: <code>saml</code>; use Keycloak &rarr; Client Scopes &rarr; Evaluate to preview the assertion</td></tr>
+        <tr><td>Redirect loop (keeps going back to Keycloak)</td><td>SP Entity ID or ACS URL mismatch</td><td>Client ID in Keycloak must equal SP Entity ID in FlowSquad — same scheme, host, port</td></tr>
+        <tr><td>User not promoted to Global Admin</td><td>Designated Admins field contains a Keycloak username instead of email</td><td>Change the value to the user&rsquo;s email address (e.g. <code>john.doe@company.com</code>)</td></tr>
+        <tr><td>OIDC mapper fields appear in scope (Token Claim Name, etc.)</td><td>Scope protocol is <code>openid-connect</code> instead of <code>saml</code></td><td>Delete the scope and recreate it with Protocol: <code>saml</code>, then re-assign to the client and re-add the mappers</td></tr>
+        <tr><td>Test Connection shows &ldquo;Cannot reach IdP&rdquo;</td><td>FlowSquad server cannot route to the Keycloak host</td><td>Confirm Keycloak is reachable from the server (not just from the browser): <code>curl -I &lt;IdP SSO URL&gt;</code> on the FlowSquad host</td></tr>
+      </tbody>
+    </table></div>
+
+    <hr />
+
+    <!-- ======================================================================================== -->
+    <h2 id="keycloak-oauth2">3. Keycloak &mdash; OAuth2 / OIDC Configuration</h2>
+
+    <p>Use this when you want users to log in to FlowSquad via <strong>"Login with Keycloak"</strong> using OpenID Connect (OAuth2). Unlike SAML, OIDC uses redirect-based token flows and is simpler to configure.</p>
+
+    <h3>Step 1: Create an OIDC Client in Keycloak</h3>
+    <ol>
+      <li>Keycloak Admin &rarr; select your realm &rarr; <strong>Clients &rarr; Create client</strong></li>
+      <li>Fill in:</li>
+    </ol>
+    <pre><code>Client type:  OpenID Connect
+Client ID:    flowsquad-oauth2
+Name:         FlowSquad OAuth2</code></pre>
+    <ol start="3">
+      <li>Click <strong>Next</strong> &rarr; on the Capability config page:
+        <ul>
+          <li><strong>Client authentication: ON</strong> (this makes it a Confidential client, enabling a Client Secret)</li>
+          <li>Authentication flow: Standard flow (Authorization Code)</li>
+        </ul>
+      </li>
+      <li>Click <strong>Next</strong> &rarr; on the Login settings page:
+        <ul>
+          <li><strong>Valid redirect URIs:</strong> <code>https://flowsquad.yourcompany.com/oauth2/keycloak/callback</code></li>
+          <li><strong>Web origins:</strong> <code>https://flowsquad.yourcompany.com</code></li>
+        </ul>
+      </li>
+      <li>Click <strong>Save</strong></li>
+    </ol>
+
+    <h3>Step 2: Retrieve the Client Secret</h3>
+    <ol>
+      <li>In the client you just created, open the <strong>Credentials</strong> tab</li>
+      <li>Copy the <strong>Client Secret</strong> value</li>
+    </ol>
+
+    <h3>Step 3: Configure FlowSquad</h3>
+    <ol>
+      <li>Open <strong>Setup Wizard &rarr; Step 4: Authentication &rarr; OAuth2 &rarr; Keycloak</strong></li>
+      <li>Fill in:</li>
+    </ol>
+    <pre><code>Keycloak Server URL:  https://keycloak.yourcompany.com
+Realm:                master   (or your custom realm name)
+Client ID:            flowsquad-oauth2
+Client Secret:        (paste from Credentials tab)</code></pre>
+    <ol start="3">
+      <li>Click <strong>Test Connection</strong> to confirm Keycloak responds, then click <strong>Save</strong></li>
+    </ol>
+
+    <div class="callout callout-info">
+      <span class="callout-icon">&#9432;</span>
+      <div class="callout-body"><strong>OIDC Discovery</strong><p>FlowSquad automatically discovers the Keycloak endpoints (authorization, token, user info, JWKS) from the OIDC well-known discovery URL: <code>https://keycloak.yourcompany.com/realms/{realm}/.well-known/openid-configuration</code>. You do not need to enter individual endpoint URLs.</p></div>
+    </div>
+
+    <h3>Step 4: Verify Login</h3>
+    <ol>
+      <li>Navigate to the FlowSquad login page &rarr; a <strong>"Login with Keycloak"</strong> button appears</li>
+      <li>Click it &rarr; you are redirected to the Keycloak login page &rarr; authenticate &rarr; you are redirected back and logged in</li>
+      <li>In <strong>Admin Panel &rarr; Users</strong>, the user&rsquo;s Auth Source shows <code>OAuth2 / Keycloak</code></li>
+    </ol>
+
+    <hr />
+
+    <!-- ======================================================================================== -->
+    <h2 id="keycloak-ldap">4. Keycloak &mdash; LDAP User Federation</h2>
+
+    <p>Keycloak can federate users from Active Directory or OpenLDAP into its realm. Once configured, FlowSquad connects to Keycloak as its LDAP provider &mdash; meaning all directory lookups go through Keycloak rather than directly to your AD/LDAP server.</p>
+
+    <div class="callout callout-info">
+      <span class="callout-icon">&#9432;</span>
+      <div class="callout-body"><strong>Direct LDAP is also supported</strong><p>If you do not use Keycloak, FlowSquad can connect directly to Active Directory or OpenLDAP &mdash; see the <a href="integration-guide.html#ldap">Integration Guide &mdash; LDAP / Active Directory</a>. This section covers the Keycloak-as-LDAP-proxy pattern used in some enterprise setups.</p></div>
+    </div>
+
+    <h3>Step 1: Add LDAP Federation to Keycloak</h3>
+    <ol>
+      <li>Keycloak Admin &rarr; select your realm &rarr; <strong>User Federation &rarr; Add provider &rarr; LDAP</strong></li>
+      <li>Fill in the connection settings:</li>
+    </ol>
+    <pre><code>Vendor:               Active Directory  (or Other for OpenLDAP)
+Connection URL:       ldap://ad.yourcompany.com:389
+                      (use ldaps://ad.yourcompany.com:636 for encrypted)
+Bind DN:              CN=svc-keycloak,OU=ServiceAccounts,DC=yourcompany,DC=com
+Bind Credential:      (service account password)
+Users DN:             OU=Users,DC=yourcompany,DC=com
+UUID LDAP attribute:  objectGUID   (Active Directory) or entryUUID (OpenLDAP)
+User object classes:  person, organizationalPerson, user</code></pre>
+    <ol start="3">
+      <li>Click <strong>Test connection</strong> and <strong>Test authentication</strong> to validate</li>
+      <li>Click <strong>Save</strong> &rarr; click <strong>Sync all users</strong> to import directory users into the Keycloak realm</li>
+    </ol>
+
+    <h3>Step 2: Configure Attribute Mappers in Keycloak</h3>
+    <p>Ensure the LDAP provider maps the correct attributes. In the LDAP federation settings &rarr; <strong>Mappers</strong> tab, verify that at minimum the following are mapped:</p>
+    <pre><code>username   &rarr;  sAMAccountName (AD) or uid (OpenLDAP)
+email      &rarr;  mail
+firstName  &rarr;  givenName
+lastName   &rarr;  sn</code></pre>
+
+    <h3>Step 3: Connect FlowSquad to Keycloak LDAP</h3>
+    <p>Once Keycloak is federating your AD/LDAP users, FlowSquad can authenticate against Keycloak using either of two approaches:</p>
+    <ul>
+      <li><strong>SAML or OAuth2 (recommended)</strong> &mdash; users authenticate at Keycloak (which validates against AD/LDAP internally) and are redirected back to FlowSquad. Follow the Keycloak SAML or OAuth2 steps above.</li>
+      <li><strong>Direct LDAP to Keycloak&rsquo;s LDAP interface</strong> &mdash; point FlowSquad&rsquo;s LDAP configuration at Keycloak&rsquo;s built-in LDAP server (<code>ldap://keycloak.yourcompany.com:10389</code> by default if enabled). This approach is less common and requires enabling the LDAP feature in Keycloak.</li>
+    </ul>
+    <p>For most deployments, configuring Keycloak SAML or OIDC (sections above) and enabling LDAP federation inside Keycloak is the cleanest architecture.</p>
+
+    <hr />
+
+    <!-- ======================================================================================== -->
+    <h2 id="nginx">5. nginx Reverse Proxy with HTTPS</h2>
+
+    <p>Use this configuration to run FlowSquad on port 5000 (the default) behind nginx on port 443, with nginx handling TLS termination. This is the recommended pattern for Linux and Docker deployments.</p>
+
+    <h3>Prerequisites</h3>
+    <ul>
+      <li>nginx 1.18+ installed on the server or in a container alongside FlowSquad</li>
+      <li>A TLS certificate and private key (Let&rsquo;s Encrypt / Certbot, or a corporate CA-issued certificate)</li>
+      <li>DNS pointing your FlowSquad domain to the nginx server&rsquo;s public IP</li>
+      <li>Ports 80 and 443 open in the firewall</li>
+    </ul>
+
+    <h3>Obtaining a Certificate with Certbot (Let&rsquo;s Encrypt)</h3>
+    <pre><code># Install Certbot
+sudo apt install certbot python3-certbot-nginx   # Ubuntu/Debian
+sudo dnf install certbot python3-certbot-nginx   # RHEL/Rocky
+
+# Issue certificate (replace with your domain)
+sudo certbot --nginx -d flowsquad.yourcompany.com
+
+# Certbot writes the certificate to:
+#   /etc/letsencrypt/live/flowsquad.yourcompany.com/fullchain.pem
+#   /etc/letsencrypt/live/flowsquad.yourcompany.com/privkey.pem</code></pre>
+
+    <h3>nginx Configuration</h3>
+    <p>Create <code>/etc/nginx/sites-available/flowsquad</code> (Ubuntu/Debian) or <code>/etc/nginx/conf.d/flowsquad.conf</code> (RHEL/Rocky):</p>
+    <pre><code># Redirect HTTP to HTTPS
+server {
+    listen 80;
+    server_name flowsquad.yourcompany.com;
+    return 301 https://$host$request_uri;
+}
+
+# HTTPS termination and proxy to FlowSquad
+server {
+    listen 443 ssl http2;
+    server_name flowsquad.yourcompany.com;
+
+    # TLS certificate (Let's Encrypt / Certbot)
+    ssl_certificate     /etc/letsencrypt/live/flowsquad.yourcompany.com/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/flowsquad.yourcompany.com/privkey.pem;
+
+    # Modern TLS settings (TLS 1.2 + 1.3 only)
+    ssl_protocols       TLSv1.2 TLSv1.3;
+    ssl_ciphers         ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384;
+    ssl_prefer_server_ciphers off;
+    ssl_session_cache   shared:SSL:10m;
+    ssl_session_timeout 1d;
+
+    # Security headers
+    add_header Strict-Transport-Security "max-age=63072000; includeSubDomains" always;
+    add_header X-Frame-Options           SAMEORIGIN always;
+    add_header X-Content-Type-Options    nosniff always;
+
+    # Proxy to FlowSquad (adjust port if different)
+    location / {
+        proxy_pass         http://127.0.0.1:5000;
+        proxy_http_version 1.1;
+
+        # CRITICAL: do NOT let nginx rewrite Location headers from FlowSquad.
+        # Without this line, nginx rewrites 302 responses that point to an
+        # external Identity Provider (Keycloak, Okta, Azure AD, etc.) during
+        # SAML SSO and OAuth2 login, replacing the IdP hostname with the
+        # FlowSquad hostname.  The browser then follows the rewritten redirect
+        # back to FlowSquad instead of the IdP and receives a 404.
+        proxy_redirect     off;
+
+        # Required for SSE / streaming AI responses
+        proxy_buffering    off;
+        proxy_cache        off;
+
+        # WebSocket support (used by FlowSquad real-time features)
+        proxy_set_header   Upgrade    $http_upgrade;
+        proxy_set_header   Connection "upgrade";
+
+        # Pass real client IP to FlowSquad
+        proxy_set_header   Host              $host;
+        proxy_set_header   X-Real-IP         $remote_addr;
+        proxy_set_header   X-Forwarded-For   $proxy_add_x_forwarded_for;
+        proxy_set_header   X-Forwarded-Proto $scheme;
+
+        # Timeouts for long-running AI generation requests
+        proxy_connect_timeout  60s;
+        proxy_send_timeout     300s;
+        proxy_read_timeout     300s;
+    }
+}</code></pre>
+
+    <h3>Enable and Reload nginx</h3>
+    <pre><code># Ubuntu/Debian -- create symlink and reload
+sudo ln -s /etc/nginx/sites-available/flowsquad /etc/nginx/sites-enabled/
+sudo nginx -t               # test config syntax
+sudo systemctl reload nginx
+
+# RHEL/Rocky -- just test and reload (conf.d is auto-loaded)
+sudo nginx -t
+sudo systemctl reload nginx</code></pre>
+
+    <div class="callout callout-tip">
+      <span class="callout-icon">&#128161;</span>
+      <div class="callout-body"><strong>Docker deployment</strong><p>When FlowSquad runs in Docker, replace <code>127.0.0.1:5000</code> with the Docker container name or network alias, e.g. <code>http://flowsquad:5000</code>. Ensure both containers are on the same Docker network.</p></div>
+    </div>
+
+    <h3>Verifying the Configuration</h3>
+    <pre><code># Confirm HTTPS redirects correctly
+curl -I http://flowsquad.yourcompany.com          # Should return 301 to HTTPS
+curl -I https://flowsquad.yourcompany.com         # Should return 200
+
+# Check TLS grade at https://www.ssllabs.com/ssltest/</code></pre>
+
+    <hr />
+
+    <!-- ======================================================================================== -->
+    <h2 id="iis">6. IIS Reverse Proxy with HTTPS (Windows Server)</h2>
+
+    <p>Use IIS Application Request Routing (ARR) and URL Rewrite to proxy requests from HTTPS (port 443) to FlowSquad running on port 5000. This is the standard approach for Windows Server environments.</p>
+
+    <h3>Prerequisites</h3>
+    <ul>
+      <li>Windows Server 2016 / 2019 / 2022 with IIS installed</li>
+      <li><a href="https://www.iis.net/downloads/microsoft/application-request-routing" target="_blank">IIS Application Request Routing (ARR) 3.0</a> installed</li>
+      <li><a href="https://www.iis.net/downloads/microsoft/url-rewrite" target="_blank">IIS URL Rewrite 2.1</a> installed</li>
+      <li>A TLS certificate bound to the IIS site (corporate CA, self-signed, or <a href="https://win-acme.com" target="_blank">win-acme / WACS</a> for Let&rsquo;s Encrypt)</li>
+      <li>FlowSquad running on <code>http://localhost:5000</code></li>
+    </ul>
+
+    <h3>Step 1: Enable ARR Proxy</h3>
+    <ol>
+      <li>Open <strong>IIS Manager</strong> &rarr; click on the <strong>server node</strong> (top-level)</li>
+      <li>Double-click <strong>Application Request Routing Cache</strong></li>
+      <li>In the right-hand Actions pane, click <strong>Server Proxy Settings</strong></li>
+      <li>Check <strong>Enable proxy</strong> &rarr; click <strong>Apply</strong></li>
+    </ol>
+
+    <h3>Step 2: Create a New IIS Website for FlowSquad</h3>
+    <ol>
+      <li>In IIS Manager &rarr; <strong>Sites &rarr; Add Website</strong></li>
+      <li>Fill in:
+        <ul>
+          <li><strong>Site name:</strong> <code>FlowSquad</code></li>
+          <li><strong>Physical path:</strong> any local folder (e.g. <code>C:\inetpub\flowsquad</code>) &mdash; IIS needs a physical path even for a pure proxy site</li>
+          <li><strong>Binding type:</strong> <code>https</code>, <strong>Port:</strong> <code>443</code>, <strong>Host name:</strong> <code>flowsquad.yourcompany.com</code></li>
+          <li><strong>SSL certificate:</strong> select your certificate from the dropdown</li>
+        </ul>
+      </li>
+      <li>Click <strong>OK</strong></li>
+    </ol>
+
+    <h3>Step 3: Add URL Rewrite Rules</h3>
+    <ol>
+      <li>Select the <strong>FlowSquad</strong> site in IIS Manager</li>
+      <li>Double-click <strong>URL Rewrite</strong></li>
+      <li>Click <strong>Add Rule(s) &rarr; Reverse Proxy</strong></li>
+      <li>Enter the backend server URL: <code>localhost:5000</code> &rarr; click <strong>OK</strong></li>
+    </ol>
+    <p>Alternatively, create the rule manually by editing <code>web.config</code> in the site root:</p>
+    <div class="callout callout-warn">
+      <span class="callout-icon">&#9888;&#65039;</span>
+      <div class="callout-body"><strong>Required: forward the public hostname to FlowSquad</strong>
+        <p>IIS terminates HTTPS and forwards plain HTTP to FlowSquad on port 5000. Without the
+        <code>serverVariables</code> block below, FlowSquad sees <code>localhost:5000</code> as the
+        request host instead of your public domain. This causes the SAML SP Entity ID and ACS URL
+        to be derived from <code>localhost:5000</code>, which will not match what is registered in
+        your IdP and results in an <strong>&ldquo;Invalid Request&rdquo;</strong> error during SSO.</p>
+      </div>
+    </div>
+
+    <div class="callout callout-warn">
+      <span class="callout-icon">&#9888;&#65039;</span>
+      <div class="callout-body"><strong>Required for SAML and OAuth2: disable ARR built-in Location rewriting</strong>
+        <p>ARR has a built-in setting called <strong>&ldquo;Reverse rewrite host in response headers&rdquo;</strong>
+        that is <strong>enabled by default</strong>. It rewrites the <code>Location</code> header of every 3xx
+        response, replacing any hostname that is not the ARR frontend with the ARR frontend hostname. This
+        <strong>breaks SAML SSO and OAuth2 login</strong>: FlowSquad emits a correct 302 redirect to the IdP
+        (e.g. <code>https://keycloak.yourcompany.com/realms/...</code>), ARR silently rewrites it to
+        <code>https://flowsquad.yourcompany.com/realms/...</code>, and the browser hits FlowSquad instead of
+        Keycloak, getting a 404.</p>
+        <p><strong>You must disable this setting once, at the server level:</strong><br/>
+        IIS Manager &rarr; <strong>server node</strong> (top-level) &rarr; <strong>Application Request Routing Cache</strong>
+        &rarr; <strong>Server Proxy Settings</strong> &rarr; <strong>uncheck &ldquo;Reverse rewrite host in response headers&rdquo;</strong>
+        &rarr; <strong>Apply</strong>.</p>
+        <p>The <code>FlowSquad-PreserveIdPLocation</code> outbound rule in the <code>web.config</code> below
+        is an <em>additional</em> site-level safeguard but does <strong>not</strong> replace this server-level setting.</p>
+      </div>
+    </div>
+
+    <pre><code>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;configuration&gt;
+  &lt;system.webServer&gt;
+    &lt;rewrite&gt;
+      &lt;rules&gt;
+        &lt;!-- WebSocket upgrade (FlowSquad real-time features) --&gt;
+        &lt;rule name="FlowSquad-WebSocket" stopProcessing="true"&gt;
+          &lt;match url="(.*)" /&gt;
+          &lt;conditions&gt;
+            &lt;add input="{HTTP_UPGRADE}" pattern="websocket" /&gt;
+          &lt;/conditions&gt;
+          &lt;serverVariables&gt;
+            &lt;set name="HTTP_X_FORWARDED_PROTO" value="https" /&gt;
+            &lt;set name="HTTP_X_FORWARDED_HOST"  value="{HTTP_HOST}" /&gt;
+          &lt;/serverVariables&gt;
+          &lt;action type="Rewrite" url="http://localhost:5000/{R:1}" /&gt;
+        &lt;/rule&gt;
+        &lt;!-- All other requests --&gt;
+        &lt;rule name="FlowSquad-Proxy" stopProcessing="true"&gt;
+          &lt;match url="(.*)" /&gt;
+          &lt;serverVariables&gt;
+            &lt;set name="HTTP_X_FORWARDED_PROTO" value="https" /&gt;
+            &lt;set name="HTTP_X_FORWARDED_HOST"  value="{HTTP_HOST}" /&gt;
+          &lt;/serverVariables&gt;
+          &lt;action type="Rewrite" url="http://localhost:5000/{R:1}" /&gt;
+        &lt;/rule&gt;
+      &lt;/rules&gt;
+      &lt;outboundRules&gt;
+        &lt;!--
+          SAML / OAuth2 IdP redirect passthrough.
+          Any Location header pointing to an external https:// host is an IdP
+          redirect (SAML AuthnRequest or OAuth2 authorization endpoint).
+          stopProcessing="true" prevents subsequent rules and ARR's built-in
+          host rewriter from touching it.
+        --&gt;
+        &lt;rule name="FlowSquad-PreserveIdPLocation"
+              preCondition="ResponseIsRedirect"
+              stopProcessing="true"&gt;
+          &lt;match serverVariable="RESPONSE_Location"
+                 pattern="^https://(?!localhost)" /&gt;
+          &lt;action type="None" /&gt;
+        &lt;/rule&gt;
+        &lt;!--
+          Safety net: rewrite any Location that still carries the raw backend
+          address (http://localhost:5000/...) to the public HTTPS URL.
+          Uses {HTTP_HOST} so this config works for any hostname without edits.
+        --&gt;
+        &lt;rule name="FlowSquad-RewriteLocalhostLocation"
+              preCondition="ResponseIsRedirect"&gt;
+          &lt;match serverVariable="RESPONSE_Location"
+                 pattern="^http://localhost:5000/(.*)" /&gt;
+          &lt;action type="Rewrite"
+                  value="https://{HTTP_HOST}/{R:1}" /&gt;
+        &lt;/rule&gt;
+        &lt;preConditions&gt;
+          &lt;preCondition name="ResponseIsRedirect"&gt;
+            &lt;add input="{RESPONSE_STATUS}" pattern="3[0-9][0-9]" /&gt;
+          &lt;/preCondition&gt;
+        &lt;/preConditions&gt;
+      &lt;/outboundRules&gt;
+    &lt;/rewrite&gt;
+    &lt;security&gt;
+      &lt;requestFiltering&gt;
+        &lt;requestLimits maxAllowedContentLength="104857600" /&gt;
+      &lt;/requestFiltering&gt;
+    &lt;/security&gt;
+  &lt;/system.webServer&gt;
+&lt;/configuration&gt;</code></pre>
+
+    <h3>Step 4: HTTP to HTTPS Redirect (Optional but Recommended)</h3>
+    <ol>
+      <li>In IIS Manager &rarr; <strong>Sites &rarr; Add Website</strong> &rarr; create a second site:
+        <ul>
+          <li><strong>Site name:</strong> <code>FlowSquad-HTTP-Redirect</code></li>
+          <li><strong>Binding type:</strong> <code>http</code>, <strong>Port:</strong> <code>80</code>, <strong>Host name:</strong> <code>flowsquad.yourcompany.com</code></li>
+        </ul>
+      </li>
+      <li>Select that site &rarr; URL Rewrite &rarr; Add Rule &rarr; <strong>Blank rule</strong>:
+        <ul>
+          <li>Name: <code>Redirect HTTP to HTTPS</code></li>
+          <li>Match URL: <code>.*</code></li>
+          <li>Action type: <strong>Redirect</strong></li>
+          <li>Redirect URL: <code>https://flowsquad.yourcompany.com/{R:0}</code></li>
+          <li>Redirect type: <strong>Permanent (301)</strong></li>
+        </ul>
+      </li>
+    </ol>
+
+    <h3>Step 5: Add Security Response Headers</h3>
+    <ol>
+      <li>Select the FlowSquad HTTPS site &rarr; double-click <strong>HTTP Response Headers</strong></li>
+      <li>Add the following headers:</li>
+    </ol>
+    <pre><code>Strict-Transport-Security:  max-age=63072000; includeSubDomains
+X-Frame-Options:            SAMEORIGIN
+X-Content-Type-Options:     nosniff</code></pre>
+
+    <h3>Verifying the Configuration</h3>
+    <pre><code># In Windows PowerShell -- check HTTPS responds correctly
+Invoke-WebRequest -Uri "https://flowsquad.yourcompany.com" -UseBasicParsing
+
+# Check that HTTP redirects to HTTPS
+Invoke-WebRequest -Uri "http://flowsquad.yourcompany.com" -MaximumRedirection 0 -ErrorAction SilentlyContinue | Select-Object StatusCode, Headers</code></pre>
+
+    <div class="callout callout-warn">
+      <span class="callout-icon">&#9888;&#65039;</span>
+      <div class="callout-body"><strong>SSE / Streaming AI responses</strong><p>FlowSquad uses Server-Sent Events (SSE) to stream AI-generated content to the browser. IIS ARR buffers responses by default. To prevent this, open the FlowSquad site&rsquo;s ARR settings and set <strong>Response buffer threshold</strong> to <code>0</code>, or add <code>&lt;responseBufferLimit&gt;0&lt;/responseBufferLimit&gt;</code> in the <code>system.webServer/serverRuntime</code> section of <code>web.config</code>.</p></div>
+    </div>
+
+    <h3>Binding an SSL Certificate Issued by a Corporate CA</h3>
+    <ol>
+      <li>Import the certificate and its full chain into the <strong>Local Computer &rarr; Personal</strong> certificate store:
+        <code>certlm.msc &rarr; Personal &rarr; Certificates &rarr; right-click &rarr; All Tasks &rarr; Import</code></li>
+      <li>In IIS Manager &rarr; select the FlowSquad HTTPS site &rarr; <strong>Bindings &rarr; Edit</strong> &rarr; select the imported certificate from the SSL certificate dropdown</li>
+    </ol>
+
+  </main>
+
+</div><!-- /.docs-shell -->
+
+<!-- ---- Footer ------------------------------------------------------------------------------------------------ -->
+<footer class="docs-footer">
+  <span>&copy; FlowSquad. All rights reserved.</span>
+  <span class="footer-sep">|</span>
+  <a href="mailto:support@flowsquad.ai">support@flowsquad.ai</a>
+  <span class="footer-sep">|</span>
+  <a href="#">Privacy Policy</a>
+</footer>
+
+</body>
+</html>

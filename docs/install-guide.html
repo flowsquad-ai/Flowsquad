@@ -1,0 +1,1693 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Installation Guide &mdash; FlowSquad Enterprise Docs</title>
+  <meta name="description" content="FlowSquad Enterprise Installation Guide: Install FlowSquad on Windows, Linux, Docker, or Kubernetes. Covers prerequisites, HTTPS/TLS setup, Fernet encryption, and post-install troubleshooting." />
+  <meta name="keywords" content="FlowSquad install, Windows installation, Linux installation, Docker deployment, Kubernetes, HTTPS TLS, Fernet encryption, Nginx reverse proxy" />
+  <meta property="og:title" content="FlowSquad Enterprise Installation Guide" />
+  <meta property="og:description" content="Step-by-step installation instructions for FlowSquad Enterprise on Windows, Linux, Docker, and Kubernetes &mdash; including HTTPS/TLS setup, Fernet encryption, and inline troubleshooting." />
+  <meta property="og:type" content="article" />
+  <link rel="canonical" href="https://flowsquad.ai/docs/install-guide" />
+  <link rel="stylesheet" href="docs.css" />
+  <script src="docs-theme.js"></script>
+</head>
+<body>
+
+<!-- ---- Top Navigation -------------------------------------------------------------------------------- -->
+<nav class="docs-nav">
+  <button class="hamburger" aria-label="Toggle sidebar">&#9776;</button>
+  <a href="https://flowsquad.ai" class="nav-logo" target="_blank" rel="noopener noreferrer">
+    <img src="icon.png" alt="FlowSquad Logo" />
+  </a>
+  <span class="nav-label">Docs</span>
+  <button class="nav-theme-btn" id="docs-theme-btn" title="Toggle dark / light mode"></button>
+  <a href="index.html" class="nav-back">&larr; All Guides</a>
+</nav>
+
+<!-- ---- Download Toolbar -------------------------------------------------------------- -->
+<div class="docs-download-bar">
+  <span class="dl-label">Download:</span>
+  <button class="docs-dl-btn" id="dlHtmlBtn" title="Save this page as HTML">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm-1 1.5L18.5 9H13V3.5zM6 20V4h5v7h7v9H6z"/></svg>
+    HTML
+  </button>
+  <button class="docs-dl-btn" id="dlPdfBtn" title="Print / Save as PDF">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2zm-7 3a4 4 0 1 1 0 8 4 4 0 0 1 0-8zm0 10c-2.67 0-8 1.34-8 4v1h16v-1c0-2.66-5.33-4-8-4z"/></svg>
+    PDF
+  </button>
+</div>
+<script>
+document.getElementById('dlHtmlBtn').addEventListener('click', function() {
+  var blob = new Blob([document.documentElement.outerHTML], {type: 'text/html'});
+  var a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = (document.title || 'page').replace(/[^a-z0-9_-]/gi, '_') + '.html';
+  a.click();
+  URL.revokeObjectURL(a.href);
+});
+document.getElementById('dlPdfBtn').addEventListener('click', function() {
+  window.print();
+});
+</script>
+
+
+<!-- ---- Mobile Overlay -------------------------------------------------------------------------------- -->
+<div class="sidebar-overlay"></div>
+
+<!-- ---- Page Shell ---------------------------------------------------------------------------------------- -->
+<div class="docs-shell">
+
+  <!-- ---- Left Sidebar -------------------------------------------------------------------------------- -->
+  <aside class="docs-sidebar">
+    <div class="sidebar-section-label">Guides</div>
+    <nav class="sidebar-nav">
+      <a href="install-guide.html" class="guide-link active">Installation Guide</a>
+      <a href="setup-guide.html" class="guide-link">Setup Guide</a>
+      <a href="admin-guide.html" class="guide-link">Admin Guide</a>
+      <a href="user-guide.html" class="guide-link">User Guide</a>
+      <a href="troubleshooting-guide.html" class="guide-link">Troubleshooting</a>
+      <a href="security-guide.html" class="guide-link">Security Reference</a>
+      <a href="integration-guide.html" class="guide-link">Integration Guide</a>
+      <a href="reference-guide.html" class="guide-link">Reference Guide</a>
+    </nav>
+
+    <hr class="sidebar-divider" />
+
+    <div class="sidebar-section-label">On This Page</div>
+    <nav class="sidebar-nav">
+      <a href="#overview" class="toc-link">Overview &amp; Prerequisites</a>
+      <a href="#options" class="toc-link">Installation Options</a>
+      <a href="#windows-portable" class="toc-link">Windows Portable</a>
+      <a href="#windows-installer" class="toc-link">Windows Installer (EXE)</a>
+      <a href="#linux" class="toc-link">Linux Installer</a>
+      <a href="#docker" class="toc-link">Docker Deployment</a>
+      <a href="#kubernetes" class="toc-link">Kubernetes Deployment</a>
+      <a href="#deployment-models" class="toc-link">HTTP / HTTPS Models</a>
+      <a href="#env-vars" class="toc-link">Environment Variables</a>
+      <a href="#security" class="toc-link">Security: TLS &amp; Encryption</a>
+      <a href="#post-install" class="toc-link">Post-Install Checklist</a>
+      <a href="#troubleshooting" class="toc-link">Troubleshooting</a>
+    </nav>
+  </aside>
+
+  <!-- ---- Main Content ------------------------------------------------------------------------------------ -->
+  <main class="docs-content">
+
+    <h1>Installation Guide</h1>
+    <p class="page-subtitle">Step-by-step deployment instructions for every supported platform &mdash; Windows, Linux, Docker, and Kubernetes. Gets FlowSquad running; the <a href="setup-guide.html">Setup Guide</a> covers first-run configuration.</p>
+
+    <!-- ======================================================= -->
+    <h2 id="overview">1. Overview &amp; Prerequisites</h2>
+
+    <p>FlowSquad ships as a fully compiled, self-contained binary for each supported platform. No Python interpreter, virtual environment, or dependency installation is required on the target host. All installers are available for download from the official release page:</p>
+
+    <div class="callout callout-info">
+      <span class="callout-icon">&#x2139;</span>
+      <div class="callout-body">
+        <strong>Official download location</strong><br />
+        All FlowSquad installers are published at:<br />
+        <a href="https://github.com/flowsquad-ai/Flowsquad/releases/" target="_blank">https://github.com/flowsquad-ai/Flowsquad/releases/</a><br />
+        Always download from this location to ensure you receive a signed, authentic release.
+      </div>
+    </div>
+
+    <h3>System Requirements</h3>
+    <div class="table-wrap"><table>
+      <thead>
+        <tr><th>Component</th><th>Minimum</th><th>Recommended (Production)</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>CPU</td><td>4 cores</td><td>8+ cores</td></tr>
+        <tr><td>RAM</td><td>8 GB</td><td>16+ GB</td></tr>
+        <tr><td>Disk</td><td>20 GB SSD</td><td>100+ GB SSD</td></tr>
+        <tr><td>Operating System</td><td>Windows 10 / Ubuntu 20.04</td><td>Windows Server 2019+ / RHEL 8+ / Ubuntu 22.04+</td></tr>
+        <tr><td>Application Database</td><td>PostgreSQL 14+ or MySQL 8.0+</td><td>PostgreSQL 16+ (dedicated server)</td></tr>
+        <tr><td>Network</td><td>Port 5000 or 443 reachable</td><td>HTTPS on port 443 via reverse proxy or direct</td></tr>
+      </tbody>
+    </table></div>
+
+    <h3>License File</h3>
+    <p>FlowSquad ships with a bundled evaluation license that activates automatically on first run &mdash; no license file is needed to get started. The evaluation license allows <strong>1 product for 30 days</strong> with full feature access.</p>
+    <p>To use multiple products or for production deployments, an enterprise license is required. Contact <a href="mailto:support@flowsquad.ai">support@flowsquad.ai</a> to obtain one. Enterprise licenses are applied through <strong>Admin Panel &rarr; License Management</strong> after installation.</p>
+
+    <hr />
+
+    <!-- ======================================================= -->
+    <h2 id="options">2. Installation Options</h2>
+
+    <p>FlowSquad provides five ready-to-deploy installer packages. Select the package that matches your target platform and deployment model.</p>
+
+    <div class="table-wrap"><table>
+      <thead>
+        <tr>
+          <th>Package</th>
+          <th>Platform</th>
+          <th>Download File</th>
+          <th>Best For</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Windows Portable</strong></td>
+          <td>Windows 10 / 11 / Server</td>
+          <td><code>FlowSquad-v2.0-portable.zip</code></td>
+          <td>Quick start, single-user, lab environments</td>
+        </tr>
+        <tr>
+          <td><strong>Windows Installer</strong></td>
+          <td>Windows 10 / 11 / Server 2016+</td>
+          <td><code>FlowSquad-Setup-v2.0.exe</code></td>
+          <td>Enterprise Windows environments, multi-user deployments</td>
+        </tr>
+        <tr>
+          <td><strong>Linux &mdash; Standalone</strong></td>
+          <td>Ubuntu 20.04+ / RHEL 8+ / Debian 11+</td>
+          <td><code>FlowSquad-Linux-Standalone-v2.0.tar.gz</code></td>
+          <td>Quick start and testing without systemd. Run via included shell scripts; no service account required.</td>
+        </tr>
+        <tr>
+          <td><strong>Linux &mdash; Systemd Service</strong></td>
+          <td>Ubuntu 20.04+ / RHEL 8+ / Debian 11+</td>
+          <td><code>FlowSquad-Linux-Systemd-v2.0.tar.gz</code></td>
+          <td>Production Linux servers. Runs as a dedicated service account under systemd; auto-starts on boot. Recommended with Nginx reverse proxy.</td>
+        </tr>
+        <tr>
+          <td><strong>Docker Package</strong></td>
+          <td>Any Docker-capable host (Linux, Windows, macOS)</td>
+          <td><code>FlowSquad-Docker-v2.0.zip</code></td>
+          <td>Containerised single-server deployments, cloud VMs, CI/CD pipelines</td>
+        </tr>
+        <tr>
+          <td><strong>Kubernetes Package</strong></td>
+          <td>Kubernetes 1.21+ (any cloud or on-premises cluster)</td>
+          <td><code>FlowSquad-Kubernetes-v2.0.zip</code></td>
+          <td>High-availability, auto-scaling enterprise deployments; includes raw manifests and a Helm chart</td>
+        </tr>
+      </tbody>
+    </table></div>
+
+    <div class="callout callout-tip">
+      <span class="callout-icon">&#x1F4A1;</span>
+      <div class="callout-body">
+        <strong>Choosing between the two Linux packages</strong><br />
+        Use <strong>Standalone</strong> if you want to try FlowSquad quickly on a Linux server or in a test environment &mdash; just extract and run a shell script, no root access needed. Use <strong>Systemd</strong> for all production deployments: it creates a dedicated service account, an auto-start systemd unit, and structured journal logging. Both packages contain the same FlowSquad binary and behave identically at runtime; the difference is only in how the service is started and managed.<br /><br />
+        For production: <strong>Linux Systemd</strong> + Nginx reverse proxy (CA-signed certificate), or <strong>Docker</strong> + Docker Compose. For high-availability: <strong>Kubernetes</strong>. All configurations pair with a dedicated PostgreSQL instance.
+      </div>
+    </div>
+
+    <hr />
+
+    <!-- ======================================================= -->
+    <h2 id="windows-portable">3. Windows Portable</h2>
+
+    <p>The portable package is a self-contained ZIP archive. It requires no installation, runs directly from any folder, and needs no administrator privileges. All application data is written to the user's profile, not the extraction folder.</p>
+
+    <h3>Prerequisites</h3>
+    <ul>
+      <li>Windows 10 or Windows 11 (64-bit)</li>
+      <li>No administrator privileges required</li>
+      <li>~500 MB free disk space for the package; additional space for data</li>
+      <li>Port 5000 available (or configure a different port in the Setup Wizard)</li>
+    </ul>
+
+    <h3>Installation Steps</h3>
+    <ol class="step-list">
+      <li>Go to <a href="https://github.com/flowsquad-ai/Flowsquad/releases/" target="_blank">https://github.com/flowsquad-ai/Flowsquad/releases/</a> and download <code>FlowSquad-v2.0-portable.zip</code>.</li>
+      <li>Verify the download integrity by comparing the SHA-256 hash published on the release page:
+        <pre><code>Get-FileHash .\FlowSquad-v2.0-portable.zip -Algorithm SHA256</code></pre>
+      </li>
+      <li>Extract the archive to your chosen location &mdash; for example, <code>C:\FlowSquad</code>. Avoid extracting to a path that contains spaces.</li>
+      <li>Start FlowSquad using one of the included launcher scripts at the root of the extracted folder:
+        <ul>
+          <li><strong>Double-click <code>Start-FlowSquad.bat</code></strong> &mdash; simplest option; works from Windows Explorer.</li>
+          <li><strong>Double-click <code>Start-FlowSquad.cmd</code></strong> &mdash; shows coloured status output in the console.</li>
+        </ul>
+        The launcher starts the server in the background, waits up to 60 seconds for it to become ready, then opens <code>http://localhost:5000</code> in your default browser automatically.
+      </li>
+      <li>Your default browser opens automatically at <code>http://localhost:5000</code>. If it does not open within 60 seconds, navigate there manually.</li>
+      <li>Complete the <a href="#setup-wizard">Setup Wizard</a> to configure your database, admin account, and license.</li>
+    </ol>
+
+    <div class="callout callout-info">
+      <span class="callout-icon">&#x2139;</span>
+      <div class="callout-body">
+        <strong>Already running?</strong><br />
+        If FlowSquad is already running when you launch a start script, the script detects the existing process and prints the URL without starting a second instance. This is safe to run multiple times.
+      </div>
+    </div>
+
+    <h3>File and Data Locations</h3>
+    <div class="table-wrap"><table>
+      <thead><tr><th>Item</th><th>Location</th></tr></thead>
+      <tbody>
+        <tr><td>Start / Stop scripts</td><td>Root of extraction folder (e.g., <code>C:\FlowSquad\</code>)</td></tr>
+        <tr><td>Application binaries &amp; libraries</td><td><code>C:\FlowSquad\_internal\</code> (do not modify)</td></tr>
+        <tr><td>Evaluation license file</td><td><code>C:\FlowSquad\_internal\config\license.json</code></td></tr>
+        <tr><td>Application data &amp; configuration database</td><td><code>%LOCALAPPDATA%\FlowSquad\</code></td></tr>
+        <tr><td>Log files</td><td><code>%LOCALAPPDATA%\FlowSquad\logs\flowsquad.log</code></td></tr>
+        <tr><td>Configuration database</td><td><code>%LOCALAPPDATA%\FlowSquad\flowsquad_engine.db</code></td></tr>
+        <tr><td>Uploaded documents</td><td><code>%LOCALAPPDATA%\FlowSquad\uploaded_documents\</code></td></tr>
+      </tbody>
+    </table></div>
+
+    <div class="callout callout-info">
+      <span class="callout-icon">&#x2139;</span>
+      <div class="callout-body">
+        <strong>Data is separate from the binary</strong><br />
+        All application data is stored in <code>%LOCALAPPDATA%\FlowSquad\</code>, not inside the extraction folder. You can move, rename, or delete the extracted folder without losing your configuration or data. The <code>_internal\</code> subfolder contains compiled binaries and bundled libraries &mdash; do not rename or reorganise it.
+      </div>
+    </div>
+
+    <h3>Stopping FlowSquad</h3>
+    <p>Use one of the included stop scripts at the root of the extraction folder:</p>
+    <ul>
+      <li><strong>Double-click <code>Stop-FlowSquad.bat</code></strong> &mdash; stops the running server from Windows Explorer.</li>
+      <li><strong>Double-click <code>Stop-FlowSquad.cmd</code></strong> &mdash; shows status and confirmation.</li>
+    </ul>
+    <p>Alternatively, right-click the FlowSquad system tray icon and choose <strong>Exit</strong>.</p>
+
+    <hr />
+
+    <!-- ======================================================= -->
+    <h2 id="windows-installer">4. Windows Installer (EXE)</h2>
+
+    <p>The Windows installer is the recommended method for enterprise Windows deployments. It installs FlowSquad as a proper Windows application with Start Menu and desktop shortcuts, and registers an uninstaller via Programs and Features.</p>
+
+    <h3>Prerequisites</h3>
+    <ul>
+      <li>Windows 10, Windows 11, or Windows Server 2016 or later (64-bit)</li>
+      <li>Administrator privileges required for installation</li>
+      <li>~1 GB free disk space</li>
+      <li>Port 5000 (or 443 if using direct HTTPS) available, or configure a different port during setup</li>
+    </ul>
+
+    <div class="callout callout-warn">
+      <span class="callout-icon">&#x26A0;</span>
+      <div class="callout-body">
+        <strong>Windows Smart App Control</strong><br>
+        If <strong>Smart App Control</strong> is enabled on Windows 11 (Settings &rarr; Privacy &amp; Security &rarr; Windows Security &rarr; App &amp; browser control &rarr; Smart App Control), it may block the FlowSquad installer from running because the binary is not yet code-signed with a Microsoft-trusted certificate.<br><br>
+        <strong>How to fix:</strong> Open <em>Windows Security &rarr; App &amp; browser control &rarr; Smart App Control</em> and switch it to <strong>Off</strong>. The change takes effect immediately &mdash; no restart is needed. You can then run the installer normally.<br><br>
+        <strong>Note:</strong> Smart App Control cannot be turned back on once disabled (it permanently enters an off state). If you prefer to keep it enabled, contact your IT administrator to add a code-signing exception, or use the Docker deployment instead.
+      </div>
+    </div>
+
+    <h3>Installation Steps</h3>
+    <ol class="step-list">
+      <li>Go to <a href="https://github.com/flowsquad-ai/Flowsquad/releases/" target="_blank">https://github.com/flowsquad-ai/Flowsquad/releases/</a> and download <code>FlowSquad-Setup-v2.0.exe</code>.</li>
+      <li>Verify the download:
+        <pre><code>Get-FileHash .\FlowSquad-Setup-v2.0.exe -Algorithm SHA256</code></pre>
+        Compare the output against the SHA-256 value listed on the release page.
+      </li>
+      <li>Right-click <code>FlowSquad-Setup-v2.0.exe</code> and select <strong>Run as administrator</strong>.</li>
+      <li>Accept the End User License Agreement.</li>
+      <li>Choose the installation directory. The default is <code>C:\Program Files\FlowSquad</code>.</li>
+      <li>Click <strong>Install</strong> and wait for completion (approximately 1&ndash;2 minutes). The installer creates a desktop shortcut and configures the Windows Firewall automatically &mdash; no manual steps are required.</li>
+      <li>On the Finish page, tick <strong>"Launch FlowSquad"</strong> to start the server and open the browser.</li>
+      <li>Complete the <a href="#post-install">Setup Wizard</a> to configure your database, admin account, and license.</li>
+    </ol>
+
+    <div class="callout callout-info">
+      <span class="callout-icon">&#x2139;</span>
+      <div class="callout-body">
+        <strong>FlowSquad didn't open a browser tab after install?</strong><br>
+        The server can take up to a minute to become ready on first launch.
+        <ul style="margin-top:8px;">
+          <li>Wait a moment &mdash; once the server is ready FlowSquad will appear as an icon in the <strong>Windows notification tray</strong> (bottom-right of the taskbar).</li>
+          <li>Right-click the tray icon and choose <strong>Open FlowSquad</strong>, <strong>or</strong></li>
+          <li>Open your browser manually and navigate to <strong><code>http://localhost:5000</code></strong>.</li>
+          <li>The desktop shortcut launches the server and then opens the browser automatically &mdash; double-clicking it while FlowSquad is already running simply opens the browser to the running instance.</li>
+        </ul>
+      </div>
+    </div>
+
+    <h3>Starting and Stopping FlowSquad</h3>
+    <p>Use the batch scripts installed with FlowSquad:</p>
+    <ul>
+      <li><strong>Start:</strong> double-click <code>Start-FlowSquad.bat</code> in the install folder, or use the <em>FlowSquad</em> Start Menu / desktop shortcut.</li>
+      <li><strong>Stop:</strong> double-click <code>Stop-FlowSquad.bat</code> in the install folder, or use <em>Stop FlowSquad</em> from the Start Menu, or use Task Manager to end <code>FlowSquad.exe</code>.</li>
+    </ul>
+
+    <h3>What the Installer Creates</h3>
+    <ul>
+      <li>Application files in <code>C:\Program Files\FlowSquad\</code></li>
+      <li><code>Start-FlowSquad.bat</code> &mdash; launch script (handles UAC, readiness polling, browser open)</li>
+      <li><code>Stop-FlowSquad.bat</code> &mdash; graceful stop script</li>
+      <li>Start Menu entries: <em>FlowSquad</em>, <em>Stop FlowSquad</em>, Documentation, Setup Guide</li>
+      <li>Desktop shortcut</li>
+      <li>Windows Firewall inbound rule for TCP port 5000</li>
+      <li>Uninstaller registered in Programs and Features</li>
+    </ul>
+
+    <h3>File and Data Locations</h3>
+    <div class="table-wrap"><table>
+      <thead><tr><th>Item</th><th>Location</th></tr></thead>
+      <tbody>
+        <tr><td>Application binaries</td><td><code>C:\Program Files\FlowSquad\</code></td></tr>
+        <tr><td>Application data &amp; configuration database</td><td><code>%LOCALAPPDATA%\FlowSquad\</code></td></tr>
+        <tr><td>Log files</td><td><code>%LOCALAPPDATA%\FlowSquad\logs\flowsquad.log</code></td></tr>
+        <tr><td>Configuration database</td><td><code>%LOCALAPPDATA%\FlowSquad\flowsquad_engine.db</code></td></tr>
+      </tbody>
+    </table></div>
+
+    <h3>Uninstalling</h3>
+    <p>Open <strong>Control Panel &rarr; Programs &rarr; Programs and Features</strong>, select <strong>FlowSquad</strong>, and click <strong>Uninstall</strong>. The uninstaller removes application binaries, the firewall rule, and all shortcuts. Application data stored in <code>%LOCALAPPDATA%\FlowSquad\</code> is preserved &mdash; back up and remove this folder manually if you want a complete removal.</p>
+
+    <hr />
+
+    <!-- ======================================================= -->
+    <h2 id="linux">5. Linux Installers</h2>
+
+    <p>Two Linux packages are available. Both contain the <strong>same FlowSquad binary</strong> and behave identically at runtime &mdash; they differ only in how the service is started and managed.</p>
+
+    <div class="table-wrap"><table>
+      <thead>
+        <tr><th>Package</th><th>File</th><th>Use When</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Standalone</strong></td>
+          <td><code>FlowSquad-Linux-Standalone-v2.0.tar.gz</code></td>
+          <td>Testing, demos, or environments where you cannot or do not want a systemd service. Start/stop via shell scripts. No root access required after initial extraction.</td>
+        </tr>
+        <tr>
+          <td><strong>Systemd Service</strong></td>
+          <td><code>FlowSquad-Linux-Systemd-v2.0.tar.gz</code></td>
+          <td>All production deployments. Includes a pre-configured systemd unit, a dedicated service account, and structured journal logging. Auto-starts on boot and restarts on crash.</td>
+        </tr>
+      </tbody>
+    </table></div>
+
+    <h3>Option A &mdash; Standalone (No systemd)</h3>
+
+    <p>Use this for a quick start, testing, or environments without systemd.</p>
+
+    <h4>Prerequisites</h4>
+    <ul>
+      <li>Ubuntu 20.04+ / RHEL 8+ / Debian 11+ (64-bit)</li>
+      <li>No root access required (extraction to a user-writable directory is sufficient)</li>
+      <li>~1 GB free disk space</li>
+    </ul>
+
+    <h4>Install and Run</h4>
+    <pre><code># Download
+wget https://github.com/flowsquad-ai/Flowsquad/releases/download/v2.0/FlowSquad-Linux-Standalone-v2.0.tar.gz
+
+# Verify integrity
+sha256sum FlowSquad-Linux-Standalone-v2.0.tar.gz
+
+# Extract -- creates FlowSquad-Linux-Standalone-v2.0/ in the current directory
+tar -xzf FlowSquad-Linux-Standalone-v2.0.tar.gz
+cd FlowSquad-Linux-Standalone-v2.0
+
+# Make scripts executable
+chmod +x start-flowsquad.sh stop-flowsquad.sh
+
+# Start (runs in background; prints URL when ready)
+./start-flowsquad.sh
+
+# Stop
+./stop-flowsquad.sh</code></pre>
+
+    <p>FlowSquad is accessible at <code>http://localhost:5000</code>. Open your browser and complete the Setup Wizard.</p>
+
+    <div class="callout callout-info">
+      <span class="callout-icon">&#x2139;</span>
+      <div class="callout-body">
+        <strong>Package layout</strong><br />
+        The compiled binary and all bundled libraries live in <code>_internal/</code>. The helper scripts and <code>LICENSE.txt</code> are at the extraction root. Do not rename or reorganise the <code>_internal/</code> subfolder &mdash; the binary resolves its data files relative to that directory.
+      </div>
+    </div>
+
+    <h3>Option B &mdash; Systemd Service (Recommended for Production)</h3>
+
+    <h4>Prerequisites</h4>
+    <ul>
+      <li>Ubuntu 20.04 LTS or later, RHEL / CentOS 8 or later, or Debian 11 or later (64-bit)</li>
+      <li>Root or sudo access for initial installation</li>
+      <li>Nginx (for HTTPS and production deployments)</li>
+      <li>PostgreSQL 14+ or MySQL 8.0+ accessible from the server</li>
+      <li>~1 GB free disk space for the binary; additional space for data</li>
+    </ul>
+
+    <h4>Step 1 &mdash; Download and Verify</h4>
+    <pre><code># Download the Linux Systemd installer from the official release page
+wget https://github.com/flowsquad-ai/Flowsquad/releases/download/v2.0/FlowSquad-Linux-Systemd-v2.0.tar.gz
+
+# Verify the download integrity (compare against the hash published on the release page)
+sha256sum FlowSquad-Linux-Systemd-v2.0.tar.gz</code></pre>
+
+    <h4>Step 2 &mdash; Extract the Archive</h4>
+    <div class="callout callout-info">
+      <span class="callout-icon">&#x2139;</span>
+      <div class="callout-body">
+        <strong>The archive extracts into its own folder.</strong> Run the <code>tar</code> command in the directory where you want the extracted folder to appear (e.g. your home directory or <code>/tmp</code>).
+      </div>
+    </div>
+    <pre><code># Extract -- this creates FlowSquad-Linux-Systemd-v2.0/ in the current directory
+tar -xzf FlowSquad-Linux-Systemd-v2.0.tar.gz
+
+# Enter the extracted folder
+cd FlowSquad-Linux-Systemd-v2.0</code></pre>
+
+    <h4>Step 3 &mdash; Run the Installation Script</h4>
+    <p>The package includes an <code>install.sh</code> script that handles all setup steps automatically (creating the system user, copying files, creating data/log directories, and installing the systemd service).</p>
+    <pre><code># Make the installer executable, then run it as root
+chmod +x install.sh
+sudo ./install.sh</code></pre>
+
+    <p>The installer will:</p>
+    <ul>
+      <li>Create the <code>flowsquad</code> system user</li>
+      <li>Copy <code>_internal/</code> to <code>/opt/flowsquad/</code></li>
+      <li>Create <code>/var/lib/flowsquad/</code> (data) and <code>/var/log/flowsquad/</code> (logs)</li>
+      <li>Set correct ownership and permissions</li>
+      <li>Install <code>flowsquad.service</code> to <code>/etc/systemd/system/</code> and run <code>systemctl daemon-reload</code></li>
+    </ul>
+
+    <div class="callout callout-tip">
+      <span class="callout-icon">&#x1F4A1;</span>
+      <div class="callout-body">
+        <strong>Manual installation (alternative)</strong><br />
+        If you prefer to install manually without using <code>install.sh</code>, expand the steps below.
+      </div>
+    </div>
+
+    <details style="margin: 1rem 0;">
+      <summary style="cursor: pointer; font-weight: 600; color: var(--color-accent, #0366d6);">&#9654; Manual installation steps</summary>
+      <div style="margin-top: 1rem; padding-left: 1rem; border-left: 3px solid var(--color-border, #e1e4e8);">
+        <pre><code># Create dedicated system user
+sudo useradd --system --no-create-home --shell /usr/sbin/nologin flowsquad
+
+# Create installation directory and copy files
+sudo mkdir -p /opt/flowsquad
+sudo cp -r _internal /opt/flowsquad/
+
+# Create data and log directories
+sudo mkdir -p /var/lib/flowsquad /var/log/flowsquad
+
+# Set ownership and permissions
+sudo chown -R root:flowsquad /opt/flowsquad
+sudo chmod -R 750 /opt/flowsquad
+sudo chmod +x /opt/flowsquad/_internal/flowsquad
+sudo chown -R flowsquad:flowsquad /var/lib/flowsquad /var/log/flowsquad
+
+# Install the systemd unit file
+sudo cp flowsquad.service /etc/systemd/system/
+sudo systemctl daemon-reload</code></pre>
+      </div>
+    </details>
+
+    <h3>Step 4 &mdash; Enable and Start the Service</h3>
+    <pre><code># Reload systemd to pick up the new unit file
+sudo systemctl daemon-reload
+
+# Enable the service to start automatically on boot
+sudo systemctl enable flowsquad
+
+# Start the service now
+sudo systemctl start flowsquad
+
+# Verify the service is running
+sudo systemctl status flowsquad</code></pre>
+
+    <p>At this point FlowSquad is running on <code>http://127.0.0.1:5000</code> (bound to localhost only). Proceed to <a href="#deployment-models">Section 8 &mdash; Deployment Models</a> to configure Nginx and HTTPS.</p>
+
+    <h3>Viewing Logs</h3>
+    <pre><code># Follow live logs
+sudo journalctl -u flowsquad -f
+
+# Show logs from the last hour
+sudo journalctl -u flowsquad --since "1 hour ago"</code></pre>
+
+    <h3>Service Management Commands</h3>
+    <pre><code># Stop the service
+sudo systemctl stop flowsquad
+
+# Restart the service (e.g., after a configuration change)
+sudo systemctl restart flowsquad
+
+# Check service status
+sudo systemctl status flowsquad</code></pre>
+
+    <h3>File and Data Locations</h3>
+    <div class="table-wrap"><table>
+      <thead><tr><th>Item</th><th>Location</th></tr></thead>
+      <tbody>
+        <tr><td>Application binary</td><td><code>/opt/flowsquad/_internal/flowsquad</code></td></tr>
+        <tr><td>Evaluation license file</td><td><code>/opt/flowsquad/_internal/config/license.json</code></td></tr>
+        <tr><td>Application data</td><td><code>/var/lib/flowsquad/</code></td></tr>
+        <tr><td>Configuration database</td><td><code>/var/lib/flowsquad/flowsquad_engine.db</code></td></tr>
+        <tr><td>Uploaded documents</td><td><code>/var/lib/flowsquad/uploaded_documents/</code></td></tr>
+        <tr><td>systemd logs</td><td><code>sudo journalctl -u flowsquad</code></td></tr>
+        <tr><td>Nginx access log</td><td><code>/var/log/nginx/flowsquad-access.log</code></td></tr>
+        <tr><td>Nginx error log</td><td><code>/var/log/nginx/flowsquad-error.log</code></td></tr>
+      </tbody>
+    </table></div>
+
+    <hr />
+
+    <!-- ======================================================= -->
+    <h2 id="docker">6. Docker Deployment</h2>
+
+    <p>The Docker package is the recommended deployment method for containerised environments. It ships as a compressed ZIP archive containing a pre-built Docker image, a <code>docker-compose.yml</code>, and ready-to-run deployment scripts &mdash; no registry access or internet connection is required at deployment time.</p>
+
+    <div class="callout callout-tip">
+      <span class="callout-icon">&#x1F4A1;</span>
+      <div class="callout-body">
+        <strong>Interactive deployment scripts included &mdash; just run and follow the prompts</strong><br />
+        The ZIP contains <code>deploy.cmd</code> (Windows) and <code>deploy.sh</code> (Linux). Both scripts are interactive: they run pre-flight checks, load the image, guide you through database and license choices, and start the container. Run the script with no arguments for a fully guided deployment. Manual steps are also documented below if you prefer full control.
+      </div>
+    </div>
+
+    <h3>Prerequisites</h3>
+    <ul>
+      <li>Docker Engine 20.10 or later (or Podman &mdash; <code>deploy.sh</code> detects either automatically)</li>
+      <li>Docker Compose v2.0 or later (or <code>docker-compose</code> v1 / <code>podman-compose</code> as fallback)</li>
+      <li>PostgreSQL or MySQL accessible from the Docker host &mdash; <em>or</em> let the interactive script start a managed Postgres container for you (see <a href="#docker-postgres">Optional: bundled Postgres</a> below)</li>
+    </ul>
+
+    <h3>Step 1 &mdash; Download and Extract</h3>
+    <pre><code># Download from the official release page
+wget https://github.com/flowsquad-ai/Flowsquad/releases/download/v2.0/FlowSquad-Docker-v2.0.zip
+
+# Verify the download
+sha256sum FlowSquad-Docker-v2.0.zip
+
+# Extract the archive
+unzip FlowSquad-Docker-v2.0.zip
+cd FlowSquad-Docker-v2.0</code></pre>
+
+    <h3>Step 2 &mdash; Load the Docker Image</h3>
+
+    <p><strong>Option A &mdash; Using the deployment script (recommended)</strong></p>
+    <pre><code># Windows (Command Prompt)
+deploy.cmd
+
+# Linux (macOS not officially supported)
+chmod +x deploy.sh
+./deploy.sh</code></pre>
+    <p>Both scripts are interactive. They will guide you through each step:</p>
+    <ol>
+      <li><strong>System checks</strong> &mdash; verifies Docker version, Compose, disk space, and memory.</li>
+      <li><strong>Image load</strong> &mdash; loads the bundled <code>.tar</code> image automatically.</li>
+      <li><strong>Database setup</strong> &mdash; choose to start a managed Postgres container alongside FlowSquad, or configure your own database later in the Setup Wizard.</li>
+      <li><strong>License check</strong> &mdash; confirms the bundled evaluation license is in place. The evaluation license (1 product, 30 days) is activated automatically &mdash; no separate activation step is needed.</li>
+      <li><strong>Start</strong> &mdash; starts the container and polls <code>/health</code> until ready.</li>
+    </ol>
+    <p>Skip Steps 3 and 4 if you use this option.</p>
+
+    <div class="callout callout-info">
+      <span class="callout-icon">&#x2139;</span>
+      <div class="callout-body">
+        <strong>Windows &mdash; running <code>deploy.cmd</code></strong><br />
+        Double-click <code>deploy.cmd</code> in Windows Explorer, or open a Command Prompt in the extracted folder and type <code>deploy.cmd</code>. No additional configuration is required &mdash; batch files run directly on all supported Windows versions.
+        Alternatively, use <code>deploy.sh</code> via Git Bash or WSL on Windows.
+      </div>
+    </div>
+
+    <div class="callout callout-info">
+      <span class="callout-icon">&#x2139;</span>
+      <div class="callout-body">
+        <strong>Automatic firewall and health checks</strong><br />
+        After starting the container the script polls <code>/health</code> for up to 60 seconds. If the application does not respond, it checks whether Windows Firewall (or <code>ufw</code> / <code>firewalld</code> on Linux) is blocking port 5000 and attempts to add an allow-rule automatically. If elevation is required, it either requests a UAC prompt (Windows) or retries with <code>sudo</code> (Linux), then re-polls. You do not need to configure the firewall manually in most environments.<br /><br />
+        <strong>Note:</strong> Docker deployment scripts have been tested on Windows and Linux. macOS is not officially supported and has not been tested &mdash; use at your own risk.
+      </div>
+    </div>
+
+    <p><strong>Option B &mdash; Manual steps</strong></p>
+    <pre><code># Load the pre-built image into the local Docker daemon
+docker load &lt; flowsquad-protected-2.0.tar
+
+# Verify the image was loaded (image is stored as localhost/flowsquad:2.0)
+docker images localhost/flowsquad</code></pre>
+
+    <h3>Step 3 &mdash; Configure docker-compose.yml</h3>
+    <p>The archive includes a <code>docker-compose.yml</code> file pre-configured with sensible defaults. The only values you may need to change are the port mapping and the optional Postgres credentials. No other edits are required before starting.</p>
+    <pre><code>services:
+  flowsquad:
+    image: localhost/flowsquad:2.0
+    container_name: flowsquad-app
+    ports:
+      - "5000:5000"        # HTTP &mdash; change to 5443:5000 if using HTTPS
+    volumes:
+      # Persistent FlowSquad data (configuration DB, vector DB, uploaded documents)
+      - flowsquad-data:/data
+
+      # LICENSE: Bind the host machine-id into the container for license validation.
+      # Linux/macOS hosts: this line is active by default.
+      - /etc/machine-id:/etc/host-machine-id:ro
+      # Windows hosts: comment out the line above and set FLOWSQUAD_CLUSTER_ID below.
+
+    environment:
+      - FLOWSQUAD_DATA_DIR=/data
+      # Windows hosts or multi-cluster deployments: set a stable cluster ID
+      # - FLOWSQUAD_CLUSTER_ID=your-stable-32-char-hex-id
+
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "curl --fail --silent http://localhost:5000/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+volumes:
+  flowsquad-data:
+    driver: local</code></pre>
+
+    <h3>Step 4 &mdash; Start the Container</h3>
+
+    <p><strong>Option A &mdash; Using the deployment script (recommended)</strong></p>
+    <p>Already done &mdash; the script in Step 2 starts the container automatically.</p>
+
+    <p><strong>Option B &mdash; Manual</strong></p>
+    <pre><code># Start in the background
+docker compose up -d
+
+# Verify the container is healthy
+docker compose ps
+
+# Follow startup logs
+docker compose logs -f flowsquad</code></pre>
+
+    <p>FlowSquad is now accessible at <code>http://localhost:5000</code> (or the configured host port). Complete the <a href="#setup-wizard">Setup Wizard</a> on first access.</p>
+
+    <div class="callout callout-info">
+      <span class="callout-icon">&#x2139;</span>
+      <div class="callout-body">
+        <strong>First-run admin account</strong><br />
+        The Setup Wizard prompts you to create a Global Admin account during initial setup. If you skip that step, FlowSquad will display a reminder on the login page to complete account creation before proceeding.
+      </div>
+    </div>
+
+    <h3>Management Commands</h3>
+    <p><strong>Windows (<code>deploy.cmd</code>)</strong> &mdash; pass a flag for direct management:</p>
+    <pre><code>deploy.cmd /Status       # check container status and log level
+deploy.cmd /Logs         # follow live logs (Ctrl+C to exit)
+deploy.cmd /Stop         # stop the container
+deploy.cmd /Help         # show all available options</code></pre>
+
+    <p><strong>Linux (<code>deploy.sh</code>)</strong> &mdash; re-run the script; if FlowSquad is already running it shows a management menu:</p>
+    <pre><code>./deploy.sh</code></pre>
+    <p>The menu offers: View logs, Restart, Stop, Re-deploy, and Collect a support bundle.</p>
+    <p>Non-interactive troubleshooting sub-commands are also available directly:</p>
+    <pre><code>./deploy.sh selftest      # verify the application binary is intact
+./deploy.sh diagnostics   # collect a support bundle (.tar.gz)
+./deploy.sh debug         # restart with DEBUG logging
+./deploy.sh nodebug       # restart with normal INFO logging</code></pre>
+
+    <p>Or use Docker Compose directly:</p>
+    <pre><code># Stop all services
+docker compose down
+
+# Restart FlowSquad
+docker compose restart flowsquad
+
+# Update to a new version (load new image, then restart)
+docker load &lt; flowsquad-vX.Y.tar
+docker compose up -d
+
+# Back up the persistent data volume
+docker run --rm \
+  -v flowsquad-data:/data:ro \
+  -v $(pwd):/backup \
+  alpine tar czf /backup/flowsquad-backup-$(date +%Y%m%d).tar.gz /data
+
+# View real-time logs
+docker compose logs -f</code></pre>
+
+    <div class="callout callout-info">
+      <span class="callout-icon">&#x2139;</span>
+      <div class="callout-body">
+        <strong>Database for Docker</strong><br />
+        By default the Docker image does not bundle a database server. Connect FlowSquad to an existing PostgreSQL or MySQL instance through the Setup Wizard. Use <code>host.docker.internal</code> as the database hostname if the database is running on the Docker host (Docker Desktop / macOS / Windows), or the host's LAN IP address for Linux hosts.
+      </div>
+    </div>
+
+    <h3 id="docker-postgres">Optional: Bundled Postgres Container</h3>
+    <p>For users who do not have an existing PostgreSQL server, the deploy scripts can start a managed Postgres container alongside FlowSquad. Both containers share the same Docker network &mdash; no external database or extra networking required.</p>
+
+    <p><strong>Linux (<code>deploy.sh</code>)</strong> &mdash; the interactive script asks about the database during deployment. Select <em>"Start a managed PostgreSQL container"</em> and enter the settings when prompted (version, database name, user, password, port). The script saves these to a <code>.env</code> file and starts both containers.</p>
+
+    <p><strong>Windows (<code>deploy.cmd</code>)</strong> &mdash; pass the <code>/WithPostgres</code> flag and set a password before running:</p>
+    <pre><code>:: Set password (required &mdash; Postgres refuses to start without one)
+set POSTGRES_PASSWORD=your-strong-password
+
+:: Deploy FlowSquad + bundled Postgres
+deploy.cmd /WithPostgres</code></pre>
+    <p>Alternatively, create a <code>.env</code> file in the same folder so the password is reused on every deploy:</p>
+    <pre><code>echo POSTGRES_PASSWORD=your-strong-password > .env
+deploy.cmd /WithPostgres</code></pre>
+
+    <p><strong>Enter these values in the Setup Wizard &rarr; Database step:</strong></p>
+    <div class="table-wrap"><table>
+      <thead><tr><th>Field</th><th>Value</th></tr></thead>
+      <tbody>
+        <tr><td>Host</td><td><code>postgres</code></td></tr>
+        <tr><td>Port</td><td><code>5432</code></td></tr>
+        <tr><td>Database</td><td><code>flowsquad</code> (or the value of <code>POSTGRES_DB</code>)</td></tr>
+        <tr><td>Username</td><td><code>flowsquad</code> (or the value of <code>POSTGRES_USER</code>)</td></tr>
+        <tr><td>Password</td><td>value of <code>POSTGRES_PASSWORD</code></td></tr>
+      </tbody>
+    </table></div>
+
+    <p>The database name and username default to <code>flowsquad</code>. Override them by setting <code>POSTGRES_DB</code> and <code>POSTGRES_USER</code> in your environment or <code>.env</code> file before running the deploy command. Postgres data is persisted in a separate named volume (<code>postgres-data</code>) and survives container restarts and image upgrades.</p>
+
+    <hr />
+
+    <!-- ======================================================= -->
+    <h2 id="kubernetes">7. Kubernetes Deployment</h2>
+
+    <p>Deploy FlowSquad to Kubernetes for high-availability and auto-scaling production environments. The Kubernetes package is a separate download &mdash; <code>FlowSquad-Kubernetes-v2.0.zip</code> &mdash; available from the <a href="https://github.com/flowsquad-ai/Flowsquad/releases/" target="_blank">releases page</a>. It ships in two flavours:</p>
+    <ul>
+      <li><strong>Raw manifests</strong> &mdash; eight numbered YAML files (<code>01-namespace.yaml</code> through <code>08-hpa.yaml</code>) plus a <code>deploy.sh</code> script that applies them in order.</li>
+      <li><strong>Helm chart</strong> &mdash; a fully parameterised chart in <code>flowsquad-helm-2.0.tgz</code> for teams already using Helm.</li>
+    </ul>
+
+    <h3>Prerequisites</h3>
+    <ul>
+      <li>Kubernetes 1.21 or later with <code>kubectl</code> installed and configured</li>
+      <li>Active cluster connection &mdash; the <code>deploy.sh</code> script verifies this automatically with <code>kubectl cluster-info</code></li>
+      <li>Docker Engine 20.10+ on the machine used to load and push the image</li>
+      <li>A container registry reachable from your cluster nodes</li>
+      <li>An ingress controller (nginx-ingress recommended) and cert-manager for TLS</li>
+      <li>A PersistentVolume provisioner in the cluster</li>
+    </ul>
+
+    <div class="callout callout-tip">
+      <span class="callout-icon">&#x1F4A1;</span>
+      <div class="callout-body">
+        <strong>Image included &mdash; no separate Docker package needed</strong><br />
+        <code>FlowSquad-Kubernetes-v2.0.zip</code> bundles <code>flowsquad-protected-2.0.tar</code> directly. The <code>deploy.sh</code> script runs all pre-flight checks (kubectl, cluster connectivity, Docker, node readiness), then prompts for your registry URL to load and push the image automatically. You can also skip the script and apply the YAML files directly with <code>kubectl apply -f</code> if you prefer full control.
+      </div>
+    </div>
+
+    <div class="callout callout-info">
+      <span class="callout-icon">&#x2139;</span>
+      <div class="callout-body">
+        <strong>Managed database required</strong><br />
+        Do not run the FlowSquad database inside the same Kubernetes cluster unless you have a dedicated stateful database operator. Use a managed database service (AWS RDS, Google Cloud SQL, Azure Database for PostgreSQL, or a dedicated on-premises database server) for all production Kubernetes deployments.
+      </div>
+    </div>
+
+    <h3>Step 1 &mdash; Download, Verify, and Extract</h3>
+    <pre><code># Download the Kubernetes package
+wget https://github.com/flowsquad-ai/Flowsquad/releases/download/v2.0/FlowSquad-Kubernetes-v2.0.zip
+
+# Verify the download
+sha256sum FlowSquad-Kubernetes-v2.0.zip
+# Compare against FlowSquad-Kubernetes-v2.0.zip.sha256 from the release page
+
+# Extract
+unzip FlowSquad-Kubernetes-v2.0.zip
+cd FlowSquad-Kubernetes-v2.0</code></pre>
+
+    <h3>Step 2 &mdash; Push the Image to Your Registry</h3>
+    <p>The Kubernetes package includes <code>flowsquad-protected-2.0.tar</code>. Load it and push it to your internal registry before deploying. The <code>deploy.sh</code> script handles this interactively &mdash; or do it manually:</p>
+    <pre><code># Load the bundled image
+docker load &lt; flowsquad-protected-2.0.tar
+
+# Tag for your internal registry
+docker tag flowsquad:latest your-registry.company.com/flowsquad:v2.0
+
+# Push to the registry
+docker push your-registry.company.com/flowsquad:v2.0</code></pre>
+
+    <div class="callout callout-tip">
+      <span class="callout-icon">&#x1F4A1;</span>
+      <div class="callout-body">
+        <strong>Recommended &mdash; use deploy.sh instead of manual steps</strong><br />
+        Running <code>./deploy.sh</code> handles Steps 2&ndash;8 for you: it checks all prerequisites, prompts for a registry URL to load and push the image, then applies all manifests in order pausing before secrets:<br />
+        <pre style="margin:8px 0 0 0;background:var(--code-bg,#f6f8fa);padding:8px;border-radius:4px;"><code>chmod +x deploy.sh
+./deploy.sh</code></pre>
+        Or apply everything manually (after editing <code>03-secrets.yaml</code>):
+        <pre style="margin:8px 0 0 0;background:var(--code-bg,#f6f8fa);padding:8px;border-radius:4px;"><code>kubectl apply -f .</code></pre>
+      </div>
+    </div>
+
+    <h3>Step 3 &mdash; Create the Namespace</h3>
+    <pre><code>kubectl create namespace flowsquad</code></pre>
+
+    <h3>Step 4 &mdash; Create the License Secret</h3>
+    <p>Each Kubernetes cluster requires a stable cluster ID that was used when generating the FlowSquad license. Generate the ID once and store it securely &mdash; it must never change once the license is issued:</p>
+    <pre><code># Generate a stable cluster ID (run once; record the output)
+python3 -c "import hashlib,uuid; print(hashlib.sha256(str(uuid.uuid4()).encode()).hexdigest()[:32])"
+
+# Apply the cluster ID secret
+kubectl apply -f - &lt;&lt;EOF
+apiVersion: v1
+kind: Secret
+metadata:
+  name: flowsquad-machine
+  namespace: flowsquad
+  labels:
+    app: flowsquad
+    component: license
+type: Opaque
+stringData:
+  FLOWSQUAD_CLUSTER_ID: "REPLACE_WITH_YOUR_STABLE_CLUSTER_ID"
+EOF</code></pre>
+
+    <h3>Step 5 &mdash; Create the Application Secret</h3>
+    <pre><code>kubectl apply -f - &lt;&lt;EOF
+apiVersion: v1
+kind: Secret
+metadata:
+  name: flowsquad-secrets
+  namespace: flowsquad
+type: Opaque
+stringData:
+EOF</code></pre>
+
+    <h3>Step 6 &mdash; Create a PersistentVolumeClaim</h3>
+    <pre><code>kubectl apply -f - &lt;&lt;EOF
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: flowsquad-data
+  namespace: flowsquad
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 20Gi
+  storageClassName: standard   # Replace with your cluster's storage class
+EOF</code></pre>
+
+    <h3>Step 7 &mdash; Deploy FlowSquad</h3>
+    <pre><code>kubectl apply -f - &lt;&lt;EOF
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: flowsquad
+  namespace: flowsquad
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: flowsquad
+  template:
+    metadata:
+      labels:
+        app: flowsquad
+    spec:
+      containers:
+        - name: flowsquad
+          image: your-registry.company.com/flowsquad:v2.0
+          ports:
+            - containerPort: 5000
+          env:
+            - name: FLOWSQUAD_DATA_DIR
+              value: /data
+            - name: FLOWSQUAD_CLUSTER_ID
+              valueFrom:
+                secretKeyRef:
+                  name: flowsquad-machine
+                  key: FLOWSQUAD_CLUSTER_ID
+          volumeMounts:
+            - name: data
+              mountPath: /data
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 5000
+            initialDelaySeconds: 40
+            periodSeconds: 30
+          resources:
+            requests:
+              memory: "2Gi"
+              cpu: "1000m"
+            limits:
+              memory: "8Gi"
+              cpu: "4000m"
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: flowsquad-data
+EOF</code></pre>
+
+    <h3>Step 8 &mdash; Create a Service and Ingress</h3>
+    <pre><code># Internal ClusterIP service
+kubectl apply -f - &lt;&lt;EOF
+apiVersion: v1
+kind: Service
+metadata:
+  name: flowsquad-service
+  namespace: flowsquad
+spec:
+  selector:
+    app: flowsquad
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 5000
+  type: ClusterIP
+EOF
+
+# Ingress (requires an ingress controller such as nginx-ingress)
+kubectl apply -f - &lt;&lt;EOF
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: flowsquad-ingress
+  namespace: flowsquad
+  annotations:
+    nginx.ingress.kubernetes.io/proxy-body-size: "100m"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "300"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "300"
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"   # If using cert-manager
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts:
+        - flowsquad.company.com
+      secretName: flowsquad-tls
+  rules:
+    - host: flowsquad.company.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: flowsquad-service
+                port:
+                  number: 80
+EOF</code></pre>
+
+    <h3>Alternative &mdash; Deploy with Helm</h3>
+    <p>If your cluster uses Helm, use the chart included in the Kubernetes package instead of the raw manifests:</p>
+    <pre><code># Install using the included chart tarball
+helm install flowsquad flowsquad-helm-2.0.tgz \
+  --namespace flowsquad --create-namespace \
+  --set image.repository=your-registry.company.com/flowsquad \
+  --set image.tag=v2.0 \
+  --set ingress.hosts[0].host=flowsquad.company.com
+
+# Or customise via a values file (recommended for production)
+# Edit flowsquad/values.yaml first, then:
+helm install flowsquad flowsquad-helm-2.0.tgz \
+  --namespace flowsquad --create-namespace \
+  -f my-values.yaml
+
+# Upgrade to a new version
+helm upgrade flowsquad flowsquad-helm-NEW.tgz \
+  --namespace flowsquad -f my-values.yaml
+
+# Check status
+kubectl get all -n flowsquad
+helm status flowsquad -n flowsquad</code></pre>
+
+    <h3>Kubernetes Management Commands</h3>
+    <pre><code># Check pod and service status
+kubectl get all -n flowsquad
+
+# Follow live logs
+kubectl logs -n flowsquad -l app=flowsquad -f
+
+# Scale replicas manually
+kubectl scale deployment flowsquad -n flowsquad --replicas=5
+
+# Rolling update to a new image
+kubectl set image deployment/flowsquad flowsquad=your-registry.company.com/flowsquad:vX.Y -n flowsquad
+
+# Port-forward for local access (dev / testing)
+kubectl port-forward -n flowsquad svc/flowsquad-service 5000:80
+# Then open: http://localhost:5000</code></pre>
+
+    <hr />
+
+    <!-- ======================================================= -->
+    <h2 id="deployment-models">8. Deployment Models (HTTP and HTTPS)</h2>
+
+    <p>FlowSquad supports two production deployment models. Choose the model that suits your network architecture. Both models are fully supported and enterprise-ready.</p>
+
+    <div class="callout callout-warn">
+      <span class="callout-icon">&#x26A0;</span>
+      <div class="callout-body">
+        <strong>Enterprise certificate policy</strong><br />
+        All production deployments must use a certificate issued by a trusted Certificate Authority &mdash; either a publicly trusted CA (such as Let's Encrypt or a commercial CA) or your organisation's internal enterprise CA. Self-signed certificates are not permitted in production environments and must not be used for end-user-facing deployments.
+      </div>
+    </div>
+
+    <!-- -------------------------------------------------------------------------------- -->
+    <h3>Model A &mdash; FlowSquad Behind an Nginx Reverse Proxy (Recommended)</h3>
+
+    <p>In this model FlowSquad runs as a plain HTTP service on <code>127.0.0.1:5000</code> (not exposed externally). Nginx handles HTTPS termination, certificate management, and forwards all requests to FlowSquad over the local loopback interface. This is the recommended production architecture because it:</p>
+    <ul>
+      <li>Simplifies certificate management (certificates live in Nginx, not inside FlowSquad)</li>
+      <li>Supports automatic certificate renewal via Let's Encrypt / certbot</li>
+      <li>Provides rate limiting, connection limiting, and request buffering at the proxy layer</li>
+      <li>Allows zero-downtime FlowSquad restarts without interrupting the TLS session</li>
+    </ul>
+
+    <h4>Step 1 &mdash; Install Nginx</h4>
+    <pre><code># Ubuntu / Debian
+sudo apt-get install -y nginx
+
+# RHEL / CentOS / Fedora
+sudo dnf install -y nginx
+sudo systemctl enable --now nginx</code></pre>
+
+    <h4>Step 2 &mdash; Obtain a Certificate</h4>
+    <p>Use one of the following options:</p>
+
+    <p><strong>Option A &mdash; Let's Encrypt (public domain, internet-accessible)</strong></p>
+    <pre><code># Install certbot
+sudo apt-get install -y certbot python3-certbot-nginx   # Ubuntu/Debian
+# sudo dnf install -y certbot python3-certbot-nginx     # RHEL/CentOS
+
+# Obtain and install certificate (certbot configures Nginx automatically)
+sudo certbot --nginx -d flowsquad.company.com
+
+# Verify automatic renewal
+sudo certbot renew --dry-run</code></pre>
+    <p>Certbot installs a renewal timer at <code>/etc/cron.d/certbot</code> or a systemd timer. Certificates renew automatically 30 days before expiry.</p>
+
+    <p><strong>Option B &mdash; Enterprise CA or Commercial Certificate</strong></p>
+    <p>Obtain the following files from your Certificate Authority:</p>
+    <ul>
+      <li><code>flowsquad.crt</code> &mdash; the certificate for your domain</li>
+      <li><code>flowsquad.key</code> &mdash; the private key</li>
+      <li><code>ca-bundle.crt</code> &mdash; the intermediate certificate chain (if provided by your CA)</li>
+    </ul>
+    <pre><code># If a chain file was provided, concatenate it with your certificate
+cat flowsquad.crt ca-bundle.crt &gt; /etc/ssl/certs/flowsquad-fullchain.crt
+
+# Or copy the certificate directly (if already a full chain)
+sudo cp flowsquad.crt /etc/ssl/certs/flowsquad.crt
+
+# Copy the private key (restrict permissions)
+sudo cp flowsquad.key /etc/ssl/private/flowsquad.key
+sudo chmod 600 /etc/ssl/private/flowsquad.key
+sudo chown root:root /etc/ssl/private/flowsquad.key</code></pre>
+
+    <h4>Step 3 &mdash; Configure Nginx</h4>
+    <pre><code>sudo tee /etc/nginx/sites-available/flowsquad &gt; /dev/null &lt;&lt;'EOF'
+upstream flowsquad_backend {
+    server 127.0.0.1:5000 max_fails=3 fail_timeout=30s;
+    keepalive 32;
+}
+
+# Redirect HTTP to HTTPS
+server {
+    listen 80;
+    listen [::]:80;
+    server_name flowsquad.company.com;
+
+    # Let's Encrypt renewal challenge
+    location /.well-known/acme-challenge/ {
+        root /var/www/html;
+    }
+
+    location / {
+        return 301 https://$server_name$request_uri;
+    }
+}
+
+# HTTPS &mdash; main FlowSquad entry point
+server {
+    listen 443 ssl http2;
+    listen [::]:443 ssl http2;
+    server_name flowsquad.company.com;
+
+    # Certificate paths &mdash; update to match your certificate location
+    ssl_certificate     /etc/ssl/certs/flowsquad.crt;
+    ssl_certificate_key /etc/ssl/private/flowsquad.key;
+
+    # TLS security settings (A+ rating)
+    ssl_protocols TLSv1.2 TLSv1.3;
+    ssl_ciphers 'ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305';
+    ssl_prefer_server_ciphers off;
+    ssl_session_cache shared:SSL:10m;
+    ssl_session_timeout 1d;
+    ssl_session_tickets off;
+
+    # OCSP Stapling
+    ssl_stapling on;
+    ssl_stapling_verify on;
+    resolver 8.8.8.8 8.8.4.4 valid=300s;
+    resolver_timeout 5s;
+
+    # Security headers
+    add_header Strict-Transport-Security "max-age=63072000; includeSubDomains; preload" always;
+    add_header X-Frame-Options "SAMEORIGIN" always;
+    add_header X-Content-Type-Options "nosniff" always;
+    add_header X-XSS-Protection "1; mode=block" always;
+    add_header Referrer-Policy "strict-origin-when-cross-origin" always;
+
+    # Logging
+    access_log /var/log/nginx/flowsquad-access.log;
+    error_log  /var/log/nginx/flowsquad-error.log warn;
+
+    # Allow large file uploads (match your organisation's document size policy)
+    client_max_body_size 100M;
+    client_body_timeout 300s;
+    client_header_timeout 300s;
+
+    # Gzip compression
+    gzip on;
+    gzip_vary on;
+    gzip_proxied any;
+    gzip_comp_level 6;
+    gzip_types text/plain text/css text/xml text/javascript application/json application/javascript;
+
+    # Proxy to FlowSquad
+    location / {
+        proxy_pass http://flowsquad_backend;
+
+        # CRITICAL: do NOT let nginx rewrite Location headers from the backend.
+        # Without this, nginx rewrites 302 redirects to external Identity Providers
+        # (Keycloak, Okta, etc.) during SAML/OAuth2 login, replacing the IdP host
+        # with the FlowSquad host. The browser then hits FlowSquad instead of the
+        # IdP and gets a 404. See Reference Guide -- nginx for details.
+        proxy_redirect off;
+
+        proxy_set_header Host               $host;
+        proxy_set_header X-Real-IP          $remote_addr;
+        proxy_set_header X-Forwarded-For    $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto  $scheme;
+        proxy_set_header X-Forwarded-Host   $server_name;
+        proxy_set_header X-Forwarded-Port   $server_port;
+
+        # WebSocket support (required for real-time features)
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade    $http_upgrade;
+        proxy_set_header Connection "upgrade";
+
+        proxy_connect_timeout 300s;
+        proxy_send_timeout    300s;
+        proxy_read_timeout    300s;
+
+        proxy_request_buffering off;
+    }
+
+    # Health check endpoint
+    location /health {
+        proxy_pass http://flowsquad_backend;
+        access_log off;
+    }
+
+    # Deny access to hidden files and logs
+    location ~ /\. {
+        deny all; access_log off; log_not_found off;
+    }
+}
+EOF
+
+# Enable the site
+sudo ln -s /etc/nginx/sites-available/flowsquad /etc/nginx/sites-enabled/
+
+# Test Nginx configuration
+sudo nginx -t
+
+# Reload Nginx (zero-downtime)
+sudo systemctl reload nginx</code></pre>
+
+    <p>FlowSquad is now accessible at <code>https://flowsquad.company.com</code>. FlowSquad itself continues to run on plain HTTP internally &mdash; Nginx handles all TLS. There is no SSL configuration required inside FlowSquad's Setup Wizard for this model.</p>
+
+    <!-- -------------------------------------------------------------------------------- -->
+    <h3>Model B &mdash; FlowSquad with Direct HTTPS (No Reverse Proxy)</h3>
+
+    <p>In this model FlowSquad terminates TLS directly. This is suitable for environments where an Nginx reverse proxy cannot be deployed &mdash; for example, a standalone Windows server or a Docker container exposed directly to the network. The Setup Wizard configures TLS in this scenario.</p>
+
+    <div class="callout callout-info">
+      <span class="callout-icon">&#x2139;</span>
+      <div class="callout-body">
+        <strong>Certificate requirements</strong><br />
+        A certificate and private key signed by a trusted Certificate Authority are required. Certificates must be in PEM format. Obtain them from your enterprise CA or a commercial CA before proceeding.
+      </div>
+    </div>
+
+    <h4>Preparing the Certificate Files</h4>
+    <p>Place the following files in a secure directory accessible to FlowSquad (e.g., <code>%LOCALAPPDATA%\FlowSquad\ssl\</code> on Windows, or <code>/var/lib/flowsquad/ssl/</code> on Linux):</p>
+    <ul>
+      <li><code>flowsquad.crt</code> &mdash; the full-chain certificate (certificate + intermediate chain, PEM format)</li>
+      <li><code>flowsquad.key</code> &mdash; the private key (PEM format)</li>
+    </ul>
+
+    <p>On Linux, restrict private key access:</p>
+    <pre><code>sudo mkdir -p /var/lib/flowsquad/ssl
+sudo cp flowsquad.crt /var/lib/flowsquad/ssl/
+sudo cp flowsquad.key /var/lib/flowsquad/ssl/
+sudo chmod 600 /var/lib/flowsquad/ssl/flowsquad.key
+sudo chown flowsquad:flowsquad /var/lib/flowsquad/ssl/flowsquad.key</code></pre>
+
+    <h4>Configuring HTTPS in the Setup Wizard</h4>
+    <ol class="step-list">
+      <li>Open the FlowSquad Setup Wizard (first-run) or navigate to <strong>Admin Panel &rarr; System Settings &rarr; SSL/TLS Configuration</strong>.</li>
+      <li>Enable <strong>HTTPS</strong>.</li>
+      <li>Set <strong>Certificate File</strong> to the full path of <code>flowsquad.crt</code>.</li>
+      <li>Set <strong>Private Key File</strong> to the full path of <code>flowsquad.key</code>.</li>
+      <li>Click <strong>Test &amp; Save</strong>. FlowSquad validates the certificate and private key, then restarts on the HTTPS port.</li>
+      <li>Update your firewall to allow inbound TCP on port 443 and block external access to port 5000.</li>
+    </ol>
+
+    <p>After configuration, FlowSquad is accessible at <code>https://your-server:443</code>.</p>
+
+    <hr />
+
+    <!-- ======================================================= -->
+    <h2 id="env-vars">9. Environment Variables &amp; Runtime Configuration</h2>
+
+    <p>FlowSquad reads a set of environment variables at startup. These override the defaults set by the installer and are the correct way to customise the port, bind address, data directory, log level, and cluster ID &mdash; without modifying any compiled file or config database.</p>
+
+    <div class="callout callout-info">
+      <span class="callout-icon">&#x2139;</span>
+      <div class="callout-body">
+        <strong>Where to set environment variables</strong>
+        <ul style="margin:0.4rem 0 0 1.2rem;">
+          <li><strong>systemd</strong> &mdash; add <code>Environment="KEY=value"</code> lines to the <code>[Service]</code> section of <code>/etc/systemd/system/flowsquad.service</code>, then run <code>sudo systemctl daemon-reload &amp;&amp; sudo systemctl restart flowsquad</code></li>
+          <li><strong>Docker / Docker Compose</strong> &mdash; add entries to the <code>environment:</code> block in <code>docker-compose.yml</code>, or pass <code>-e KEY=value</code> on <code>docker run</code></li>
+          <li><strong>Windows Service</strong> &mdash; set system environment variables via <em>Control Panel &rarr; System &rarr; Advanced &rarr; Environment Variables</em>, or add them in the registry key for the FlowSquad service</li>
+          <li><strong>Windows Portable / Linux Standalone</strong> &mdash; set before running the start script: <code>export FLOWSQUAD_PORT=8080 &amp;&amp; ./start-flowsquad.sh</code> (Linux), or <code>set FLOWSQUAD_PORT=8080 &amp;&amp; Start-FlowSquad.bat</code> (Windows)</li>
+        </ul>
+      </div>
+    </div>
+
+    <h3>All Supported Variables</h3>
+
+    <div class="table-wrap"><table>
+      <thead>
+        <tr><th>Variable</th><th>Default</th><th>Description</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>FLOWSQUAD_PORT</code></td>
+          <td><code>5000</code></td>
+          <td>TCP port FlowSquad listens on. Change to any available port (e.g. <code>8080</code>, <code>443</code> for direct HTTPS).</td>
+        </tr>
+        <tr>
+          <td><code>FLOWSQUAD_HOST</code></td>
+          <td><code>0.0.0.0</code></td>
+          <td>Network interface to bind to. See note below on when to change this.</td>
+        </tr>
+        <tr>
+          <td><code>FLOWSQUAD_DATA_DIR</code></td>
+          <td>Platform-specific<br />(see table below)</td>
+          <td>Directory where FlowSquad writes the configuration database (<code>flowsquad_engine.db</code>), vector store, and uploaded documents. Must be writable by the FlowSquad process.</td>
+        </tr>
+        <tr>
+          <td><code>FLOWSQUAD_LOG_LEVEL</code></td>
+          <td><code>INFO</code></td>
+          <td>Application log verbosity. Accepted values: <code>DEBUG</code>, <code>INFO</code>, <code>WARNING</code>, <code>ERROR</code>. Use <code>DEBUG</code> to capture detailed request/response traces for troubleshooting; revert to <code>INFO</code> for production (DEBUG logs are verbose and may expose sensitive data in log files).</td>
+        </tr>
+        <tr>
+          <td><code>FLOWSQUAD_ENV</code></td>
+          <td><code>production</code></td>
+          <td>Runtime environment hint. Set to <code>development</code> to enable more detailed error pages and relaxed HTTPS checks. Should always be <code>production</code> in deployed environments.</td>
+        </tr>
+        <tr>
+          <td><code>FLOWSQUAD_CLUSTER_ID</code></td>
+          <td>(auto-detected)</td>
+          <td>License binding identifier. Required for Docker and Kubernetes deployments where <code>/etc/machine-id</code> is not available. Must be a stable 32-character hex string that was used when the license was issued. Do not change after license issuance.</td>
+        </tr>
+        <tr>
+          <td><code>FLOWSQUAD_SECRET_KEY</code></td>
+          <td>(auto-generated)</td>
+          <td>Session signing key. Auto-generated and persisted in the configuration database on first start. Only override if you need deterministic session keys across multiple instances (advanced use case).</td>
+        </tr>
+      </tbody>
+    </table></div>
+
+    <h3>Default Data Directory by Platform</h3>
+
+    <div class="table-wrap"><table>
+      <thead><tr><th>Platform</th><th>Default <code>FLOWSQUAD_DATA_DIR</code></th></tr></thead>
+      <tbody>
+        <tr><td>Windows (Portable / Installer)</td><td><code>%LOCALAPPDATA%\FlowSquad\</code></td></tr>
+        <tr><td>Linux (Standalone)</td><td>Subdirectory of the extraction folder</td></tr>
+        <tr><td>Linux (Systemd)</td><td><code>/var/lib/flowsquad/</code> (set in the systemd unit file)</td></tr>
+        <tr><td>Docker</td><td><code>/data</code> (inside the container; backed by a named volume)</td></tr>
+        <tr><td>Kubernetes</td><td><code>/data</code> (inside the container; backed by the PVC)</td></tr>
+      </tbody>
+    </table></div>
+
+    <h3>Bind Address: <code>0.0.0.0</code> vs <code>127.0.0.1</code></h3>
+
+    <p>By default, FlowSquad binds to <code>0.0.0.0</code> (all interfaces), which makes it reachable on any IP address of the host. This is intentional for Docker and Kubernetes, where the container has no external firewall and the port mapping controls external exposure.</p>
+
+    <div class="table-wrap"><table>
+      <thead>
+        <tr><th>Deployment</th><th>Recommended <code>FLOWSQUAD_HOST</code></th><th>Why</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Linux with nginx reverse proxy (Model A)</strong></td>
+          <td><code>127.0.0.1</code></td>
+          <td>FlowSquad should <strong>only</strong> be reachable from the local nginx process, not from external network interfaces. Binding to loopback ensures port 5000 is never exposed externally, even if the firewall is misconfigured. The nginx config proxies <code>127.0.0.1:5000</code> over the loopback.</td>
+        </tr>
+        <tr>
+          <td><strong>Windows with IIS reverse proxy</strong></td>
+          <td><code>127.0.0.1</code></td>
+          <td>Same reason as Linux + nginx. IIS ARR proxies to <code>localhost:5000</code> over loopback.</td>
+        </tr>
+        <tr>
+          <td><strong>Docker (port-mapped)</strong></td>
+          <td><code>0.0.0.0</code> (default)</td>
+          <td>Docker's port mapping (<code>-p 5000:5000</code>) controls external exposure. The container itself uses <code>0.0.0.0</code> so Docker can route traffic to it internally.</td>
+        </tr>
+        <tr>
+          <td><strong>Direct HTTPS (Model B) or standalone testing</strong></td>
+          <td><code>0.0.0.0</code> (default)</td>
+          <td>FlowSquad handles all connections directly; it must listen on all interfaces or the specific external interface IP.</td>
+        </tr>
+        <tr>
+          <td><strong>Windows Portable (local-only)</strong></td>
+          <td><code>127.0.0.1</code> (optional)</td>
+          <td>If only local browser access is needed and you want to prevent LAN access, change to loopback.</td>
+        </tr>
+      </tbody>
+    </table></div>
+
+    <h4>How to Change the Bind Address</h4>
+    <p><strong>Linux systemd:</strong> add to the <code>[Service]</code> section:</p>
+    <pre><code>Environment="FLOWSQUAD_HOST=127.0.0.1"</code></pre>
+    <p>Then reload: <code>sudo systemctl daemon-reload &amp;&amp; sudo systemctl restart flowsquad</code></p>
+
+    <p><strong>Docker Compose</strong> &mdash; add to the <code>environment:</code> block:</p>
+    <pre><code>environment:
+  - FLOWSQUAD_HOST=0.0.0.0   # Keep 0.0.0.0 for Docker; rely on port mapping</code></pre>
+
+    <p><strong>Linux Standalone / Windows Portable</strong> &mdash; set before launching:</p>
+    <pre><code># Linux
+export FLOWSQUAD_HOST=127.0.0.1
+./start-flowsquad.sh
+
+# Windows
+set FLOWSQUAD_HOST=127.0.0.1
+Start-FlowSquad.bat</code></pre>
+
+    <h3>Running in Debug Mode</h3>
+
+    <p>Debug mode enables verbose request/response logging and detailed error pages. <strong>Never use DEBUG in production</strong> &mdash; it logs request payloads, headers, and database queries which may include credentials and user data.</p>
+
+    <pre><code># Linux systemd -- add to [Service] section of the unit file, then reload
+Environment="FLOWSQUAD_LOG_LEVEL=DEBUG"
+Environment="FLOWSQUAD_ENV=development"
+
+# Linux Standalone
+export FLOWSQUAD_LOG_LEVEL=DEBUG
+export FLOWSQUAD_ENV=development
+./start-flowsquad.sh
+
+# Docker Compose -- add to environment block
+- FLOWSQUAD_LOG_LEVEL=DEBUG
+- FLOWSQUAD_ENV=development
+
+# Windows (Portable)
+set FLOWSQUAD_LOG_LEVEL=DEBUG
+set FLOWSQUAD_ENV=development
+Start-FlowSquad.bat</code></pre>
+
+    <h3>Running on a Custom Port</h3>
+
+    <pre><code># Linux systemd -- add to [Service] section, then daemon-reload &amp; restart
+Environment="FLOWSQUAD_PORT=8080"
+
+# Linux Standalone
+export FLOWSQUAD_PORT=8080
+./start-flowsquad.sh
+
+# Docker Compose -- change the host-side port mapping AND set the env var
+ports:
+  - "8080:8080"   # host:container
+environment:
+  - FLOWSQUAD_PORT=8080
+
+# Windows
+set FLOWSQUAD_PORT=8080
+Start-FlowSquad.bat</code></pre>
+
+    <div class="callout callout-warn">
+      <span class="callout-icon">&#x26A0;</span>
+      <div class="callout-body">
+        <strong>Update your reverse proxy when changing the port</strong><br />
+        If you change <code>FLOWSQUAD_PORT</code> and are using nginx or IIS as a reverse proxy, update the <code>proxy_pass</code> target (nginx) or <code>web.config</code> rewrite URL (IIS) to match the new port. Also update any firewall rules that reference port 5000.
+      </div>
+    </div>
+
+    <hr />
+
+    <!-- ======================================================= -->
+    <h2 id="security">10. Security: TLS &amp; Encryption</h2>
+
+    <div class="callout callout-info">
+      <span class="callout-icon">&#x2139;</span>
+      <div class="callout-body">
+        <strong>Deployment-time security decisions</strong><br />
+        The two security topics below are settled at deploy time &mdash; before users log in. Post-deployment security (RBAC, audit logs, hardening checklist) is covered in the <a href="admin-guide.html">Admin Guide</a>. A printable Security Reference is at <a href="security-guide.html">security-guide.html</a>.
+      </div>
+    </div>
+
+    <h3>TLS / HTTPS</h3>
+    <p>All production deployments must use HTTPS. The recommended approach for Linux and Docker is <strong>Nginx as a reverse proxy</strong> (Model A in Section 8) &mdash; TLS lives in Nginx and FlowSquad runs plain HTTP internally. For Windows or environments without a reverse proxy, configure TLS directly inside FlowSquad (Model B).</p>
+
+    <div class="table-wrap"><table>
+      <thead>
+        <tr><th>Option</th><th>Use Case</th><th>Where to Configure</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Let's Encrypt</strong> (free, auto-renewing)</td>
+          <td>Public domain, internet-accessible Linux/Docker deployment</td>
+          <td>Nginx reverse proxy &mdash; <code>sudo certbot --nginx -d flowsquad.company.com</code></td>
+        </tr>
+        <tr>
+          <td><strong>Commercial / Enterprise CA</strong></td>
+          <td>Internal deployments, air-gapped, or corporate certificate policy</td>
+          <td>Nginx: place <code>.crt</code> and <code>.key</code> in <code>/etc/ssl/</code> and update <code>ssl_certificate</code> paths (Section 8). Windows direct: Setup Wizard &rarr; SSL/TLS &rarr; Upload Custom Certificate.</td>
+        </tr>
+        <tr>
+          <td><strong>Self-signed</strong></td>
+          <td>Development / local testing only &mdash; not permitted in production</td>
+          <td>Setup Wizard &rarr; SSL/TLS &rarr; Generate Certificate</td>
+        </tr>
+      </tbody>
+    </table></div>
+
+    <h3>Configuration Database Security</h3>
+    <p>The configuration database (<code>flowsquad_engine.db</code>) stores API keys, credentials, and license information. All sensitive values are encrypted at the field level before storage â€” API keys, passwords, SAML keys, and tokens are never stored in plaintext. Whole-file database encryption is not available; for at-rest protection of the entire database file, use filesystem-level encryption (LUKS/dm-crypt on Linux, BitLocker on Windows, or place the Docker volume on an encrypted filesystem).</p>
+
+    <h4>File Permissions (Minimum Baseline)</h4>
+    <pre><code># Linux
+chmod 600 /var/lib/flowsquad/flowsquad_engine.db
+chown flowsquad:flowsquad /var/lib/flowsquad/flowsquad_engine.db
+
+# Windows (Command Prompt &mdash; Administrator)
+icacls "%LOCALAPPDATA%\FlowSquad\flowsquad_engine.db" /inheritance:d
+icacls "%LOCALAPPDATA%\FlowSquad\flowsquad_engine.db" /remove "Everyone"
+icacls "%LOCALAPPDATA%\FlowSquad\flowsquad_engine.db" /grant:r "$env:USERNAME:(R,W)"</code></pre>
+
+    <div class="callout callout-info">
+      <span class="callout-icon">&#x2139;</span>
+      <div class="callout-body">
+        <strong>Database provisioning &amp; first-run configuration</strong><br />
+        Provisioning PostgreSQL / MySQL and completing the Setup Wizard (LLM provider, authentication, integrations, admin account, license) are covered step-by-step in the <a href="setup-guide.html">Setup Guide</a>. FlowSquad uses a dual-database architecture: the configuration database (<code>flowsquad_engine.db</code>, SQLite, auto-created) for settings and secrets, and the application database (PostgreSQL or MySQL, provisioned by you) for all product data.
+      </div>
+    </div>
+
+    <h3>Configuration Database &mdash; File Locations</h3>
+    <div class="table-wrap"><table>
+      <thead><tr><th>Platform</th><th>Location</th></tr></thead>
+      <tbody>
+        <tr><td>Windows (Portable / Installer)</td><td><code>%LOCALAPPDATA%\FlowSquad\flowsquad_engine.db</code></td></tr>
+        <tr><td>Linux (systemd)</td><td><code>/var/lib/flowsquad/flowsquad_engine.db</code></td></tr>
+        <tr><td>Docker</td><td><code>/data/flowsquad_engine.db</code> (inside the mounted volume)</td></tr>
+      </tbody>
+    </table></div>
+
+    <hr />
+
+    <!-- ======================================================= -->
+    <h2 id="post-install">11. Post-Install Checklist</h2>
+
+    <p>Confirm the installation is complete before handing off to the Setup Guide.</p>
+
+    <ul class="checklist">
+      <li>FlowSquad process starts and the browser opens to the Setup Wizard or login page</li>
+      <li>HTTPS enabled &mdash; either via Nginx reverse proxy (Model A, Section 8) or direct TLS (Model B)</li>
+      <li>Certificate is CA-issued (not self-signed) and covers the correct domain name</li>
+      <li>Firewall rules verified &mdash; port 443 open to users; port 5000 blocked from external access if behind a reverse proxy</li>
+      <li>Configuration database file permissions set (<code>chmod 600</code> on Linux)</li>
+      <li>Sensitive credentials verified accessible (API keys, passwords stored encrypted at field level)</li>
+      <li>Log rotation configured (see log locations below)</li>
+      <li>For Docker: <code>docker compose ps</code> shows container as healthy &mdash; or run <code>deploy.cmd /Status</code> / <code>./deploy.sh status</code></li>
+      <li>For Linux: <code>sudo systemctl status flowsquad</code> shows active (running)</li>
+      <li>For Kubernetes: <code>kubectl get all -n flowsquad</code> shows pods Running and service ready</li>
+    </ul>
+
+    <h3>Log File Locations</h3>
+    <div class="table-wrap"><table>
+      <thead><tr><th>Platform</th><th>Location / Command</th></tr></thead>
+      <tbody>
+        <tr><td>Windows (Portable / Installer)</td><td><code>%LOCALAPPDATA%\FlowSquad\logs\flowsquad.log</code></td></tr>
+        <tr><td>Linux (systemd)</td><td><code>sudo journalctl -u flowsquad -f</code></td></tr>
+        <tr><td>Linux (Nginx access)</td><td><code>/var/log/nginx/flowsquad-access.log</code></td></tr>
+        <tr><td>Linux (Nginx errors)</td><td><code>/var/log/nginx/flowsquad-error.log</code></td></tr>
+        <tr><td>Docker</td><td><code>docker compose logs -f flowsquad</code></td></tr>
+      </tbody>
+    </table></div>
+
+    <hr />
+
+    <!-- ======================================================= -->
+    <h2 id="troubleshooting">12. Troubleshooting: Installation &amp; Startup</h2>
+
+    <h3>Windows: Script Won't Run</h3>
+    <p>Batch and CMD files run directly on Windows without any additional configuration. If <code>deploy.cmd</code> or <code>Start-FlowSquad.bat</code> does not start, ensure you are running it from a Command Prompt opened in the same folder as the script, or double-click the file directly in Windows Explorer. Do not move the scripts outside the extraction folder.</p>
+
+    <h3>Windows / Linux: Port 5000 Blocked by Firewall</h3>
+    <p>If the server starts but the browser cannot reach it, a host firewall is the most likely cause. The deploy and launcher scripts detect this automatically: after a failed health-check they query the firewall, add an inbound allow-rule for TCP 5000, and retry. If automatic fixing fails (e.g. no admin rights), they print the exact manual command. You can also add the rule yourself:</p>
+    <pre><code># Windows &mdash; run in an elevated (Administrator) Command Prompt:
+netsh advfirewall firewall add rule name="FlowSquad-Port-5000" ^
+    dir=in action=allow protocol=TCP localport=5000 enable=yes profile=any
+
+# Linux &mdash; ufw:
+sudo ufw allow 5000/tcp
+
+# Linux &mdash; firewalld:
+sudo firewall-cmd --add-port=5000/tcp --permanent
+sudo firewall-cmd --reload</code></pre>
+
+    <h3>Cannot Log In with admin / admin After Setup</h3>
+    <p>The default <code>admin / admin</code> account is created during the Setup Wizard &rarr; Step 7 (Users), or automatically when you click <em>Complete Setup</em> if no admin was created in Step 7. If login still fails after setup:</p>
+    <ol>
+      <li>Check the application log for the line <code>LocalAuthProvider: User 'admin' not found</code>:<br />
+          <code>%LOCALAPPDATA%\FlowSquad\logs\flowsquad.log</code> (Windows) or <code>/data/logs/flowsquad.log</code> (Docker)</li>
+      <li>If the line is present, re-open the Setup Wizard as a logged-in global admin and complete Step 7 to create the admin account.</li>
+      <li>If you cannot log in at all, restart FlowSquad &mdash; the startup migration will create the account on boot if none exists.</li>
+    </ol>
+
+    <h3>Windows: FlowSquad Won't Start</h3>
+    <p><strong>Symptoms:</strong> Running <code>Start-FlowSquad.bat</code> or <code>Start-FlowSquad.cmd</code> shows an error or the browser does not open after 60 seconds.</p>
+    <ol>
+      <li>Check whether port 5000 is already in use: <code>Get-NetTCPConnection -LocalPort 5000</code></li>
+      <li>If another process is using port 5000, use <code>Stop-FlowSquad.bat</code> first to stop any stale FlowSquad instance, or kill the conflicting process: <code>Get-Process -Id (Get-NetTCPConnection -LocalPort 5000).OwningProcess | Stop-Process</code></li>
+      <li>Review <code>%LOCALAPPDATA%\FlowSquad\logs\flowsquad.log</code> for error details</li>
+      <li>Verify that the <code>_internal\</code> subfolder exists alongside the start scripts &mdash; do not move the scripts outside the extraction folder</li>
+    </ol>
+
+    <h3>Docker: Container Exits Immediately</h3>
+    <p><strong>Symptoms:</strong> <code>docker ps -a</code> shows Exited (1).</p>
+    <pre><code># Inspect logs
+docker logs flowsquad 2>&amp;1 | tail -20</code></pre>
+    <p><strong>Common causes:</strong></p>
+    <ul>
+      <li><strong>Volume permission denied (Linux):</strong> <code>sudo chown -R 1000:1000 ./data &amp;&amp; chmod -R 755 ./data</code></li>
+      <li><strong>Database URL incorrect:</strong> verify the service name in <code>docker-compose.yml</code> matches your PostgreSQL service</li>
+    </ul>
+
+    <h3>SSL / TLS Issues</h3>
+    <ul>
+      <li><strong>Browser "Not Secure" warning:</strong> Expected for self-signed certificates in dev. For production, obtain a Let's Encrypt or CA-signed certificate.</li>
+      <li><strong>Certificate chain incomplete:</strong> <code>openssl s_client -connect flowsquad.company.com:443</code> &mdash; verify the full chain is present. Concatenate intermediate CA: <code>cat flowsquad.crt ca-bundle.crt &gt; fullchain.crt</code></li>
+      <li><strong>WebSocket failing:</strong> Verify Nginx config includes <code>proxy_http_version 1.1;</code> and the <code>Upgrade</code> and <code>Connection</code> proxy headers (Section 8).</li>
+      <li><strong>Certificate expired:</strong> Let's Encrypt: <code>sudo certbot renew</code>. Commercial: obtain a new certificate from your CA and update the path in Nginx.</li>
+    </ul>
+
+    <h3>Port Already in Use</h3>
+    <pre><code># Windows
+netstat -ano | findstr :5000
+taskkill /PID &lt;pid&gt; /F
+
+# Linux
+sudo lsof -i :5000
+sudo kill &lt;pid&gt;</code></pre>
+
+    <div class="callout callout-tip">
+      <span class="callout-icon">&rarr;</span>
+      <div class="callout-body">
+        <strong>Installation complete &mdash; next step: Setup Guide</strong><br />
+        FlowSquad is running. Open it in your browser and proceed to the <a href="setup-guide.html">Setup Guide</a> to complete the 10-step Setup Wizard: SSL/TLS, database, vector DB, LLM provider, authentication, integrations, admin account, license, and system settings.
+      </div>
+    </div>
+
+  </main>
+
+</div><!-- /.docs-shell -->
+
+<!-- ========================================================== -->
+<!-- FAQ &mdash; Structured for AI crawlers (ChatGPT, Gemini, Perplexity) -->
+<!-- ========================================================== -->
+<section id="faq" itemscope itemtype="https://schema.org/FAQPage">
+  <h2>Frequently Asked Questions</h2>
+
+  <article itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+    <h3 itemprop="name">Where do I download the FlowSquad installer?</h3>
+    <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+      <p itemprop="text" style="color:var(--text);margin:0;">All FlowSquad installers are published at <a href="https://github.com/flowsquad-ai/Flowsquad/releases/">https://github.com/flowsquad-ai/Flowsquad/releases/</a>. Available packages include <code>FlowSquad-v2.0-portable.zip</code> (Windows portable), <code>FlowSquad-Setup-v2.0.exe</code> (Windows installer), <code>FlowSquad-v2.0-linux.tar.gz</code> (Linux binary), and <code>FlowSquad-v2.0-docker.zip</code> (Docker image). Always verify the SHA-256 hash against the value published on the release page before installing.</p>
+    </div>
+  </article>
+
+  <article itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+    <h3 itemprop="name">What are the system requirements for FlowSquad?</h3>
+    <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+      <p itemprop="text" style="color:var(--text);margin:0;">FlowSquad requires a minimum of 4 CPU cores, 8 GB RAM, and 20 GB disk space. For production the recommendation is 8+ cores, 16+ GB RAM, and 100+ GB SSD. A PostgreSQL 14+ or MySQL 8.0+ database is required for multi-user deployments. Supported operating systems include Windows 10/11 and Windows Server 2016+, Ubuntu 20.04+, and RHEL/CentOS 8+. No Python installation is required on the target host &mdash; the installer includes an embedded runtime.</p>
+    </div>
+  </article>
+
+  <article itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+    <h3 itemprop="name">How do I install FlowSquad on Linux?</h3>
+    <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+      <p itemprop="text" style="color:var(--text);margin:0;">Download <code>FlowSquad-v2.0-linux.tar.gz</code> from the releases page and extract it to <code>/opt/flowsquad</code>. Create a dedicated <code>flowsquad</code> system user, set up the data directory at <code>/var/lib/flowsquad</code>, create a systemd service unit at <code>/etc/systemd/system/flowsquad.service</code>, and run <code>sudo systemctl enable --now flowsquad</code>. Install Nginx as a reverse proxy for HTTPS termination. The full step-by-step procedure is in the <em>Linux Installer</em> section above. No Python or virtual environment is required.</p>
+    </div>
+  </article>
+
+  <article itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+    <h3 itemprop="name">How do I deploy FlowSquad with Docker?</h3>
+    <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+      <p itemprop="text" style="color:var(--text);margin:0;">Download <code>FlowSquad-v2.0-docker.zip</code> from the releases page. Extract the archive and either run the included deployment script (<code>deploy.cmd</code> on Windows or <code>./deploy.sh</code> on Linux/macOS) for a one-command deployment with pre-flight checks, or follow the manual steps: load the image with <code>docker load &lt; flowsquad-protected-2.0.tar</code>, update <code>docker-compose.yml</code> with your machine-id volume mount and environment variables, then run <code>docker compose up -d</code>. FlowSquad starts on port 5000. Complete the Setup Wizard on first access to connect to your PostgreSQL or MySQL database. No registry access is required &mdash; the image is distributed as a self-contained tar file.</p>
+    </div>
+  </article>
+
+  <article itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+    <h3 itemprop="name">How do I deploy FlowSquad on Kubernetes?</h3>
+    <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+      <p itemprop="text" style="color:var(--text);margin:0;">Download the separate <code>FlowSquad-Kubernetes-v2.0.zip</code> package from the releases page. It contains two deployment options: raw Kubernetes manifests (eight numbered YAML files) with a <code>deploy.sh</code> script that applies them in order, and a Helm chart (<code>flowsquad-helm-2.0.tgz</code>) for Helm-based workflows. Push the Docker image to your internal registry first, then run <code>./deploy.sh</code> (manifests) or <code>helm install flowsquad flowsquad-helm-2.0.tgz</code> (Helm). Kubernetes 1.21 or later is required. Use a managed external database &mdash; do not run the FlowSquad database inside the cluster.</p>
+    </div>
+  </article>
+
+  <article itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+    <h3 itemprop="name">Where is the FlowSquad configuration database stored?</h3>
+    <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+      <p itemprop="text" style="color:var(--text);margin:0;">The configuration database file is named <code>flowsquad_engine.db</code>. On Windows (Portable and Installer) it is stored at <code>%LOCALAPPDATA%\FlowSquad\flowsquad_engine.db</code>. On Linux with the systemd deployment it is at <code>/var/lib/flowsquad/flowsquad_engine.db</code>. In Docker it is at <code>/data/flowsquad_engine.db</code> inside the mounted volume. Always include this file in your backup routine &mdash; it contains application settings and encrypted credentials.</p>
+    </div>
+  </article>
+
+  <article itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+    <h3 itemprop="name">Should I configure SSL inside FlowSquad or use a reverse proxy?</h3>
+    <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+      <p itemprop="text" style="color:var(--text);margin:0;">For Linux and Docker deployments the recommended approach is Nginx as a reverse proxy handling TLS termination &mdash; FlowSquad runs on plain HTTP on localhost and is never exposed directly. This simplifies certificate management, supports Let's Encrypt auto-renewal, and allows zero-downtime FlowSquad restarts. For standalone Windows deployments or scenarios where a reverse proxy cannot be deployed, FlowSquad can terminate TLS directly using a CA-issued certificate configured through the Setup Wizard. Self-signed certificates are not permitted in production environments.</p>
+    </div>
+  </article>
+
+  <article itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+    <h3 itemprop="name">How do I upgrade FlowSquad to a new version?</h3>
+    <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+      <p itemprop="text" style="color:var(--text);margin:0;">Always take a full database backup before upgrading. For Windows (Installer): download and run the new <code>FlowSquad-Setup-vX.Y.exe</code> &mdash; it upgrades in-place and preserves all data in <code>%LOCALAPPDATA%\FlowSquad\</code>. For Linux: stop the service, replace the binary in <code>/opt/flowsquad/</code> with the new version from the tar archive, and restart the service. For Docker: load the new image tar, update the image tag in <code>docker-compose.yml</code>, and run <code>docker compose up -d</code>. FlowSquad applies all database schema migrations automatically on startup.</p>
+    </div>
+  </article>
+
+  <article itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+    <h3 itemprop="name">Can FlowSquad run in an air-gapped environment?</h3>
+    <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+      <p itemprop="text" style="color:var(--text);margin:0;">Yes. FlowSquad can run fully offline when using Ollama as the LLM provider and ChromaDB as the vector database &mdash; both run locally with no internet dependency. License validation is performed locally without requiring internet access. All installer packages are distributed as self-contained downloadable archives and can be transferred to air-gapped environments via USB or internal file transfer. External integrations (Jira, Confluence, Git providers) are optional and only require connectivity if enabled.</p>
+    </div>
+  </article>
+</section>
+
+<!-- ---- Footer ------------------------------------------------------------------------------------------------ -->
+<footer class="docs-footer">
+  <span>(C) FlowSquad. All rights reserved.</span>
+  <span class="footer-sep">|</span>
+  <a href="mailto:support@flowsquad.ai">support@flowsquad.ai</a>
+  <span class="footer-sep">|</span>
+  <a href="#">Privacy Policy</a>
+</footer>
+
+</body>
+</html>

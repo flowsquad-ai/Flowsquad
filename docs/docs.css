@@ -1,0 +1,462 @@
+/* ============================================================================
+   FlowSquad Enterprise Docs -- Shared Stylesheet
+   Single source of truth for all docs pages.
+   Dark mode: add data-theme="dark" on <html> (done by docs-theme.js).
+   ============================================================================ */
+
+/* ---- Light tokens (default) ---------------------------------------------------------------------------------------------- */
+:root {
+  --accent:              #5865f2;
+  --accent-hover:        #4752c4;
+  /* Sidebar always dark regardless of page theme */
+  --sidebar-bg:          #1e1e2e;
+  --sidebar-text:        #cdd6f4;
+  --sidebar-muted:       #6c7086;
+  --sidebar-active:      #313244;
+  --sidebar-active-text: #cba6f7;
+  --sidebar-divider:     #313244;
+  /* Code blocks -- always dark */
+  --code-bg:             #1e1e2e;
+  --code-text:           #cdd6f4;
+  --copy-btn-bg:         #313244;
+  --copy-btn-text:       #cdd6f4;
+  --copy-btn-hover:      #45475a;
+  --copy-btn-copied-bg:  #1e4532;
+  --copy-btn-copied-text:#22c55e;
+  /* Callouts */
+  --warn-bg:             #fef3c7;
+  --warn-border:         #f59e0b;
+  --warn-text:           #78350f;
+  --info-bg:             #eff6ff;
+  --info-border:         #3b82f6;
+  --info-text:           #1e3a5f;
+  --success-bg:          #f0fdf4;
+  --success-border:      #22c55e;
+  --success-text:        #14532d;
+  /* Page surfaces */
+  --body-bg:             #f8f9fb;
+  --surface:             #ffffff;
+  --border:              #e5e7eb;
+  --text:                #1f2328;
+  --text-muted:          #57606a;
+  --nav-bg:              #ffffff;
+  --nav-border:          #e5e7eb;
+  /* Inline code */
+  --inline-code-bg:      #f0f1f4;
+  --inline-code-text:    #c7254e;
+  /* Tables */
+  --table-head-bg:       #f0f1f4;
+  --table-stripe-bg:     #fafafa;
+  /* Badges */
+  --badge-new-bg:        #e0f2fe;   --badge-new-text:      #0369a1;
+  --badge-req-bg:        #fef2f2;   --badge-req-text:      #dc2626;
+  --badge-opt-bg:        #f0fdf4;   --badge-opt-text:      #15803d;
+  /* Step-list */
+  --step-divider:        #f3f4f6;
+  /* Version badge */
+  --version-badge-bg:    #f0f1f4;
+  /* Layout constants (not colour -- no dark override needed) */
+  --nav-height:          60px;
+  --sidebar-width:       240px;
+  --toc-width:           200px;
+  --content-max:         800px;
+  --radius:              6px;
+  --font-mono:           'Consolas', 'Fira Mono', 'Courier New', monospace;
+}
+
+/* ---- Dark tokens ---------------------------------------------------------------------------------------------------------------------- */
+[data-theme="dark"] {
+  --accent:              #818cf8;
+  --accent-hover:        #a5b4fc;
+  /* Callouts -- dark tinted */
+  --warn-bg:             #1c1600;  --warn-border:   #e3b341;  --warn-text:    #f0c843;
+  --info-bg:             #0d1d29;  --info-border:   #79c0ff;  --info-text:    #a5d6ff;
+  --success-bg:          #0d1f12;  --success-border:#3fb950;  --success-text: #56d364;
+  /* Page surfaces */
+  --body-bg:             #0d1117;
+  --surface:             #161b22;
+  --border:              #30363d;
+  --text:                #e6edf3;
+  --text-muted:          #8b949e;
+  --nav-bg:              #161b22;
+  --nav-border:          #21262d;
+  /* Inline code */
+  --inline-code-bg:      #21262d;
+  --inline-code-text:    #ff7b72;
+  /* Tables */
+  --table-head-bg:       #21262d;
+  --table-stripe-bg:     #1c2128;
+  /* Badges */
+  --badge-new-bg:        #0d1d29;   --badge-new-text:     #79c0ff;
+  --badge-req-bg:        #1f0d0d;   --badge-req-text:     #ff7b72;
+  --badge-opt-bg:        #0d1f12;   --badge-opt-text:     #56d364;
+  /* Step-list */
+  --step-divider:        #21262d;
+  /* Version badge */
+  --version-badge-bg:    #21262d;
+}
+
+/* ---- OS dark mode fallback (no explicit choice yet) ------------------------------------------------ */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --accent:              #818cf8;   --accent-hover:        #a5b4fc;
+    --warn-bg:             #1c1600;   --warn-border:         #e3b341;  --warn-text:    #f0c843;
+    --info-bg:             #0d1d29;   --info-border:         #79c0ff;  --info-text:    #a5d6ff;
+    --success-bg:          #0d1f12;   --success-border:      #3fb950;  --success-text: #56d364;
+    --body-bg:             #0d1117;
+    --surface:             #161b22;
+    --border:              #30363d;
+    --text:                #e6edf3;
+    --text-muted:          #8b949e;
+    --nav-bg:              #161b22;
+    --nav-border:          #21262d;
+    --inline-code-bg:      #21262d;   --inline-code-text:    #ff7b72;
+    --table-head-bg:       #21262d;   --table-stripe-bg:     #1c2128;
+    --badge-new-bg:        #0d1d29;   --badge-new-text:      #79c0ff;
+    --badge-req-bg:        #1f0d0d;   --badge-req-text:      #ff7b72;
+    --badge-opt-bg:        #0d1f12;   --badge-opt-text:      #56d364;
+    --step-divider:        #21262d;
+    --version-badge-bg:    #21262d;
+  }
+}
+
+/* ============================================================================
+   Reset & Base
+   ============================================================================ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; font-size: 15px; overflow-x: hidden; scroll-padding-top: 60px; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+               "Helvetica Neue", Arial, sans-serif;
+  background: var(--body-bg);
+  color: var(--text);
+  line-height: 1.7;
+  overflow-x: hidden;
+}
+
+/* ---- Top Nav ------------------------------------------------------------------------------------------------------------------------------ */
+.docs-nav {
+  position: fixed; top: 0; left: 0; right: 0;
+  height: var(--nav-height);
+  background: var(--nav-bg);
+  border-bottom: 1px solid var(--nav-border);
+  display: flex; align-items: center;
+  padding: 0 1.25rem; gap: 1rem; z-index: 100;
+}
+.docs-nav .nav-logo {
+  display: flex; align-items: center; gap: 0.6rem;
+  text-decoration: none; color: var(--text);
+  font-weight: 600; font-size: 1.05rem;
+}
+.docs-nav .nav-logo img { height: 36px; width: auto; }
+.docs-nav .nav-label {
+  font-size: 0.85rem; color: var(--text-muted);
+  border-left: 1px solid var(--border); padding-left: 1rem;
+}
+.docs-nav .nav-badge {
+  font-size: 0.72rem; font-weight: 600;
+  background: var(--accent); color: #fff;
+  padding: 0.2rem 0.55rem; border-radius: 20px; letter-spacing: 0.02em;
+}
+.docs-nav .nav-back {
+  margin-left: auto; font-size: 0.82rem;
+  color: var(--accent); text-decoration: none; white-space: nowrap;
+  background: none; border: none; padding: 0; cursor: pointer; font-family: inherit;
+}
+.docs-nav .nav-back:hover { text-decoration: underline; }
+.docs-nav .hamburger {
+  display: none; background: none; border: none;
+  font-size: 1.4rem; cursor: pointer; color: var(--text);
+  padding: 0.2rem 0.4rem; margin-right: 0.5rem;
+}
+/* Theme toggle button in nav */
+.docs-nav .nav-theme-btn {
+  background: none; border: 1px solid var(--border);
+  border-radius: 6px; padding: 0.25rem 0.5rem;
+  cursor: pointer; font-size: 1rem; line-height: 1;
+  color: var(--text); transition: border-color 0.15s;
+}
+.docs-nav .nav-theme-btn:hover { border-color: var(--accent); }
+
+/* ---- Index-only shell ------------------------------------------------------------------------------------------------------------ */
+.docs-index-shell {
+  margin-top: var(--nav-height);
+  padding: 3rem 2rem 4rem;
+  max-width: 1000px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.index-hero { margin-bottom: 1rem; }
+.index-hero h1 { font-size: 2.2rem; font-weight: 700; margin-bottom: 0.6rem; line-height: 1.25; }
+.index-hero p  { font-size: 1.05rem; color: var(--text-muted); margin-bottom: 0.75rem; }
+.version-badge {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  background: var(--version-badge-bg);
+  border: 1px solid var(--border);
+  border-radius: 20px; padding: 0.3rem 0.85rem;
+  font-size: 0.78rem; color: var(--text-muted);
+  margin-bottom: 2.5rem; font-weight: 500;
+}
+.guide-grid {
+  display: grid; grid-template-columns: repeat(2, 1fr);
+  gap: 1.25rem; margin-top: 1rem;
+}
+.guide-card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 10px; padding: 1.5rem 1.75rem;
+  text-decoration: none; color: var(--text);
+  transition: border-color 0.15s, box-shadow 0.15s;
+  display: flex; flex-direction: column;
+}
+.guide-card:hover {
+  border-color: var(--accent);
+  box-shadow: 0 4px 16px rgba(88, 101, 242, 0.1);
+}
+.guide-card .card-icon  { font-size: 1.75rem; margin-bottom: 0.6rem; }
+.guide-card .card-title { font-size: 1.05rem; font-weight: 600; margin-bottom: 0.4rem; }
+.guide-card .card-desc  { font-size: 0.875rem; color: var(--text-muted); line-height: 1.55; flex: 1; }
+.guide-card .card-read  { margin-top: 1rem; font-size: 0.82rem; font-weight: 600; color: var(--accent); }
+.docs-index-footer {
+  background: var(--surface); border-top: 1px solid var(--border);
+  padding: 1.25rem 2rem; font-size: 0.8rem; color: var(--text-muted);
+  display: flex; align-items: center; gap: 1.25rem; flex-wrap: wrap; justify-content: center;
+}
+.docs-index-footer a { color: var(--text-muted); text-decoration: none; }
+.docs-index-footer a:hover { color: var(--accent); }
+.docs-index-footer .footer-sep { color: var(--border); }
+
+/* ---- Guide-page shell ------------------------------------------------------------------------------------------------------------ */
+.docs-shell {
+  display: grid;
+  grid-template-columns: var(--sidebar-width) 1fr;
+  grid-template-rows: 1fr;
+  margin-top: var(--nav-height);
+  min-height: calc(100vh - var(--nav-height));
+}
+/* ---- Sidebar ------------------------------------------------------------------------------------------------------------------------------ */
+.docs-sidebar {
+  background: var(--sidebar-bg); color: var(--sidebar-text);
+  position: fixed; top: var(--nav-height); left: 0;
+  width: var(--sidebar-width);
+  height: calc(100vh - var(--nav-height));
+  overflow-y: auto; padding: 1.5rem 0 2rem; z-index: 90;
+}
+.docs-sidebar::-webkit-scrollbar { width: 4px; }
+.docs-sidebar::-webkit-scrollbar-thumb { background: var(--sidebar-active); border-radius: 2px; }
+.sidebar-section-label {
+  font-size: 0.68rem; font-weight: 700; letter-spacing: 0.1em;
+  text-transform: uppercase; color: var(--sidebar-muted);
+  padding: 1.2rem 1.2rem 0.4rem;
+}
+.sidebar-nav a {
+  display: block; padding: 0.42rem 1.2rem;
+  color: var(--sidebar-text); text-decoration: none;
+  font-size: 0.875rem; border-left: 2px solid transparent;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+.sidebar-nav a:hover, .sidebar-nav a.active {
+  background: var(--sidebar-active); color: var(--sidebar-active-text); border-left-color: var(--accent);
+}
+.sidebar-nav a.guide-link { font-weight: 500; }
+.sidebar-nav a.toc-link   { font-size: 0.8rem; padding-left: 1.8rem; color: #a6adc8; }
+.sidebar-nav a.toc-link:hover, .sidebar-nav a.toc-link.active {
+  color: var(--sidebar-active-text); background: var(--sidebar-active); border-left-color: var(--accent);
+}
+.sidebar-divider { border: none; border-top: 1px solid var(--sidebar-divider); margin: 0.8rem 1.2rem; }
+
+/* ---- Main Content -------------------------------------------------------------------------------------------------------------------- */
+.docs-content {
+  grid-column: 2;
+  padding: 2.5rem 2rem 4rem calc(var(--sidebar-width) + 2rem);
+  max-width: calc(var(--sidebar-width) + var(--content-max) + 4rem);
+  /* prevent any child from busting out horizontally */
+  overflow-x: hidden;
+  min-width: 0;
+}
+.docs-content h1   { font-size: 2rem; font-weight: 700; color: var(--text); margin-bottom: 0.5rem; line-height: 1.25; }
+.docs-content .page-subtitle {
+  font-size: 1.05rem; color: var(--text-muted);
+  margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--border);
+}
+.docs-content h2   { font-size: 1.4rem; font-weight: 600; color: var(--text); margin: 2.5rem 0 0.75rem; padding-top: 0.5rem; }
+.docs-content h3   { font-size: 1.1rem; font-weight: 600; color: var(--text); margin: 1.75rem 0 0.5rem; }
+.docs-content h4   { font-size: 0.95rem; font-weight: 600; color: var(--text-muted); margin: 1.25rem 0 0.4rem; text-transform: uppercase; letter-spacing: 0.04em; }
+.docs-content p    { margin-bottom: 1rem; word-break: break-word; }
+.docs-content ul, .docs-content ol { margin: 0.5rem 0 1rem 1.5rem; }
+.docs-content li   { margin-bottom: 0.3rem; word-break: break-word; }
+.docs-content li ul, .docs-content li ol { margin-top: 0.3rem; margin-bottom: 0.3rem; }
+.docs-content a    { color: var(--accent); text-decoration: none; word-break: break-all; }
+.docs-content a:hover { text-decoration: underline; }
+.docs-content strong { font-weight: 600; }
+.docs-content hr   { border: none; border-top: 1px solid var(--border); margin: 2rem 0; }
+.docs-content h2[id], .docs-content h3[id] { scroll-margin-top: calc(var(--nav-height) + 1.5rem); }
+
+/* ---- Inline Code ---------------------------------------------------------------------------------------------------------------------- */
+.docs-content code {
+  background: var(--inline-code-bg); color: var(--inline-code-text);
+  padding: 0.15em 0.45em; border-radius: 3px;
+  font-family: var(--font-mono); font-size: 0.875em;
+}
+
+/* ---- Code Blocks ---------------------------------------------------------------------------------------------------------------------- */
+.docs-content pre {
+  background: var(--code-bg); color: var(--code-text);
+  border-radius: var(--radius); padding: 1.2rem 1.25rem;
+  overflow-x: auto; margin: 0.75rem 0 1.25rem;
+  position: relative; font-size: 0.85rem; line-height: 1.6;
+}
+.docs-content pre code { background: none; color: inherit; padding: 0; font-size: inherit; border-radius: 0; }
+.copy-btn {
+  position: absolute; top: 0.6rem; right: 0.6rem;
+  background: var(--copy-btn-bg); color: var(--copy-btn-text); border: none;
+  border-radius: 4px; padding: 0.25rem 0.6rem;
+  font-size: 0.72rem; cursor: pointer; transition: background 0.15s;
+  font-family: var(--font-mono);
+}
+.copy-btn:hover  { background: var(--copy-btn-hover); }
+.copy-btn.copied { background: var(--copy-btn-copied-bg); color: var(--copy-btn-copied-text); }
+
+/* ---- Tables -------------------------------------------------------------------------------------------------------------------------------- */
+.docs-content .table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; margin: 0.75rem 0 1.5rem; }
+.docs-content table { width: 100%; border-collapse: collapse; margin: 0; font-size: 0.875rem; }
+.docs-content table th {
+  background: var(--table-head-bg); font-weight: 600; text-align: left;
+  padding: 0.6rem 0.85rem; border: 1px solid var(--border); white-space: nowrap;
+}
+.docs-content table td { padding: 0.55rem 0.85rem; border: 1px solid var(--border); vertical-align: top; }
+.docs-content table tr:nth-child(even) td { background: var(--table-stripe-bg); }
+
+/* ---- Callouts ---------------------------------------------------------------------------------------------------------------------------- */
+.callout {
+  display: flex; gap: 0.75rem; padding: 0.9rem 1.1rem;
+  border-radius: var(--radius); border-left: 4px solid;
+  margin: 1rem 0 1.25rem; font-size: 0.9rem; line-height: 1.6;
+}
+.callout-info    { background: var(--info-bg);    border-color: var(--info-border);    color: var(--info-text);    }
+.callout-warn    { background: var(--warn-bg);    border-color: var(--warn-border);    color: var(--warn-text);    }
+.callout-tip     { background: var(--success-bg); border-color: var(--success-border); color: var(--success-text); }
+.callout .callout-icon { font-size: 1.1rem; flex-shrink: 0; line-height: 1.6; }
+.callout .callout-body { flex: 1; }
+.callout .callout-body strong { display: block; margin-bottom: 0.2rem; }
+.callout p:last-child { margin-bottom: 0; }
+.callout code { font-size: 0.83em; }
+.section-hr { border: none; border-top: 1px dashed var(--border); margin: 1.5rem 0; }
+
+/* ---- Right TOC -- hidden (left sidebar covers "On This Page") -------------------------------- */
+.docs-toc { display: none; }
+
+/* ---- Footer -------------------------------------------------------------------------------------------------------------------------------- */
+.docs-footer {
+  background: var(--surface); border-top: 1px solid var(--border);
+  padding: 1.25rem 2rem 1.25rem calc(var(--sidebar-width) + 2rem);
+  font-size: 0.8rem; color: var(--text-muted);
+  display: flex; align-items: center; gap: 1.25rem; flex-wrap: wrap;
+}
+.docs-footer a { color: var(--text-muted); text-decoration: none; }
+.docs-footer a:hover { color: var(--accent); }
+.docs-footer .footer-sep { color: var(--border); }
+
+/* ---- Download Toolbar ---------------------------------------------------------------------------------------------------------------- */
+.docs-download-bar {
+  display: flex; gap: 0.6rem; align-items: center;
+  padding: 0.75rem 2rem 0.75rem calc(var(--sidebar-width) + 2rem);
+  background: var(--surface); border-bottom: 1px solid var(--border);
+  flex-wrap: wrap;
+}
+.docs-download-bar .dl-label {
+  font-size: 0.75rem; font-weight: 600; color: var(--text-muted);
+  text-transform: uppercase; letter-spacing: 0.06em; margin-right: 0.25rem;
+}
+.docs-dl-btn {
+  display: inline-flex; align-items: center; gap: 0.4rem;
+  padding: 0.3rem 0.8rem; border-radius: 6px; font-size: 0.78rem;
+  font-weight: 600; cursor: pointer; border: 1px solid var(--border);
+  background: var(--surface); color: var(--text); text-decoration: none;
+  transition: border-color 0.15s, color 0.15s, background 0.15s;
+  white-space: nowrap;
+}
+.docs-dl-btn:hover { border-color: var(--accent); color: var(--accent); }
+.docs-dl-btn svg { width: 14px; height: 14px; fill: currentColor; flex-shrink: 0; }
+
+@media (max-width: 768px) {
+  .docs-download-bar { padding-left: 1.25rem; }
+}
+
+/* ---- Badges -------------------------------------------------------------------------------------------------------------------------------- */
+.badge { display: inline-block; font-size: 0.7rem; font-weight: 600; padding: 0.15rem 0.5rem; border-radius: 20px; vertical-align: middle; }
+.badge-new      { background: var(--badge-new-bg); color: var(--badge-new-text); }
+.badge-required { background: var(--badge-req-bg); color: var(--badge-req-text); }
+.badge-optional { background: var(--badge-opt-bg); color: var(--badge-opt-text); }
+
+/* ---- Checklist -------------------------------------------------------------------------------------------------------------------------- */
+.checklist { list-style: none; margin: 0.5rem 0 1rem; }
+.checklist li { padding: 0.35rem 0 0.35rem 1.6rem; position: relative; font-size: 0.9rem; }
+.checklist li::before { content: "\2713"; position: absolute; left: 0; font-size: 0.95rem; color: var(--success-text); font-weight: 700; }
+
+/* ---- Step list -------------------------------------------------------------------------------------------------------------------------- */
+.step-list { counter-reset: steps; list-style: none; margin: 0.5rem 0 1rem; }
+.step-list li {
+  counter-increment: steps; padding: 0.5rem 0 0.5rem 2.4rem;
+  position: relative; border-bottom: 1px solid var(--step-divider);
+}
+.step-list li:last-child { border-bottom: none; }
+.step-list li::before {
+  content: counter(steps); position: absolute; left: 0; top: 0.5rem;
+  width: 1.6rem; height: 1.6rem;
+  background: var(--accent); color: #fff;
+  border-radius: 50%; font-size: 0.75rem; font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+}
+
+/* ---- Mobile sidebar overlay ------------------------------------------------------------------------------------------------ */
+.sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.45); z-index: 89; }
+.sidebar-overlay.open { display: block; }
+
+/* ---- FAQ section (SEO / AI-crawler structured data) ------------------------------------------------ */
+#faq {
+  max-width: var(--content-max);
+  margin: 0 auto 2rem;
+  padding: 0 1.5rem;
+  color: var(--text);
+  font-family: inherit;
+}
+#faq h2 {
+  font-size: 1.3rem;
+  color: var(--text);
+  border-top: 2px solid var(--border);
+  padding-top: 1.5rem;
+  margin-bottom: 1.2rem;
+}
+#faq h3 { font-size: 1rem; color: var(--text); margin: 0.8rem 0 0.3rem; }
+#faq p  { color: var(--text); margin: 0; }
+#faq a  { color: var(--accent); }
+
+/* On guide pages the FAQ content is offset by the sidebar */
+.docs-shell ~ #faq,
+.docs-shell + * #faq {
+  padding-left: calc(var(--sidebar-width) + 1.5rem);
+  max-width: calc(var(--sidebar-width) + var(--content-max) + 3rem);
+}
+
+/* ---- Responsive ------------------------------------------------------------------------------------------------------------------------ */
+@media (max-width: 768px) {
+  .docs-nav .hamburger { display: block; }
+  .docs-nav .nav-label { display: none; }
+  .docs-sidebar { transform: translateX(-100%); transition: transform 0.25s ease; }
+  .docs-sidebar.open { transform: translateX(0); }
+  .docs-shell { grid-template-columns: 1fr; }
+  .docs-content {
+    padding: 1.75rem 1rem 3rem 1rem;
+    max-width: 100%;
+    width: 100%;
+    overflow-x: hidden;
+  }
+  .docs-footer  { padding-left: 1.25rem; }
+  .guide-grid   { grid-template-columns: 1fr; }
+  .docs-index-shell { padding: 2rem 1.25rem 3rem; }
+  .index-hero h1 { font-size: 1.6rem; }
+  /* code blocks scroll within themselves, not the page */
+  .docs-content pre { max-width: 100%; overflow-x: auto; }
+  /* images never bust out */
+  .docs-content img { max-width: 100%; height: auto; }
+}

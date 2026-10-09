@@ -1,0 +1,1050 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Administrator Guide -- FlowSquad Docs</title>
+  <meta name="description" content="FlowSquad Administrator Guide: Configure users, roles, products, LLM providers, vector databases, SSO (LDAP, SAML, OAuth2), MFA, Jira/Confluence integrations, database management, backup, audit logging, and system health monitoring for FlowSquad Enterprise." />
+  <meta name="keywords" content="FlowSquad admin guide, user management, RBAC, roles, LDAP, SAML, OAuth2, MFA, LLM configuration, OpenAI, Anthropic Claude, GitHub Models, Ollama, PostgreSQL, MySQL, Jira integration, Confluence integration, audit log, system health, health check" />
+  <meta property="og:title" content="FlowSquad Enterprise Administrator Guide" />
+  <meta property="og:description" content="Complete administrator reference for FlowSquad Enterprise -- user roles, LLM provider configuration, SSO setup, database management, and system integrations." />
+  <meta property="og:type" content="article" />
+  <link rel="canonical" href="https://flowsquad.ai/docs/admin-guide" />
+  <link rel="stylesheet" href="docs.css" />
+  <script src="docs-theme.js"></script>
+</head>
+<body>
+
+<!-- ---- Top Navigation -------------------------------------------------------------------------------- -->
+<nav class="docs-nav">
+  <button class="hamburger" aria-label="Toggle sidebar">&#9776;</button>
+  <a href="https://flowsquad.ai" class="nav-logo" target="_blank" rel="noopener noreferrer">
+    <img src="icon.png" alt="FlowSquad Logo" />
+  </a>
+  <span class="nav-label">Docs</span>
+  <button class="nav-theme-btn" id="docs-theme-btn" title="Toggle dark / light mode"></button>
+  <a href="index.html" class="nav-back">&larr; All Guides</a>
+</nav>
+
+<!-- ---- Download Toolbar -------------------------------------------------------------- -->
+<div class="docs-download-bar">
+  <span class="dl-label">Download:</span>
+  <button class="docs-dl-btn" id="dlHtmlBtn" title="Save this page as HTML">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm-1 1.5L18.5 9H13V3.5zM6 20V4h5v7h7v9H6z"/></svg>
+    HTML
+  </button>
+  <button class="docs-dl-btn" id="dlPdfBtn" title="Print / Save as PDF">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2zm-7 3a4 4 0 1 1 0 8 4 4 0 0 1 0-8zm0 10c-2.67 0-8 1.34-8 4v1h16v-1c0-2.66-5.33-4-8-4z"/></svg>
+    PDF
+  </button>
+</div>
+<script>
+document.getElementById('dlHtmlBtn').addEventListener('click', function() {
+  var blob = new Blob([document.documentElement.outerHTML], {type: 'text/html'});
+  var a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = (document.title || 'page').replace(/[^a-z0-9_-]/gi, '_') + '.html';
+  a.click();
+  URL.revokeObjectURL(a.href);
+});
+document.getElementById('dlPdfBtn').addEventListener('click', function() {
+  window.print();
+});
+</script>
+
+
+<!-- ---- Mobile Overlay -------------------------------------------------------------------------------- -->
+<div class="sidebar-overlay"></div>
+
+<!-- ---- Page Shell ---------------------------------------------------------------------------------------- -->
+<div class="docs-shell">
+
+  <!-- ---- Left Sidebar -------------------------------------------------------------------------------- -->
+  <aside class="docs-sidebar">
+    <div class="sidebar-section-label">Guides</div>
+    <nav class="sidebar-nav">
+      <a href="install-guide.html" class="guide-link">Installation Guide</a>
+      <a href="setup-guide.html" class="guide-link">Setup Guide</a>
+      <a href="admin-guide.html" class="guide-link active">Admin Guide</a>
+      <a href="user-guide.html" class="guide-link">User Guide</a>
+      <a href="troubleshooting-guide.html" class="guide-link">Troubleshooting</a>
+      <a href="security-guide.html" class="guide-link">Security Reference</a>
+      <a href="integration-guide.html" class="guide-link">Integration Guide</a>
+      <a href="reference-guide.html" class="guide-link">Reference Guide</a>
+    </nav>
+
+    <hr class="sidebar-divider" />
+
+    <div class="sidebar-section-label">On This Page</div>
+    <nav class="sidebar-nav">
+      <a href="#roles" class="toc-link">Administrator Roles</a>
+      <a href="#admin-panel" class="toc-link">Admin Panel Overview</a>
+      <a href="#product-management" class="toc-link">Creating Products</a>
+      <a href="#user-management" class="toc-link">User Management</a>
+      <a href="#auth-config" class="toc-link">Authentication Config</a>
+      <a href="#llm-config" class="toc-link">LLM Configuration</a>
+      <a href="#database-management" class="toc-link">Database Management</a>
+      <a href="#license-management" class="toc-link">License Management</a>
+      <a href="#analytics" class="toc-link">Analytics &amp; Insights</a>
+      <a href="#audit-logs" class="toc-link">Audit Logs</a>
+      <a href="#system-health" class="toc-link">System Health</a>
+      <a href="#backup-recovery" class="toc-link">Backup &amp; Recovery</a>
+      <a href="#security-practices" class="toc-link">Security &amp; Hardening</a>
+      <a href="#troubleshooting" class="toc-link">Troubleshooting</a>
+    </nav>
+  </aside>
+
+  <!-- ---- Main Content ------------------------------------------------------------------------------------ -->
+  <main class="docs-content">
+
+    <h1>Administrator Guide</h1>
+    <p class="page-subtitle">Complete reference for Global Administrators -- creating products, managing users, configuring LLMs, reviewing audit logs, and operating the Admin Panel.</p>
+
+    <!-- ======================================================= -->
+    <h2 id="roles">1. Administrator Roles</h2>
+
+    <p>FlowSquad defines three tiers of access. Understanding the role model is essential before configuring users, products, or authentication.</p>
+
+    <h3>Global Administrator</h3>
+    <p><strong>Scope:</strong> Full, unrestricted system access. The first Global Admin is created during the Setup Wizard.</p>
+    <div class="table-wrap"><table>
+      <thead><tr><th>Capability</th><th>Allowed</th></tr></thead>
+      <tbody>
+        <tr><td>Configure database, LLM providers, and authentication</td><td>Yes</td></tr>
+        <tr><td>Create and delete all products and users</td><td>Yes</td></tr>
+        <tr><td>View all audit logs across every product</td><td>Yes</td></tr>
+        <tr><td>Manage and upload license files</td><td>Yes</td></tr>
+        <tr><td>Toggle debug mode</td><td>Yes</td></tr>
+        <tr><td>Access every section of the Admin Panel</td><td>Yes</td></tr>
+      </tbody>
+    </table></div>
+    <div class="callout callout-warn">
+      <span class="callout-icon">&#x26A0;&#xFE0F;</span>
+      <div class="callout-body">
+        <strong>Limit Global Admin accounts</strong>
+        Maintain two to three Global Admin accounts for redundancy, but avoid creating more. Use Product Admin roles for day-to-day management tasks. A user cannot be demoted if they are the only remaining Global Admin (safety check enforced by the system).
+      </div>
+    </div>
+
+    <h3>Product Administrator</h3>
+    <p><strong>Scope:</strong> Scoped to one or more assigned products. Product Admins have full control within their products but cannot access system-wide settings.</p>
+
+    <p><strong>Granting Product Admin access -- two equivalent methods:</strong></p>
+    <ol>
+      <li><strong>RBAC Admin Panel:</strong> Admin Panel -> User Management -> select the user -> assign the "Product Admin" role, then associate the user with the target product.</li>
+      <li><strong>Product Settings:</strong> Navigate to the product -> Settings -> Admin List -> add the user's account directly to the product's admin list.</li>
+    </ol>
+    <p>Both methods grant identical access. Either may be used depending on your workflow.</p>
+
+    <p>Product Admins can perform the following within their assigned products:</p>
+    <ul>
+      <li>Add and remove product members</li>
+      <li>Configure product-specific LLM models and settings</li>
+      <li>Delete artifacts (Requirements, Epics, Stories, Tasks, Test Cases, Designs) directly through the product dashboard -- no backend access is required</li>
+      <li>View product-level analytics and audit events</li>
+    </ul>
+    <div class="callout callout-info">
+      <span class="callout-icon">&#x2139;&#xFE0F;</span>
+      <div class="callout-body">
+        <strong>What Product Admins cannot do</strong>
+        Product Admins cannot access system-wide settings (database, LLM providers, authentication, license management) and cannot view or manage other products.
+      </div>
+    </div>
+
+    <h3>Regular User</h3>
+    <p><strong>Scope:</strong> Read and write access on assigned products only.</p>
+    <ul>
+      <li>Create and edit requirements, epics, stories, and tasks</li>
+      <li>Generate designs and test cases</li>
+      <li>View analytics for their assigned products</li>
+      <li>Cannot manage other users or access any admin features</li>
+    </ul>
+
+    <hr />
+
+    <!-- ======================================================= -->
+    <h2 id="admin-panel">2. Admin Panel Overview</h2>
+
+    <p>The Admin Panel is the central control surface for Global Administrators. Access it by clicking <strong>Admin Panel</strong> in the top navigation bar. The URL is <code>/admin</code>.</p>
+
+    <div class="callout callout-info">
+      <span class="callout-icon">&#x2139;&#xFE0F;</span>
+      <div class="callout-body">
+        <strong>Access control</strong>
+        The Admin Panel link is visible only to Global Admins. Product Admins manage their products through the product's own Settings page. Regular Users do not see any admin controls.
+      </div>
+    </div>
+
+    <div class="table-wrap"><table>
+      <thead><tr><th>Section</th><th>Purpose</th><th>This Guide</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Dashboard</strong></td><td>System overview: product count, requirements total, license status, vector DB size</td><td>--</td></tr>
+        <tr><td><strong>Products</strong></td><td>Create products, assign Product Admins, manage members</td><td><a href="#product-management">Section 3</a></td></tr>
+        <tr><td><strong>User Management</strong></td><td>Create, edit, and deactivate users; assign roles; reset MFA</td><td><a href="#user-management">Section 4</a></td></tr>
+        <tr><td><strong>License Management</strong></td><td>View license details, upload new enterprise licenses</td><td><a href="#license-management">Section 8</a></td></tr>
+        <tr><td><strong>Analytics &amp; Insights</strong></td><td>SQL-based usage analytics, LLM cost tracking, query history</td><td><a href="#analytics">Section 9</a></td></tr>
+        <tr><td><strong>Audit Logs</strong></td><td>Security and compliance event logs; CSV export</td><td><a href="#audit-logs">Section 10</a></td></tr>
+        <tr><td><strong>System Health</strong></td><td>On-demand and scheduled probes for all configured services; warning banner integration</td><td><a href="#system-health">Section 11</a></td></tr>
+      </tbody>
+    </table></div>
+
+    <div class="callout callout-info">
+      <span class="callout-icon">&#x2139;</span>
+      <div class="callout-body">
+        <strong>Authentication, LLM, Database, and SMTP are configured in the Setup Wizard</strong><br />
+        Settings for authentication providers, LLM models, database connection, and SMTP email are managed through the <strong>&#x2699;&#xFE0F; Setup</strong> button in the top navigation bar (visible to admins only). These are not separate Admin Panel pages &mdash; the Setup Wizard can be re-run at any time to update any of these settings.
+      </div>
+    </div>
+
+    <hr />
+
+    <!-- ======================================================= -->
+    <h2 id="product-management">3. Creating Products &amp; Assigning Admins</h2>
+
+    <div class="callout callout-tip">
+      <span class="callout-icon">&#x1F4A1;</span>
+      <div class="callout-body">
+        <strong>Try the E-Commerce Demo first</strong><br />
+        Before creating your own product, click the <strong>&#x1F3AC; Try Demo</strong> button on the Products dashboard (visible to admins only, shown once until the demo is created). This creates a fully analyzed sample e-commerce product with 3 codebases, 30 test cases, automation scripts, and product documents &mdash; giving you an instant, hands-on walkthrough of the entire FlowSquad workflow before you load your own codebase.
+      </div>
+    </div>
+
+    <div class="callout callout-info">
+      <span class="callout-icon">&#x2139;</span>
+      <div class="callout-body">
+        <strong>First action after setup</strong><br />
+        Creating a product and assigning a Product Admin is the most common first action after completing the Setup Wizard. Do this before inviting team members &mdash; they need a product to be added to.
+      </div>
+    </div>
+
+    <h3>Creating a Product</h3>
+    <ol class="step-list">
+      <li>From the FlowSquad dashboard, click <strong>+ New Product</strong></li>
+      <li>Enter the <strong>Product Name</strong> (required) and an optional description</li>
+      <li>Select the <strong>Default LLM Model</strong> for this product (overrides the global default). Can be changed later in Product -> Settings -> LLM Configuration</li>
+      <li>Optionally assign initial Product Admins (see below)</li>
+      <li>Click <strong>Create Product</strong></li>
+    </ol>
+    <p>The new product opens automatically. Team members can now be added and the product is ready for use in all workflow tabs.</p>
+
+    <h3>Assigning a Product Admin</h3>
+    <p>Two equivalent methods -- use whichever fits your workflow:</p>
+    <div class="table-wrap"><table>
+      <thead><tr><th>Method</th><th>Path</th><th>Best For</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><strong>Via Product Settings</strong></td>
+          <td>Product -> Settings -> Admin List -> add the user's account</td>
+          <td>Fastest when you are already inside the product</td>
+        </tr>
+        <tr>
+          <td><strong>Via RBAC Admin Panel</strong></td>
+          <td>Admin Panel -> User Management -> select the user -> assign Product Admin role -> associate with the product</td>
+          <td>Useful when assigning the same user to multiple products at once</td>
+        </tr>
+      </tbody>
+    </table></div>
+
+    <h3>Managing Product Members</h3>
+    <p>Product Admins and Global Admins can add or remove members at any time:</p>
+    <ul>
+      <li>Navigate to Product -> <strong>Manage Users</strong></li>
+      <li>Search for existing FlowSquad users by name or email</li>
+      <li>Assign role: <strong>Regular User</strong> (read/write on all tabs) or <strong>Product Admin</strong> (full product control)</li>
+    </ul>
+
+    <div class="callout callout-info">
+      <span class="callout-icon">&#x2139;&#xFE0F;</span>
+      <div class="callout-body">
+        <strong>Users must already have a FlowSquad account</strong><br />
+        A user must have an active FlowSquad account (local, LDAP, SAML, or OAuth2) before they can be added to a product. Create or provision user accounts first in User Management, then add them to products.
+      </div>
+    </div>
+
+    <h3>Product Settings</h3>
+    <p>Navigate to Product -> <strong>Settings</strong>. Available options:</p>
+    <ul>
+      <li>Product name, description, and logo</li>
+      <li>LLM model assignments per operation (Analyze, Refine, Epic, Story, Task, Design, Test Cases, Quality, Security Scan, AskProduct)</li>
+      <li>Admin List -- add or remove Product Admins</li>
+      <li>Member list -- add or remove Regular Users</li>
+      <li>Integration overrides -- override the default Jira project key for this product</li>
+      <li>Danger Zone -- archive or permanently delete the product</li>
+    </ul>
+
+    <div class="callout callout-tip">
+      <span class="callout-icon">&#x1F4A1;</span>
+      <div class="callout-body">
+        <strong>Product Admin artifact deletion</strong><br />
+        Product Admins can delete Requirements, Epics, Stories, Tasks, Test Cases, and Designs directly from the product dashboard -- no backend or database access is required.
+      </div>
+    </div>
+
+    <hr />
+
+    <!-- ======================================================= -->
+    <h2 id="user-management">4. User Management</h2>
+
+    <p><strong>Path:</strong> Admin Panel -> User Management</p>
+
+    <h3>Creating Users</h3>
+
+    <h4>Local Users</h4>
+    <ol>
+      <li>Click <strong>+ Add User</strong></li>
+      <li>Complete the form:
+        <ul>
+          <li><strong>Username</strong> -- required, must be unique</li>
+          <li><strong>Email</strong> -- required, must be unique</li>
+          <li><strong>Display Name</strong> -- shown in the UI</li>
+          <li><strong>Password</strong> -- minimum 8 characters; stored as bcrypt hash (12 rounds)</li>
+          <li><strong>Role</strong> -- Global Admin, Product Admin, or Regular User</li>
+        </ul>
+      </li>
+      <li>If assigning Product Admin or Regular User, also assign the user to one or more products</li>
+      <li>Click <strong>Create User</strong></li>
+    </ol>
+
+    <h4>LDAP / Active Directory Users</h4>
+    <p>LDAP users are auto-created in FlowSquad on their first successful LDAP login. To pre-create an account before first login, use Admin Panel -> User Management -> <strong>Search LDAP</strong>, locate the user, and click <strong>Import</strong>.</p>
+
+    <h4>SAML / OAuth2 Users</h4>
+    <p>SSO users are created automatically when they complete their first login. The email address returned by the identity provider is used as the username. These accounts cannot have a local password set -- authentication is exclusively via SSO.</p>
+
+    <h3>Assigning and Changing Roles</h3>
+    <p>To promote a user to Global Admin: click the user's row -> <strong>Promote to Global Admin</strong>. This action requires confirmation, as Global Admins have full system access.</p>
+    <p>For product-level roles, navigate to the product -> <strong>Manage Users</strong> -> add or change the user's role (Product Admin or Regular User).</p>
+
+    <p>The role hierarchy:</p>
+    <pre><code>Global Admin  (system-wide, unrestricted)
+    v
+Product Admin (scoped to assigned products)
+    v
+Regular User  (read/write on assigned products)</code></pre>
+
+    <h3>Resetting Passwords</h3>
+    <p>Click a user's row -> <strong>Reset Password</strong>. You may either set a specific temporary password or generate a password-reset link to email to the user. SSO-only users (LDAP, SAML, OAuth2) do not have a local password and cannot use this function.</p>
+
+    <h3>Bulk Import via CSV</h3>
+    <p>To import multiple users at once: Admin Panel -> User Management -> <strong>Import Users (CSV)</strong>. The CSV must include columns: <code>username</code>, <code>email</code>, <code>display_name</code>, <code>role</code>. Download the template from the import dialog for the exact format.</p>
+
+    <h3>Multi-Authentication User Management</h3>
+    <p>FlowSquad supports multiple authentication methods simultaneously. Each user record stores the auth provider and provider-specific ID:</p>
+    <div class="table-wrap"><table>
+      <thead><tr><th>Auth Method</th><th>Auto-created on first login</th><th>Can set local password</th></tr></thead>
+      <tbody>
+        <tr><td>Local</td><td>No (admin creates manually)</td><td>Yes</td></tr>
+        <tr><td>LDAP / Active Directory</td><td>Yes</td><td>No</td></tr>
+        <tr><td>SAML 2.0</td><td>Yes</td><td>No</td></tr>
+        <tr><td>OAuth2 (GitHub, Google, Microsoft, Okta, Keycloak)</td><td>Yes</td><td>No</td></tr>
+      </tbody>
+    </table></div>
+    <p>To filter users by authentication provider, use the <strong>All Providers</strong> dropdown in the User Management list. Each user's detail view shows their auth method and last login timestamp.</p>
+
+    <h3>Multi-Factor Authentication (MFA)</h3>
+    <p>FlowSquad supports TOTP-based MFA (Google Authenticator, Authy, and compatible apps) with email backup codes.</p>
+    <ul>
+      <li>Users configure MFA in their own Preferences page by scanning a QR code</li>
+      <li>10 one-time backup codes are generated at setup time</li>
+      <li>Optional SMS backup requires Twilio configuration in Settings</li>
+    </ul>
+
+    <p><strong>Admin MFA actions:</strong></p>
+    <ul>
+      <li><strong>View MFA status:</strong> The user list displays an MFA badge next to each user</li>
+      <li><strong>Reset MFA:</strong> Click user -> <strong>Reset MFA</strong> -- forces the user to re-enrol on next login</li>
+      <li><strong>Disable MFA:</strong> Click user -> <strong>Disable MFA</strong> -- removes MFA requirement for that account</li>
+      <li><strong>Force MFA policy:</strong> Admin Panel -> Settings -> Security -> <strong>Require MFA for all users</strong> -- users without MFA set up are redirected to the enrolment page on next login</li>
+    </ul>
+
+    <hr />
+
+    <!-- ======================================================= -->
+    <h2 id="auth-config">5. Authentication Configuration</h2>
+
+    <p><strong>Configured via:</strong> Setup Wizard &rarr; Step 4 (Authentication). The wizard can be re-opened at any time from the <strong>&#x2699;&#xFE0F; Setup</strong> button in the navigation bar.</p>
+
+    <p>FlowSquad uses an ordered authentication chain: <strong>Local -> LDAP -> SAML -> OAuth2</strong>. Local authentication is always active and serves as the fallback. Each additional method is enabled independently.</p>
+
+    <h3>Local Authentication</h3>
+    <p>Always enabled and cannot be disabled. It provides the primary admin account and acts as the fallback when all other methods are unavailable.</p>
+    <ul>
+      <li>Minimum password length: 8 characters</li>
+      <li>Passwords are hashed using bcrypt with 12 rounds</li>
+      <li>Password complexity requirements are configurable in Admin Panel -> Settings -> Security</li>
+    </ul>
+
+    <h3>LDAP / Active Directory</h3>
+    <ol>
+      <li>Setup Wizard Step 4 &rarr; <strong>LDAP / Active Directory</strong></li>
+      <li>Configure the connection:
+        <ul>
+          <li><strong>Server URI:</strong> <code>ldap://ad.company.com:389</code> or <code>ldaps://ad.company.com:636</code></li>
+          <li><strong>Bind DN:</strong> <code>CN=ServiceAccount,OU=Users,DC=company,DC=com</code></li>
+          <li><strong>Bind Password:</strong> Service account password</li>
+          <li><strong>User Search Base:</strong> <code>OU=Users,DC=company,DC=com</code></li>
+          <li><strong>User Search Filter:</strong> <code>(sAMAccountName={username})</code></li>
+          <li><strong>Group Search Base:</strong> <code>OU=Groups,DC=company,DC=com</code></li>
+          <li><strong>Group Membership Attribute:</strong> <code>memberOf</code></li>
+        </ul>
+      </li>
+      <li>Click <strong>Test Connection</strong> to verify</li>
+      <li>Map LDAP groups to FlowSquad roles:
+        <ul>
+          <li><code>CN=FlowSquad-Admins,OU=Groups,DC=company,DC=com</code> -> Global Admin</li>
+          <li><code>CN=FlowSquad-Users,OU=Groups,DC=company,DC=com</code> -> Regular User</li>
+        </ul>
+      </li>
+      <li>Save configuration</li>
+    </ol>
+    <div class="callout callout-tip">
+      <span class="callout-icon">&#x1F4A1;</span>
+      <div class="callout-body">
+        <strong>Group-based auto-assignment</strong>
+        Users in mapped LDAP groups automatically receive the corresponding role on login. Role assignments are refreshed on every login. Manual role overrides set in FlowSquad take precedence over LDAP group mappings.
+      </div>
+    </div>
+
+    <h3>SAML 2.0 SSO</h3>
+    <p>Supported identity providers include Keycloak, Okta, Azure AD, OneLogin, ADFS, Google Workspace, and any standard SAML 2.0 provider.</p>
+    <ol>
+      <li>Setup Wizard Step 4 &rarr; <strong>SAML</strong></li>
+      <li>Enter identity provider settings:
+        <ul>
+          <li><strong>IdP Entity ID:</strong> Your IdP's entity ID (from IdP metadata)</li>
+          <li><strong>IdP SSO URL:</strong> Single Sign-On URL from your IdP</li>
+          <li><strong>IdP SLO URL:</strong> Single Logout URL (optional)</li>
+          <li><strong>IdP Certificate:</strong> Paste the X.509 PEM certificate from your IdP</li>
+        </ul>
+      </li>
+      <li>Copy service provider values to your IdP:
+        <ul>
+          <li><strong>SP Entity ID:</strong> <code>https://flowsquad.company.com/saml/metadata</code></li>
+          <li><strong>SP ACS URL:</strong> <code>https://flowsquad.company.com/saml/acs</code></li>
+          <li><strong>SP SLO URL:</strong> <code>https://flowsquad.company.com/saml/sls</code></li>
+        </ul>
+      </li>
+      <li>Configure attribute mappings:
+        <ul>
+          <li><strong>Email:</strong> <code>http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress</code></li>
+          <li><strong>Display Name:</strong> <code>http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name</code></li>
+        </ul>
+      </li>
+      <li>Optionally enter <strong>Designated Admin Emails</strong> -- a comma-separated list of email addresses that are automatically promoted to Global Admin on first SSO login</li>
+      <li>Click <strong>Download Metadata XML</strong> and upload it to your IdP</li>
+      <li>Click <strong>Test SAML Login</strong>, then <strong>Save Configuration</strong></li>
+    </ol>
+    <div class="callout callout-info">
+      <span class="callout-icon">&#x2139;&#xFE0F;</span>
+      <div class="callout-body">
+        <strong>SAML request signing</strong>
+        FlowSquad automatically generates an RSA key pair for signing SAML authentication requests. The key is stored securely in the encrypted configuration database and uses the RSA-SHA256 algorithm.
+      </div>
+    </div>
+
+    <h3>OAuth2 Social Login</h3>
+    <p>Supported providers: GitHub, Google, Microsoft, Okta, Keycloak, and any OpenID Connect-compatible provider.</p>
+    <p><strong>Example: GitHub OAuth2 setup</strong></p>
+    <ol>
+      <li>In GitHub: Settings -> Developer Settings -> OAuth Apps -> <strong>New OAuth App</strong>
+        <ul>
+          <li>Homepage URL: <code>https://flowsquad.company.com</code></li>
+          <li>Authorization callback URL: <code>https://flowsquad.company.com/oauth2/github/callback</code></li>
+          <li>Copy the Client ID and Client Secret</li>
+        </ul>
+      </li>
+      <li>In FlowSquad: Setup Wizard Step 4 &rarr; <strong>OAuth2</strong> &rarr; GitHub</li>
+      <li>Enter Client ID, Client Secret, and scopes (<code>user:email,read:user</code>)</li>
+      <li>Click <strong>Test OAuth2 Login</strong>, then <strong>Save</strong></li>
+    </ol>
+
+    <hr />
+
+    <!-- ======================================================= -->
+    <h2 id="llm-config">6. LLM Configuration</h2>
+
+    <p><strong>Path:</strong> Admin Panel -> LLM Configuration</p>
+
+    <p>FlowSquad supports multiple LLM providers simultaneously. API keys are configured globally, then individual models are assigned per product and per operation, giving fine-grained control over both quality and cost.</p>
+
+    <h3>Supported Providers</h3>
+    <div class="table-wrap"><table>
+      <thead><tr><th>Provider</th><th>Models</th><th>Notes</th></tr></thead>
+      <tbody>
+        <tr><td>OpenAI</td><td>GPT-4, GPT-4o, GPT-4o-mini, GPT-4-turbo, GPT-3.5-turbo</td><td>API key required</td></tr>
+        <tr><td>Anthropic Claude</td><td>Claude 3.5 Sonnet, Claude 3 Opus, Claude 3 Sonnet, Claude 3 Haiku</td><td>API key required</td></tr>
+        <tr><td>GitHub Models</td><td>GPT-4o, GPT-4o-mini, GPT-4-turbo</td><td>GitHub account with Models marketplace access required</td></tr>
+        <tr><td>Ollama (Enterprise)</td><td>Llama 3, Mistral, Code Llama, and any locally pulled model</td><td>Self-hosted; no external API key needed</td></tr>
+      </tbody>
+    </table></div>
+
+    <h3>Adding an LLM Provider</h3>
+
+    <h4>OpenAI</h4>
+    <ol>
+      <li>Click <strong>+ Add LLM Provider</strong> -> select <strong>OpenAI</strong></li>
+      <li>Enter your API key</li>
+      <li>Select models to enable (GPT-4o for highest quality, GPT-4o-mini for cost efficiency, GPT-3.5-turbo for fastest/cheapest)</li>
+      <li>Click <strong>Test Connection</strong>, then <strong>Save</strong></li>
+    </ol>
+
+    <h4>Anthropic Claude</h4>
+    <ol>
+      <li>Click <strong>+ Add LLM Provider</strong> -> select <strong>Anthropic</strong></li>
+      <li>Enter your API key</li>
+      <li>Select models (Claude 3.5 Sonnet for best overall, Claude 3 Opus for highest intelligence, Claude 3 Haiku for fastest/cheapest)</li>
+      <li>Click <strong>Test Connection</strong>, then <strong>Save</strong></li>
+    </ol>
+
+    <h4>GitHub Models</h4>
+    <ol>
+      <li>Click <strong>+ Add LLM Configuration</strong> -> select <strong>GitHub</strong></li>
+      <li>Create a fine-grained Personal Access Token at <a href="https://github.com/settings/personal-access-tokens/new" target="_blank">github.com/settings/personal-access-tokens/new</a>: under <em>Permissions</em> expand <strong>Copilot Request</strong> &rarr; set to <strong>Read-only</strong>. No repository access is needed. Classic PATs are not supported.</li>
+      <li>Paste the token (starts with <code>github_pat_</code>). Your account must be enrolled in the <a href="https://github.com/marketplace?type=models" target="_blank">GitHub Models marketplace</a> (free).</li>
+      <li>Click <strong>Test Connection &amp; Fetch Models</strong>, select a text model, then <strong>Add to Configuration List</strong></li>
+    </ol>
+    <p><strong>Note:</strong> Enterprise-managed user (EMU) accounts cannot access GitHub Models &mdash; use a personal GitHub account.</p>
+
+    <h4>Ollama (Self-Hosted)</h4>
+    <pre><code># 1. Install Ollama on your server
+curl https://ollama.ai/install.sh | sh
+
+# 2. Pull desired models
+ollama pull llama3
+ollama pull mistral</code></pre>
+    <ol>
+      <li>Click <strong>+ Add LLM Provider</strong> -> select <strong>Ollama</strong></li>
+      <li>Enter the Ollama API URL: <code>http://localhost:11434</code></li>
+      <li>Available models are auto-detected from Ollama</li>
+      <li>Click <strong>Test Connection</strong>, then <strong>Save</strong></li>
+    </ol>
+
+    <h3>Per-Product LLM Assignment</h3>
+    <p><strong>Path:</strong> Product -> Settings -> LLM Configuration</p>
+    <p>Each product can independently assign a different provider and model to each of the 10 AI operations:</p>
+    <div class="table-wrap"><table>
+      <thead><tr><th>Operation</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td>Analyze</td><td>Requirement analysis and parsing</td></tr>
+        <tr><td>Refine</td><td>Requirement refinement and improvement</td></tr>
+        <tr><td>Epic</td><td>Epic generation from requirements</td></tr>
+        <tr><td>Story</td><td>User story generation</td></tr>
+        <tr><td>Task</td><td>Task breakdown from stories</td></tr>
+        <tr><td>Design</td><td>Technical design and architecture generation</td></tr>
+        <tr><td>Test Case</td><td>Test case generation</td></tr>
+        <tr><td>Quality</td><td>Quality scoring and suggestions</td></tr>
+        <tr><td>Security Scan</td><td>Security requirement analysis</td></tr>
+        <tr><td>AskProduct</td><td>Q&amp;A against product context</td></tr>
+      </tbody>
+    </table></div>
+
+    <p><strong>Cost optimisation example:</strong></p>
+    <pre><code>Analysis (high volume):  GPT-4o-mini  = $0.15 per 1M tokens
+Design (low volume):     GPT-4o       = $2.50 per 1M tokens
+Total Savings: ~85% compared to using GPT-4o for all operations</code></pre>
+
+    <h3>LLM Cost Tracking</h3>
+    <p><strong>Path:</strong> Admin Panel -> Analytics &amp; Insights -> LLM Usage</p>
+    <ul>
+      <li>Per-provider and per-product cost breakdown</li>
+      <li>Token usage (input and output) with daily, weekly, and monthly trend charts</li>
+      <li>Set monthly budget limits per product; email alerts fire when thresholds are reached</li>
+      <li>Optionally pause AI operations automatically if the budget limit is exceeded</li>
+    </ul>
+
+    <hr />
+
+    <!-- ======================================================= -->
+    <h2 id="database-management">7. Database Management</h2>
+
+    <p><strong>Path:</strong> Admin Panel -> Database Settings</p>
+
+    <p>Database configuration is read-only in the Admin Panel after initial setup. Changing the database type requires running the Setup Wizard (<code>/setup</code> -- Global Admin only) and migrating existing data.</p>
+
+    <h3>Supported Database Types</h3>
+    <div class="table-wrap"><table>
+      <thead><tr><th>Database</th><th>Use Case</th><th>Connection String Example</th></tr></thead>
+      <tbody>
+        <tr><td>PostgreSQL (recommended)</td><td>Production, multi-user, high availability</td><td><code>postgresql://user:pass@host:5432/flowsquad</code></td></tr>
+        <tr><td>MySQL / MariaDB</td><td>Production, existing MySQL infrastructure</td><td><code>mysql://user:pass@host:3306/flowsquad</code></td></tr>
+      </tbody>
+    </table></div>
+
+    <h3>Configuration Database</h3>
+    <p>FlowSquad uses a separate SQLite database (<code>flowsquad_engine.db</code>) for storing settings, API keys, license information, and authentication credentials. This database is always SQLite and is distinct from the product data database (PostgreSQL or MySQL).</p>
+
+    <h3>Configuration Database Security</h3>
+    <p>All sensitive values stored in the configuration database â€” API keys, integration passwords, SAML keys â€” are encrypted at the field level using Fernet AES-128-CBC before being written to the <code>settings</code> table. Whole-file database encryption is not available. For at-rest protection of the full database file, use filesystem-level encryption (LUKS/dm-crypt on Linux, BitLocker on Windows, or an encrypted Docker volume).</p>
+    <p>For product data encryption at rest, use your database platform's native capabilities:</p>
+    <ul>
+      <li><strong>PostgreSQL:</strong> <code>pgcrypto</code> extension or filesystem-level encryption</li>
+      <li><strong>MySQL:</strong> InnoDB tablespace encryption</li>
+    </ul>
+
+    <h3>Running Migrations</h3>
+    <p>Database migrations run automatically on application start whenever a new version of FlowSquad is launched. No manual steps are required. Always back up your database before upgrading.</p>
+
+    <hr />
+
+    <!-- ======================================================= -->
+    <h2 id="license-management">8. License Management</h2>
+
+    <p><strong>Path:</strong> Admin Panel -> License Management</p>
+
+    <h3>License Types</h3>
+    <div class="table-wrap"><table>
+      <thead><tr><th>Feature</th><th>Evaluation</th><th>Enterprise</th></tr></thead>
+      <tbody>
+        <tr><td>Validity</td><td>30 days</td><td>1+ years (custom)</td></tr>
+        <tr><td>Products</td><td>1 maximum</td><td>Unlimited</td></tr>
+        <tr><td>Users</td><td>Unlimited</td><td>Unlimited</td></tr>
+        <tr><td>Feature access</td><td>Full</td><td>Full</td></tr>
+        <tr><td>License signing</td><td>--</td><td>RSA-4096</td></tr>
+        <tr><td>Support</td><td>Community</td><td>Priority email support</td></tr>
+      </tbody>
+    </table></div>
+
+    <h3>Viewing License Details</h3>
+    <p>Admin Panel -> License Management displays:</p>
+    <ul>
+      <li>License type (Evaluation / Enterprise)</li>
+      <li>Company name</li>
+      <li>Maximum products allowed</li>
+      <li>Expiration date and days remaining</li>
+      <li>License key (partial, shown for reference only)</li>
+    </ul>
+
+    <h3>Applying a New Enterprise License</h3>
+    <ol>
+      <li>Receive the <code>enterprise_license.lic</code> file from FlowSquad sales</li>
+      <li>Admin Panel -> License Management -> <strong>Upload License</strong></li>
+      <li>Select the <code>.lic</code> file and click <strong>Upload</strong></li>
+      <li>The system validates the RSA-4096 signature, expiration date, and company name match</li>
+      <li>If valid, the license is activated immediately and the page reloads showing the new details</li>
+    </ol>
+    <div class="callout callout-warn">
+      <span class="callout-icon">&#x26A0;&#xFE0F;</span>
+      <div class="callout-body">
+        <strong>License upload errors</strong>
+        "Invalid signature" indicates the file was corrupted or tampered. "License expired" means the license has passed its validity date -- contact FlowSquad sales. "Invalid format" means the wrong file type was uploaded.
+      </div>
+    </div>
+
+    <h3>License Expiration Handling</h3>
+    <p>When the license expires, FlowSquad <strong>blocks all access</strong> (HTTP 403) and displays a license expiry page. Users cannot log in until a valid license is uploaded. The license upload widget remains accessible on the expiry page so a Global Admin can apply a renewal without needing to log in first.</p>
+    <div class="table-wrap"><table>
+      <thead><tr><th>State</th><th>Behaviour</th></tr></thead>
+      <tbody>
+        <tr><td>License valid</td><td>Normal operation.</td></tr>
+        <tr><td>License expired</td><td>All access blocked. Login page replaced with license expiry screen. Global Admin can upload a new enterprise license directly from the expiry page.</td></tr>
+        <tr><td>License file missing</td><td>License expiry screen shown with an upload widget to restore or replace the license file.</td></tr>
+        <tr><td>Machine ID mismatch</td><td>License error screen shown. Contact <a href="mailto:support@flowsquad.ai">support@flowsquad.ai</a> to re-issue the license for the new machine.</td></tr>
+      </tbody>
+    </table></div>
+    <div class="callout callout-info">
+      <span class="callout-icon">&#x2139;</span>
+      <div class="callout-body">
+        <strong>Evaluation license clock</strong><br />
+        The evaluation license clock starts on first application run and is tied to the host machine ID. The 30-day window cannot be reset by reinstalling &mdash; the activation record is stored independently of the license file. To continue beyond 30 days, contact <a href="mailto:support@flowsquad.ai">support@flowsquad.ai</a> for an enterprise license.
+      </div>
+    </div>
+
+    <hr />
+
+    <!-- ======================================================= -->
+    <h2 id="analytics">9. Analytics &amp; Insights</h2>
+
+    <p><strong>Path:</strong> Admin Panel -> Analytics &amp; Insights</p>
+
+    <p>Global Admins see analytics across all products. Product Admins accessing the product-level analytics tab see data for their assigned products only.</p>
+
+    <h3>System-Wide Analytics</h3>
+    <p>The system-wide dashboard provides:</p>
+    <ul>
+      <li><strong>Usage metrics:</strong> Total requirements created (all-time and last 30 days), designs and test cases generated, active users (last 7 and 30 days), storage consumed</li>
+      <li><strong>LLM usage:</strong> API calls per provider, tokens consumed (input and output), estimated costs per provider and in total, average response time, error rate</li>
+      <li><strong>Performance:</strong> Average page load time, API response time, database query performance, background task queue depths</li>
+    </ul>
+
+    <h3>Per-Product Analytics</h3>
+    <p><strong>Path:</strong> Product -> Analytics tab</p>
+    <ul>
+      <li>Requirements by status (New, In Progress, Completed)</li>
+      <li>Quality score trends over time</li>
+      <li>Most active contributors</li>
+      <li>LLM cost breakdown scoped to that product</li>
+      <li>Activity timeline</li>
+    </ul>
+
+    <h3>Exporting Analytics</h3>
+    <p>Data can be exported in the following formats:</p>
+    <ul>
+      <li><strong>CSV</strong> -- raw data suitable for Excel or Google Sheets</li>
+      <li><strong>PDF</strong> -- formatted report with charts</li>
+      <li><strong>JSON</strong> -- for API and SIEM integration</li>
+    </ul>
+    <p>Scheduled reports (daily, weekly, or monthly) can be configured and emailed to Global Admins and Product Admins with customisable metrics.</p>
+
+    <hr />
+
+    <!-- ======================================================= -->
+    <h2 id="audit-logs">10. Audit Logs</h2>
+
+    <p><strong>Path:</strong> Admin Panel -> Audit Logs</p>
+
+    <p>FlowSquad logs all security-relevant and data-mutating events automatically. Logs cannot be modified or deleted by any user.</p>
+
+    <h3>Logged Event Categories</h3>
+    <div class="table-wrap"><table>
+      <thead><tr><th>Category</th><th>Events Logged</th></tr></thead>
+      <tbody>
+        <tr><td>Authentication</td><td>Login (success and failure), logout, MFA setup and reset, failed brute-force attempts</td></tr>
+        <tr><td>User Management</td><td>User created, updated, deleted; role assignments changed</td></tr>
+        <tr><td>Product Actions</td><td>Product created or deleted; requirement, design, and test case created, edited, or deleted</td></tr>
+        <tr><td>System Actions</td><td>License uploaded, LLM provider added or removed, database configuration changed, authentication settings changed</td></tr>
+        <tr><td>Security Events</td><td>Privilege escalation (role changes), API key created or deleted, configuration exports</td></tr>
+      </tbody>
+    </table></div>
+
+    <h3>Searching and Filtering Logs</h3>
+    <p>Use the filter controls to narrow the log view:</p>
+    <ul>
+      <li><strong>Date range:</strong> Last 7 days, last 30 days, or custom range</li>
+      <li><strong>Event type:</strong> Login, Create, Update, Delete, and more</li>
+      <li><strong>User:</strong> Specific username or all users</li>
+      <li><strong>Product:</strong> Specific product or all products</li>
+      <li><strong>Severity:</strong> Info, Warning, Error</li>
+    </ul>
+    <p>Example searches: "All failed login attempts in the last 24 hours", "All product deletions by user admin", "All license changes".</p>
+
+    <h3>Exporting Audit Logs</h3>
+    <p>Logs can be exported as CSV (for compliance audits and Excel analysis), JSON (for SIEM integration), or PDF (formatted report).</p>
+    <p>FlowSquad audit logs are designed to satisfy the requirements of SOC 2, HIPAA, and GDPR compliance programmes:</p>
+    <ul>
+      <li><strong>SOC 2:</strong> Comprehensive access and change event logging</li>
+      <li><strong>HIPAA:</strong> Full access logging with user identification</li>
+      <li><strong>GDPR:</strong> User data access tracking to support data subject requests</li>
+    </ul>
+
+    <hr />
+
+    <!-- ======================================================= -->
+    <h2 id="system-health">11. System Health</h2>
+
+    <p><strong>Path:</strong> Admin Panel &rarr; System Health (also accessible via the <strong>🩺 System Health</strong> button on the Audit Logs, Analytics, User Management, and Settings pages)</p>
+
+    <p>The System Health page gives Global Administrators a live view of every service FlowSquad depends on, and lets them configure automated background monitoring that surfaces warnings directly in the UI.</p>
+
+    <h3>On-Demand Health Check</h3>
+    <p>Click <strong>&#x25B6; Run Health Check Now</strong> to trigger an immediate probe of all configured services. Results appear in a table with three columns:</p>
+    <div class="table-wrap"><table>
+      <thead><tr><th>Column</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Service</strong></td><td>Name of the probed component (e.g., Application Database, Configuration Database, LLM Provider, SMTP, LDAP)</td></tr>
+        <tr><td><strong>Status</strong></td><td><span style="background:#d1fae5;color:#065f46;padding:1px 8px;border-radius:10px;font-size:12px;font-weight:600;">✓ OK</span> or <span style="background:#fee2e2;color:#991b1b;padding:1px 8px;border-radius:10px;font-size:12px;font-weight:600;">✗ FAIL</span></td></tr>
+        <tr><td><strong>Message</strong></td><td>Details such as response time, error description, or connection info</td></tr>
+      </tbody>
+    </table></div>
+    <p>A summary line below the table shows the timestamp and a count of healthy services (e.g., <em>4/5 services healthy</em>).</p>
+
+    <h3>Recurring Health Monitoring</h3>
+    <p>When enabled, FlowSquad runs health probes automatically in the background at a configurable interval. The results are surfaced as a <strong>warning banner</strong> at the top of every page whenever a service is degraded — no manual checking is required.</p>
+
+    <div class="table-wrap"><table>
+      <thead><tr><th>Setting</th><th>Default</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td>Enable recurring health monitoring</td><td>Off</td><td>Toggle to start background probing</td></tr>
+        <tr><td>Check interval (minutes)</td><td>60</td><td>How often probes run; minimum 1 minute, maximum 1440 (24 hours)</td></tr>
+      </tbody>
+    </table></div>
+
+    <p>Click <strong>💾 Save Settings</strong> after making changes. Settings take effect immediately without restarting FlowSquad.</p>
+
+    <div class="callout callout-info">
+      <span class="callout-icon">&#x2139;</span>
+      <div class="callout-body">
+        <strong>Warning banner behaviour</strong><br />
+        When a background probe detects a degraded service, a yellow warning banner appears at the top of every page for all logged-in users. Clicking <strong>Details</strong> expands a list of affected services. Admins can dismiss the banner until the next probe cycle. The banner disappears automatically once all services recover.
+      </div>
+    </div>
+
+    <div class="callout callout-tip">
+      <span class="callout-icon">&#x1F4A1;</span>
+      <div class="callout-body">
+        <strong>Recommended interval</strong><br />
+        Set the interval to 5&ndash;15 minutes for production environments where rapid detection of outages is important. Use 60 minutes for lower-traffic or development deployments to reduce background noise.
+      </div>
+    </div>
+
+    <hr />
+
+    <!-- ======================================================= -->
+    <h2 id="backup-recovery">12. Backup &amp; Recovery</h2>
+
+    <p>Regular backups protect against data loss from hardware failure, migration errors, or accidental deletions. FlowSquad recommends daily automated backups with off-site storage.</p>
+
+    <h3>Configuration Database Backup</h3>
+    <p>Copy the configuration database file directly:</p>
+    <pre><code># Linux/Docker -- config database
+cp ${FLOWSQUAD_DATA_DIR:-/var/lib/flowsquad}/flowsquad_engine.db /backups/engine_$(date +%Y%m%d).db
+
+# Windows
+copy "%LOCALAPPDATA%\FlowSquad\flowsquad_engine.db" "C:\Backups\engine_%date:~-4,4%%date:~-10,2%%date:~-7,2%.db"</code></pre>
+    <div class="callout callout-warn">
+      <span class="callout-icon">&#x26A0;&#xFE0F;</span>
+      <div class="callout-body">
+        <strong>Config database backup</strong>
+          The config database backup can be restored directly â€” no password is required. Sensitive field values (API keys, passwords) are stored encrypted within the database and will remain encrypted in the backup.
+      </div>
+    </div>
+
+    <h3>Product Database Backup</h3>
+    <pre><code># PostgreSQL
+pg_dump -U flowsquad -h localhost flowsquad &gt; backup_$(date +%Y%m%d).sql
+
+# MySQL / MariaDB
+mysqldump -u flowsquad -p flowsquad &gt; backup_$(date +%Y%m%d).sql
+
+# SQLite (if used for product data)
+cp flowsquad_engine.db backup_$(date +%Y%m%d).db</code></pre>
+
+    <h3>Automated Backup Script (Linux)</h3>
+    <pre><code>#!/bin/bash
+BACKUP_DIR="/var/backups/flowsquad"
+DATE=$(date +%Y%m%d_%H%M%S)
+mkdir -p $BACKUP_DIR
+
+# Backup product database
+pg_dump -U flowsquad flowsquad | gzip &gt; $BACKUP_DIR/flowsquad_$DATE.sql.gz
+
+# Backup config database
+cp /var/lib/flowsquad/flowsquad_engine.db $BACKUP_DIR/flowsquad_engine_$DATE.db
+
+# Retain only the last 30 days
+find $BACKUP_DIR -name "*.sql.gz" -mtime +30 -delete
+
+echo "Backup completed: $DATE"</code></pre>
+    <p>Schedule this script as a daily cron job:</p>
+    <pre><code># Make executable
+sudo chmod +x /usr/local/bin/backup-flowsquad.sh
+
+# Run daily at 2:00 AM
+sudo crontab -e
+# Add: 0 2 * * * /usr/local/bin/backup-flowsquad.sh</code></pre>
+
+    <h3>Restore Procedure</h3>
+    <pre><code># PostgreSQL
+gunzip -c backup_YYYYMMDD.sql.gz | psql -U flowsquad flowsquad
+
+# MySQL
+gunzip -c backup_YYYYMMDD.sql.gz | mysql -u flowsquad -p flowsquad</code></pre>
+    <div class="callout callout-tip">
+      <span class="callout-icon">&#x1F4A1;</span>
+      <div class="callout-body">
+        <strong>Test your restore procedure quarterly</strong>
+        A backup that has never been tested is an untested assumption. Schedule a quarterly restore drill to a staging environment to verify your backups are complete and usable.
+      </div>
+    </div>
+
+    <hr />
+
+    <!-- ======================================================= -->
+    <h2 id="security-practices">13. Security Best Practices</h2>
+
+    <h3>Administrator Account Security</h3>
+    <ul>
+      <li>Use a minimum 16-character password for all Global Admin accounts</li>
+      <li>Use a password manager -- do not reuse passwords</li>
+      <li>Enable TOTP-based MFA for every Global Admin account</li>
+      <li>Maintain 2-3 Global Admin accounts for redundancy; do not create more</li>
+      <li>Review active user accounts quarterly and remove accounts for departed personnel immediately</li>
+      <li>Rotate LLM API keys at least every 90 days</li>
+      <li>Review audit logs at minimum weekly for suspicious activity</li>
+    </ul>
+
+    <h3>Network Security</h3>
+    <ul>
+      <li>Always serve FlowSquad over HTTPS in production -- obtain certificates from Let's Encrypt or a trusted CA</li>
+      <li>Use an Nginx (or Apache) reverse proxy for SSL termination, rate limiting, and DDoS protection</li>
+      <li>Block direct external access to port 5000 -- expose only port 443 via the reverse proxy</li>
+    </ul>
+    <pre><code># UFW example -- allow HTTPS only from internet, block direct FlowSquad port
+sudo ufw allow 443/tcp
+sudo ufw deny 5000/tcp</code></pre>
+
+    <h3>Database Security</h3>
+    <ul>
+      <li>Verify API keys and integration credentials are stored (field-level Fernet encryption is applied automatically)</li>
+      <li>Restrict the FlowSquad database user to only the FlowSquad database:</li>
+    </ul>
+    <pre><code>-- PostgreSQL: limit permissions
+REVOKE ALL ON DATABASE postgres FROM flowsquad;
+GRANT ALL PRIVILEGES ON DATABASE flowsquad TO flowsquad;</code></pre>
+    <ul>
+      <li>Store database backups off-site (AWS S3, Azure Blob Storage, or equivalent)</li>
+      <li>Enable encryption at rest for the product database using your database platform's native capabilities</li>
+    </ul>
+
+    <h3>Compliance Checklists</h3>
+    <h4>SOC 2</h4>
+    <ul class="checklist">
+      <li>Audit logs enabled and exported monthly</li>
+      <li>MFA enforced for all Global Admin accounts</li>
+      <li>Sensitive credentials stored encrypted (field-level encryption, enabled by default)</li>
+      <li>Regular security patches applied</li>
+    </ul>
+
+    <h4>HIPAA</h4>
+    <ul class="checklist">
+      <li>All communications served over HTTPS</li>
+      <li>Database encryption enabled (at rest and in transit)</li>
+      <li>Access logs retained for a minimum of 6 years</li>
+      <li>Role-based access controls (RBAC) implemented</li>
+    </ul>
+
+    <h4>GDPR</h4>
+    <ul class="checklist">
+      <li>User data export capability available</li>
+      <li>User deletion (right to be forgotten) supported</li>
+      <li>Audit logs capture all data access events</li>
+      <li>Data processing agreements in place with LLM providers</li>
+    </ul>
+
+    <div class="callout callout-info">
+      <span class="callout-icon">&#x2139;&#xFE0F;</span>
+      <div class="callout-body">
+        <strong>Security Reference</strong><br />
+        For a printable security cheat sheet with cross-links to TLS, Fernet, RBAC, and audit log sections, see the <a href="security-guide.html">Security Reference</a>.
+      </div>
+    </div>
+
+    <hr />
+
+    <!-- ======================================================= -->
+    <h2 id="troubleshooting">14. Troubleshooting: Admin &amp; Platform Issues</h2>
+
+    <h3>Performance -- Slow Requirement Refinement (30+ Seconds)</h3>
+    <p><strong>Diagnosis:</strong> Admin Panel -> Analytics -> LLM Usage -> check average response times.</p>
+    <p><strong>Solutions:</strong></p>
+    <ul>
+      <li><strong>Switch to a faster model:</strong> Admin Panel -> Products -> Edit product -> LLM Configuration -> Refine -> select <strong>GPT-4o-mini</strong> (averages 1-3 s, 90% cheaper than GPT-4o)</li>
+      <li><strong>Break down long inputs:</strong> Very long requirements (5,000+ characters) increase token count. Split into three smaller focused requirements.</li>
+      <li><strong>Check network latency to LLM provider:</strong> <code>ping api.openai.com</code> -- if &gt;200 ms, consider switching to Anthropic Claude or Ollama (self-hosted, zero network latency)</li>
+    </ul>
+
+    <h3>Performance -- PostgreSQL Slow Queries</h3>
+    <p><strong>Diagnosis:</strong></p>
+    <pre><code>-- Find slow queries in PostgreSQL
+SELECT query, total_time, calls, mean_time
+FROM pg_stat_statements
+WHERE mean_time > 1000
+ORDER BY total_time DESC
+LIMIT 10;</code></pre>
+    <p><strong>Solutions:</strong></p>
+    <pre><code>-- Add missing indexes
+CREATE INDEX idx_requirements_product_id ON requirements(product_id);
+CREATE INDEX idx_designs_requirement_id ON designs(requirement_id);
+CREATE INDEX idx_test_cases_design_id ON test_cases(design_id);
+CREATE INDEX idx_users_username ON users(username);
+CREATE INDEX idx_audit_logs_timestamp ON audit_logs(timestamp);</code></pre>
+    <p>Tune PostgreSQL configuration in <code>/etc/postgresql/XX/main/postgresql.conf</code>:</p>
+    <pre><code>shared_buffers      = 256MB
+effective_cache_size = 1GB
+work_mem            = 16MB</code></pre>
+    <pre><code>sudo systemctl restart postgresql</code></pre>
+
+    <h3>Configuration Database Recovery</h3>
+    <p>If <code>flowsquad_engine.db</code> is missing or corrupted, restore from a backup copy. No password is required. Sensitive field values (API keys, passwords) will be re-entered through the Setup Wizard after restore.</p>
+
+    <h3>License Upload Errors</h3>
+    <div class="table-wrap"><table>
+      <thead><tr><th>Error Message</th><th>Cause</th><th>Resolution</th></tr></thead>
+      <tbody>
+        <tr><td>Invalid signature</td><td>License file corrupted or tampered</td><td>Request a fresh <code>.lic</code> file from FlowSquad sales</td></tr>
+        <tr><td>License expired</td><td>License validity date has passed</td><td>Contact <a href="mailto:support@flowsquad.ai">support@flowsquad.ai</a> for renewal</td></tr>
+        <tr><td>Machine ID mismatch</td><td>License was issued for a different machine/cluster ID</td><td>Verify <code>FLOWSQUAD_CLUSTER_ID</code> matches the ID used when the license was generated</td></tr>
+        <tr><td>Invalid format</td><td>Wrong file type uploaded</td><td>Ensure you are uploading the <code>.lic</code> file, not a ZIP or PDF</td></tr>
+      </tbody>
+    </table></div>
+
+    <div class="callout callout-tip">
+      <span class="callout-icon">-></span>
+      <div class="callout-body">
+        <strong>Admin setup complete -- next step: User Guide</strong><br />
+        Products are created and admins are assigned. Share the <a href="user-guide.html">User Guide</a> with your Product Admins and team members to get started with codebase analysis, requirement generation, and SDLC workflow.
+      </div>
+    </div>
+
+  </main>
+
+</div><!-- /.docs-shell -->
+
+<!-- ========================================================== -->
+<!-- FAQ -- Structured for AI crawlers (ChatGPT, Gemini, Perplexity) -->
+<!-- ========================================================== -->
+<section id="faq" itemscope itemtype="https://schema.org/FAQPage">
+  <h2>Frequently Asked Questions</h2>
+
+  <article itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+    <h3 itemprop="name">How do I add a new user to FlowSquad?</h3>
+    <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+      <p itemprop="text" style="color:var(--text);margin:0;">Go to <strong>Admin Panel -> User Management -> Add User</strong>. Fill in the username, email, and initial password, then assign the appropriate role (Global Admin, Product Admin, or Developer). For product-scoped access, also assign the user to one or more products from the Products section. If LDAP or SAML SSO is enabled, users can also be provisioned automatically on first login.</p>
+    </div>
+  </article>
+
+  <article itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+    <h3 itemprop="name">How do I configure different LLM providers per product?</h3>
+    <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+      <p itemprop="text" style="color:var(--text);margin:0;">Each product can have its own LLM configuration per operation type (e.g., Analyze, Refine, Epic, Design, Test Cases). Go to <strong>Admin Panel -> Products -> Edit Product -> LLM Configuration</strong>. For each operation, select the provider (OpenAI, Anthropic Claude, GitHub Models, or Ollama for Enterprise) and model. If no per-product setting is configured, the product inherits the global default set during the Setup Wizard.</p>
+    </div>
+  </article>
+
+  <article itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+    <h3 itemprop="name">How do I set up LDAP authentication in FlowSquad?</h3>
+    <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+      <p itemprop="text" style="color:var(--text);margin:0;">LDAP is configured in <strong>Setup Wizard &rarr; Step 4: Authentication &rarr; LDAP / Active Directory</strong>. The wizard can be re-opened at any time from the <strong>&#x2699;&#xFE0F; Setup</strong> button. You will need: the LDAP server URL (e.g., <code>ldap://your-ad-server:389</code>), the base DN for user searches, a service account DN and password for the bind operation, and the attribute used as the username (typically <code>sAMAccountName</code> for Active Directory). Once saved, users can log in with their LDAP credentials and are provisioned automatically on first login.</p>
+    </div>
+  </article>
+
+  <article itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+    <h3 itemprop="name">What is the FlowSquad configuration database?</h3>
+    <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+      <p itemprop="text" style="color:var(--text);margin:0;">FlowSquad maintains two separate databases. The <strong>configuration database</strong> (<code>flowsquad_engine.db</code>) is a SQLite file that stores all platform settings: API keys, license information, authentication configuration, Setup Wizard state, and admin credentials. It is always SQLite. All sensitive values are encrypted at field level before storage. The <strong>application database</strong> (PostgreSQL or MySQL) stores all product data -- requirements, artifacts, users, and audit logs.</p>
+    </div>
+  </article>
+
+  <article itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+    <h3 itemprop="name">How do I back up FlowSquad data?</h3>
+    <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+      <p itemprop="text" style="color:var(--text);margin:0;">You need to back up two items: (1) the <strong>application database</strong> -- use <code>pg_dump</code> for PostgreSQL or <code>mysqldump</code> for MySQL, ideally via a scheduled cron job or task scheduler; and (2) the <strong>configuration database</strong> -- copy the <code>flowsquad_engine.db</code> file from its data directory. Store both backups in a separate, secure location. Test your restore procedure regularly to ensure backups are valid.</p>
+    </div>
+  </article>
+
+  <article itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+    <h3 itemprop="name">How do I enable MFA for FlowSquad users?</h3>
+    <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+      <p itemprop="text" style="color:var(--text);margin:0;">MFA is configured in <strong>Setup Wizard &rarr; Step 4: Authentication &rarr; MFA</strong>. Supported methods are TOTP (time-based one-time password using any authenticator app) and email OTP. Users set up their own MFA device on next login once enforcement is enabled. For Global Admin accounts, enabling MFA is strongly recommended as a security baseline.</p>
+    </div>
+  </article>
+
+  <article itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+    <h3 itemprop="name">How do I configure Ollama in FlowSquad?</h3>
+    <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+      <p itemprop="text" style="color:var(--text);margin:0;">Ollama is available in the Enterprise tier only. During the Setup Wizard (LLM Provider step) or in the Admin Panel, select <strong>Ollama</strong> as the provider and enter the base URL of your Ollama instance (e.g., <code>http://localhost:11434</code>). Ollama runs fully locally with no internet dependency, making it suitable for air-gapped environments. Ensure the desired model (e.g., <code>llama3</code>, <code>mistral</code>) is already pulled on your Ollama instance before configuring FlowSquad.</p>
+    </div>
+  </article>
+</section>
+
+<!-- ---- Footer ------------------------------------------------------------------------------------------------ -->
+<footer class="docs-footer">
+  <span>(C) FlowSquad. All rights reserved.</span>
+  <span class="footer-sep">|</span>
+  <a href="mailto:support@flowsquad.ai">support@flowsquad.ai</a>
+  <span class="footer-sep">|</span>
+  <a href="#">Privacy Policy</a>
+</footer>
+
+
+
+</body>
+</html>
