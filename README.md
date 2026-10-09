@@ -1,16 +1,28 @@
 # FlowSquad
 
-## From code to decisions
+**Your codebase already knows the answers. FlowSquad surfaces them.**
 
-FlowSquad is an AI-powered platform that analyzes your codebase and transforms it into actionable insights for your engineering squad.
+Stop explaining your system to AI tools that don't understand it. FlowSquad reads your codebase once, builds deep product intelligence, and generates requirements, designs, and test cases that actually fit your architecture.
 
-**Works with your existing repositories — no code changes, no setup complexity.**
+> **One analysis. Infinite artifacts. Zero repeated LLM cost.**
+
+🌐 [flowsquad.ai](https://flowsquad.ai) &nbsp;·&nbsp; 📘 [Documentation](https://flowsquad.ai/docs) &nbsp;·&nbsp; 📧 [support@flowsquad.ai](mailto:support@flowsquad.ai)
 
 ---
 
-## 📥 Download
+## 📥 Download v2.0
 
-👉 https://github.com/flowsquad-ai/flowsquad/releases
+| Platform | Package |
+|---|---|
+| 💻 Windows Portable | [FlowSquad-Win-Portable-v2.0.zip](https://github.com/flowsquad-ai/Flowsquad/releases/download/v2.0/FlowSquad-Win-Portable-v2.0.zip) |
+| 🪟 Windows Installer | [FlowSquad-Win-Installer-v2.0.zip](https://github.com/flowsquad-ai/Flowsquad/releases/download/v2.0/FlowSquad-Win-Installer-v2.0.zip) |
+| 🐧 Linux Standalone | [FlowSquad-Linux-Standalone-v2.0.tar.gz](https://github.com/flowsquad-ai/Flowsquad/releases/download/v2.0/FlowSquad-Linux-Standalone-v2.0.tar.gz) |
+| 🐧 Linux Systemd | [FlowSquad-Linux-Systemd-v2.0.tar.gz](https://github.com/flowsquad-ai/Flowsquad/releases/download/v2.0/FlowSquad-Linux-Systemd-v2.0.tar.gz) |
+| 🐳 Docker | [FlowSquad-Docker-v2.0.zip](https://github.com/flowsquad-ai/Flowsquad/releases/download/v2.0/FlowSquad-Docker-v2.0.zip) |
+| ☸️ Kubernetes Manifests | [FlowSquad-Kubernetes-v2.0.zip](https://github.com/flowsquad-ai/Flowsquad/releases/download/v2.0/FlowSquad-Kubernetes-v2.0.zip) |
+| ☸️ Kubernetes Helm | [flowsquad-2.0.tgz](https://github.com/flowsquad-ai/Flowsquad/releases/download/v2.0/flowsquad-2.0.tgz) |
+
+👉 [View full release notes](https://github.com/flowsquad-ai/Flowsquad/releases/tag/v2.0)
 
 ---
 
@@ -18,50 +30,149 @@ FlowSquad is an AI-powered platform that analyzes your codebase and transforms i
 
 👉 https://youtu.be/M56-Kezxxio
 
+---
+
+## ⚡ Ten Purpose-Built Workflow Tabs
+
+From a single codebase analysis, FlowSquad generates:
+
+| # | Tab | What It Does |
+|---|---|---|
+| 1 | **Analyze** | Load from GitHub, GitLab, Bitbucket, Gitea, Azure DevOps, or local folder |
+| 2 | **Refine** | AI requirement refinement with completeness scoring (0–100) |
+| 3 | **Epic** | Generate structured epics — ready to push to Jira |
+| 4 | **Story** | User stories with acceptance criteria aligned to your actual code |
+| 5 | **Task** | Granular development tasks grounded in real code patterns |
+| 6 | **Design** | Architecture diagrams, API contracts, data flow — auto-generated |
+| 7 | **Test Cases** | Test scenarios matched to your existing frameworks (Pytest, Cypress, Selenium…) |
+| 8 | **Quality Score** | Semantic code quality, complexity metrics, risk indicators |
+| 9 | **Security Scan** | OWASP Top 10 analysis against your actual codebase |
+| 10 | **AskProduct** | Natural language Q&A over your entire product knowledge base |
 
 ---
 
-## ❌ Why Traditional AI Falls Short
+## 🏗 How It Works
 
-Most AI tools generate without context.
+```
+Your Repository
+      │
+      ▼
+  [Analyze] ── Parse code, extract modules, dependencies, patterns
+      │
+      ▼
+  Vector Store ── Embeddings stored once, reused by all tabs
+      │
+      ├──▶ Refine / Epic / Story / Task
+      ├──▶ Design
+      ├──▶ Test Cases
+      ├──▶ Quality Score / Security Scan
+      └──▶ AskProduct
+```
 
-They don’t understand your architecture, patterns, or risks.  
-The output looks correct — but doesn’t fit your system.
+One analysis. Every artifact. No repeated LLM cost.
 
 ---
 
-## ✅ What FlowSquad Does Differently
+## 🤖 Supported AI Providers
 
-FlowSquad learns directly from your codebase.
+| Provider | Notes |
+|---|---|
+| **OpenAI** | GPT-4, GPT-4o, GPT-4o-mini, GPT-4-turbo, GPT-3.5-turbo |
+| **Anthropic Claude** | Via Anthropic API |
+| **GitHub Models** | GPT-4o and GPT-4o-mini via GitHub marketplace |
+| **Ollama** | Fully local, air-gapped — Enterprise tier |
 
-It understands your services, dependencies, and structure —  
-and generates outputs that actually align with your system.
+Each product can be configured with a different provider per operation type.
 
 ---
 
-## ⚡ From Code to Intelligence
+## 🚀 Quick Start
 
-FlowSquad transforms your codebase into:
+### Windows (Portable — no install)
+```
+1. Download FlowSquad-Win-Portable-v2.0.zip
+2. Extract to any folder
+3. Run FlowSquad-Setup.exe
+4. Open http://localhost:5000
+5. Complete the Setup Wizard
+```
 
-### 📌 Requirements
-- Refined, context-aware functional understanding  
-- Eliminates ambiguity and back-and-forth  
+### Linux Standalone (no root required)
+```bash
+tar -xzf FlowSquad-Linux-Standalone-v2.0.tar.gz
+cd FlowSquad-Linux-Standalone-v2.0
+chmod +x start-flowsquad.sh && ./start-flowsquad.sh
+# Open http://localhost:5000
+```
 
-### 🏗 Design
-- Implementable architecture insights  
-- API contracts, flow-level understanding  
+### Linux Systemd (production service)
+```bash
+tar -xzf FlowSquad-Linux-Systemd-v2.0.tar.gz
+cd FlowSquad-Linux-Systemd-v2.0
+sudo ./install.sh
+# FlowSquad starts automatically — open http://localhost:5000
+```
 
-### 🧪 Testing
-- Suggested test scenarios  
-- Coverage gaps identification  
+### Docker
+```bash
+unzip FlowSquad-Docker-v2.0.zip
+cd FlowSquad-Docker-Protected-v2.0
+chmod +x deploy.sh && ./deploy.sh
+# Open http://localhost:5000
+```
 
-### 📊 Quality
-- Semantic code analysis  
-- Risk and complexity indicators  
+### Kubernetes (Helm)
+```bash
+helm install flowsquad flowsquad-2.0.tgz \
+  --namespace flowsquad --create-namespace \
+  -f values.yaml
+```
 
-### ⏱ Estimation
-- Effort and impact analysis  
-- Better sprint planning decisions  
+---
+
+## 🔌 Integrations
+
+**Project Management:** Jira (push Epics, Stories, Tasks, Designs)
+
+**Documentation:** Confluence (import pages, publish designs)
+
+**Source Control:** GitHub · GitLab · Bitbucket · Azure DevOps · Gitea
+
+**Identity & SSO:** LDAP/Active Directory · SAML 2.0 · OAuth2
+(Okta, Azure AD, Keycloak, OneLogin, ADFS, Google, Microsoft)
+
+---
+
+## 🏢 Evaluation vs Enterprise
+
+| | Evaluation | Enterprise |
+|---|---|---|
+| License | 30-day free | Contact us |
+| Products | 1 | Unlimited |
+| Workflow tabs | All 10 | All 10 |
+| Deployment | Windows, Linux, Docker, K8s | All + air-gapped |
+| RBAC | — | Global Admin / Product Admin / Member |
+| SSO | — | LDAP, SAML 2.0, OAuth2 |
+| MFA | — | TOTP + email OTP |
+| Jira / Confluence | — | ✓ |
+| PostgreSQL / MySQL | — | ✓ |
+| Ollama (air-gapped) | — | ✓ |
+| Field encryption | — | Fernet AES-128-CBC |
+| Audit logs | — | Immutable |
+| Compliance | — | SOC 2 / HIPAA / GDPR |
+| Support | Community | Priority |
+
+---
+
+## 🔒 Security & Privacy
+
+- **Your code never leaves your machine** — all analysis runs locally
+- **No cloud uploads required** — works fully offline with Ollama (Enterprise)
+- **Field-level encryption** — API keys and credentials encrypted at rest
+- **Immutable audit logs** — every action recorded for compliance
+- **MFA + SSO** — TOTP, email OTP, LDAP, SAML 2.0, OAuth2 (Enterprise)
+
+> Windows binaries are not yet code-signed. Windows Defender SmartScreen will show a warning on first run — click **More info → Run anyway** to proceed.
 
 ---
 
@@ -81,88 +192,23 @@ FlowSquad transforms your codebase into:
 
 ---
 
-## 🐳 Deployment Options
+## 📘 Documentation
 
-FlowSquad can be used in multiple ways:
+Full documentation at **[flowsquad.ai/docs](https://flowsquad.ai/docs)**:
 
-### 💻 Local (Windows)
-- Portable EXE  
-- No installation required  
-- Ideal for individual users  
-
-### 🐳 Containerized (Docker)
-- Run on Linux servers  
-- Suitable for teams and internal deployments  
-- Easy to deploy and scale  
-
-Works seamlessly in both environments.
-
----
-
-## 🚀 Features
-
-- AI-powered codebase analysis  
-- Context-aware requirement generation  
-- Design insights aligned with your architecture  
-- Test case suggestions  
-- Semantic quality and coverage analysis  
-- Effort estimation and risk detection  
-- Docker-based deployment for team and enterprise environments  
-
----
-
-## ⚙️ How to Use
-
-### Option 1: Windows (Recommended for Quick Start)
-
-1. Download the ZIP file  
-2. Extract contents  
-3. Run `FlowSquad-Setup.exe`  
-4. Add your preferred AI API key  
-5. Provide repository path or URL  
-6. Start analysis  
-
----
-
-### Option 2: Docker (Linux / Teams)
-
-1. Pull the FlowSquad Docker image  
-2. Run the container  
-3. Access via browser (http://localhost:5000)  
-4. Complete setup and start analysis  
-
-*(Detailed Docker instructions available in USER_GUIDE.md)*
-
----
-
-## 🧪 Evaluation Version
-
-This is an early evaluation version.
-
-Note:
-- Application is not code-signed yet  
-- Windows may show a security warning  
-- Click “More info” → “Run anyway” to proceed  
-
----
-
-## 🎯 What Teams Gain
-
-- Faster delivery  
-- Higher quality  
-- Fewer production surprises  
+- [Installation Guide](https://flowsquad.ai/docs/install-guide) — Windows, Linux, Docker, Kubernetes
+- [Setup Guide](https://flowsquad.ai/docs/setup-guide) — complete the Setup Wizard
+- [Admin Guide](https://flowsquad.ai/docs/admin-guide) — products, users, licensing
+- [User Guide](https://flowsquad.ai/docs/user-guide) — all 10 workflow tabs
+- [Integration Guide](https://flowsquad.ai/docs/integration-guide) — Jira, Confluence, SSO, SCM
+- [Security Reference](https://flowsquad.ai/docs/security-guide) — TLS, encryption, RBAC, compliance
 
 ---
 
 ## 📧 Support
 
-support@flowsquad.ai
+[support@flowsquad.ai](mailto:support@flowsquad.ai)
 
 ---
 
-## 🚀 Final Thought
-
-Don’t generate code. Generate intelligence.
-
-Your codebase already holds the answers.  
-FlowSquad turns it into intelligent context — so requirements align, designs match reality, and you know what’s actually tested.
+*Your codebase already holds the answers. FlowSquad turns it into intelligent context — so requirements align, designs match reality, and you know what's actually tested.*
