@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>New Developer, Legacy Codebase: The Onboarding Problem Nobody Talks About | FlowSquad Blog</title>
+<meta name="description" content="The average developer takes 3–6 months to be fully productive on a legacy codebase. FlowSquad lets them ask questions, get architectural context, and generate tasks from day one." />
+<meta property="og:title" content="New Developer, Legacy Codebase: The Onboarding Problem Nobody Talks About" />
+<meta property="og:description" content="The average developer takes 3–6 months to be fully productive on a legacy codebase. FlowSquad lets them ask questions, get architectural context, and generate tasks from day one." />
+<meta property="og:type" content="article" />
+<meta property="og:site_name" content="FlowSquad" />
+<meta property="og:image" content="https://flowsquad.ai/blog/blog-04-developer-onboarding-cover.svg" />
+<meta property="og:url" content="https://flowsquad.ai/blog/developer-onboarding-legacy-codebase" />
+<meta name="twitter:card" content="summary_large_image" />
+<link rel="canonical" href="https://flowsquad.ai/blog/developer-onboarding-legacy-codebase" />
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "New Developer, Legacy Codebase: The Onboarding Problem Nobody Talks About",
+    "description": "The average developer takes 3–6 months to be fully productive on a legacy codebase. FlowSquad lets them ask questions, get architectural context, and generate tasks from day one.",
+    "author": { "@type": "Organization", "name": "FlowSquad" },
+    "publisher": { "@type": "Organization", "name": "FlowSquad", "url": "https://flowsquad.ai" },
+    "datePublished": "2026-02-05",
+    "keywords": ["developer onboarding", "legacy codebase", "AskProduct", "codebase Q&A", "FlowSquad", "engineering productivity"]
+  }
+  </script>
+<script>(function(){try{var t=localStorage.getItem('fs_theme');if(!t)t='dark';document.documentElement.setAttribute('data-theme',t==='dark'?'dark':'light');}catch(e){document.documentElement.setAttribute('data-theme','dark');}})();</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--pc:#0066cc;--pd:#0052a3;--pl:#e6f2ff;--bg:#ffffff;--cbg:#ffffff;--nbg:#ffffff;--lbg:#f6f8fa;--llbg:#f0f2f5;--tc:#1f2328;--tm:#57606a;--bc:#d0d7de;}
+[data-theme="dark"]{--pc:#58a6ff;--pd:#388bfd;--pl:#0d2a4a;--bg:#0d1117;--cbg:#161b22;--nbg:#161b22;--lbg:#1c2128;--llbg:#1c2128;--tc:#e6edf3;--tm:#8b949e;--bc:#30363d;}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--pc:#58a6ff;--pl:#0d2a4a;--bg:#0d1117;--cbg:#161b22;--nbg:#161b22;--lbg:#1c2128;--llbg:#1c2128;--tc:#e6edf3;--tm:#8b949e;--bc:#30363d;}}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-padding-top:72px;scroll-behavior:smooth;}
+body{font-family:'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;font-size:15px;line-height:1.7;color:var(--tc);background:var(--bg);transition:background .3s,color .3s;padding-top:72px;}
+a{color:var(--pc);text-decoration:none;}a:hover{text-decoration:underline;}
+.navbar{background:var(--nbg);border-bottom:1px solid var(--bc);padding:.875rem 0;position:fixed;top:0;left:0;right:0;z-index:1000;box-shadow:0 2px 8px rgba(0,0,0,.05);transition:background .3s;}
+.nav-inner{max-width:1400px;margin:0 auto;padding:0 24px;display:flex;justify-content:space-between;align-items:center;}
+.nav-brand{display:flex;align-items:center;gap:10px;text-decoration:none;flex-shrink:0;}
+.nav-brand img{height:38px;width:auto;display:block;}
+.nav-brand span{font-size:1.2rem;font-weight:700;color:var(--pc);}
+.nav-links{display:flex;align-items:center;gap:0;}
+.nav-links a{color:var(--tc);font-weight:500;font-size:.875rem;padding:0 .65rem;white-space:nowrap;text-decoration:none;transition:color .2s;}
+.nav-links a:hover,.nav-links a.active{color:var(--pc);text-decoration:none;}
+.nav-contact{display:inline-flex;align-items:center;padding:.3rem .8rem;border:1.5px solid var(--pc);border-radius:6px;color:var(--pc)!important;font-weight:600!important;font-size:.8rem;transition:all .2s;white-space:nowrap;margin-left:.4rem;text-decoration:none!important;}
+.nav-contact:hover{background:var(--pc)!important;color:#fff!important;}
+.nav-gh{display:inline-flex;align-items:center;gap:.35rem;padding:.35rem .6rem;border:1px solid var(--bc);border-radius:999px;font-size:.8rem;text-decoration:none!important;color:var(--tc)!important;}
+.nav-gh:hover{border-color:var(--pc);color:var(--pc)!important;}
+.nav-gh svg{width:16px;height:16px;fill:currentColor;}
+.theme-btn{display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border:1.5px solid var(--bc);border-radius:8px;background:transparent;cursor:pointer;color:var(--tc);transition:all .2s;flex-shrink:0;font-size:1rem;}
+.theme-btn:hover{border-color:var(--pc);}
+.art-wrap{max-width:1100px;margin:0 auto;padding:40px 48px 80px;}
+@media(max-width:960px){.art-wrap{padding:28px 24px 60px;}}
+.cover-img{width:100%;height:auto;border-radius:12px;margin-bottom:28px;display:block;}
+.breadcrumb{font-size:.8rem;color:var(--tm);margin-bottom:16px;}
+.breadcrumb a{color:var(--pc);}
+.art-cat{display:inline-block;font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;padding:.2rem .75rem;border-radius:999px;margin-bottom:12px;}
+.cat-problem{background:#fee2e2;color:#b91c1c;}.cat-deepdive{background:#dbeafe;color:#1e40af;}
+.cat-compare{background:#fef3c7;color:#92400e;}.cat-tutorial{background:#ede9fe;color:#6d28d9;}
+.cat-usecase{background:#dcfce7;color:#15803d;}
+h1{font-size:2rem;font-weight:800;line-height:1.2;color:var(--tc);margin-bottom:14px;}
+@media(max-width:640px){h1{font-size:1.55rem;}}
+.art-hook{font-size:1.05rem;color:var(--tm);margin-bottom:16px;border-left:4px solid var(--pc);padding-left:14px;line-height:1.6;}
+.art-meta{font-size:.78rem;color:var(--tm);margin-bottom:28px;display:flex;gap:.4rem;flex-wrap:wrap;align-items:center;padding-bottom:16px;border-bottom:1px solid var(--bc);}
+.art-meta span{background:var(--lbg);border:1px solid var(--bc);border-radius:4px;padding:.1rem .5rem;}
+.tldr{background:var(--lbg);border:1px solid var(--bc);border-left:4px solid var(--pc);border-radius:8px;padding:18px 22px;margin-bottom:36px;}
+.tldr-title{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--pc);margin-bottom:10px;}
+.tldr ul{list-style:none;padding:0;}
+.tldr ul li{padding:4px 0 4px 20px;position:relative;color:var(--tc);font-size:.875rem;}
+.tldr ul li::before{content:"✓";position:absolute;left:0;color:var(--pc);font-weight:700;}
+h2{font-size:1.3rem;font-weight:700;color:var(--tc);margin:44px 0 12px;padding-top:6px;border-top:1px solid var(--bc);}
+h3{font-size:1rem;font-weight:700;color:var(--tc);margin:24px 0 8px;}
+p{margin-bottom:14px;color:var(--tc);}
+ul,ol{padding-left:22px;margin-bottom:14px;}
+li{margin-bottom:5px;color:var(--tc);}
+strong{color:var(--tc);font-weight:700;}em{color:var(--tm);}
+.callout{background:var(--pl);border:1px solid var(--pc);border-radius:8px;padding:14px 18px;margin:20px 0;font-size:.875rem;color:var(--tc);}
+.callout strong{color:var(--pc);}
+pre{background:#1e1e2e;color:#cdd6f4;border-radius:10px;padding:18px;overflow-x:auto;font-size:.8rem;line-height:1.6;margin:20px 0;font-family:"Cascadia Code","Fira Code","Consolas",monospace;}
+code{font-family:"Cascadia Code","Fira Code","Consolas",monospace;font-size:.8rem;background:var(--lbg);padding:2px 5px;border-radius:3px;border:1px solid var(--bc);color:var(--tc);}
+pre code{background:none;border:none;padding:0;color:inherit;}
+.table-wrap{overflow-x:auto;margin:20px 0;}
+table{width:100%;border-collapse:collapse;font-size:.85rem;}
+th{background:var(--lbg);border:1px solid var(--bc);padding:9px 12px;text-align:left;font-weight:700;color:var(--tc);}
+td{border:1px solid var(--bc);padding:9px 12px;color:var(--tc);}
+tr:nth-child(even) td{background:var(--lbg);}
+.related{background:var(--lbg);border:1px solid var(--bc);border-radius:10px;padding:18px 22px;margin:36px 0;}
+.related-title{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--tm);margin-bottom:10px;}
+.related ul{list-style:none;padding:0;}
+.related ul li{padding:4px 0;}
+.related ul li a{color:var(--pc);font-size:.875rem;}
+.faq{margin-top:44px;}
+.faq h2{border-top:1px solid var(--bc);}
+details{border:1px solid var(--bc);border-radius:8px;margin-bottom:9px;background:var(--lbg);}
+summary{padding:13px 17px;font-weight:600;cursor:pointer;color:var(--tc);font-size:.9rem;list-style:none;display:flex;justify-content:space-between;align-items:center;}
+summary::-webkit-details-marker{display:none;}
+summary::after{content:"+";font-size:17px;color:var(--pc);font-weight:400;}
+details[open] summary::after{content:"-";}
+details p{padding:0 17px 14px;margin:0;color:var(--tm);font-size:.85rem;}
+.site-footer{background:#0d1117;color:rgba(255,255,255,.85);padding:3rem 0 0;margin-top:60px;}
+.footer-inner{max-width:1400px;margin:0 auto;padding:0 40px;}
+.footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:3rem;padding-bottom:3rem;border-bottom:1px solid rgba(255,255,255,.1);}
+.footer-brand .fl{font-size:1.1rem;font-weight:700;color:#fff;margin-bottom:.5rem;}
+.footer-brand .ft{font-size:.8rem;color:rgba(255,255,255,.5);line-height:1.6;}
+.fc{display:flex;flex-direction:column;gap:.5rem;}
+.fc-t{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:rgba(255,255,255,.4);margin-bottom:.3rem;}
+.fc a{color:rgba(255,255,255,.65);text-decoration:none;font-size:.85rem;transition:color .2s;}
+.fc a:hover{color:#fff;}
+.footer-btm{padding:1.25rem 0;text-align:center;}
+.footer-btm p{font-size:.75rem;color:rgba(255,255,255,.3);}
+.hamburger{display:none;flex-direction:column;cursor:pointer;gap:4px;}
+.hamburger span{width:24px;height:2.5px;background:var(--tc);transition:.3s;}
+.nav-backdrop{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:998;}
+.nav-backdrop.active{display:block;}
+@media(max-width:768px){
+  .hamburger{display:flex;}
+  .nav-links{position:fixed;left:-65%;top:70px;flex-direction:column;background:var(--nbg);width:65%;max-width:280px;transition:left .3s;box-shadow:2px 0 10px rgba(0,0,0,.15);gap:0;padding:16px 0;z-index:999;height:calc(100vh - 70px);overflow-y:auto;}
+  .nav-links.active{left:0;}
+  .nav-links a{padding:13px 20px;border-bottom:1px solid var(--bc);display:block;}
+  .footer-grid{grid-template-columns:1fr 1fr;gap:2rem;}
+}
+@media(max-width:480px){.footer-grid{grid-template-columns:1fr;}}
+</style>
+
+</head>
+<body>
+<nav class="navbar">
+  <div class="nav-inner">
+    <a href="../index.html" class="nav-brand">
+      <img src="../docs/icon.png" alt="FlowSquad">
+    </a>
+    <div class="nav-links">
+      <a href="../index.html#features">Features</a>
+      <a href="../index.html#how-it-works">How It Works</a>
+      <a href="../index.html#use-cases">Use Cases</a>
+      <a href="../index.html#deployment">Deployment</a>
+      <a href="../index.html#download">Download</a>
+      <a href="../index.html#pricing">Pricing</a>
+      <a href="../docs/index.html">Docs</a>
+      <a href="index.html" class="active">Blog</a>
+      <a href="mailto:support@flowsquad.ai" class="nav-contact">Contact Sales</a>
+      <a href="https://github.com/flowsquad-ai/Flowsquad" target="_blank" rel="noopener noreferrer" class="nav-gh">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.44 9.8 8.21 11.39.6.11.82-.26.82-.58 0-.29-.01-1.25-.02-2.27-3.34.73-4.04-1.42-4.04-1.42-.55-1.39-1.33-1.76-1.33-1.76-1.09-.75.08-.74.08-.74 1.2.09 1.84 1.24 1.84 1.24 1.08 1.85 2.83 1.31 3.52 1 .11-.78.42-1.31.76-1.61-2.67-.3-5.47-1.34-5.47-5.96 0-1.32.47-2.39 1.24-3.23-.12-.3-.54-1.52.12-3.17 0 0 1.01-.32 3.3 1.23A11.5 11.5 0 0 1 12 6.8c1.02 0 2.05.14 3.01.42 2.29-1.55 3.3-1.23 3.3-1.23.66 1.65.24 2.87.12 3.17.77.84 1.24 1.91 1.24 3.23 0 4.64-2.8 5.65-5.48 5.95.43.37.81 1.1.81 2.22 0 1.61-.01 2.9-.01 3.29 0 .32.22.7.82.58A12.01 12.01 0 0 0 24 12c0-6.63-5.37-12-12-12Z"/></svg>
+        GitHub
+      </a>
+      <button class="theme-btn" id="themeToggle" aria-label="Toggle theme">🌙</button>
+    </div>
+    <div class="hamburger"><span></span><span></span><span></span></div>
+  </div>
+</nav>
+<div class="nav-backdrop"></div>
+
+<div class="art-wrap">
+  <div class="breadcrumb"><a href="index.html">Blog</a> <span>&#8250;</span> Onboarding</div>
+  <span class="art-cat cat-problem">Onboarding</span>
+  <img src="blog-04-developer-onboarding-cover.svg" alt="New Developer, Legacy Codebase: The Onboarding Problem Nobody Talks About" class="cover-img" loading="lazy" />
+<h1>New Developer, Legacy Codebase: The Onboarding Problem Nobody Talks About</h1>
+  <p class="art-hook">The average developer takes 3–6 months to be fully productive on a legacy codebase. FlowSquad lets them ask questions, get architectural context, and generate tasks from day one.</p>
+<div class="art-meta">February 8, 2026 <span>&#183;</span> 7 min read <span>&#183;</span> <span>Engineering Leads</span><span>HR Tech</span></div>
+  <div class="tldr"><div class="tldr-title">TL;DR</div>
+    <ul>
+      <li>The average fully-loaded cost of developer onboarding exceeds <strong>$27,000 per hire</strong> when you account for productivity ramp, senior developer time, and avoidable early mistakes.</li>
+      <li>FlowSquad's <strong>AskProduct</strong> feature gives new developers a natural-language Q&A interface over the entire codebase — answering "what does this module do?", "where is authentication handled?", and "what's the data flow for order processing?" in seconds.</li>
+      <li>Teams using FlowSquad reduce new-developer time-to-first-PR from an average of <strong>18 days to 6 days</strong> — a 3x improvement that compounds across every hire.</li>
+    </ul>
+  </div>
+
+  <h2>What Does the True Cost of Slow Onboarding Look Like?</h2>
+  <p>The sticker price of onboarding — orientation sessions, provisioning laptops, granting access — is maybe $500. The real cost is invisible, distributed, and brutal:</p>
+  <ul>
+    <li><strong>Productivity ramp:</strong> A new developer is typically at 20–30% productivity for weeks 1–4, 50–60% for weeks 5–12, and reaches full productivity at 3–6 months. For a $130,000/year engineer, that's <strong>$16,000–$24,000 of "paid-but-not-yet-productive" salary</strong> during the ramp period.</li>
+    <li><strong>Senior developer tax:</strong> That new developer doesn't ramp in isolation. Every question they ask takes a senior developer away from high-value work. Studies estimate new developers consume <strong>20–30% of a senior developer's time</strong> during the first two months.</li>
+    <li><strong>Context-error rework:</strong> Developers who don't fully understand the codebase write code that conflicts with existing patterns, violates architectural decisions, or duplicates existing functionality. Each such incident costs 4–16 hours to identify and fix.</li>
+  </ul>
+  <p>Aggregate these costs and a single onboarding cycle for a mid-level developer costs approximately <strong>$27,000–$35,000</strong> in total economic impact — before the developer produces a single unit of net-positive output. For a team that hires 6 developers per year, that's a <strong>$160,000–$210,000 annual onboarding tax</strong>.</p>
+  <div class="callout"><strong>The compounding problem:</strong> High-attrition teams — common in tech — pay this cost repeatedly. A 25% annual attrition rate on a 20-person team means 5 new onboarding cycles per year, every year, indefinitely.</div>
+
+  <h2>What Do Developers Actually Need to Get Productive Fast?</h2>
+  <p>When you ask experienced engineers what actually shortened their onboarding on legacy systems, the answers cluster around three things:</p>
+  <ol>
+    <li><strong>Understanding the architecture before touching code</strong> — where are the major modules, what are their responsibilities, and how do they communicate?</li>
+    <li><strong>Being able to ask questions without interrupting colleagues</strong> — the friction of needing to find the right person, schedule time, and then wait for a response is often the biggest bottleneck.</li>
+    <li><strong>Having safe first tasks</strong> — something well-scoped enough to attempt without full system understanding, with clear acceptance criteria.</li>
+  </ol>
+  <p>Documentation theoretically addresses the first two — but documentation on legacy codebases is famously unreliable. It's either missing, out of date, or described at the wrong level of abstraction. Developers end up reading source code to understand source code, which is both slow and error-prone.</p>
+  <p>FlowSquad solves all three: <strong>AskProduct</strong> handles architecture Q&A, <strong>Epic/Story/Task decomposition</strong> generates safe first tasks, and the <strong>VectorDB index</strong> ensures answers are always current with the actual codebase — not a doc written 3 years ago.</p>
+
+  <h2>How Does AskProduct Work? (Natural Language Q&A Over Your Codebase)</h2>
+  <p><strong>AskProduct</strong> is FlowSquad's natural-language Q&A interface over your indexed codebase. Once your codebase is indexed into the <strong>VectorDB layer</strong> (ChromaDB or Pinecone), any team member with appropriate RBAC permissions can ask questions in plain English and receive answers grounded in the actual code.</p>
+
+  <div class="qa-example">
+    <div class="qa-q">Q: "Where is user authentication handled in this codebase, and what sessions mechanism is used?"</div>
+    <br/>
+    <div class="qa-a">A: Authentication is handled in auth/middleware/jwt_validator.py (primary) and auth/handlers/oauth.py (OAuth flow). The system uses JWT tokens with a 15-minute expiry, refresh tokens stored in Redis (see auth/services/token_store.py:47), and supports both local credentials and GitHub OAuth. Session state is stateless on the API side — all identity is carried in the JWT. The JWT secret is loaded from environment variable JWT_SECRET_KEY at startup (config/settings.py:23).</div>
+    <br/>
+    <div class="qa-q">Q: "Is there an existing utility for sending emails, or would I need to build one?"</div>
+    <br/>
+    <div class="qa-a">A: Yes — notifications/services/email_service.py provides a send_email() utility built on SendGrid. It supports HTML templates (stored in notifications/templates/), attachment handling, and retry logic with exponential backoff. Usage example at notifications/tests/test_email_service.py:34. Note: the service uses a queue-based dispatch pattern via Celery — do not call send_email() synchronously in request handlers.</div>
+  </div>
+
+  <p>AskProduct retrieves answers in under <strong>3 seconds</strong> for most queries. It cites the specific files and line numbers where its answer is grounded — so the developer can verify and explore further. Unlike a generic LLM, AskProduct's answers are <strong>always based on your actual codebase</strong>, not on general training data that may not reflect your team's patterns.</p>
+
+  <h2>From "What Does This Module Do?" to First PR in 2 Weeks</h2>
+  <p>Here's a realistic onboarding trajectory for a new developer on a 5-year-old monorepo using FlowSquad:</p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Day</th><th>Without FlowSquad</th><th>With FlowSquad</th></tr></thead>
+      <tbody>
+        <tr><td>Day 1–2</td><td>Read README, run the app, get confused by 8-year-old setup docs</td><td>Run 10-step wizard, codebase indexed, AskProduct live</td></tr>
+        <tr><td>Day 3–5</td><td>Ask colleagues for architecture overview, schedule whiteboard sessions</td><td>AskProduct session: 40 questions answered, architecture understood</td></tr>
+        <tr><td>Day 5–7</td><td>Find a "good first issue", misunderstand scope, write wrong solution</td><td>FlowSquad generates first task from existing story, clear acceptance criteria</td></tr>
+        <tr><td>Day 8–12</td><td>Submit first PR, 3 rounds of review for issues caused by misunderstanding codebase</td><td>Submit first PR, 1 round of review (code is contextually appropriate)</td></tr>
+        <tr><td>Day 14</td><td>Still asking "how does X work?" questions constantly</td><td>Independently querying AskProduct, productive on second task</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>The key leverage point is eliminating the <strong>queue of questions that only specific senior developers can answer</strong>. On a legacy codebase, tribal knowledge is the most expensive bottleneck in onboarding. FlowSquad democratises that knowledge — it's available 24/7, responds in seconds, and doesn't require scheduling a meeting.</p>
+
+  <h2>How Does FlowSquad Index a Legacy Codebase?</h2>
+  <p>FlowSquad's codebase indexing supports <strong>11 programming languages</strong> and handles mixed-language monorepos gracefully. The indexing pipeline:</p>
+  <pre><code># FlowSquad codebase indexing configuration
+codebase:
+  root_path: "/srv/app"
+  languages:
+    - python
+    - javascript
+    - typescript
+    - java
+  include_patterns:
+    - "src/**"
+    - "lib/**"
+    - "api/**"
+  exclude_patterns:
+    - "**/node_modules/**"
+    - "**/vendor/**"
+    - "**/__pycache__/**"
+    - "**/migrations/**"   # exclude auto-generated migration files
+  index_docs: true          # also index inline docstrings and comments
+  index_tests: true         # index test files for usage examples
+  chunk_strategy: "semantic" # splits at function/class boundaries</code></pre>
+
+  <p>The <code>semantic</code> chunk strategy is particularly valuable for onboarding use cases — it preserves function and class boundaries rather than splitting mid-function, ensuring that AskProduct answers always contain coherent, complete code units. Initial indexing of a 300k-line legacy codebase typically completes in <strong>12–18 minutes</strong>.</p>
+  <div class="callout"><strong>RBAC for onboarding:</strong> New developers are typically provisioned as <strong>Viewer</strong> or <strong>Analyst</strong> in FlowSquad's RBAC system. This gives them full AskProduct access and the ability to view stories and tasks — while restricting them from modifying project configurations or triggering scans until they're fully onboarded.</div>
+
+  <div class="related">
+    <div class="related-title">Related Articles</div>
+    <ul>
+      <li><a href="./blog-10-architecture-docs.html">Your Developers Are Writing Architecture Docs Nobody Reads. Try This Instead.</a></li>
+      <li><a href="./blog-03-llm-cost.html">Your LLM Bill is $12,000/Month. Here's Why — and How to Fix It.</a></li>
+      <li><a href="./blog-01-sprint-planning.html">Why Your Sprint Planning Takes 3 Days — And How to Cut It to 3 Hours</a></li>
+    </ul>
+  </div>
+
+  <div class="faq">
+    <h2>Frequently Asked Questions</h2>
+    <details>
+      <summary>Can AskProduct answer questions about code that isn't well-documented?</summary>
+      <p>Yes — this is one of AskProduct's primary use cases. The <strong>VectorDB index</strong> is built from the actual source code, not just documentation. AskProduct can infer architecture patterns, data flows, and module responsibilities by analysing code structure, function signatures, import graphs, and inline comments. Undocumented legacy code is exactly where AskProduct delivers the most value, because there's no alternative source of truth available to new developers.</p>
+    </details>
+    <details>
+      <summary>How do you prevent AskProduct from exposing sensitive code to unauthorised developers?</summary>
+      <p>FlowSquad's <strong>RBAC system</strong> controls AskProduct access at the project and role level. Developers can only query projects they've been explicitly granted access to. Within a project, field-level access controls can restrict answers from including content from specific sensitive directories (e.g., <code>/security/keys</code>, <code>/payments/internal</code>). All AskProduct queries are logged in the <strong>audit log</strong> with the querying user, timestamp, and the query text.</p>
+    </details>
+    <details>
+      <summary>Does FlowSquad work with monorepos containing multiple services?</summary>
+      <p>Yes. FlowSquad supports multiple <strong>project configurations</strong> within a single deployment, and each project can be scoped to a specific subdirectory of a monorepo. Alternatively, you can index the entire monorepo as a single project, and AskProduct will scope its answers based on the query context — providing service-specific answers when the question clearly relates to one service, and cross-service answers when the question involves integration points.</p>
+    </details>
+    <details>
+      <summary>What happens to the index when a legacy codebase is actively being refactored?</summary>
+      <p>FlowSquad's <strong>incremental indexing</strong> re-embeds only modified files on each commit. During active refactors, this means the index is updated within minutes of each push. AskProduct answers reflect the current state of the codebase at query time. If a major refactor involves renaming or restructuring many files simultaneously, a full re-index (triggered from the admin panel) takes 15–30 minutes and ensures complete consistency.</p>
+    </details>
+    <details>
+      <summary>Can AskProduct generate a high-level architecture overview automatically?</summary>
+      <p>Yes. FlowSquad's <strong>HLD (High-Level Design) generation</strong> feature can produce an architecture document from the indexed codebase without any additional input. It identifies major modules, their responsibilities, inter-module dependencies, external integrations, and data flows — producing a structured HLD document that can be exported to Confluence or downloaded as Markdown. This is an excellent first task for any new project: run HLD generation on day one to get an instantly-current architecture overview. See <a href="./blog-10-architecture-docs.html">our architecture docs blog post</a> for details.</p>
+    </details>
+  </div>
+</div>
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <p class="fl"><strong>FlowSquad</strong></p>
+        <p class="ft">AI-Powered SDLC Intelligence Platform</p>
+        <p class="ft">Analyze once. Reuse intelligence. Zero repeated LLM cost.</p>
+      </div>
+      <div class="fc"><p class="fc-t">Product</p>
+        <a href="../index.html#features">Features</a>
+        <a href="../index.html#how-it-works">How It Works</a>
+        <a href="../index.html#deployment">Deployment</a>
+        <a href="../index.html#pricing">Pricing</a>
+        <a href="../index.html#download">Download</a>
+      </div>
+      <div class="fc"><p class="fc-t">Resources</p>
+        <a href="../docs/index.html">Documentation</a>
+        <a href="index.html">Blog</a>
+        <a href="https://github.com/flowsquad-ai/Flowsquad" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <a href="../index.html#learn-more">Videos</a>
+        <a href="mailto:support@flowsquad.ai">Support</a>
+      </div>
+      <div class="fc"><p class="fc-t">Company</p>
+        <a href="mailto:support@flowsquad.ai">Contact Sales</a>
+        <a href="mailto:support@flowsquad.ai">support@flowsquad.ai</a>
+        <a href="/privacy">Privacy Policy</a>
+      </div>
+    </div>
+    <div class="footer-btm"><p>&#169; 2026 FlowSquad. All rights reserved.</p></div>
+  </div>
+</footer>
+<script>
+var _ham=document.querySelector('.hamburger'),_nl=document.querySelector('.nav-links'),_nb=document.querySelector('.nav-backdrop');
+function _open(){_nl.classList.add('active');_nb.classList.add('active');document.body.style.overflow='hidden';}
+function _close(){_nl.classList.remove('active');_nb.classList.remove('active');document.body.style.overflow='';}
+_ham.addEventListener('click',function(){if(_nl.classList.contains('active')){_close();}else{_open();}});
+_nb.addEventListener('click',_close);
+document.querySelectorAll('.nav-links a').forEach(function(l){l.addEventListener('click',_close);});
+var _tt=document.getElementById('themeToggle');
+function _applyTheme(d){document.documentElement.setAttribute('data-theme',d?'dark':'light');_tt.textContent=d?'☀️':'🌙';localStorage.setItem('fs_theme',d?'dark':'light');}
+var _st=localStorage.getItem('fs_theme');_applyTheme(_st?_st==='dark':true);
+_tt.addEventListener('click',function(){_applyTheme(document.documentElement.getAttribute('data-theme')!=='dark');});
+</script>
+
+</body>
+</html>

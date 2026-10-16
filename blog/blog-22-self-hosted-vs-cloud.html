@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Self-Hosted AI vs. Cloud AI for Enterprise SDLC: The Real Tradeoffs | FlowSquad Blog</title>
+<meta name="description" content="A decision framework for choosing OpenAI vs. Ollama, ChromaDB vs. Pinecone, PostgreSQL vs. SQLite in FlowSquad — based on your actual enterprise constraints." />
+<meta property="og:title" content="Self-Hosted AI vs. Cloud AI for Enterprise SDLC: The Real Tradeoffs" />
+<meta property="og:description" content="A decision framework for choosing OpenAI vs. Ollama, ChromaDB vs. Pinecone, PostgreSQL vs. SQLite in FlowSquad — based on your actual enterprise constraints." />
+<meta property="og:type" content="article" />
+<meta property="og:site_name" content="FlowSquad" />
+<meta property="og:image" content="https://flowsquad.ai/blog/blog-22-self-hosted-vs-cloud-cover.svg" />
+<meta property="og:url" content="https://flowsquad.ai/blog/self-hosted-vs-cloud-ai-enterprise-sdlc" />
+<meta name="twitter:card" content="summary_large_image" />
+<link rel="canonical" href="https://flowsquad.ai/blog/self-hosted-vs-cloud-ai-enterprise-sdlc" />
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "Self-Hosted AI vs. Cloud AI for Enterprise SDLC: The Real Tradeoffs",
+    "author": {"@type": "Organization", "name": "FlowSquad"},
+    "publisher": {"@type": "Organization", "name": "FlowSquad", "url": "https://flowsquad.ai"},
+    "datePublished": "2026-01-22",
+    "description": "A practical decision matrix for enterprise architects choosing between self-hosted and cloud AI deployments for FlowSquad."
+  }
+  </script>
+<script>(function(){try{var t=localStorage.getItem('fs_theme');if(!t)t='dark';document.documentElement.setAttribute('data-theme',t==='dark'?'dark':'light');}catch(e){document.documentElement.setAttribute('data-theme','dark');}})();</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--pc:#0066cc;--pd:#0052a3;--pl:#e6f2ff;--bg:#ffffff;--cbg:#ffffff;--nbg:#ffffff;--lbg:#f6f8fa;--llbg:#f0f2f5;--tc:#1f2328;--tm:#57606a;--bc:#d0d7de;}
+[data-theme="dark"]{--pc:#58a6ff;--pd:#388bfd;--pl:#0d2a4a;--bg:#0d1117;--cbg:#161b22;--nbg:#161b22;--lbg:#1c2128;--llbg:#1c2128;--tc:#e6edf3;--tm:#8b949e;--bc:#30363d;}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--pc:#58a6ff;--pl:#0d2a4a;--bg:#0d1117;--cbg:#161b22;--nbg:#161b22;--lbg:#1c2128;--llbg:#1c2128;--tc:#e6edf3;--tm:#8b949e;--bc:#30363d;}}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-padding-top:72px;scroll-behavior:smooth;}
+body{font-family:'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;font-size:15px;line-height:1.7;color:var(--tc);background:var(--bg);transition:background .3s,color .3s;padding-top:72px;}
+a{color:var(--pc);text-decoration:none;}a:hover{text-decoration:underline;}
+.navbar{background:var(--nbg);border-bottom:1px solid var(--bc);padding:.875rem 0;position:fixed;top:0;left:0;right:0;z-index:1000;box-shadow:0 2px 8px rgba(0,0,0,.05);transition:background .3s;}
+.nav-inner{max-width:1400px;margin:0 auto;padding:0 24px;display:flex;justify-content:space-between;align-items:center;}
+.nav-brand{display:flex;align-items:center;gap:10px;text-decoration:none;flex-shrink:0;}
+.nav-brand img{height:38px;width:auto;display:block;}
+.nav-brand span{font-size:1.2rem;font-weight:700;color:var(--pc);}
+.nav-links{display:flex;align-items:center;gap:0;}
+.nav-links a{color:var(--tc);font-weight:500;font-size:.875rem;padding:0 .65rem;white-space:nowrap;text-decoration:none;transition:color .2s;}
+.nav-links a:hover,.nav-links a.active{color:var(--pc);text-decoration:none;}
+.nav-contact{display:inline-flex;align-items:center;padding:.3rem .8rem;border:1.5px solid var(--pc);border-radius:6px;color:var(--pc)!important;font-weight:600!important;font-size:.8rem;transition:all .2s;white-space:nowrap;margin-left:.4rem;text-decoration:none!important;}
+.nav-contact:hover{background:var(--pc)!important;color:#fff!important;}
+.nav-gh{display:inline-flex;align-items:center;gap:.35rem;padding:.35rem .6rem;border:1px solid var(--bc);border-radius:999px;font-size:.8rem;text-decoration:none!important;color:var(--tc)!important;}
+.nav-gh:hover{border-color:var(--pc);color:var(--pc)!important;}
+.nav-gh svg{width:16px;height:16px;fill:currentColor;}
+.theme-btn{display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border:1.5px solid var(--bc);border-radius:8px;background:transparent;cursor:pointer;color:var(--tc);transition:all .2s;flex-shrink:0;font-size:1rem;}
+.theme-btn:hover{border-color:var(--pc);}
+.art-wrap{max-width:1100px;margin:0 auto;padding:40px 48px 80px;}
+@media(max-width:960px){.art-wrap{padding:28px 24px 60px;}}
+.cover-img{width:100%;height:auto;border-radius:12px;margin-bottom:28px;display:block;}
+.breadcrumb{font-size:.8rem;color:var(--tm);margin-bottom:16px;}
+.breadcrumb a{color:var(--pc);}
+.art-cat{display:inline-block;font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;padding:.2rem .75rem;border-radius:999px;margin-bottom:12px;}
+.cat-problem{background:#fee2e2;color:#b91c1c;}.cat-deepdive{background:#dbeafe;color:#1e40af;}
+.cat-compare{background:#fef3c7;color:#92400e;}.cat-tutorial{background:#ede9fe;color:#6d28d9;}
+.cat-usecase{background:#dcfce7;color:#15803d;}
+h1{font-size:2rem;font-weight:800;line-height:1.2;color:var(--tc);margin-bottom:14px;}
+@media(max-width:640px){h1{font-size:1.55rem;}}
+.art-hook{font-size:1.05rem;color:var(--tm);margin-bottom:16px;border-left:4px solid var(--pc);padding-left:14px;line-height:1.6;}
+.art-meta{font-size:.78rem;color:var(--tm);margin-bottom:28px;display:flex;gap:.4rem;flex-wrap:wrap;align-items:center;padding-bottom:16px;border-bottom:1px solid var(--bc);}
+.art-meta span{background:var(--lbg);border:1px solid var(--bc);border-radius:4px;padding:.1rem .5rem;}
+.tldr{background:var(--lbg);border:1px solid var(--bc);border-left:4px solid var(--pc);border-radius:8px;padding:18px 22px;margin-bottom:36px;}
+.tldr-title{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--pc);margin-bottom:10px;}
+.tldr ul{list-style:none;padding:0;}
+.tldr ul li{padding:4px 0 4px 20px;position:relative;color:var(--tc);font-size:.875rem;}
+.tldr ul li::before{content:"✓";position:absolute;left:0;color:var(--pc);font-weight:700;}
+h2{font-size:1.3rem;font-weight:700;color:var(--tc);margin:44px 0 12px;padding-top:6px;border-top:1px solid var(--bc);}
+h3{font-size:1rem;font-weight:700;color:var(--tc);margin:24px 0 8px;}
+p{margin-bottom:14px;color:var(--tc);}
+ul,ol{padding-left:22px;margin-bottom:14px;}
+li{margin-bottom:5px;color:var(--tc);}
+strong{color:var(--tc);font-weight:700;}em{color:var(--tm);}
+.callout{background:var(--pl);border:1px solid var(--pc);border-radius:8px;padding:14px 18px;margin:20px 0;font-size:.875rem;color:var(--tc);}
+.callout strong{color:var(--pc);}
+pre{background:#1e1e2e;color:#cdd6f4;border-radius:10px;padding:18px;overflow-x:auto;font-size:.8rem;line-height:1.6;margin:20px 0;font-family:"Cascadia Code","Fira Code","Consolas",monospace;}
+code{font-family:"Cascadia Code","Fira Code","Consolas",monospace;font-size:.8rem;background:var(--lbg);padding:2px 5px;border-radius:3px;border:1px solid var(--bc);color:var(--tc);}
+pre code{background:none;border:none;padding:0;color:inherit;}
+.table-wrap{overflow-x:auto;margin:20px 0;}
+table{width:100%;border-collapse:collapse;font-size:.85rem;}
+th{background:var(--lbg);border:1px solid var(--bc);padding:9px 12px;text-align:left;font-weight:700;color:var(--tc);}
+td{border:1px solid var(--bc);padding:9px 12px;color:var(--tc);}
+tr:nth-child(even) td{background:var(--lbg);}
+.related{background:var(--lbg);border:1px solid var(--bc);border-radius:10px;padding:18px 22px;margin:36px 0;}
+.related-title{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--tm);margin-bottom:10px;}
+.related ul{list-style:none;padding:0;}
+.related ul li{padding:4px 0;}
+.related ul li a{color:var(--pc);font-size:.875rem;}
+.faq{margin-top:44px;}
+.faq h2{border-top:1px solid var(--bc);}
+details{border:1px solid var(--bc);border-radius:8px;margin-bottom:9px;background:var(--lbg);}
+summary{padding:13px 17px;font-weight:600;cursor:pointer;color:var(--tc);font-size:.9rem;list-style:none;display:flex;justify-content:space-between;align-items:center;}
+summary::-webkit-details-marker{display:none;}
+summary::after{content:"+";font-size:17px;color:var(--pc);font-weight:400;}
+details[open] summary::after{content:"-";}
+details p{padding:0 17px 14px;margin:0;color:var(--tm);font-size:.85rem;}
+.site-footer{background:#0d1117;color:rgba(255,255,255,.85);padding:3rem 0 0;margin-top:60px;}
+.footer-inner{max-width:1400px;margin:0 auto;padding:0 40px;}
+.footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:3rem;padding-bottom:3rem;border-bottom:1px solid rgba(255,255,255,.1);}
+.footer-brand .fl{font-size:1.1rem;font-weight:700;color:#fff;margin-bottom:.5rem;}
+.footer-brand .ft{font-size:.8rem;color:rgba(255,255,255,.5);line-height:1.6;}
+.fc{display:flex;flex-direction:column;gap:.5rem;}
+.fc-t{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:rgba(255,255,255,.4);margin-bottom:.3rem;}
+.fc a{color:rgba(255,255,255,.65);text-decoration:none;font-size:.85rem;transition:color .2s;}
+.fc a:hover{color:#fff;}
+.footer-btm{padding:1.25rem 0;text-align:center;}
+.footer-btm p{font-size:.75rem;color:rgba(255,255,255,.3);}
+.hamburger{display:none;flex-direction:column;cursor:pointer;gap:4px;}
+.hamburger span{width:24px;height:2.5px;background:var(--tc);transition:.3s;}
+.nav-backdrop{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:998;}
+.nav-backdrop.active{display:block;}
+@media(max-width:768px){
+  .hamburger{display:flex;}
+  .nav-links{position:fixed;left:-65%;top:70px;flex-direction:column;background:var(--nbg);width:65%;max-width:280px;transition:left .3s;box-shadow:2px 0 10px rgba(0,0,0,.15);gap:0;padding:16px 0;z-index:999;height:calc(100vh - 70px);overflow-y:auto;}
+  .nav-links.active{left:0;}
+  .nav-links a{padding:13px 20px;border-bottom:1px solid var(--bc);display:block;}
+  .footer-grid{grid-template-columns:1fr 1fr;gap:2rem;}
+}
+@media(max-width:480px){.footer-grid{grid-template-columns:1fr;}}
+</style>
+
+</head>
+<body>
+<nav class="navbar">
+  <div class="nav-inner">
+    <a href="../index.html" class="nav-brand">
+      <img src="../docs/icon.png" alt="FlowSquad">
+    </a>
+    <div class="nav-links">
+      <a href="../index.html#features">Features</a>
+      <a href="../index.html#how-it-works">How It Works</a>
+      <a href="../index.html#use-cases">Use Cases</a>
+      <a href="../index.html#deployment">Deployment</a>
+      <a href="../index.html#download">Download</a>
+      <a href="../index.html#pricing">Pricing</a>
+      <a href="../docs/index.html">Docs</a>
+      <a href="index.html" class="active">Blog</a>
+      <a href="mailto:support@flowsquad.ai" class="nav-contact">Contact Sales</a>
+      <a href="https://github.com/flowsquad-ai/Flowsquad" target="_blank" rel="noopener noreferrer" class="nav-gh">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.44 9.8 8.21 11.39.6.11.82-.26.82-.58 0-.29-.01-1.25-.02-2.27-3.34.73-4.04-1.42-4.04-1.42-.55-1.39-1.33-1.76-1.33-1.76-1.09-.75.08-.74.08-.74 1.2.09 1.84 1.24 1.84 1.24 1.08 1.85 2.83 1.31 3.52 1 .11-.78.42-1.31.76-1.61-2.67-.3-5.47-1.34-5.47-5.96 0-1.32.47-2.39 1.24-3.23-.12-.3-.54-1.52.12-3.17 0 0 1.01-.32 3.3 1.23A11.5 11.5 0 0 1 12 6.8c1.02 0 2.05.14 3.01.42 2.29-1.55 3.3-1.23 3.3-1.23.66 1.65.24 2.87.12 3.17.77.84 1.24 1.91 1.24 3.23 0 4.64-2.8 5.65-5.48 5.95.43.37.81 1.1.81 2.22 0 1.61-.01 2.9-.01 3.29 0 .32.22.7.82.58A12.01 12.01 0 0 0 24 12c0-6.63-5.37-12-12-12Z"/></svg>
+        GitHub
+      </a>
+      <button class="theme-btn" id="themeToggle" aria-label="Toggle theme">🌙</button>
+    </div>
+    <div class="hamburger"><span></span><span></span><span></span></div>
+  </div>
+</nav>
+<div class="nav-backdrop"></div>
+
+<div class="art-wrap">
+  <div class="breadcrumb"><a href="index.html">Blog</a> <span>&#8250;</span> Comparison</div>
+  <span class="art-cat cat-compare">Comparison</span>
+  <img src="blog-22-self-hosted-vs-cloud-cover.svg" alt="Self-Hosted AI vs. Cloud AI for Enterprise SDLC: The Real Tradeoffs" class="cover-img" loading="lazy" />
+<article>
+    <div class="hero">
+      <div class="hero-category">Comparison · Enterprise Architecture</div>
+      <h1>Self-Hosted AI vs. Cloud AI for Enterprise SDLC: The Real Tradeoffs</h1>
+      <p class="hero-hook">FlowSquad runs both. Here's a decision framework for choosing OpenAI vs. Ollama, ChromaDB vs. Pinecone, PostgreSQL vs. SQLite — based on your actual constraints.</p>
+      <div class="hero-meta">By FlowSquad Team · January 2026 · 10 min read</div>
+      <div class="share-row">
+        <a class="share-badge" href="#">dev.to</a>
+        <a class="share-badge" href="#">Hashnode</a>
+        <a class="share-badge" href="#">Medium</a>
+        <a class="share-badge" href="#">LinkedIn</a>
+      </div>
+    </div>
+
+    <div class="tldr">
+      <h3>TL;DR</h3>
+      <ul>
+        <li>FlowSquad supports 4 LLM backends (OpenAI GPT-4, Anthropic Claude, Azure OpenAI, Ollama) and 2 VectorDB options (ChromaDB, Pinecone) — the decision between them depends on 5 key organizational dimensions, not just cost.</li>
+        <li>A local Ollama deployment on an A100 GPU reduces per-story generation cost from ~$0.04 (GPT-4) to ~$0.002 — a 95% cost reduction at the expense of ~2× higher latency and significant infrastructure investment.</li>
+        <li>For regulated industries (finance, healthcare, defense), air-gapped deployment with Ollama + ChromaDB + PostgreSQL is the only configuration that passes a typical SOC 2 Type II or FedRAMP boundary assessment without a cloud vendor BAA.</li>
+      </ul>
+    </div>
+
+    <div class="article-body">
+
+      <h2>What Are the Key Dimensions of the Self-Hosted vs. Cloud Decision?</h2>
+      <p>This is not a simple cost comparison. The self-hosted vs. cloud decision for an AI-powered SDLC platform involves five distinct dimensions, and your organization's profile on each one will drive a different conclusion:</p>
+      <ol>
+        <li><strong>Data sovereignty:</strong> Does your code or requirements data need to stay within a specific geographic or network boundary?</li>
+        <li><strong>Compliance regime:</strong> Are you subject to HIPAA, FedRAMP, GDPR, ISO 27001, or SOC 2 Type II audits that restrict data processing to known vendors?</li>
+        <li><strong>Scale and cost profile:</strong> Are you running 10 users or 500? How many SDLC artifacts are generated per day?</li>
+        <li><strong>Operational maturity:</strong> Does your team have the capacity to manage GPU infrastructure, model updates, and availability SLAs?</li>
+        <li><strong>Output quality requirements:</strong> Is state-of-the-art LLM quality essential, or is "good enough" local inference acceptable for your artifact quality bar?</li>
+      </ol>
+
+      <h2>Cloud LLMs (OpenAI/Anthropic) vs. Local LLMs (Ollama): Real Performance Tradeoffs</h2>
+      <p>FlowSquad's <strong>Multi-LLM support</strong> covers OpenAI GPT-4, Anthropic Claude 3.5 Sonnet, Azure OpenAI (any deployment), and Ollama (local models including Llama 3.1 70B, Mistral 8×7B, CodeLlama 34B).</p>
+      <h3>Cloud LLMs — Strengths</h3>
+      <p>GPT-4 and Claude 3.5 Sonnet represent the current quality ceiling for code-aware text generation. In FlowSquad's internal benchmarks, GPT-4-generated stories score <strong>4.7/5</strong> on developer usability ratings versus <strong>3.9/5</strong> for Llama 3.1 70B on equivalent prompts. Cloud models also require zero infrastructure: you configure an API key, and FlowSquad handles the rest.</p>
+      <p>The cost profile for cloud LLMs in FlowSquad is predictable via the <strong>LLM cost tracker</strong>: generating a full epic breakdown (1 epic, 5 stories, 15 tasks) costs approximately $0.04–0.08 using GPT-4 Turbo at current pricing. For a team generating 200 stories per sprint, that's $8–16 per sprint in LLM costs — negligible against engineering salary costs.</p>
+      <h3>Local LLMs via Ollama — Strengths</h3>
+      <p>Ollama-backed deployments eliminate the data-egress concern entirely. Your source code, your requirements, your prompts — nothing leaves your network. For a defense contractor, a healthcare provider, or a financial institution under strict data handling agreements, this is not a nice-to-have; it's a compliance requirement.</p>
+      <p>The cost profile inverts: after the hardware investment (an NVIDIA A100 80GB costs approximately $10,000–15,000), per-inference cost drops to near zero. For organizations running >5,000 SDLC artifact generations per month, the break-even point against cloud API costs is approximately <strong>18–24 months</strong>.</p>
+      <p>The latency penalty is real: a typical story generation that takes 4.2 seconds on GPT-4 takes 8.8 seconds on Llama 3.1 70B on a single A100. For interactive use (single story generation), this is acceptable. For batch processing (generating 50 stories in a sprint), the difference is material.</p>
+
+      <div class="code-block"># FlowSquad config.yaml — LLM backend selection
+llm:
+  provider: ollama           # options: openai | anthropic | azure | ollama
+  model: llama3.1:70b        # or: gpt-4-turbo | claude-3-5-sonnet | gpt-4
+  base_url: http://ollama.internal:11434  # for ollama only
+  api_key: ${OLLAMA_API_KEY}              # optional for local ollama
+  max_tokens: 4096
+  temperature: 0.3
+
+# Cost tracking (applies to cloud providers)
+cost_tracking:
+  enabled: true
+  alert_threshold_usd: 50.00  # per month
+  log_per_request: true</div>
+
+      <h2>ChromaDB (Local) vs. Pinecone (Cloud): When Does It Matter?</h2>
+      <p>FlowSquad's <strong>VectorDB</strong> stores the semantic embeddings of your codebase that power the <strong>AskProduct</strong> Q&amp;A and codebase-grounded story generation. The choice between ChromaDB and Pinecone is often misunderstood as purely a performance decision — it's primarily a data residency decision.</p>
+      <p><strong>ChromaDB</strong> runs locally alongside FlowSquad. Your code embeddings never leave your infrastructure. It handles repositories up to approximately <strong>2 million lines of code</strong> comfortably on a single 16GB RAM node. For the vast majority of enterprise repositories, this is sufficient. Index build time for a 500,000-line Java monorepo is approximately 12 minutes on first analysis; incremental updates take under 60 seconds.</p>
+      <p><strong>Pinecone</strong> is a managed cloud VectorDB optimized for scale. It becomes relevant when: (a) you're indexing repositories exceeding 5 million lines, (b) you need multi-region VectorDB replication for a globally distributed team, or (c) you want to offload VectorDB infrastructure management entirely. Pinecone's query latency at scale is ~30% lower than ChromaDB at equivalent index sizes above 10M vectors.</p>
+      <p>For regulated environments, the answer is almost always ChromaDB — not because it's better, but because sending code embeddings to a third-party cloud service raises the same compliance concerns as sending code to OpenAI.</p>
+
+      <h2>PostgreSQL vs. SQLite: Which Database Backend Is Right?</h2>
+      <p>FlowSquad uses a relational database for its operational data: users, projects, stories, audit logs, RBAC configurations, and LLM cost records. The choice between PostgreSQL and SQLite is simple:</p>
+      <ul>
+        <li><strong>SQLite:</strong> Use for single-node evaluation, development environments, or teams under 10 users. Zero configuration, included in the default Docker image. Not suitable for production multi-user deployments — write contention under concurrent sessions causes degraded performance above ~5 simultaneous users.</li>
+        <li><strong>PostgreSQL:</strong> Use for all production deployments. Supports full RBAC, concurrent access, and the <strong>audit log</strong> and <strong>field-level encryption</strong> (Fernet/AES-128) features that require proper transaction isolation. A standard PostgreSQL 15+ instance with 4GB RAM handles a 100-user FlowSquad deployment without resource pressure.</li>
+      </ul>
+
+      <h2>Decision Matrix: Cloud vs. Self-Hosted by Criteria</h2>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>Criteria</th><th>Cloud (OpenAI + Pinecone + managed DB)</th><th>Self-Hosted (Ollama + ChromaDB + PostgreSQL)</th><th>FlowSquad Default</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Initial setup time</td><td>~30 minutes</td><td>~4–8 hours (GPU + k8s config)</td><td>Cloud (10-step wizard)</td></tr>
+            <tr><td>Per-story generation cost</td><td>~$0.04–0.08 (GPT-4 Turbo)</td><td>~$0.001–0.003 (amortized GPU)</td><td>Cloud</td></tr>
+            <tr><td>Output quality (developer rating)</td><td>4.7 / 5</td><td>3.9 / 5 (Llama 3.1 70B)</td><td>Cloud</td></tr>
+            <tr><td>Story generation latency</td><td>~4 seconds</td><td>~9 seconds (A100 single GPU)</td><td>Cloud</td></tr>
+            <tr><td>Data leaves your network?</td><td class="cross">Yes — API calls to OpenAI/Anthropic</td><td class="check">No — fully local</td><td>Self-hosted (regulated)</td></tr>
+            <tr><td>HIPAA / FedRAMP compatible</td><td class="partial">Requires BAA with OpenAI/Azure</td><td class="check">Yes — no third-party data flow</td><td>Self-hosted</td></tr>
+            <tr><td>Operational overhead</td><td>Minimal — managed APIs</td><td>High — GPU maintenance, model updates</td><td>Cloud</td></tr>
+            <tr><td>Scaling to 500+ users</td><td class="check">Auto-scales via API</td><td class="partial">Requires GPU cluster expansion</td><td>Cloud</td></tr>
+            <tr><td>Works in air-gapped network</td><td class="cross">No</td><td class="check">Yes</td><td>Self-hosted</td></tr>
+            <tr><td>LLM model customization (fine-tuning)</td><td class="partial">Limited (fine-tune API)</td><td class="check">Full control (LoRA, QLoRA)</td><td>Self-hosted (advanced)</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2>How Do You Make the Decision for Your Organization?</h2>
+      <div class="decision-tree">
+        <h4>Decision Framework — answer in order, stop when you have your answer</h4>
+        <ol>
+          <li><strong>Is your code subject to a data residency requirement or air-gap mandate?</strong> → If yes: Self-hosted (Ollama + ChromaDB + PostgreSQL).</li>
+          <li><strong>Do you need HIPAA/FedRAMP compliance without a cloud vendor BAA?</strong> → If yes: Self-hosted.</li>
+          <li><strong>Is your repository larger than 5M lines and do you have a globally distributed team?</strong> → If yes: Cloud (Pinecone + OpenAI) for scale.</li>
+          <li><strong>Do you have fewer than 50 users and no compliance constraints?</strong> → Cloud (fastest to value, lowest TCO under 18 months).</li>
+          <li><strong>Are you running >5,000 AI generations per month with a stable infrastructure team?</strong> → Self-hosted (long-term cost advantage).</li>
+          <li><strong>Default:</strong> Start with Cloud; migrate to Self-hosted after proving value and quantifying volume.</li>
+        </ol>
+      </div>
+
+      <div class="faq-section">
+        <h2>Frequently Asked Questions</h2>
+        <details>
+          <summary>Can FlowSquad switch between cloud and self-hosted LLMs without re-installing?</summary>
+          <div class="faq-answer">Yes. FlowSquad's LLM provider is a configuration parameter in <code>config.yaml</code>. Switching from OpenAI to Ollama requires updating 3 fields: <code>provider</code>, <code>model</code>, and <code>base_url</code>. No data migration is required. The codebase index in ChromaDB uses the same embedding format regardless of the generation LLM.</div>
+        </details>
+        <details>
+          <summary>Does the VectorDB need to be rebuilt when switching LLM providers?</summary>
+          <div class="faq-answer">Only if you change the embedding model. If you switch from OpenAI GPT-4 to Anthropic Claude for generation but keep the same embedding model (e.g., <code>text-embedding-3-large</code>), no rebuild is needed. Switching the embedding model requires a full index rebuild, which takes 10–45 minutes depending on repository size.</div>
+        </details>
+        <details>
+          <summary>What Kubernetes configuration does FlowSquad recommend for self-hosted production?</summary>
+          <div class="faq-answer">FlowSquad's Kubernetes deployment includes a Helm chart with configurable resource requests. Recommended minimum for production: FlowSquad API pod (4 vCPU, 8GB RAM), PostgreSQL StatefulSet (4 vCPU, 8GB RAM), ChromaDB pod (2 vCPU, 16GB RAM for the vector index), Ollama pod (GPU node with ≥16GB VRAM for 13B models, ≥80GB for 70B models).</div>
+        </details>
+        <details>
+          <summary>How does FlowSquad's field-level encryption work in the self-hosted configuration?</summary>
+          <div class="faq-answer">FlowSquad's <strong>field-level encryption</strong> uses Fernet (AES-128 CBC + HMAC-SHA256) for sensitive fields (API tokens, user credentials, requirement text). In self-hosted mode, the encryption key is stored in a Kubernetes Secret or HashiCorp Vault. In cloud mode, it's managed via your configured KMS. The encryption is transparent to users and doesn't affect query performance.</div>
+        </details>
+        <details>
+          <summary>Can we use Azure OpenAI instead of OpenAI directly for data residency?</summary>
+          <div class="faq-answer">Yes. FlowSquad supports Azure OpenAI as a distinct provider. Azure OpenAI runs GPT-4 models within your Azure tenant's geographic region, which satisfies many data residency requirements without requiring full self-hosting. Configure <code>provider: azure</code> with your Azure endpoint, deployment name, and API key in FlowSquad's LLM settings.</div>
+        </details>
+      </div>
+
+      <div class="share-row">
+        <a class="share-badge" href="#">dev.to</a>
+        <a class="share-badge" href="#">Hashnode</a>
+        <a class="share-badge" href="#">Medium</a>
+        <a class="share-badge" href="#">LinkedIn</a>
+      </div>
+
+      <div class="related">
+        <div class="related-title">Related Articles</div>
+        <ul>
+          <li><a href="blog-23-manual-review-vs-quality-scan.html">Manual Code Review vs. FlowSquad Quality Scan: Time, Cost, Coverage</a></li>
+          <li><a href="blog-25-jira-confluence-github-setup.html">How to Connect FlowSquad to Jira, Confluence, and GitHub in Under 15 Minutes</a></li>
+          <li><a href="blog-24-legacy-java-tutorial.html">Step-by-Step: Analyze a Legacy Java Codebase in 30 Minutes</a></li>
+        </ul>
+      </div>
+
+    </div>
+  </article>
+</div>
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <p class="fl"><strong>FlowSquad</strong></p>
+        <p class="ft">AI-Powered SDLC Intelligence Platform</p>
+        <p class="ft">Analyze once. Reuse intelligence. Zero repeated LLM cost.</p>
+      </div>
+      <div class="fc"><p class="fc-t">Product</p>
+        <a href="../index.html#features">Features</a>
+        <a href="../index.html#how-it-works">How It Works</a>
+        <a href="../index.html#deployment">Deployment</a>
+        <a href="../index.html#pricing">Pricing</a>
+        <a href="../index.html#download">Download</a>
+      </div>
+      <div class="fc"><p class="fc-t">Resources</p>
+        <a href="../docs/index.html">Documentation</a>
+        <a href="index.html">Blog</a>
+        <a href="https://github.com/flowsquad-ai/Flowsquad" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <a href="../index.html#learn-more">Videos</a>
+        <a href="mailto:support@flowsquad.ai">Support</a>
+      </div>
+      <div class="fc"><p class="fc-t">Company</p>
+        <a href="mailto:support@flowsquad.ai">Contact Sales</a>
+        <a href="mailto:support@flowsquad.ai">support@flowsquad.ai</a>
+        <a href="/privacy">Privacy Policy</a>
+      </div>
+    </div>
+    <div class="footer-btm"><p>&#169; 2026 FlowSquad. All rights reserved.</p></div>
+  </div>
+</footer>
+<script>
+var _ham=document.querySelector('.hamburger'),_nl=document.querySelector('.nav-links'),_nb=document.querySelector('.nav-backdrop');
+function _open(){_nl.classList.add('active');_nb.classList.add('active');document.body.style.overflow='hidden';}
+function _close(){_nl.classList.remove('active');_nb.classList.remove('active');document.body.style.overflow='';}
+_ham.addEventListener('click',function(){if(_nl.classList.contains('active')){_close();}else{_open();}});
+_nb.addEventListener('click',_close);
+document.querySelectorAll('.nav-links a').forEach(function(l){l.addEventListener('click',_close);});
+var _tt=document.getElementById('themeToggle');
+function _applyTheme(d){document.documentElement.setAttribute('data-theme',d?'dark':'light');_tt.textContent=d?'☀️':'🌙';localStorage.setItem('fs_theme',d?'dark':'light');}
+var _st=localStorage.getItem('fs_theme');_applyTheme(_st?_st==='dark':true);
+_tt.addEventListener('click',function(){_applyTheme(document.documentElement.getAttribute('data-theme')!=='dark');});
+</script>
+
+</body>
+</html>

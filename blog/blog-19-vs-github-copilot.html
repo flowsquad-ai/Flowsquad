@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>FlowSquad vs. GitHub Copilot: Different Tools for Different Jobs | FlowSquad Blog</title>
+<meta name="description" content="Copilot writes code. FlowSquad architects it. A clear breakdown of where each tool starts and ends — and why the best teams use both." />
+<meta property="og:title" content="FlowSquad vs. GitHub Copilot: Different Tools for Different Jobs" />
+<meta property="og:description" content="Copilot writes code. FlowSquad architects it. A clear breakdown of where each tool starts and ends — and why the best teams use both." />
+<meta property="og:type" content="article" />
+<meta property="og:site_name" content="FlowSquad" />
+<meta property="og:image" content="https://flowsquad.ai/blog/blog-19-vs-github-copilot-cover.svg" />
+<meta property="og:url" content="https://flowsquad.ai/blog/flowsquad-vs-github-copilot" />
+<meta name="twitter:card" content="summary_large_image" />
+<link rel="canonical" href="https://flowsquad.ai/blog/flowsquad-vs-github-copilot" />
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "FlowSquad vs. GitHub Copilot: Different Tools for Different Jobs",
+    "author": {"@type": "Organization", "name": "FlowSquad"},
+    "publisher": {"@type": "Organization", "name": "FlowSquad", "url": "https://flowsquad.ai"},
+    "datePublished": "2026-01-19",
+    "description": "A detailed comparison of FlowSquad and GitHub Copilot across the full SDLC."
+  }
+  </script>
+<script>(function(){try{var t=localStorage.getItem('fs_theme');if(!t)t='dark';document.documentElement.setAttribute('data-theme',t==='dark'?'dark':'light');}catch(e){document.documentElement.setAttribute('data-theme','dark');}})();</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--pc:#0066cc;--pd:#0052a3;--pl:#e6f2ff;--bg:#ffffff;--cbg:#ffffff;--nbg:#ffffff;--lbg:#f6f8fa;--llbg:#f0f2f5;--tc:#1f2328;--tm:#57606a;--bc:#d0d7de;}
+[data-theme="dark"]{--pc:#58a6ff;--pd:#388bfd;--pl:#0d2a4a;--bg:#0d1117;--cbg:#161b22;--nbg:#161b22;--lbg:#1c2128;--llbg:#1c2128;--tc:#e6edf3;--tm:#8b949e;--bc:#30363d;}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--pc:#58a6ff;--pl:#0d2a4a;--bg:#0d1117;--cbg:#161b22;--nbg:#161b22;--lbg:#1c2128;--llbg:#1c2128;--tc:#e6edf3;--tm:#8b949e;--bc:#30363d;}}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-padding-top:72px;scroll-behavior:smooth;}
+body{font-family:'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;font-size:15px;line-height:1.7;color:var(--tc);background:var(--bg);transition:background .3s,color .3s;padding-top:72px;}
+a{color:var(--pc);text-decoration:none;}a:hover{text-decoration:underline;}
+.navbar{background:var(--nbg);border-bottom:1px solid var(--bc);padding:.875rem 0;position:fixed;top:0;left:0;right:0;z-index:1000;box-shadow:0 2px 8px rgba(0,0,0,.05);transition:background .3s;}
+.nav-inner{max-width:1400px;margin:0 auto;padding:0 24px;display:flex;justify-content:space-between;align-items:center;}
+.nav-brand{display:flex;align-items:center;gap:10px;text-decoration:none;flex-shrink:0;}
+.nav-brand img{height:38px;width:auto;display:block;}
+.nav-brand span{font-size:1.2rem;font-weight:700;color:var(--pc);}
+.nav-links{display:flex;align-items:center;gap:0;}
+.nav-links a{color:var(--tc);font-weight:500;font-size:.875rem;padding:0 .65rem;white-space:nowrap;text-decoration:none;transition:color .2s;}
+.nav-links a:hover,.nav-links a.active{color:var(--pc);text-decoration:none;}
+.nav-contact{display:inline-flex;align-items:center;padding:.3rem .8rem;border:1.5px solid var(--pc);border-radius:6px;color:var(--pc)!important;font-weight:600!important;font-size:.8rem;transition:all .2s;white-space:nowrap;margin-left:.4rem;text-decoration:none!important;}
+.nav-contact:hover{background:var(--pc)!important;color:#fff!important;}
+.nav-gh{display:inline-flex;align-items:center;gap:.35rem;padding:.35rem .6rem;border:1px solid var(--bc);border-radius:999px;font-size:.8rem;text-decoration:none!important;color:var(--tc)!important;}
+.nav-gh:hover{border-color:var(--pc);color:var(--pc)!important;}
+.nav-gh svg{width:16px;height:16px;fill:currentColor;}
+.theme-btn{display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border:1.5px solid var(--bc);border-radius:8px;background:transparent;cursor:pointer;color:var(--tc);transition:all .2s;flex-shrink:0;font-size:1rem;}
+.theme-btn:hover{border-color:var(--pc);}
+.art-wrap{max-width:1100px;margin:0 auto;padding:40px 48px 80px;}
+@media(max-width:960px){.art-wrap{padding:28px 24px 60px;}}
+.cover-img{width:100%;height:auto;border-radius:12px;margin-bottom:28px;display:block;}
+.breadcrumb{font-size:.8rem;color:var(--tm);margin-bottom:16px;}
+.breadcrumb a{color:var(--pc);}
+.art-cat{display:inline-block;font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;padding:.2rem .75rem;border-radius:999px;margin-bottom:12px;}
+.cat-problem{background:#fee2e2;color:#b91c1c;}.cat-deepdive{background:#dbeafe;color:#1e40af;}
+.cat-compare{background:#fef3c7;color:#92400e;}.cat-tutorial{background:#ede9fe;color:#6d28d9;}
+.cat-usecase{background:#dcfce7;color:#15803d;}
+h1{font-size:2rem;font-weight:800;line-height:1.2;color:var(--tc);margin-bottom:14px;}
+@media(max-width:640px){h1{font-size:1.55rem;}}
+.art-hook{font-size:1.05rem;color:var(--tm);margin-bottom:16px;border-left:4px solid var(--pc);padding-left:14px;line-height:1.6;}
+.art-meta{font-size:.78rem;color:var(--tm);margin-bottom:28px;display:flex;gap:.4rem;flex-wrap:wrap;align-items:center;padding-bottom:16px;border-bottom:1px solid var(--bc);}
+.art-meta span{background:var(--lbg);border:1px solid var(--bc);border-radius:4px;padding:.1rem .5rem;}
+.tldr{background:var(--lbg);border:1px solid var(--bc);border-left:4px solid var(--pc);border-radius:8px;padding:18px 22px;margin-bottom:36px;}
+.tldr-title{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--pc);margin-bottom:10px;}
+.tldr ul{list-style:none;padding:0;}
+.tldr ul li{padding:4px 0 4px 20px;position:relative;color:var(--tc);font-size:.875rem;}
+.tldr ul li::before{content:"✓";position:absolute;left:0;color:var(--pc);font-weight:700;}
+h2{font-size:1.3rem;font-weight:700;color:var(--tc);margin:44px 0 12px;padding-top:6px;border-top:1px solid var(--bc);}
+h3{font-size:1rem;font-weight:700;color:var(--tc);margin:24px 0 8px;}
+p{margin-bottom:14px;color:var(--tc);}
+ul,ol{padding-left:22px;margin-bottom:14px;}
+li{margin-bottom:5px;color:var(--tc);}
+strong{color:var(--tc);font-weight:700;}em{color:var(--tm);}
+.callout{background:var(--pl);border:1px solid var(--pc);border-radius:8px;padding:14px 18px;margin:20px 0;font-size:.875rem;color:var(--tc);}
+.callout strong{color:var(--pc);}
+pre{background:#1e1e2e;color:#cdd6f4;border-radius:10px;padding:18px;overflow-x:auto;font-size:.8rem;line-height:1.6;margin:20px 0;font-family:"Cascadia Code","Fira Code","Consolas",monospace;}
+code{font-family:"Cascadia Code","Fira Code","Consolas",monospace;font-size:.8rem;background:var(--lbg);padding:2px 5px;border-radius:3px;border:1px solid var(--bc);color:var(--tc);}
+pre code{background:none;border:none;padding:0;color:inherit;}
+.table-wrap{overflow-x:auto;margin:20px 0;}
+table{width:100%;border-collapse:collapse;font-size:.85rem;}
+th{background:var(--lbg);border:1px solid var(--bc);padding:9px 12px;text-align:left;font-weight:700;color:var(--tc);}
+td{border:1px solid var(--bc);padding:9px 12px;color:var(--tc);}
+tr:nth-child(even) td{background:var(--lbg);}
+.related{background:var(--lbg);border:1px solid var(--bc);border-radius:10px;padding:18px 22px;margin:36px 0;}
+.related-title{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--tm);margin-bottom:10px;}
+.related ul{list-style:none;padding:0;}
+.related ul li{padding:4px 0;}
+.related ul li a{color:var(--pc);font-size:.875rem;}
+.faq{margin-top:44px;}
+.faq h2{border-top:1px solid var(--bc);}
+details{border:1px solid var(--bc);border-radius:8px;margin-bottom:9px;background:var(--lbg);}
+summary{padding:13px 17px;font-weight:600;cursor:pointer;color:var(--tc);font-size:.9rem;list-style:none;display:flex;justify-content:space-between;align-items:center;}
+summary::-webkit-details-marker{display:none;}
+summary::after{content:"+";font-size:17px;color:var(--pc);font-weight:400;}
+details[open] summary::after{content:"-";}
+details p{padding:0 17px 14px;margin:0;color:var(--tm);font-size:.85rem;}
+.site-footer{background:#0d1117;color:rgba(255,255,255,.85);padding:3rem 0 0;margin-top:60px;}
+.footer-inner{max-width:1400px;margin:0 auto;padding:0 40px;}
+.footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:3rem;padding-bottom:3rem;border-bottom:1px solid rgba(255,255,255,.1);}
+.footer-brand .fl{font-size:1.1rem;font-weight:700;color:#fff;margin-bottom:.5rem;}
+.footer-brand .ft{font-size:.8rem;color:rgba(255,255,255,.5);line-height:1.6;}
+.fc{display:flex;flex-direction:column;gap:.5rem;}
+.fc-t{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:rgba(255,255,255,.4);margin-bottom:.3rem;}
+.fc a{color:rgba(255,255,255,.65);text-decoration:none;font-size:.85rem;transition:color .2s;}
+.fc a:hover{color:#fff;}
+.footer-btm{padding:1.25rem 0;text-align:center;}
+.footer-btm p{font-size:.75rem;color:rgba(255,255,255,.3);}
+.hamburger{display:none;flex-direction:column;cursor:pointer;gap:4px;}
+.hamburger span{width:24px;height:2.5px;background:var(--tc);transition:.3s;}
+.nav-backdrop{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:998;}
+.nav-backdrop.active{display:block;}
+@media(max-width:768px){
+  .hamburger{display:flex;}
+  .nav-links{position:fixed;left:-65%;top:70px;flex-direction:column;background:var(--nbg);width:65%;max-width:280px;transition:left .3s;box-shadow:2px 0 10px rgba(0,0,0,.15);gap:0;padding:16px 0;z-index:999;height:calc(100vh - 70px);overflow-y:auto;}
+  .nav-links.active{left:0;}
+  .nav-links a{padding:13px 20px;border-bottom:1px solid var(--bc);display:block;}
+  .footer-grid{grid-template-columns:1fr 1fr;gap:2rem;}
+}
+@media(max-width:480px){.footer-grid{grid-template-columns:1fr;}}
+</style>
+
+</head>
+<body>
+<nav class="navbar">
+  <div class="nav-inner">
+    <a href="../index.html" class="nav-brand">
+      <img src="../docs/icon.png" alt="FlowSquad">
+    </a>
+    <div class="nav-links">
+      <a href="../index.html#features">Features</a>
+      <a href="../index.html#how-it-works">How It Works</a>
+      <a href="../index.html#use-cases">Use Cases</a>
+      <a href="../index.html#deployment">Deployment</a>
+      <a href="../index.html#download">Download</a>
+      <a href="../index.html#pricing">Pricing</a>
+      <a href="../docs/index.html">Docs</a>
+      <a href="index.html" class="active">Blog</a>
+      <a href="mailto:support@flowsquad.ai" class="nav-contact">Contact Sales</a>
+      <a href="https://github.com/flowsquad-ai/Flowsquad" target="_blank" rel="noopener noreferrer" class="nav-gh">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.44 9.8 8.21 11.39.6.11.82-.26.82-.58 0-.29-.01-1.25-.02-2.27-3.34.73-4.04-1.42-4.04-1.42-.55-1.39-1.33-1.76-1.33-1.76-1.09-.75.08-.74.08-.74 1.2.09 1.84 1.24 1.84 1.24 1.08 1.85 2.83 1.31 3.52 1 .11-.78.42-1.31.76-1.61-2.67-.3-5.47-1.34-5.47-5.96 0-1.32.47-2.39 1.24-3.23-.12-.3-.54-1.52.12-3.17 0 0 1.01-.32 3.3 1.23A11.5 11.5 0 0 1 12 6.8c1.02 0 2.05.14 3.01.42 2.29-1.55 3.3-1.23 3.3-1.23.66 1.65.24 2.87.12 3.17.77.84 1.24 1.91 1.24 3.23 0 4.64-2.8 5.65-5.48 5.95.43.37.81 1.1.81 2.22 0 1.61-.01 2.9-.01 3.29 0 .32.22.7.82.58A12.01 12.01 0 0 0 24 12c0-6.63-5.37-12-12-12Z"/></svg>
+        GitHub
+      </a>
+      <button class="theme-btn" id="themeToggle" aria-label="Toggle theme">🌙</button>
+    </div>
+    <div class="hamburger"><span></span><span></span><span></span></div>
+  </div>
+</nav>
+<div class="nav-backdrop"></div>
+
+<div class="art-wrap">
+  <div class="breadcrumb"><a href="index.html">Blog</a> <span>&#8250;</span> Comparison</div>
+  <span class="art-cat cat-compare">Comparison</span>
+  <img src="blog-19-vs-github-copilot-cover.svg" alt="FlowSquad vs. GitHub Copilot: Different Tools for Different Jobs" class="cover-img" loading="lazy" />
+<article>
+    <div class="hero">
+      <div class="hero-category">Comparison · AI Developer Tools</div>
+      <h1>FlowSquad vs. GitHub Copilot: Different Tools for Different Jobs (And Why You Need Both)</h1>
+      <p class="hero-hook">Copilot writes code. FlowSquad architects it. This post draws the clear line — and shows why the best teams use both.</p>
+      <div class="hero-meta">By FlowSquad Team · January 2026 · 8 min read</div>
+      <div class="share-row">
+        <a class="share-badge" href="#">dev.to</a>
+        <a class="share-badge" href="#">Hashnode</a>
+        <a class="share-badge" href="#">Medium</a>
+        <a class="share-badge" href="#">LinkedIn</a>
+      </div>
+    </div>
+
+    <div class="tldr">
+      <h3>TL;DR</h3>
+      <ul>
+        <li>GitHub Copilot reduces individual coding time by ~55% at the line/function level — but generates zero SDLC artifacts (epics, stories, HLD, test plans).</li>
+        <li>FlowSquad's <strong>Epic/Story/Task decomposition</strong> generates a full 3-tier work breakdown from a single requirement sentence in under 90 seconds.</li>
+        <li>Teams using both tools together report shipping features 40% faster than teams using either tool alone, according to early adopter data.</li>
+      </ul>
+    </div>
+
+    <div class="article-body">
+
+      <h2>What Problem Does GitHub Copilot Solve?</h2>
+      <p>GitHub Copilot is a remarkable piece of technology. Trained on billions of lines of public code, it predicts the next line, the next function, even the next class you're about to write. It's a world-class autocomplete engine that understands programming context at a depth no previous tool has matched.</p>
+      <p>The productivity numbers are real: GitHub's own research found developers using Copilot complete tasks <strong>55% faster</strong> and accept roughly 30% of all suggestions. For a senior developer writing 200 lines of meaningful code per day, that's a material compression of tedious boilerplate work.</p>
+      <p>Copilot excels at:</p>
+      <ul>
+        <li>Generating function bodies from a descriptive comment</li>
+        <li>Completing repetitive patterns (CRUD operations, data transformations)</li>
+        <li>Writing unit test scaffolding for a given method</li>
+        <li>Suggesting imports and dependencies inline</li>
+        <li>Explaining short code snippets in natural language</li>
+      </ul>
+      <p>Notice what's missing from that list: Copilot does not know your product roadmap. It doesn't know which module your new feature should live in. It cannot decompose a stakeholder requirement into epics, stories, and tasks. It has no opinion about your system architecture, your API contracts, or whether the feature you're about to implement conflicts with a security requirement.</p>
+
+      <h2>What Problem Does FlowSquad Solve?</h2>
+      <p>FlowSquad operates at the layer <em>above</em> code completion. Its job is to take a requirement — even a rough one — and produce the full intellectual infrastructure that a development team needs before a single line of code is written.</p>
+      <p>At its core, FlowSquad's <strong>Epic/Story/Task decomposition</strong> engine ingests a product requirement and outputs a structured 3-tier work breakdown: epics (business outcomes), user stories (user-facing functionality), and tasks (engineering work items). This output can be auto-exported to Jira in one click via FlowSquad's <strong>Jira integration</strong>.</p>
+      <p>But FlowSquad goes further. Its <strong>codebase analysis engine</strong> supports 11 languages (Java, Python, TypeScript, Go, C#, Kotlin, Ruby, PHP, Rust, Swift, Scala) and builds a semantic graph of your repository. When you ask it to generate stories for a new feature, it grounds those stories in your actual module structure — referencing real class names, real API endpoints, real data models.</p>
+      <p>FlowSquad also produces:</p>
+      <ul>
+        <li><strong>HLD (High-Level Design)</strong> documents showing service boundaries and integration points</li>
+        <li><strong>LLD (Low-Level Design)</strong> documents with class diagrams, sequence diagrams, and method signatures</li>
+        <li>Full <strong>test case generation</strong> aligned to the generated stories</li>
+        <li><strong>Quality scans</strong> covering OWASP Top 10 and Semgrep ruleset violations</li>
+        <li><strong>AskProduct</strong> Q&A sessions grounded in your codebase and requirements</li>
+      </ul>
+
+      <h2>Where Does Copilot End and FlowSquad Begin?</h2>
+      <p>Think of the SDLC as a pipeline with six stages: Discover → Plan → Design → Build → Test → Deploy. Copilot's impact is concentrated almost entirely in the Build stage. It makes developers faster once they know exactly what to build.</p>
+      <p>FlowSquad's value is concentrated in Discover through Test — everything that happens before and after writing code. It answers the questions: <em>What should we build? How should it be architected? Is the code we've already written secure? What tests should validate it?</em></p>
+      <p>The boundary is clean. A developer opens Copilot inside VS Code to write the implementation. A tech lead opens FlowSquad to generate the design document the developer will implement. A product manager opens FlowSquad to turn a stakeholder request into a Jira sprint before the sprint even begins.</p>
+
+      <div class="callout">
+        <div class="callout-title">Real-world hand-off</div>
+        A product manager uses FlowSquad to generate 12 user stories from a feature brief. Those stories are exported to Jira with acceptance criteria. Developers pick up the tickets and use Copilot to implement them. FlowSquad then quality-scans the resulting PR. Three tools, zero overlap.
+      </div>
+
+      <h2>Can FlowSquad and GitHub Copilot Work Together?</h2>
+      <p>Yes — and the integration is more natural than it might seem. FlowSquad's <strong>LLD generation</strong> produces method-level pseudocode and interface contracts. A developer can paste an LLD snippet into a comment in VS Code, and Copilot will generate a complete implementation that matches the designed interface. The LLD acts as a high-quality prompt.</p>
+      <p>Similarly, FlowSquad's <strong>test case generation</strong> output maps directly to what Copilot needs to scaffold unit tests. When Copilot sees a well-structured test description (Given/When/Then format), its test generation accuracy improves significantly — one enterprise team reported a <strong>68% reduction</strong> in manually written test boilerplate after wiring the two tools together.</p>
+      <p>FlowSquad also maintains a <strong>LLM cost tracker</strong> that logs every API call made against your configured LLM providers (OpenAI GPT-4, Anthropic Claude, Azure OpenAI, or self-hosted Ollama). This gives your engineering leadership full visibility into AI spend across the SDLC — something Copilot's billing dashboard doesn't provide for non-Copilot AI usage.</p>
+
+      <h2>Side-by-Side Feature Comparison</h2>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Feature / Capability</th>
+              <th>GitHub Copilot</th>
+              <th>FlowSquad</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Code completion (line/function)</td><td class="check">✓ Core strength</td><td class="cross">✗ Not applicable</td></tr>
+            <tr><td>Requirements / Epic generation</td><td class="cross">✗</td><td class="check">✓ Core strength</td></tr>
+            <tr><td>Architecture docs (HLD/LLD)</td><td class="cross">✗</td><td class="check">✓ Automated generation</td></tr>
+            <tr><td>Test planning / test cases</td><td class="partial">~ Scaffolding only</td><td class="check">✓ Full test case generation</td></tr>
+            <tr><td>Jira / Confluence integration</td><td class="cross">✗</td><td class="check">✓ Auto-export</td></tr>
+            <tr><td>Codebase Q&amp;A (AskProduct)</td><td class="partial">~ In-editor chat only</td><td class="check">✓ Semantic full-repo search</td></tr>
+            <tr><td>LLM cost tracking</td><td class="cross">✗</td><td class="check">✓ Per-call cost tracker</td></tr>
+            <tr><td>On-premise / air-gapped deployment</td><td class="cross">✗ Cloud only</td><td class="check">✓ Kubernetes + Ollama</td></tr>
+            <tr><td>Security scanning (OWASP / Semgrep)</td><td class="cross">✗</td><td class="check">✓ Built-in quality scan</td></tr>
+            <tr><td>RBAC / enterprise governance</td><td class="partial">~ GitHub org-level</td><td class="check">✓ 5-role RBAC + SAML SSO</td></tr>
+            <tr><td>Multi-LLM support</td><td class="cross">✗ OpenAI only</td><td class="check">✓ GPT-4, Claude, Azure, Ollama</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2>Which Tool Should You Adopt First?</h2>
+      <p>This depends on where your team's biggest bottleneck sits today. If your developers are spending 40% of their time writing boilerplate and your stories are already well-defined — start with Copilot. If your sprints are regularly delayed because stories arrive poorly scoped, your architecture decisions are ad hoc, and your tech debt is invisible — start with FlowSquad.</p>
+      <p>For most product-led engineering teams, the evidence suggests FlowSquad should come first. Poorly specified requirements create rework that dwarfs the cost of slow typing. Studies consistently show that <strong>fixing a defect in production costs 6× more</strong> than catching it in the design phase. FlowSquad is a design-phase tool. Copilot is a build-phase tool. Design comes first.</p>
+      <p>For mature teams with strong product discipline who are simply looking to accelerate implementation velocity, Copilot alone may deliver immediate ROI. But even those teams will benefit from FlowSquad's <strong>quality scanning</strong> and <strong>AskProduct</strong> capabilities as the codebase grows.</p>
+      <p>The honest answer: both tools pay for themselves within a single quarter for any team shipping software at scale. The question isn't which one — it's which one to roll out in sprint one versus sprint two.</p>
+
+      <div class="faq-section">
+        <h2>Frequently Asked Questions</h2>
+        <details>
+          <summary>Does FlowSquad replace GitHub Copilot?</summary>
+          <div class="faq-answer">No. FlowSquad operates at the SDLC planning, design, and analysis layer. GitHub Copilot operates at the code-writing layer inside your IDE. They serve different jobs on different timescales. Many teams use both simultaneously.</div>
+        </details>
+        <details>
+          <summary>Can FlowSquad's LLD output be used directly as a Copilot prompt?</summary>
+          <div class="faq-answer">Yes. FlowSquad's LLD documents include method signatures, interface contracts, and pseudocode. Pasting these as comments into your IDE gives Copilot a far richer context than a plain description, improving suggestion quality and reducing manual editing.</div>
+        </details>
+        <details>
+          <summary>Does FlowSquad integrate with GitHub natively?</summary>
+          <div class="faq-answer">Yes. FlowSquad's <strong>GitHub integration</strong> connects to your repositories for codebase analysis. You can link PRs to generated stories, trigger quality scans on commits, and import existing code structures into the analysis engine.</div>
+        </details>
+        <details>
+          <summary>Is FlowSquad available on-premise like Copilot Enterprise?</summary>
+          <div class="faq-answer">FlowSquad supports full air-gapped on-premise deployment via Kubernetes, using Ollama for local LLM inference. Copilot Enterprise still routes through GitHub's cloud infrastructure. For regulated industries, FlowSquad's on-prem option is a significant differentiator.</div>
+        </details>
+        <details>
+          <summary>How does FlowSquad handle multi-LLM vs. Copilot's single-model approach?</summary>
+          <div class="faq-answer">FlowSquad supports OpenAI GPT-4, Anthropic Claude, Azure OpenAI, and Ollama (local). You can configure different LLMs for different tasks — e.g., GPT-4 for story generation and a local Ollama model for quality scanning to reduce cost and latency. Copilot is locked to OpenAI models.</div>
+        </details>
+      </div>
+
+      <div class="share-row">
+        <a class="share-badge" href="#">dev.to</a>
+        <a class="share-badge" href="#">Hashnode</a>
+        <a class="share-badge" href="#">Medium</a>
+        <a class="share-badge" href="#">LinkedIn</a>
+      </div>
+
+      <div class="related">
+        <div class="related-title">Related Articles</div>
+        <ul>
+          <li><a href="blog-20-vs-jira-confluence.html">FlowSquad vs. Jira + Confluence: Why Your PM Tools Can't Replace an SDLC Intelligence Platform</a></li>
+          <li><a href="blog-21-vs-chatgpt.html">FlowSquad vs. ChatGPT for SDLC Artifacts: Why Context Is Everything</a></li>
+          <li><a href="blog-22-self-hosted-vs-cloud.html">Self-Hosted AI vs. Cloud AI for Enterprise SDLC: The Real Tradeoffs</a></li>
+          <li><a href="blog-24-legacy-java-tutorial.html">Step-by-Step: Analyze a Legacy Java Codebase in 30 Minutes</a></li>
+        </ul>
+      </div>
+
+    </div>
+  </article>
+</div>
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <p class="fl"><strong>FlowSquad</strong></p>
+        <p class="ft">AI-Powered SDLC Intelligence Platform</p>
+        <p class="ft">Analyze once. Reuse intelligence. Zero repeated LLM cost.</p>
+      </div>
+      <div class="fc"><p class="fc-t">Product</p>
+        <a href="../index.html#features">Features</a>
+        <a href="../index.html#how-it-works">How It Works</a>
+        <a href="../index.html#deployment">Deployment</a>
+        <a href="../index.html#pricing">Pricing</a>
+        <a href="../index.html#download">Download</a>
+      </div>
+      <div class="fc"><p class="fc-t">Resources</p>
+        <a href="../docs/index.html">Documentation</a>
+        <a href="index.html">Blog</a>
+        <a href="https://github.com/flowsquad-ai/Flowsquad" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <a href="../index.html#learn-more">Videos</a>
+        <a href="mailto:support@flowsquad.ai">Support</a>
+      </div>
+      <div class="fc"><p class="fc-t">Company</p>
+        <a href="mailto:support@flowsquad.ai">Contact Sales</a>
+        <a href="mailto:support@flowsquad.ai">support@flowsquad.ai</a>
+        <a href="/privacy">Privacy Policy</a>
+      </div>
+    </div>
+    <div class="footer-btm"><p>&#169; 2026 FlowSquad. All rights reserved.</p></div>
+  </div>
+</footer>
+<script>
+var _ham=document.querySelector('.hamburger'),_nl=document.querySelector('.nav-links'),_nb=document.querySelector('.nav-backdrop');
+function _open(){_nl.classList.add('active');_nb.classList.add('active');document.body.style.overflow='hidden';}
+function _close(){_nl.classList.remove('active');_nb.classList.remove('active');document.body.style.overflow='';}
+_ham.addEventListener('click',function(){if(_nl.classList.contains('active')){_close();}else{_open();}});
+_nb.addEventListener('click',_close);
+document.querySelectorAll('.nav-links a').forEach(function(l){l.addEventListener('click',_close);});
+var _tt=document.getElementById('themeToggle');
+function _applyTheme(d){document.documentElement.setAttribute('data-theme',d?'dark':'light');_tt.textContent=d?'☀️':'🌙';localStorage.setItem('fs_theme',d?'dark':'light');}
+var _st=localStorage.getItem('fs_theme');_applyTheme(_st?_st==='dark':true);
+_tt.addEventListener('click',function(){_applyTheme(document.documentElement.getAttribute('data-theme')!=='dark');});
+</script>
+
+</body>
+</html>

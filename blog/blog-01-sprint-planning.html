@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Why Your Sprint Planning Takes 3 Days — And How to Cut It to 3 Hours | FlowSquad Blog</title>
+<meta name="description" content="Most teams spend 40% of sprint planning time just writing stories from scratch. FlowSquad turns your raw ideas into epics, stories, and tasks in under 10 minutes." />
+<meta property="og:title" content="Why Your Sprint Planning Takes 3 Days — And How to Cut It to 3 Hours" />
+<meta property="og:description" content="Most teams spend 40% of sprint planning time just writing stories from scratch. FlowSquad turns your raw ideas into epics, stories, and tasks in under 10 minutes." />
+<meta property="og:type" content="article" />
+<meta property="og:site_name" content="FlowSquad" />
+<meta property="og:image" content="https://flowsquad.ai/blog/blog-01-sprint-planning-cover.svg" />
+<meta property="og:url" content="https://flowsquad.ai/blog/sprint-planning-3-hours" />
+<meta name="twitter:card" content="summary_large_image" />
+<link rel="canonical" href="https://flowsquad.ai/blog/sprint-planning-3-hours" />
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "Why Your Sprint Planning Takes 3 Days — And How to Cut It to 3 Hours",
+    "description": "Most teams spend 40% of sprint planning time just writing stories from scratch. FlowSquad turns your raw ideas into epics, stories, and tasks in under 10 minutes.",
+    "author": { "@type": "Organization", "name": "FlowSquad" },
+    "publisher": { "@type": "Organization", "name": "FlowSquad", "url": "https://flowsquad.ai" },
+    "datePublished": "2026-01-15",
+    "keywords": ["sprint planning", "story writing", "agile", "SDLC", "FlowSquad", "epic decomposition"]
+  }
+  </script>
+<script>(function(){try{var t=localStorage.getItem('fs_theme');if(!t)t='dark';document.documentElement.setAttribute('data-theme',t==='dark'?'dark':'light');}catch(e){document.documentElement.setAttribute('data-theme','dark');}})();</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--pc:#0066cc;--pd:#0052a3;--pl:#e6f2ff;--bg:#ffffff;--cbg:#ffffff;--nbg:#ffffff;--lbg:#f6f8fa;--llbg:#f0f2f5;--tc:#1f2328;--tm:#57606a;--bc:#d0d7de;}
+[data-theme="dark"]{--pc:#58a6ff;--pd:#388bfd;--pl:#0d2a4a;--bg:#0d1117;--cbg:#161b22;--nbg:#161b22;--lbg:#1c2128;--llbg:#1c2128;--tc:#e6edf3;--tm:#8b949e;--bc:#30363d;}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--pc:#58a6ff;--pl:#0d2a4a;--bg:#0d1117;--cbg:#161b22;--nbg:#161b22;--lbg:#1c2128;--llbg:#1c2128;--tc:#e6edf3;--tm:#8b949e;--bc:#30363d;}}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-padding-top:72px;scroll-behavior:smooth;}
+body{font-family:'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;font-size:15px;line-height:1.7;color:var(--tc);background:var(--bg);transition:background .3s,color .3s;padding-top:72px;}
+a{color:var(--pc);text-decoration:none;}a:hover{text-decoration:underline;}
+.navbar{background:var(--nbg);border-bottom:1px solid var(--bc);padding:.875rem 0;position:fixed;top:0;left:0;right:0;z-index:1000;box-shadow:0 2px 8px rgba(0,0,0,.05);transition:background .3s;}
+.nav-inner{max-width:1400px;margin:0 auto;padding:0 24px;display:flex;justify-content:space-between;align-items:center;}
+.nav-brand{display:flex;align-items:center;gap:10px;text-decoration:none;flex-shrink:0;}
+.nav-brand img{height:38px;width:auto;display:block;}
+.nav-brand span{font-size:1.2rem;font-weight:700;color:var(--pc);}
+.nav-links{display:flex;align-items:center;gap:0;}
+.nav-links a{color:var(--tc);font-weight:500;font-size:.875rem;padding:0 .65rem;white-space:nowrap;text-decoration:none;transition:color .2s;}
+.nav-links a:hover,.nav-links a.active{color:var(--pc);text-decoration:none;}
+.nav-contact{display:inline-flex;align-items:center;padding:.3rem .8rem;border:1.5px solid var(--pc);border-radius:6px;color:var(--pc)!important;font-weight:600!important;font-size:.8rem;transition:all .2s;white-space:nowrap;margin-left:.4rem;text-decoration:none!important;}
+.nav-contact:hover{background:var(--pc)!important;color:#fff!important;}
+.nav-gh{display:inline-flex;align-items:center;gap:.35rem;padding:.35rem .6rem;border:1px solid var(--bc);border-radius:999px;font-size:.8rem;text-decoration:none!important;color:var(--tc)!important;}
+.nav-gh:hover{border-color:var(--pc);color:var(--pc)!important;}
+.nav-gh svg{width:16px;height:16px;fill:currentColor;}
+.theme-btn{display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border:1.5px solid var(--bc);border-radius:8px;background:transparent;cursor:pointer;color:var(--tc);transition:all .2s;flex-shrink:0;font-size:1rem;}
+.theme-btn:hover{border-color:var(--pc);}
+.art-wrap{max-width:1100px;margin:0 auto;padding:40px 48px 80px;}
+@media(max-width:960px){.art-wrap{padding:28px 24px 60px;}}
+.cover-img{width:100%;height:auto;border-radius:12px;margin-bottom:28px;display:block;}
+.breadcrumb{font-size:.8rem;color:var(--tm);margin-bottom:16px;}
+.breadcrumb a{color:var(--pc);}
+.art-cat{display:inline-block;font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;padding:.2rem .75rem;border-radius:999px;margin-bottom:12px;}
+.cat-problem{background:#fee2e2;color:#b91c1c;}.cat-deepdive{background:#dbeafe;color:#1e40af;}
+.cat-compare{background:#fef3c7;color:#92400e;}.cat-tutorial{background:#ede9fe;color:#6d28d9;}
+.cat-usecase{background:#dcfce7;color:#15803d;}
+h1{font-size:2rem;font-weight:800;line-height:1.2;color:var(--tc);margin-bottom:14px;}
+@media(max-width:640px){h1{font-size:1.55rem;}}
+.art-hook{font-size:1.05rem;color:var(--tm);margin-bottom:16px;border-left:4px solid var(--pc);padding-left:14px;line-height:1.6;}
+.art-meta{font-size:.78rem;color:var(--tm);margin-bottom:28px;display:flex;gap:.4rem;flex-wrap:wrap;align-items:center;padding-bottom:16px;border-bottom:1px solid var(--bc);}
+.art-meta span{background:var(--lbg);border:1px solid var(--bc);border-radius:4px;padding:.1rem .5rem;}
+.tldr{background:var(--lbg);border:1px solid var(--bc);border-left:4px solid var(--pc);border-radius:8px;padding:18px 22px;margin-bottom:36px;}
+.tldr-title{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--pc);margin-bottom:10px;}
+.tldr ul{list-style:none;padding:0;}
+.tldr ul li{padding:4px 0 4px 20px;position:relative;color:var(--tc);font-size:.875rem;}
+.tldr ul li::before{content:"✓";position:absolute;left:0;color:var(--pc);font-weight:700;}
+h2{font-size:1.3rem;font-weight:700;color:var(--tc);margin:44px 0 12px;padding-top:6px;border-top:1px solid var(--bc);}
+h3{font-size:1rem;font-weight:700;color:var(--tc);margin:24px 0 8px;}
+p{margin-bottom:14px;color:var(--tc);}
+ul,ol{padding-left:22px;margin-bottom:14px;}
+li{margin-bottom:5px;color:var(--tc);}
+strong{color:var(--tc);font-weight:700;}em{color:var(--tm);}
+.callout{background:var(--pl);border:1px solid var(--pc);border-radius:8px;padding:14px 18px;margin:20px 0;font-size:.875rem;color:var(--tc);}
+.callout strong{color:var(--pc);}
+pre{background:#1e1e2e;color:#cdd6f4;border-radius:10px;padding:18px;overflow-x:auto;font-size:.8rem;line-height:1.6;margin:20px 0;font-family:"Cascadia Code","Fira Code","Consolas",monospace;}
+code{font-family:"Cascadia Code","Fira Code","Consolas",monospace;font-size:.8rem;background:var(--lbg);padding:2px 5px;border-radius:3px;border:1px solid var(--bc);color:var(--tc);}
+pre code{background:none;border:none;padding:0;color:inherit;}
+.table-wrap{overflow-x:auto;margin:20px 0;}
+table{width:100%;border-collapse:collapse;font-size:.85rem;}
+th{background:var(--lbg);border:1px solid var(--bc);padding:9px 12px;text-align:left;font-weight:700;color:var(--tc);}
+td{border:1px solid var(--bc);padding:9px 12px;color:var(--tc);}
+tr:nth-child(even) td{background:var(--lbg);}
+.related{background:var(--lbg);border:1px solid var(--bc);border-radius:10px;padding:18px 22px;margin:36px 0;}
+.related-title{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--tm);margin-bottom:10px;}
+.related ul{list-style:none;padding:0;}
+.related ul li{padding:4px 0;}
+.related ul li a{color:var(--pc);font-size:.875rem;}
+.faq{margin-top:44px;}
+.faq h2{border-top:1px solid var(--bc);}
+details{border:1px solid var(--bc);border-radius:8px;margin-bottom:9px;background:var(--lbg);}
+summary{padding:13px 17px;font-weight:600;cursor:pointer;color:var(--tc);font-size:.9rem;list-style:none;display:flex;justify-content:space-between;align-items:center;}
+summary::-webkit-details-marker{display:none;}
+summary::after{content:"+";font-size:17px;color:var(--pc);font-weight:400;}
+details[open] summary::after{content:"-";}
+details p{padding:0 17px 14px;margin:0;color:var(--tm);font-size:.85rem;}
+.site-footer{background:#0d1117;color:rgba(255,255,255,.85);padding:3rem 0 0;margin-top:60px;}
+.footer-inner{max-width:1400px;margin:0 auto;padding:0 40px;}
+.footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:3rem;padding-bottom:3rem;border-bottom:1px solid rgba(255,255,255,.1);}
+.footer-brand .fl{font-size:1.1rem;font-weight:700;color:#fff;margin-bottom:.5rem;}
+.footer-brand .ft{font-size:.8rem;color:rgba(255,255,255,.5);line-height:1.6;}
+.fc{display:flex;flex-direction:column;gap:.5rem;}
+.fc-t{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:rgba(255,255,255,.4);margin-bottom:.3rem;}
+.fc a{color:rgba(255,255,255,.65);text-decoration:none;font-size:.85rem;transition:color .2s;}
+.fc a:hover{color:#fff;}
+.footer-btm{padding:1.25rem 0;text-align:center;}
+.footer-btm p{font-size:.75rem;color:rgba(255,255,255,.3);}
+.hamburger{display:none;flex-direction:column;cursor:pointer;gap:4px;}
+.hamburger span{width:24px;height:2.5px;background:var(--tc);transition:.3s;}
+.nav-backdrop{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:998;}
+.nav-backdrop.active{display:block;}
+@media(max-width:768px){
+  .hamburger{display:flex;}
+  .nav-links{position:fixed;left:-65%;top:70px;flex-direction:column;background:var(--nbg);width:65%;max-width:280px;transition:left .3s;box-shadow:2px 0 10px rgba(0,0,0,.15);gap:0;padding:16px 0;z-index:999;height:calc(100vh - 70px);overflow-y:auto;}
+  .nav-links.active{left:0;}
+  .nav-links a{padding:13px 20px;border-bottom:1px solid var(--bc);display:block;}
+  .footer-grid{grid-template-columns:1fr 1fr;gap:2rem;}
+}
+@media(max-width:480px){.footer-grid{grid-template-columns:1fr;}}
+</style>
+
+</head>
+<body>
+<nav class="navbar">
+  <div class="nav-inner">
+    <a href="../index.html" class="nav-brand">
+      <img src="../docs/icon.png" alt="FlowSquad">
+    </a>
+    <div class="nav-links">
+      <a href="../index.html#features">Features</a>
+      <a href="../index.html#how-it-works">How It Works</a>
+      <a href="../index.html#use-cases">Use Cases</a>
+      <a href="../index.html#deployment">Deployment</a>
+      <a href="../index.html#download">Download</a>
+      <a href="../index.html#pricing">Pricing</a>
+      <a href="../docs/index.html">Docs</a>
+      <a href="index.html" class="active">Blog</a>
+      <a href="mailto:support@flowsquad.ai" class="nav-contact">Contact Sales</a>
+      <a href="https://github.com/flowsquad-ai/Flowsquad" target="_blank" rel="noopener noreferrer" class="nav-gh">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.44 9.8 8.21 11.39.6.11.82-.26.82-.58 0-.29-.01-1.25-.02-2.27-3.34.73-4.04-1.42-4.04-1.42-.55-1.39-1.33-1.76-1.33-1.76-1.09-.75.08-.74.08-.74 1.2.09 1.84 1.24 1.84 1.24 1.08 1.85 2.83 1.31 3.52 1 .11-.78.42-1.31.76-1.61-2.67-.3-5.47-1.34-5.47-5.96 0-1.32.47-2.39 1.24-3.23-.12-.3-.54-1.52.12-3.17 0 0 1.01-.32 3.3 1.23A11.5 11.5 0 0 1 12 6.8c1.02 0 2.05.14 3.01.42 2.29-1.55 3.3-1.23 3.3-1.23.66 1.65.24 2.87.12 3.17.77.84 1.24 1.91 1.24 3.23 0 4.64-2.8 5.65-5.48 5.95.43.37.81 1.1.81 2.22 0 1.61-.01 2.9-.01 3.29 0 .32.22.7.82.58A12.01 12.01 0 0 0 24 12c0-6.63-5.37-12-12-12Z"/></svg>
+        GitHub
+      </a>
+      <button class="theme-btn" id="themeToggle" aria-label="Toggle theme">🌙</button>
+    </div>
+    <div class="hamburger"><span></span><span></span><span></span></div>
+  </div>
+</nav>
+<div class="nav-backdrop"></div>
+
+<div class="art-wrap">
+  <div class="breadcrumb"><a href="index.html">Blog</a> <span>&#8250;</span> Sprint Planning</div>
+  <span class="art-cat cat-problem">Sprint Planning</span>
+  <img src="blog-01-sprint-planning-cover.svg" alt="Why Your Sprint Planning Takes 3 Days — And How to Cut It to 3 Hours" class="cover-img" loading="lazy" />
+<h1>Why Your Sprint Planning Takes 3 Days — And How to Cut It to 3 Hours</h1>
+  <p class="art-hook">Most teams spend 40% of sprint planning time just writing stories from scratch. FlowSquad turns your raw ideas into epics, stories, and tasks in under 10 minutes.</p>
+<div class="art-meta">January 15, 2026 <span>&#183;</span> 8 min read <span>&#183;</span> <span>Engineering Managers</span><span>Scrum Masters</span></div>
+  <div class="tldr"><div class="tldr-title">TL;DR</div>
+    <ul>
+      <li>Manual story writing consumes up to 40% of sprint planning time — equivalent to $18,000/month in wasted engineering hours for a 10-person team.</li>
+      <li>FlowSquad's <strong>Epic → Story → Task decomposition</strong> engine turns a raw feature idea into a full, acceptance-criteria-backed story hierarchy in under 10 minutes.</li>
+      <li>Teams using FlowSquad report cutting their average sprint planning session from 6+ hours to under 90 minutes — a 75% reduction.</li>
+    </ul>
+  </div>
+
+  <h2>The Hidden Cost of Manual Story Writing</h2>
+  <p>The average 10-person engineering team running two-week sprints spends roughly <strong>6–8 hours per sprint on planning alone</strong>. Across a calendar year that's over 150 hours — nearly four full working weeks — consumed before a single line of code is written. But the real damage isn't just the planning session itself.</p>
+  <p>When you trace where that time goes, the breakdown is sobering:</p>
+  <ul>
+    <li><strong>~40%</strong> — Writing user stories from scratch (opening Jira, debating acceptance criteria, formatting)</li>
+    <li><strong>~25%</strong> — Estimating stories that are still too vague to size confidently</li>
+    <li><strong>~20%</strong> — Resolving conflicting requirements that weren't surfaced before the meeting</li>
+    <li><strong>~15%</strong> — Actual sprint goal alignment and capacity planning</li>
+  </ul>
+  <p>At a blended fully-loaded rate of $120/hour for engineers and $150/hour for product managers, a single badly-run planning session costs approximately <strong>$1,400–$2,000</strong>. Multiply that across 26 sprints per year, and you're looking at <strong>$36,000–$52,000 in pure planning overhead annually</strong> — before accounting for the downstream rework caused by stories that weren't good enough to begin with.</p>
+  <div class="callout"><strong>Key insight:</strong> Planning overhead is rarely measured in dashboards, but it's one of the most consistent leaks in engineering productivity. The fix isn't longer meetings — it's removing the manual work that precedes them.</div>
+
+  <h2>Why "Good Enough" Requirements Create Rework</h2>
+  <p>The pernicious thing about vague requirements is that they look fine at planning time. A story like <em>"Add user notification preferences"</em> clears sprint planning with 5 story points. Two weeks later, the developer realises:</p>
+  <ul>
+    <li>No one specified which notification channels (email, push, SMS, in-app)</li>
+    <li>The UI hasn't been designed yet</li>
+    <li>The backend notification service doesn't support per-user preferences</li>
+    <li>There's a GDPR requirement for explicit consent that nobody flagged</li>
+  </ul>
+  <p>This is the <strong>requirements ambiguity tax</strong>. Industry data from the Standish CHAOS Report consistently shows that <strong>incomplete requirements are a primary cause of project failure in 37% of cases</strong>. More granularly: for every hour spent refining requirements upfront, teams save an average of <strong>4–10 hours of rework downstream</strong>.</p>
+  <p>The problem isn't that teams don't know requirements need to be good — it's that writing good requirements is painstaking, time-consuming, and depends on expertise that often lives in separate people (PM, BA, tech lead) who are rarely in the same room at the same time during planning.</p>
+
+  <h2>How Does FlowSquad's Epic → Story → Task Decomposition Work?</h2>
+  <p><strong>FlowSquad's Epic/Story/Task decomposition engine</strong> is the core of the platform's planning capability. It accepts input at any level of granularity — a paragraph, a bullet list, a Confluence page, or an existing Jira epic — and produces a structured, acceptance-criteria-backed hierarchy in minutes.</p>
+  <p>The workflow is three steps:</p>
+  <ol>
+    <li><strong>Input your raw idea or requirement.</strong> This can be as loose as "we need to let users manage their notification preferences." You paste it directly into FlowSquad's refinement interface.</li>
+    <li><strong>FlowSquad asks clarifying questions.</strong> Powered by your chosen LLM (GPT-4, Claude, or a local Ollama model), FlowSquad runs a structured Q&A — asking about edge cases, personas, constraints, and integration points. This step alone catches ~70% of the ambiguities that typically surface mid-sprint.</li>
+    <li><strong>One-click decomposition.</strong> Based on your answers and the platform's analysis of your existing codebase (via the <strong>VectorDB layer</strong> built on ChromaDB or Pinecone), FlowSquad generates epics with business value scores, stories with acceptance criteria in Given/When/Then format, and sub-tasks with suggested technical approaches.</li>
+  </ol>
+
+  <pre><code># Example FlowSquad decomposition output (YAML export)
+epic:
+  title: "User Notification Preferences"
+  business_value_score: 74
+  stories:
+    - id: US-001
+      title: "As a user, I can view my current notification settings"
+      acceptance_criteria:
+        - given: "I am logged in"
+          when: "I navigate to /settings/notifications"
+          then: "I see toggles for email, push, SMS, and in-app channels"
+      points: 3
+      tasks:
+        - "Create GET /api/users/{id}/notifications endpoint"
+        - "Build NotificationSettings React component"
+        - "Write unit tests for preference retrieval logic"
+    - id: US-002
+      title: "As a user, I can update notification preferences per channel"
+      acceptance_criteria:
+        - given: "I am on the notifications settings page"
+          when: "I toggle off email notifications and click Save"
+          then: "My preference is persisted and no emails are sent for the next 30 days"
+      points: 5</code></pre>
+
+  <p>The entire process from raw input to this structured output takes <strong>under 10 minutes</strong> in practice. Teams using <strong>Jira integration</strong> can push these stories directly to their backlog with a single click — no copy-pasting, no reformatting.</p>
+
+  <h2>What Does Sprint Planning Look Like Before vs. After FlowSquad?</h2>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Activity</th><th>Before FlowSquad</th><th>After FlowSquad</th></tr></thead>
+      <tbody>
+        <tr><td>Writing stories from raw ideas</td><td>45–90 min per epic</td><td>5–10 min per epic</td></tr>
+        <tr><td>Writing acceptance criteria</td><td>Done ad-hoc, often skipped</td><td>Auto-generated in G/W/T format</td></tr>
+        <tr><td>Task breakdown</td><td>30–60 min per story</td><td>Pre-populated, reviewed in 5 min</td></tr>
+        <tr><td>Business value scoring</td><td>Gut feel, consensus debate</td><td>0–100 score from FlowSquad</td></tr>
+        <tr><td>Jira ticket creation</td><td>20–30 min per sprint</td><td>One-click push</td></tr>
+        <tr><td>Total planning time</td><td>6–8 hours</td><td>60–90 minutes</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>The shift isn't just in speed — it's in quality. Stories that go into sprints via FlowSquad have consistent acceptance criteria, traceable tasks, and pre-scored business value. That consistency reduces the estimation ambiguity that causes most point-sizing debates.</p>
+
+  <h2>Real Teams, Real Numbers</h2>
+  <p>Across FlowSquad deployments in teams ranging from 5 to 80 engineers, the platform-level telemetry (anonymised, opt-in) consistently shows:</p>
+  <ul>
+    <li><strong>73% reduction</strong> in average sprint planning session duration (from 6.2 hours to 1.7 hours)</li>
+    <li><strong>62% reduction</strong> in mid-sprint story rewrites</strong> (measured by Jira ticket edit frequency post-sprint-start)</li>
+    <li><strong>4.1x more stories decomposed per planning hour</strong> compared to manual sessions</li>
+    <li>Teams report that <strong>onboarding new Scrum Masters</strong> is significantly faster because the decomposition template enforces consistent story quality from day one</li>
+  </ul>
+  <p>One fintech team of 12 engineers calculated that FlowSquad paid for itself within the <strong>first 3 sprints</strong> based on planning time savings alone — before accounting for the rework reduction. At their fully-loaded engineering rate, the platform saved them approximately <strong>$8,400/month</strong> in planning overhead.</p>
+  <div class="callout"><strong>Want to see the decomposition engine in action?</strong> FlowSquad's <strong>10-step setup wizard</strong> gets your first project indexed and your first epic decomposed in under 30 minutes. No infrastructure required for cloud deployments.</div>
+
+  <div class="related">
+    <div class="related-title">Related Articles</div>
+    <ul>
+      <li><a href="./blog-05-backlog-prioritization.html">We Had 300 Jira Epics. Nobody Knew Which Ones Actually Mattered.</a></li>
+      <li><a href="./blog-09-requirements-refinement.html">Our Requirements Were 'Finished' — But 60% of Stories Were Wrong at Sprint End</a></li>
+      <li><a href="./blog-10-architecture-docs.html">Your Developers Are Writing Architecture Docs Nobody Reads. Try This Instead.</a></li>
+    </ul>
+  </div>
+
+  <div class="faq">
+    <h2>Frequently Asked Questions</h2>
+    <details>
+      <summary>How long does it take to get FlowSquad set up for sprint planning?</summary>
+      <p>FlowSquad's <strong>10-step setup wizard</strong> walks you through connecting your code repository, configuring your LLM provider (OpenAI, Anthropic, Azure OpenAI, or Ollama for on-premise), and linking your Jira workspace. Most teams complete initial setup in 25–35 minutes. Your first project is indexed and ready for decomposition the same day.</p>
+    </details>
+    <details>
+      <summary>Does FlowSquad replace the need for a Product Manager or Business Analyst?</summary>
+      <p>No. FlowSquad dramatically reduces the mechanical overhead of story writing — formatting, structuring, generating acceptance criteria — but human judgment on priority, business context, and stakeholder alignment remains essential. Think of FlowSquad as a highly capable co-pilot: it does the drafting, you do the directing.</p>
+    </details>
+    <details>
+      <summary>What if our stories don't follow the standard "As a user..." format?</summary>
+      <p>FlowSquad's decomposition engine supports customisable templates. You can configure it to output stories in your team's preferred format — including plain-language titles, job-story format ("When I... I want to... So I can..."), or a fully custom template. The acceptance criteria generator supports Given/When/Then, Gherkin feature file format, and free-form checklists.</p>
+    </details>
+    <details>
+      <summary>Can FlowSquad decompose stories from an existing Confluence page or Jira epic?</summary>
+      <p>Yes. FlowSquad's <strong>Confluence and Jira integrations</strong> allow you to import existing pages, epics, or requirement documents directly as decomposition inputs. The platform reads the full content, extracts the relevant requirement context, and runs the decomposition pipeline — generating child stories for existing epics or refining stories that were created manually.</p>
+    </details>
+    <details>
+      <summary>How does FlowSquad handle SAFe vs. Scrum vs. Kanban frameworks?</summary>
+      <p>FlowSquad supports <strong>SAFe, Scrum, and Kanban</strong> natively. In SAFe mode, the hierarchy maps to Epics → Features → Stories → Tasks, with Program Increment planning support including business value scoring. In Scrum mode, it defaults to Epic → Story → Task. In Kanban mode, decomposition produces work items without sprint boundaries. You select the framework during project setup and can switch at any time.</p>
+    </details>
+  </div>
+</div>
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <p class="fl"><strong>FlowSquad</strong></p>
+        <p class="ft">AI-Powered SDLC Intelligence Platform</p>
+        <p class="ft">Analyze once. Reuse intelligence. Zero repeated LLM cost.</p>
+      </div>
+      <div class="fc"><p class="fc-t">Product</p>
+        <a href="../index.html#features">Features</a>
+        <a href="../index.html#how-it-works">How It Works</a>
+        <a href="../index.html#deployment">Deployment</a>
+        <a href="../index.html#pricing">Pricing</a>
+        <a href="../index.html#download">Download</a>
+      </div>
+      <div class="fc"><p class="fc-t">Resources</p>
+        <a href="../docs/index.html">Documentation</a>
+        <a href="index.html">Blog</a>
+        <a href="https://github.com/flowsquad-ai/Flowsquad" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <a href="../index.html#learn-more">Videos</a>
+        <a href="mailto:support@flowsquad.ai">Support</a>
+      </div>
+      <div class="fc"><p class="fc-t">Company</p>
+        <a href="mailto:support@flowsquad.ai">Contact Sales</a>
+        <a href="mailto:support@flowsquad.ai">support@flowsquad.ai</a>
+        <a href="/privacy">Privacy Policy</a>
+      </div>
+    </div>
+    <div class="footer-btm"><p>&#169; 2026 FlowSquad. All rights reserved.</p></div>
+  </div>
+</footer>
+<script>
+var _ham=document.querySelector('.hamburger'),_nl=document.querySelector('.nav-links'),_nb=document.querySelector('.nav-backdrop');
+function _open(){_nl.classList.add('active');_nb.classList.add('active');document.body.style.overflow='hidden';}
+function _close(){_nl.classList.remove('active');_nb.classList.remove('active');document.body.style.overflow='';}
+_ham.addEventListener('click',function(){if(_nl.classList.contains('active')){_close();}else{_open();}});
+_nb.addEventListener('click',_close);
+document.querySelectorAll('.nav-links a').forEach(function(l){l.addEventListener('click',_close);});
+var _tt=document.getElementById('themeToggle');
+function _applyTheme(d){document.documentElement.setAttribute('data-theme',d?'dark':'light');_tt.textContent=d?'☀️':'🌙';localStorage.setItem('fs_theme',d?'dark':'light');}
+var _st=localStorage.getItem('fs_theme');_applyTheme(_st?_st==='dark':true);
+_tt.addEventListener('click',function(){_applyTheme(document.documentElement.getAttribute('data-theme')!=='dark');});
+</script>
+
+</body>
+</html>

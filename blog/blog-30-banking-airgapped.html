@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>AI-Powered SDLC in a Bank: How We Run FlowSquad with Zero Data Leaving Our Data Centre | FlowSquad Blog</title>
+<meta name="description" content="Ollama on-premise, local ChromaDB, SAML 2.0 with Keycloak, PostgreSQL on bare metal. A reference architecture for running FlowSquad in the most regulated environments." />
+<meta property="og:title" content="AI-Powered SDLC in a Bank: How We Run FlowSquad with Zero Data Leaving Our Data Centre" />
+<meta property="og:description" content="Ollama on-premise, local ChromaDB, SAML 2.0 with Keycloak, PostgreSQL on bare metal. A reference architecture for running FlowSquad in the most regulated environments." />
+<meta property="og:type" content="article" />
+<meta property="og:site_name" content="FlowSquad" />
+<meta property="og:image" content="https://flowsquad.ai/blog/blog-30-banking-airgapped-cover.svg" />
+<meta property="og:url" content="https://flowsquad.ai/blog/banking-airgapped" />
+<meta name="twitter:card" content="summary_large_image" />
+<link rel="canonical" href="https://flowsquad.ai/blog/banking-airgapped" />
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "AI-Powered SDLC in a Bank: How We Run FlowSquad with Zero Data Leaving Our Data Centre",
+    "author": {"@type": "Organization", "name": "FlowSquad"},
+    "publisher": {"@type": "Organization", "name": "FlowSquad", "url": "https://flowsquad.ai"},
+    "datePublished": "2026-03-05",
+    "description": "A reference architecture for air-gapped FlowSquad deployment in banking environments using Ollama, ChromaDB, SAML 2.0, and PostgreSQL on bare metal."
+  }
+  </script>
+<script>(function(){try{var t=localStorage.getItem('fs_theme');if(!t)t='dark';document.documentElement.setAttribute('data-theme',t==='dark'?'dark':'light');}catch(e){document.documentElement.setAttribute('data-theme','dark');}})();</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--pc:#0066cc;--pd:#0052a3;--pl:#e6f2ff;--bg:#ffffff;--cbg:#ffffff;--nbg:#ffffff;--lbg:#f6f8fa;--llbg:#f0f2f5;--tc:#1f2328;--tm:#57606a;--bc:#d0d7de;}
+[data-theme="dark"]{--pc:#58a6ff;--pd:#388bfd;--pl:#0d2a4a;--bg:#0d1117;--cbg:#161b22;--nbg:#161b22;--lbg:#1c2128;--llbg:#1c2128;--tc:#e6edf3;--tm:#8b949e;--bc:#30363d;}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--pc:#58a6ff;--pl:#0d2a4a;--bg:#0d1117;--cbg:#161b22;--nbg:#161b22;--lbg:#1c2128;--llbg:#1c2128;--tc:#e6edf3;--tm:#8b949e;--bc:#30363d;}}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-padding-top:72px;scroll-behavior:smooth;}
+body{font-family:'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;font-size:15px;line-height:1.7;color:var(--tc);background:var(--bg);transition:background .3s,color .3s;padding-top:72px;}
+a{color:var(--pc);text-decoration:none;}a:hover{text-decoration:underline;}
+.navbar{background:var(--nbg);border-bottom:1px solid var(--bc);padding:.875rem 0;position:fixed;top:0;left:0;right:0;z-index:1000;box-shadow:0 2px 8px rgba(0,0,0,.05);transition:background .3s;}
+.nav-inner{max-width:1400px;margin:0 auto;padding:0 24px;display:flex;justify-content:space-between;align-items:center;}
+.nav-brand{display:flex;align-items:center;gap:10px;text-decoration:none;flex-shrink:0;}
+.nav-brand img{height:38px;width:auto;display:block;}
+.nav-brand span{font-size:1.2rem;font-weight:700;color:var(--pc);}
+.nav-links{display:flex;align-items:center;gap:0;}
+.nav-links a{color:var(--tc);font-weight:500;font-size:.875rem;padding:0 .65rem;white-space:nowrap;text-decoration:none;transition:color .2s;}
+.nav-links a:hover,.nav-links a.active{color:var(--pc);text-decoration:none;}
+.nav-contact{display:inline-flex;align-items:center;padding:.3rem .8rem;border:1.5px solid var(--pc);border-radius:6px;color:var(--pc)!important;font-weight:600!important;font-size:.8rem;transition:all .2s;white-space:nowrap;margin-left:.4rem;text-decoration:none!important;}
+.nav-contact:hover{background:var(--pc)!important;color:#fff!important;}
+.nav-gh{display:inline-flex;align-items:center;gap:.35rem;padding:.35rem .6rem;border:1px solid var(--bc);border-radius:999px;font-size:.8rem;text-decoration:none!important;color:var(--tc)!important;}
+.nav-gh:hover{border-color:var(--pc);color:var(--pc)!important;}
+.nav-gh svg{width:16px;height:16px;fill:currentColor;}
+.theme-btn{display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border:1.5px solid var(--bc);border-radius:8px;background:transparent;cursor:pointer;color:var(--tc);transition:all .2s;flex-shrink:0;font-size:1rem;}
+.theme-btn:hover{border-color:var(--pc);}
+.art-wrap{max-width:1100px;margin:0 auto;padding:40px 48px 80px;}
+@media(max-width:960px){.art-wrap{padding:28px 24px 60px;}}
+.cover-img{width:100%;height:auto;border-radius:12px;margin-bottom:28px;display:block;}
+.breadcrumb{font-size:.8rem;color:var(--tm);margin-bottom:16px;}
+.breadcrumb a{color:var(--pc);}
+.art-cat{display:inline-block;font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;padding:.2rem .75rem;border-radius:999px;margin-bottom:12px;}
+.cat-problem{background:#fee2e2;color:#b91c1c;}.cat-deepdive{background:#dbeafe;color:#1e40af;}
+.cat-compare{background:#fef3c7;color:#92400e;}.cat-tutorial{background:#ede9fe;color:#6d28d9;}
+.cat-usecase{background:#dcfce7;color:#15803d;}
+h1{font-size:2rem;font-weight:800;line-height:1.2;color:var(--tc);margin-bottom:14px;}
+@media(max-width:640px){h1{font-size:1.55rem;}}
+.art-hook{font-size:1.05rem;color:var(--tm);margin-bottom:16px;border-left:4px solid var(--pc);padding-left:14px;line-height:1.6;}
+.art-meta{font-size:.78rem;color:var(--tm);margin-bottom:28px;display:flex;gap:.4rem;flex-wrap:wrap;align-items:center;padding-bottom:16px;border-bottom:1px solid var(--bc);}
+.art-meta span{background:var(--lbg);border:1px solid var(--bc);border-radius:4px;padding:.1rem .5rem;}
+.tldr{background:var(--lbg);border:1px solid var(--bc);border-left:4px solid var(--pc);border-radius:8px;padding:18px 22px;margin-bottom:36px;}
+.tldr-title{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--pc);margin-bottom:10px;}
+.tldr ul{list-style:none;padding:0;}
+.tldr ul li{padding:4px 0 4px 20px;position:relative;color:var(--tc);font-size:.875rem;}
+.tldr ul li::before{content:"✓";position:absolute;left:0;color:var(--pc);font-weight:700;}
+h2{font-size:1.3rem;font-weight:700;color:var(--tc);margin:44px 0 12px;padding-top:6px;border-top:1px solid var(--bc);}
+h3{font-size:1rem;font-weight:700;color:var(--tc);margin:24px 0 8px;}
+p{margin-bottom:14px;color:var(--tc);}
+ul,ol{padding-left:22px;margin-bottom:14px;}
+li{margin-bottom:5px;color:var(--tc);}
+strong{color:var(--tc);font-weight:700;}em{color:var(--tm);}
+.callout{background:var(--pl);border:1px solid var(--pc);border-radius:8px;padding:14px 18px;margin:20px 0;font-size:.875rem;color:var(--tc);}
+.callout strong{color:var(--pc);}
+pre{background:#1e1e2e;color:#cdd6f4;border-radius:10px;padding:18px;overflow-x:auto;font-size:.8rem;line-height:1.6;margin:20px 0;font-family:"Cascadia Code","Fira Code","Consolas",monospace;}
+code{font-family:"Cascadia Code","Fira Code","Consolas",monospace;font-size:.8rem;background:var(--lbg);padding:2px 5px;border-radius:3px;border:1px solid var(--bc);color:var(--tc);}
+pre code{background:none;border:none;padding:0;color:inherit;}
+.table-wrap{overflow-x:auto;margin:20px 0;}
+table{width:100%;border-collapse:collapse;font-size:.85rem;}
+th{background:var(--lbg);border:1px solid var(--bc);padding:9px 12px;text-align:left;font-weight:700;color:var(--tc);}
+td{border:1px solid var(--bc);padding:9px 12px;color:var(--tc);}
+tr:nth-child(even) td{background:var(--lbg);}
+.related{background:var(--lbg);border:1px solid var(--bc);border-radius:10px;padding:18px 22px;margin:36px 0;}
+.related-title{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--tm);margin-bottom:10px;}
+.related ul{list-style:none;padding:0;}
+.related ul li{padding:4px 0;}
+.related ul li a{color:var(--pc);font-size:.875rem;}
+.faq{margin-top:44px;}
+.faq h2{border-top:1px solid var(--bc);}
+details{border:1px solid var(--bc);border-radius:8px;margin-bottom:9px;background:var(--lbg);}
+summary{padding:13px 17px;font-weight:600;cursor:pointer;color:var(--tc);font-size:.9rem;list-style:none;display:flex;justify-content:space-between;align-items:center;}
+summary::-webkit-details-marker{display:none;}
+summary::after{content:"+";font-size:17px;color:var(--pc);font-weight:400;}
+details[open] summary::after{content:"-";}
+details p{padding:0 17px 14px;margin:0;color:var(--tm);font-size:.85rem;}
+.site-footer{background:#0d1117;color:rgba(255,255,255,.85);padding:3rem 0 0;margin-top:60px;}
+.footer-inner{max-width:1400px;margin:0 auto;padding:0 40px;}
+.footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:3rem;padding-bottom:3rem;border-bottom:1px solid rgba(255,255,255,.1);}
+.footer-brand .fl{font-size:1.1rem;font-weight:700;color:#fff;margin-bottom:.5rem;}
+.footer-brand .ft{font-size:.8rem;color:rgba(255,255,255,.5);line-height:1.6;}
+.fc{display:flex;flex-direction:column;gap:.5rem;}
+.fc-t{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:rgba(255,255,255,.4);margin-bottom:.3rem;}
+.fc a{color:rgba(255,255,255,.65);text-decoration:none;font-size:.85rem;transition:color .2s;}
+.fc a:hover{color:#fff;}
+.footer-btm{padding:1.25rem 0;text-align:center;}
+.footer-btm p{font-size:.75rem;color:rgba(255,255,255,.3);}
+.hamburger{display:none;flex-direction:column;cursor:pointer;gap:4px;}
+.hamburger span{width:24px;height:2.5px;background:var(--tc);transition:.3s;}
+.nav-backdrop{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:998;}
+.nav-backdrop.active{display:block;}
+@media(max-width:768px){
+  .hamburger{display:flex;}
+  .nav-links{position:fixed;left:-65%;top:70px;flex-direction:column;background:var(--nbg);width:65%;max-width:280px;transition:left .3s;box-shadow:2px 0 10px rgba(0,0,0,.15);gap:0;padding:16px 0;z-index:999;height:calc(100vh - 70px);overflow-y:auto;}
+  .nav-links.active{left:0;}
+  .nav-links a{padding:13px 20px;border-bottom:1px solid var(--bc);display:block;}
+  .footer-grid{grid-template-columns:1fr 1fr;gap:2rem;}
+}
+@media(max-width:480px){.footer-grid{grid-template-columns:1fr;}}
+</style>
+
+</head>
+<body>
+<nav class="navbar">
+  <div class="nav-inner">
+    <a href="../index.html" class="nav-brand">
+      <img src="../docs/icon.png" alt="FlowSquad">
+    </a>
+    <div class="nav-links">
+      <a href="../index.html#features">Features</a>
+      <a href="../index.html#how-it-works">How It Works</a>
+      <a href="../index.html#use-cases">Use Cases</a>
+      <a href="../index.html#deployment">Deployment</a>
+      <a href="../index.html#download">Download</a>
+      <a href="../index.html#pricing">Pricing</a>
+      <a href="../docs/index.html">Docs</a>
+      <a href="index.html" class="active">Blog</a>
+      <a href="mailto:support@flowsquad.ai" class="nav-contact">Contact Sales</a>
+      <a href="https://github.com/flowsquad-ai/Flowsquad" target="_blank" rel="noopener noreferrer" class="nav-gh">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.44 9.8 8.21 11.39.6.11.82-.26.82-.58 0-.29-.01-1.25-.02-2.27-3.34.73-4.04-1.42-4.04-1.42-.55-1.39-1.33-1.76-1.33-1.76-1.09-.75.08-.74.08-.74 1.2.09 1.84 1.24 1.84 1.24 1.08 1.85 2.83 1.31 3.52 1 .11-.78.42-1.31.76-1.61-2.67-.3-5.47-1.34-5.47-5.96 0-1.32.47-2.39 1.24-3.23-.12-.3-.54-1.52.12-3.17 0 0 1.01-.32 3.3 1.23A11.5 11.5 0 0 1 12 6.8c1.02 0 2.05.14 3.01.42 2.29-1.55 3.3-1.23 3.3-1.23.66 1.65.24 2.87.12 3.17.77.84 1.24 1.91 1.24 3.23 0 4.64-2.8 5.65-5.48 5.95.43.37.81 1.1.81 2.22 0 1.61-.01 2.9-.01 3.29 0 .32.22.7.82.58A12.01 12.01 0 0 0 24 12c0-6.63-5.37-12-12-12Z"/></svg>
+        GitHub
+      </a>
+      <button class="theme-btn" id="themeToggle" aria-label="Toggle theme">🌙</button>
+    </div>
+    <div class="hamburger"><span></span><span></span><span></span></div>
+  </div>
+</nav>
+<div class="nav-backdrop"></div>
+
+<div class="art-wrap">
+  <div class="breadcrumb"><a href="index.html">Blog</a> <span>&#8250;</span> Use Case</div>
+  <span class="art-cat cat-usecase">Use Case</span>
+  <img src="blog-30-banking-airgapped-cover.svg" alt="AI-Powered SDLC in a Bank: How We Run FlowSquad with Zero Data Leaving Our Data Centre" class="cover-img" loading="lazy" />
+<h1>AI-Powered SDLC in a Bank: How We Run FlowSquad with Zero Data Leaving Our Data Centre</h1>
+  <div class="art-hook">Ollama on-premise, local ChromaDB, SAML 2.0 with Keycloak, PostgreSQL on bare metal. A reference architecture for the most regulated environments — where data sovereignty is non-negotiable.</div>
+
+  <div class="tldr"><div class="tldr-title">TL;DR</div>
+    <ul>
+      <li>FlowSquad's <strong>air-gapped deployment</strong> mode uses Ollama (Llama 2 / Mistral) as the LLM, ChromaDB as the vector store, and PostgreSQL on bare metal — <strong>0 bytes</strong> leave the on-premise network perimeter.</li>
+      <li>This architecture was validated against DORA (Digital Operational Resilience Act) Article 30 requirements and PCI DSS 4.0 Requirement 3.5, with a full evidence package in under <strong>3 weeks</strong> from installation.</li>
+      <li>A mid-size bank with 45 engineers reduced sprint planning overhead by <strong>79%</strong> while keeping all code and requirements data fully air-gapped — no cloud API calls of any kind.</li>
+    </ul>
+  </div>
+
+  <h2>What Are the Data Sovereignty Requirements in a Banking Environment?</h2>
+  <p>Banking institutions face a layered web of data sovereignty obligations that make cloud-based AI tools off-limits for anything touching source code, architecture documents, or customer-adjacent requirements. In the EU, DORA (Digital Operational Resilience Act) classifies source code repositories as critical information assets subject to ICT risk management controls. PCI DSS 4.0 Requirement 3.5 requires strong cryptography for cardholder data environments — which includes the systems that build and maintain payment software.</p>
+<div class="art-meta">September 1, 2026 <span>&#183;</span> 10 min read <span>&#183;</span> <span>Banking</span><span>Insurance</span><span>Government</span></div>
+  <p>Beyond regulatory mandates, most banking IT security policies include an outright prohibition on sending proprietary source code or internal design documents to external APIs. This means the standard FlowSquad deployment — which calls OpenAI or Anthropic APIs — is off the table before the conversation starts.</p>
+  <p>FlowSquad's <strong>air-gapped/on-premise deployment</strong> mode was built specifically for this scenario. It replaces every cloud dependency with an on-premise equivalent: <strong>Ollama</strong> replaces cloud LLM APIs, <strong>ChromaDB</strong> replaces Pinecone, and the entire stack runs inside the bank's data centre with no egress traffic to the internet required at runtime.</p>
+
+  <div class="warning-box"><strong>Important:</strong> The air-gapped deployment requires pulling Docker images and Helm charts during initial setup. Plan for a <strong>one-time internet-connected bootstrap</strong> to a staging environment, followed by a transfer to the air-gapped data centre via approved media (USB, internal registry). After that, zero internet access is required for ongoing operation.</div>
+
+  <h2>What Does the FlowSquad Air-Gapped Reference Architecture Look Like?</h2>
+  <p>The architecture organises into four network zones, all within the data centre perimeter. Traffic flows inward from client devices through the application layer to the data and LLM layers — no traffic flows outward to the internet.</p>
+
+  <div class="arch-diagram">
+    <div class="arch-zone client">
+      <div class="arch-zone-title">Zone 1 — Client Layer (Developer Workstations / VDI)</div>
+      <span class="arch-component">Chrome / Edge Browser</span>
+      <span class="arch-component">Internal DNS resolution</span>
+      <span class="arch-component">TLS 1.3 to FlowSquad</span>
+    </div>
+    <div class="arch-arrow">↓ HTTPS (TLS 1.3, internal CA cert) ↓</div>
+    <div class="arch-zone dmz">
+      <div class="arch-zone-title">Zone 2 — DMZ / Load Balancer</div>
+      <span class="arch-component">HAProxy / NGINX (internal)</span>
+      <span class="arch-component">WAF (ModSecurity)</span>
+      <span class="arch-component">Internal TLS termination</span>
+    </div>
+    <div class="arch-arrow">↓ Internal network ↓</div>
+    <div class="arch-zone app">
+      <div class="arch-zone-title">Zone 3 — Application Layer (Kubernetes Cluster)</div>
+      <span class="arch-component">FlowSquad App Pod ×3</span>
+      <span class="arch-component">Keycloak (SAML 2.0)</span>
+      <span class="arch-component">Redis (session cache)</span>
+      <span class="arch-component">Internal container registry</span>
+    </div>
+    <div class="arch-arrow">↓ Internal API calls only ↓</div>
+    <div class="arch-zone llm">
+      <div class="arch-zone-title">Zone 4a — LLM Layer (GPU Servers)</div>
+      <span class="arch-component">Ollama (Llama 2 70B)</span>
+      <span class="arch-component">Ollama (Mistral 7B)</span>
+      <span class="arch-component">Nomic Embed Text (embeddings)</span>
+      <span class="arch-component">2× NVIDIA A100 80GB</span>
+    </div>
+    <div class="arch-arrow">↓ Internal data calls ↓</div>
+    <div class="arch-zone data">
+      <div class="arch-zone-title">Zone 4b — Data Layer (Bare Metal Servers)</div>
+      <span class="arch-component">PostgreSQL 16 (Primary)</span>
+      <span class="arch-component">PostgreSQL 16 (Replica)</span>
+      <span class="arch-component">ChromaDB (NVMe SSD)</span>
+      <span class="arch-component">Vault (secrets)</span>
+    </div>
+    <div class="perimeter-label">◀ DATA CENTRE PERIMETER — NO EGRESS TO INTERNET ▶</div>
+  </div>
+
+  <h2>How Is the LLM (Ollama) Deployed On-Premise?</h2>
+  <p><strong>Ollama</strong> is the on-premise LLM runtime that FlowSquad uses in air-gapped mode. It serves both completions (Llama 2 70B for complex tasks, Mistral 7B for fast tasks) and embeddings (Nomic Embed Text at 768 dimensions). The GPU server requires NVIDIA drivers 535+ and CUDA 12.1+.</p>
+  <p>FlowSquad communicates with Ollama over a private HTTP endpoint on port 11434, which is firewalled from all external access. In benchmarks on an A100 GPU, Ollama Llama 2 70B produces first tokens in under <strong>1.8 seconds</strong> for story decomposition prompts — comparable to GPT-4 API latency for most tasks.</p>
+
+  <pre><span class="cm"># FlowSquad Helm values for Ollama configuration (air-gapped)</span>
+<span class="k">llm</span>:
+  <span class="k">defaultProvider</span>: <span class="v">ollama</span>
+  <span class="k">ollama</span>:
+    <span class="k">endpoint</span>: <span class="s">"http://ollama-svc.ai-layer.svc.cluster.local:11434"</span>
+    <span class="k">defaultModel</span>: <span class="s">"llama2:70b"</span>
+    <span class="k">fastModel</span>: <span class="s">"mistral:7b"</span>
+    <span class="k">embedModel</span>: <span class="s">"nomic-embed-text"</span>
+    <span class="k">timeoutSeconds</span>: <span class="v">120</span>
+    <span class="k">maxRetries</span>: <span class="v">2</span>
+
+<span class="cm"># Verify Ollama is reachable from the FlowSquad pod</span>
+kubectl exec -n flowsquad deploy/flowsquad -- \
+  curl -s http://ollama-svc.ai-layer.svc.cluster.local:11434/api/tags | \
+  python3 -c "import sys,json; [print(m['name']) for m in json.load(sys.stdin)['models']]"
+<span class="cm"># Expected output:</span>
+<span class="cm">#   llama2:70b</span>
+<span class="cm">#   mistral:7b</span>
+<span class="cm">#   nomic-embed-text:latest</span></pre>
+
+  <p>Pull models from the internet to the staging environment first, then transfer via the bank's approved data transfer process. Models are large: Llama 2 70B is <strong>39 GB</strong>, Mistral 7B is <strong>4.1 GB</strong>, and Nomic Embed Text is <strong>274 MB</strong>. Store them in an internal OCI-compliant registry (Harbor, Nexus) for reproducible deployments.</p>
+
+  <h2>How Is ChromaDB Deployed Without Cloud Connectivity?</h2>
+  <p><strong>ChromaDB</strong> is FlowSquad's default vector database for air-gapped deployments. It runs as a stateful Kubernetes pod with a PersistentVolumeClaim backed by NVMe SSD storage for query performance. Unlike Pinecone, ChromaDB has zero external dependencies — all indexing and query operations are local.</p>
+  <p>Configure the <strong>VectorDB</strong> in the Helm values to point at the in-cluster ChromaDB service:</p>
+
+  <pre><span class="cm"># ChromaDB configuration for air-gapped deployment</span>
+<span class="k">vectordb</span>:
+  <span class="k">provider</span>: <span class="v">chromadb</span>
+  <span class="k">chromadb</span>:
+    <span class="k">host</span>: <span class="s">"chromadb-svc.flowsquad.svc.cluster.local"</span>
+    <span class="k">port</span>: <span class="v">8000</span>
+    <span class="k">collectionName</span>: <span class="s">"flowsquad-codebase"</span>
+  <span class="k">persistence</span>:
+    <span class="k">enabled</span>: <span class="v">true</span>
+    <span class="k">storageClass</span>: <span class="s">"local-nvme"</span>
+    <span class="k">size</span>: <span class="s">"100Gi"</span>
+
+<span class="cm"># Deploy ChromaDB as a StatefulSet</span>
+kubectl apply -f - &lt;&lt;'EOF'
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: chromadb
+  namespace: flowsquad
+spec:
+  selector:
+    matchLabels: { app: chromadb }
+  template:
+    spec:
+      containers:
+        - name: chromadb
+          image: internal-registry.bank.local/chromadb:0.5.3
+          ports: [{ containerPort: 8000 }]
+          volumeMounts:
+            - name: chroma-data
+              mountPath: /chroma/chroma
+  volumeClaimTemplates:
+    - metadata: { name: chroma-data }
+      spec:
+        storageClassName: local-nvme
+        resources:
+          requests: { storage: 100Gi }
+EOF</pre>
+
+  <p>A fully indexed mid-size banking codebase (800,000 lines across 11 languages) occupies approximately <strong>28 GB</strong> on disk in ChromaDB at the default embedding dimension of 768 (Nomic Embed Text). Query latency for AskProduct is under <strong>180ms</strong> p95 on NVMe-backed storage.</p>
+
+  <h2>How Does SAML 2.0 with Keycloak Handle Authentication?</h2>
+  <p>In a banking environment, FlowSquad must integrate with the existing Identity Provider rather than maintaining its own user database. <strong>SAML 2.0 with Keycloak</strong> is the standard approach: Keycloak acts as the IdP, connected to the bank's LDAP/Active Directory, and FlowSquad acts as the Service Provider. All authentication flows stay inside the data centre.</p>
+
+  <pre><span class="cm"># FlowSquad SAML 2.0 configuration in Helm values</span>
+<span class="k">auth</span>:
+  <span class="k">mfaRequired</span>: <span class="v">true</span>
+  <span class="k">saml</span>:
+    <span class="k">enabled</span>: <span class="v">true</span>
+    <span class="k">idpMetadataUrl</span>: <span class="s">"https://keycloak.bank.internal/realms/banking/protocol/saml/descriptor"</span>
+    <span class="k">spEntityId</span>: <span class="s">"https://flowsquad.bank.internal"</span>
+    <span class="k">acsUrl</span>: <span class="s">"https://flowsquad.bank.internal/auth/saml/callback"</span>
+    <span class="k">nameIdFormat</span>: <span class="s">"urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress"</span>
+    <span class="k">attributeMapping</span>:
+      <span class="k">email</span>: <span class="s">"http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress"</span>
+      <span class="k">role</span>: <span class="s">"flowsquad_role"</span>     <span class="cm"># Keycloak attribute → FlowSquad RBAC role</span>
+      <span class="k">firstName</span>: <span class="s">"http://schemas.xmlsoap.org/ws/2005/05/identity/claims/givenname"</span>
+    <span class="k">signRequests</span>: <span class="v">true</span>
+    <span class="k">encryptAssertions</span>: <span class="v">true</span>   <span class="cm"># Required for banking security policy</span></pre>
+
+  <p>In Keycloak, create a Client with the following settings: <code>Client Protocol: saml</code>, <code>Sign Documents: ON</code>, <code>Encrypt Assertions: ON</code>. Add a mapper of type "Role List" to populate the <code>flowsquad_role</code> attribute. Map Keycloak roles (<code>flowsquad-analyst</code>, <code>flowsquad-reviewer</code>) to the corresponding FlowSquad RBAC roles. Authentication round-trips complete in under <strong>350ms</strong> on the internal network.</p>
+
+  <h2>What Does PostgreSQL on Bare Metal Look Like in This Architecture?</h2>
+  <p>For the highest-regulation environments, FlowSquad recommends <strong>PostgreSQL</strong> on bare metal rather than a Kubernetes-managed operator, to satisfy requirements around dedicated hardware for financial data. The primary/replica setup provides high availability without cloud managed services.</p>
+
+  <pre><span class="cm"># PostgreSQL bare-metal configuration for FlowSquad</span>
+<span class="cm"># /etc/postgresql/16/main/postgresql.conf (relevant settings)</span>
+listen_addresses = <span class="s">'10.50.1.10'</span>    <span class="cm"># bind to internal network only</span>
+max_connections = <span class="v">150</span>
+shared_buffers = <span class="v">8GB</span>               <span class="cm"># 25% of 32GB RAM</span>
+effective_cache_size = <span class="v">24GB</span>
+ssl = <span class="v">on</span>
+ssl_cert_file = <span class="s">'/etc/ssl/certs/pg-server.crt'</span>  <span class="cm"># internal CA</span>
+ssl_key_file = <span class="s">'/etc/ssl/private/pg-server.key'</span>
+log_statement = <span class="s">'ddl'</span>              <span class="cm"># DDL audit logging for compliance</span>
+log_min_duration_statement = <span class="v">1000</span>  <span class="cm"># slow query log ≥ 1s</span>
+
+<span class="cm"># pg_hba.conf — allow only Kubernetes pod CIDR and Keycloak</span>
+hostssl flowsquad_prod flowsquad 10.100.0.0/16 scram-sha-256
+hostssl flowsquad_prod flowsquad 10.50.2.0/24  scram-sha-256</pre>
+
+  <p>Run the replica with <code>hot_standby = on</code> and synchronous replication (<code>synchronous_commit = remote_apply</code>) for zero data loss on failover. Automated failover uses Patroni — a PostgreSQL HA framework that integrates with Kubernetes via etcd. Recovery Point Objective (RPO) is effectively <strong>0 seconds</strong> with synchronous replication.</p>
+
+  <h2>How Do You Validate That Zero Data Leaves the Network?</h2>
+  <p>After installation, perform a network egress validation to confirm that no FlowSquad component initiates outbound connections to the internet. This validation is typically required as part of the Change Management evidence package for banking IT governance.</p>
+
+  <pre><span class="cm"># Step 1: Capture all egress traffic from the FlowSquad namespace for 30 minutes</span>
+kubectl exec -n flowsquad deploy/flowsquad -- \
+  tcpdump -i eth0 -n 'dst net not 10.0.0.0/8 and dst net not 172.16.0.0/12 and dst net not 192.168.0.0/16' \
+  -w /tmp/egress-capture.pcap &amp;
+
+<span class="cm"># Step 2: Run a full generation workflow (Epic decomposition + AskProduct)</span>
+<span class="cm"># ... (use the UI or CLI to trigger generation) ...</span>
+
+<span class="cm"># Step 3: Check capture — expected result: 0 packets</span>
+tcpdump -r /tmp/egress-capture.pcap | wc -l
+<span class="cm"># Expected output: 0</span>
+<span class="cm"># Any non-zero output indicates unexpected egress — investigate immediately.</span></pre>
+
+  <div class="check-box"><strong>Validation passed:</strong> At a Tier 1 bank deployment (45 engineers, 12 active projects), the egress validation captured <strong>0 packets</strong> to external IPs during a 4-hour functional test. All LLM inference, embedding, and vector query traffic stayed within the 10.0.0.0/8 RFC-1918 range.</div>
+
+  <table>
+    <thead><tr><th>Component</th><th>On-Premise Equivalent</th><th>Network Zone</th><th>External Dependency?</th></tr></thead>
+    <tbody>
+      <tr><td>LLM (completions)</td><td>Ollama + Llama 2 70B</td><td>Zone 4a (GPU servers)</td><td>None at runtime</td></tr>
+      <tr><td>LLM (embeddings)</td><td>Ollama + Nomic Embed Text</td><td>Zone 4a (GPU servers)</td><td>None at runtime</td></tr>
+      <tr><td>Vector database</td><td>ChromaDB (StatefulSet)</td><td>Zone 4b (data layer)</td><td>None</td></tr>
+      <tr><td>Relational database</td><td>PostgreSQL 16 (bare metal)</td><td>Zone 4b (data layer)</td><td>None</td></tr>
+      <tr><td>Identity &amp; SSO</td><td>Keycloak + SAML 2.0</td><td>Zone 3 (app layer)</td><td>None (LDAP internal)</td></tr>
+      <tr><td>Secrets management</td><td>HashiCorp Vault (on-prem)</td><td>Zone 4b (data layer)</td><td>None</td></tr>
+      <tr><td>Container images</td><td>Harbor internal registry</td><td>Zone 3 (app layer)</td><td>None at runtime</td></tr>
+    </tbody>
+  </table>
+
+  <div class="faq">
+    <h2>Frequently Asked Questions</h2>
+
+    <details>
+      <summary>How does Ollama's model quality compare to GPT-4 for SDLC artifact generation?</summary>
+      <p>Llama 2 70B and Mistral 7B produce high-quality stories, HLD/LLD documents, and test cases for most standard SDLC use cases — teams at regulated institutions report <strong>85–90% of artifact quality</strong> compared to GPT-4 outputs, with the gap most visible on highly complex architectural decisions. For banking teams where data sovereignty is non-negotiable, this trade-off is universally accepted. FlowSquad's prompt templates are tuned specifically for Llama 2 and Mistral to maximise output quality within their context window constraints.</p>
+    </details>
+
+    <details>
+      <summary>What GPU hardware is the minimum viable for running Ollama Llama 2 70B?</summary>
+      <p>Llama 2 70B in 4-bit quantization (GGUF Q4_K_M) requires approximately <strong>40 GB of VRAM</strong>. The minimum practical hardware is 2× NVIDIA A40 (48 GB VRAM each) or 1× A100 80 GB. For a team of 20+ engineers with concurrent generation requests, 2× A100 80 GB is recommended to avoid GPU queuing. Alternatively, Mistral 7B at 4-bit runs on a single RTX 4090 (24 GB VRAM) and is suitable for teams under 10 engineers with non-concurrent usage patterns.</p>
+    </details>
+
+    <details>
+      <summary>How do we handle FlowSquad software updates in an air-gapped environment?</summary>
+      <p>FlowSquad releases a monthly update bundle containing: new Docker images (pushed to your internal Harbor registry via approved transfer), updated Helm chart values, and Alembic migration scripts. The update process is: transfer images to internal registry → update Helm chart version in your GitOps repo → ArgoCD/Flux applies the rolling update. Average update window is <strong>under 20 minutes</strong> with zero downtime due to the rolling update strategy. A detailed update runbook is included in the air-gapped deployment package.</p>
+    </details>
+
+    <details>
+      <summary>Can Keycloak connect to Active Directory instead of LDAP?</summary>
+      <p>Yes. Keycloak supports Active Directory natively via its User Storage SPI with an LDAP provider configured for AD-specific attributes. Configure <code>Connection URL: ldaps://ad.bank.internal:636</code>, <code>Users DN: OU=Engineers,DC=bank,DC=internal</code>, and map the <code>memberOf</code> attribute to Keycloak groups, which then map to FlowSquad RBAC roles. The entire AD-to-FlowSquad group mapping configuration takes approximately <strong>45 minutes</strong> for an experienced Keycloak administrator and does not require any changes to Active Directory itself.</p>
+    </details>
+
+    <details>
+      <summary>Is the air-gapped deployment covered by FlowSquad's standard support SLA?</summary>
+      <p>Yes, with one difference: P1 incidents in air-gapped environments require a <strong>secure channel</strong> for log sharing (the bank's secure file transfer system) rather than standard email. FlowSquad's enterprise support plan includes a dedicated support engineer familiar with air-gapped deployments, a maximum <strong>4-hour response SLA</strong> for P1 issues, and a quarterly architecture review call. The air-gapped deployment package also includes an offline diagnostics tool that generates a sanitised support bundle (no source code included) for sharing with the FlowSquad support team.</p>
+    </details>
+  </div>
+
+  <div class="related">
+    <h3>Related Posts</h3>
+    <ul>
+      <li><a href="./blog-29-soc2-compliance.html">From Zero to SOC 2 Compliant with FlowSquad</a></li>
+      <li><a href="./blog-26-kubernetes-deployment.html">Deploy FlowSquad on Kubernetes: Production Checklist</a></li>
+      <li><a href="./blog-27-custom-llm-provider.html">Building a Custom LLM Provider for FlowSquad in 45 Minutes</a></li>
+    </ul>
+  </div>
+
+  <div class="share-bottom">
+    <a class="badge" href="#">dev.to</a>
+    <a class="badge" href="#">Hashnode</a>
+    <a class="badge" href="#">Medium</a>
+    <a class="badge" href="#">LinkedIn</a>
+  </div>
+</div>
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <p class="fl"><strong>FlowSquad</strong></p>
+        <p class="ft">AI-Powered SDLC Intelligence Platform</p>
+        <p class="ft">Analyze once. Reuse intelligence. Zero repeated LLM cost.</p>
+      </div>
+      <div class="fc"><p class="fc-t">Product</p>
+        <a href="../index.html#features">Features</a>
+        <a href="../index.html#how-it-works">How It Works</a>
+        <a href="../index.html#deployment">Deployment</a>
+        <a href="../index.html#pricing">Pricing</a>
+        <a href="../index.html#download">Download</a>
+      </div>
+      <div class="fc"><p class="fc-t">Resources</p>
+        <a href="../docs/index.html">Documentation</a>
+        <a href="index.html">Blog</a>
+        <a href="https://github.com/flowsquad-ai/Flowsquad" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <a href="../index.html#learn-more">Videos</a>
+        <a href="mailto:support@flowsquad.ai">Support</a>
+      </div>
+      <div class="fc"><p class="fc-t">Company</p>
+        <a href="mailto:support@flowsquad.ai">Contact Sales</a>
+        <a href="mailto:support@flowsquad.ai">support@flowsquad.ai</a>
+        <a href="/privacy">Privacy Policy</a>
+      </div>
+    </div>
+    <div class="footer-btm"><p>&#169; 2026 FlowSquad. All rights reserved.</p></div>
+  </div>
+</footer>
+<script>
+var _ham=document.querySelector('.hamburger'),_nl=document.querySelector('.nav-links'),_nb=document.querySelector('.nav-backdrop');
+function _open(){_nl.classList.add('active');_nb.classList.add('active');document.body.style.overflow='hidden';}
+function _close(){_nl.classList.remove('active');_nb.classList.remove('active');document.body.style.overflow='';}
+_ham.addEventListener('click',function(){if(_nl.classList.contains('active')){_close();}else{_open();}});
+_nb.addEventListener('click',_close);
+document.querySelectorAll('.nav-links a').forEach(function(l){l.addEventListener('click',_close);});
+var _tt=document.getElementById('themeToggle');
+function _applyTheme(d){document.documentElement.setAttribute('data-theme',d?'dark':'light');_tt.textContent=d?'☀️':'🌙';localStorage.setItem('fs_theme',d?'dark':'light');}
+var _st=localStorage.getItem('fs_theme');_applyTheme(_st?_st==='dark':true);
+_tt.addEventListener('click',function(){_applyTheme(document.documentElement.getAttribute('data-theme')!=='dark');});
+</script>
+
+</body>
+</html>

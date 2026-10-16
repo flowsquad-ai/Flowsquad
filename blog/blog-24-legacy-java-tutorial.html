@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Step-by-Step: Analyze a Legacy Java Codebase and Generate a Full SDLC Plan in 30 Minutes | FlowSquad Blog</title>
+<meta name="description" content="Clone → Analyze → Refine → Epics → Stories → Design → Test Cases. A complete FlowSquad walkthrough with a real open-source Java project." />
+<meta property="og:title" content="Step-by-Step: Analyze a Legacy Java Codebase and Generate a Full SDLC Plan in 30 Minutes" />
+<meta property="og:description" content="Clone → Analyze → Refine → Epics → Stories → Design → Test Cases. A complete FlowSquad walkthrough with a real open-source Java project." />
+<meta property="og:type" content="article" />
+<meta property="og:site_name" content="FlowSquad" />
+<meta property="og:image" content="https://flowsquad.ai/blog/blog-24-legacy-java-tutorial-cover.svg" />
+<meta property="og:url" content="https://flowsquad.ai/blog/legacy-java-codebase-sdlc-plan-tutorial" />
+<meta name="twitter:card" content="summary_large_image" />
+<link rel="canonical" href="https://flowsquad.ai/blog/legacy-java-codebase-sdlc-plan-tutorial" />
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "Step-by-Step: Analyze a Legacy Java Codebase and Generate a Full SDLC Plan in 30 Minutes",
+    "author": {"@type": "Organization", "name": "FlowSquad"},
+    "publisher": {"@type": "Organization", "name": "FlowSquad", "url": "https://flowsquad.ai"},
+    "datePublished": "2026-01-24",
+    "description": "A complete tutorial for analyzing a Java codebase with FlowSquad and generating a full SDLC plan including epics, stories, design docs, and test cases."
+  }
+  </script>
+<script>(function(){try{var t=localStorage.getItem('fs_theme');if(!t)t='dark';document.documentElement.setAttribute('data-theme',t==='dark'?'dark':'light');}catch(e){document.documentElement.setAttribute('data-theme','dark');}})();</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--pc:#0066cc;--pd:#0052a3;--pl:#e6f2ff;--bg:#ffffff;--cbg:#ffffff;--nbg:#ffffff;--lbg:#f6f8fa;--llbg:#f0f2f5;--tc:#1f2328;--tm:#57606a;--bc:#d0d7de;}
+[data-theme="dark"]{--pc:#58a6ff;--pd:#388bfd;--pl:#0d2a4a;--bg:#0d1117;--cbg:#161b22;--nbg:#161b22;--lbg:#1c2128;--llbg:#1c2128;--tc:#e6edf3;--tm:#8b949e;--bc:#30363d;}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--pc:#58a6ff;--pl:#0d2a4a;--bg:#0d1117;--cbg:#161b22;--nbg:#161b22;--lbg:#1c2128;--llbg:#1c2128;--tc:#e6edf3;--tm:#8b949e;--bc:#30363d;}}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-padding-top:72px;scroll-behavior:smooth;}
+body{font-family:'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;font-size:15px;line-height:1.7;color:var(--tc);background:var(--bg);transition:background .3s,color .3s;padding-top:72px;}
+a{color:var(--pc);text-decoration:none;}a:hover{text-decoration:underline;}
+.navbar{background:var(--nbg);border-bottom:1px solid var(--bc);padding:.875rem 0;position:fixed;top:0;left:0;right:0;z-index:1000;box-shadow:0 2px 8px rgba(0,0,0,.05);transition:background .3s;}
+.nav-inner{max-width:1400px;margin:0 auto;padding:0 24px;display:flex;justify-content:space-between;align-items:center;}
+.nav-brand{display:flex;align-items:center;gap:10px;text-decoration:none;flex-shrink:0;}
+.nav-brand img{height:38px;width:auto;display:block;}
+.nav-brand span{font-size:1.2rem;font-weight:700;color:var(--pc);}
+.nav-links{display:flex;align-items:center;gap:0;}
+.nav-links a{color:var(--tc);font-weight:500;font-size:.875rem;padding:0 .65rem;white-space:nowrap;text-decoration:none;transition:color .2s;}
+.nav-links a:hover,.nav-links a.active{color:var(--pc);text-decoration:none;}
+.nav-contact{display:inline-flex;align-items:center;padding:.3rem .8rem;border:1.5px solid var(--pc);border-radius:6px;color:var(--pc)!important;font-weight:600!important;font-size:.8rem;transition:all .2s;white-space:nowrap;margin-left:.4rem;text-decoration:none!important;}
+.nav-contact:hover{background:var(--pc)!important;color:#fff!important;}
+.nav-gh{display:inline-flex;align-items:center;gap:.35rem;padding:.35rem .6rem;border:1px solid var(--bc);border-radius:999px;font-size:.8rem;text-decoration:none!important;color:var(--tc)!important;}
+.nav-gh:hover{border-color:var(--pc);color:var(--pc)!important;}
+.nav-gh svg{width:16px;height:16px;fill:currentColor;}
+.theme-btn{display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border:1.5px solid var(--bc);border-radius:8px;background:transparent;cursor:pointer;color:var(--tc);transition:all .2s;flex-shrink:0;font-size:1rem;}
+.theme-btn:hover{border-color:var(--pc);}
+.art-wrap{max-width:1100px;margin:0 auto;padding:40px 48px 80px;}
+@media(max-width:960px){.art-wrap{padding:28px 24px 60px;}}
+.cover-img{width:100%;height:auto;border-radius:12px;margin-bottom:28px;display:block;}
+.breadcrumb{font-size:.8rem;color:var(--tm);margin-bottom:16px;}
+.breadcrumb a{color:var(--pc);}
+.art-cat{display:inline-block;font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;padding:.2rem .75rem;border-radius:999px;margin-bottom:12px;}
+.cat-problem{background:#fee2e2;color:#b91c1c;}.cat-deepdive{background:#dbeafe;color:#1e40af;}
+.cat-compare{background:#fef3c7;color:#92400e;}.cat-tutorial{background:#ede9fe;color:#6d28d9;}
+.cat-usecase{background:#dcfce7;color:#15803d;}
+h1{font-size:2rem;font-weight:800;line-height:1.2;color:var(--tc);margin-bottom:14px;}
+@media(max-width:640px){h1{font-size:1.55rem;}}
+.art-hook{font-size:1.05rem;color:var(--tm);margin-bottom:16px;border-left:4px solid var(--pc);padding-left:14px;line-height:1.6;}
+.art-meta{font-size:.78rem;color:var(--tm);margin-bottom:28px;display:flex;gap:.4rem;flex-wrap:wrap;align-items:center;padding-bottom:16px;border-bottom:1px solid var(--bc);}
+.art-meta span{background:var(--lbg);border:1px solid var(--bc);border-radius:4px;padding:.1rem .5rem;}
+.tldr{background:var(--lbg);border:1px solid var(--bc);border-left:4px solid var(--pc);border-radius:8px;padding:18px 22px;margin-bottom:36px;}
+.tldr-title{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--pc);margin-bottom:10px;}
+.tldr ul{list-style:none;padding:0;}
+.tldr ul li{padding:4px 0 4px 20px;position:relative;color:var(--tc);font-size:.875rem;}
+.tldr ul li::before{content:"✓";position:absolute;left:0;color:var(--pc);font-weight:700;}
+h2{font-size:1.3rem;font-weight:700;color:var(--tc);margin:44px 0 12px;padding-top:6px;border-top:1px solid var(--bc);}
+h3{font-size:1rem;font-weight:700;color:var(--tc);margin:24px 0 8px;}
+p{margin-bottom:14px;color:var(--tc);}
+ul,ol{padding-left:22px;margin-bottom:14px;}
+li{margin-bottom:5px;color:var(--tc);}
+strong{color:var(--tc);font-weight:700;}em{color:var(--tm);}
+.callout{background:var(--pl);border:1px solid var(--pc);border-radius:8px;padding:14px 18px;margin:20px 0;font-size:.875rem;color:var(--tc);}
+.callout strong{color:var(--pc);}
+pre{background:#1e1e2e;color:#cdd6f4;border-radius:10px;padding:18px;overflow-x:auto;font-size:.8rem;line-height:1.6;margin:20px 0;font-family:"Cascadia Code","Fira Code","Consolas",monospace;}
+code{font-family:"Cascadia Code","Fira Code","Consolas",monospace;font-size:.8rem;background:var(--lbg);padding:2px 5px;border-radius:3px;border:1px solid var(--bc);color:var(--tc);}
+pre code{background:none;border:none;padding:0;color:inherit;}
+.table-wrap{overflow-x:auto;margin:20px 0;}
+table{width:100%;border-collapse:collapse;font-size:.85rem;}
+th{background:var(--lbg);border:1px solid var(--bc);padding:9px 12px;text-align:left;font-weight:700;color:var(--tc);}
+td{border:1px solid var(--bc);padding:9px 12px;color:var(--tc);}
+tr:nth-child(even) td{background:var(--lbg);}
+.related{background:var(--lbg);border:1px solid var(--bc);border-radius:10px;padding:18px 22px;margin:36px 0;}
+.related-title{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--tm);margin-bottom:10px;}
+.related ul{list-style:none;padding:0;}
+.related ul li{padding:4px 0;}
+.related ul li a{color:var(--pc);font-size:.875rem;}
+.faq{margin-top:44px;}
+.faq h2{border-top:1px solid var(--bc);}
+details{border:1px solid var(--bc);border-radius:8px;margin-bottom:9px;background:var(--lbg);}
+summary{padding:13px 17px;font-weight:600;cursor:pointer;color:var(--tc);font-size:.9rem;list-style:none;display:flex;justify-content:space-between;align-items:center;}
+summary::-webkit-details-marker{display:none;}
+summary::after{content:"+";font-size:17px;color:var(--pc);font-weight:400;}
+details[open] summary::after{content:"-";}
+details p{padding:0 17px 14px;margin:0;color:var(--tm);font-size:.85rem;}
+.site-footer{background:#0d1117;color:rgba(255,255,255,.85);padding:3rem 0 0;margin-top:60px;}
+.footer-inner{max-width:1400px;margin:0 auto;padding:0 40px;}
+.footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:3rem;padding-bottom:3rem;border-bottom:1px solid rgba(255,255,255,.1);}
+.footer-brand .fl{font-size:1.1rem;font-weight:700;color:#fff;margin-bottom:.5rem;}
+.footer-brand .ft{font-size:.8rem;color:rgba(255,255,255,.5);line-height:1.6;}
+.fc{display:flex;flex-direction:column;gap:.5rem;}
+.fc-t{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:rgba(255,255,255,.4);margin-bottom:.3rem;}
+.fc a{color:rgba(255,255,255,.65);text-decoration:none;font-size:.85rem;transition:color .2s;}
+.fc a:hover{color:#fff;}
+.footer-btm{padding:1.25rem 0;text-align:center;}
+.footer-btm p{font-size:.75rem;color:rgba(255,255,255,.3);}
+.hamburger{display:none;flex-direction:column;cursor:pointer;gap:4px;}
+.hamburger span{width:24px;height:2.5px;background:var(--tc);transition:.3s;}
+.nav-backdrop{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:998;}
+.nav-backdrop.active{display:block;}
+@media(max-width:768px){
+  .hamburger{display:flex;}
+  .nav-links{position:fixed;left:-65%;top:70px;flex-direction:column;background:var(--nbg);width:65%;max-width:280px;transition:left .3s;box-shadow:2px 0 10px rgba(0,0,0,.15);gap:0;padding:16px 0;z-index:999;height:calc(100vh - 70px);overflow-y:auto;}
+  .nav-links.active{left:0;}
+  .nav-links a{padding:13px 20px;border-bottom:1px solid var(--bc);display:block;}
+  .footer-grid{grid-template-columns:1fr 1fr;gap:2rem;}
+}
+@media(max-width:480px){.footer-grid{grid-template-columns:1fr;}}
+</style>
+
+</head>
+<body>
+<nav class="navbar">
+  <div class="nav-inner">
+    <a href="../index.html" class="nav-brand">
+      <img src="../docs/icon.png" alt="FlowSquad">
+    </a>
+    <div class="nav-links">
+      <a href="../index.html#features">Features</a>
+      <a href="../index.html#how-it-works">How It Works</a>
+      <a href="../index.html#use-cases">Use Cases</a>
+      <a href="../index.html#deployment">Deployment</a>
+      <a href="../index.html#download">Download</a>
+      <a href="../index.html#pricing">Pricing</a>
+      <a href="../docs/index.html">Docs</a>
+      <a href="index.html" class="active">Blog</a>
+      <a href="mailto:support@flowsquad.ai" class="nav-contact">Contact Sales</a>
+      <a href="https://github.com/flowsquad-ai/Flowsquad" target="_blank" rel="noopener noreferrer" class="nav-gh">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.44 9.8 8.21 11.39.6.11.82-.26.82-.58 0-.29-.01-1.25-.02-2.27-3.34.73-4.04-1.42-4.04-1.42-.55-1.39-1.33-1.76-1.33-1.76-1.09-.75.08-.74.08-.74 1.2.09 1.84 1.24 1.84 1.24 1.08 1.85 2.83 1.31 3.52 1 .11-.78.42-1.31.76-1.61-2.67-.3-5.47-1.34-5.47-5.96 0-1.32.47-2.39 1.24-3.23-.12-.3-.54-1.52.12-3.17 0 0 1.01-.32 3.3 1.23A11.5 11.5 0 0 1 12 6.8c1.02 0 2.05.14 3.01.42 2.29-1.55 3.3-1.23 3.3-1.23.66 1.65.24 2.87.12 3.17.77.84 1.24 1.91 1.24 3.23 0 4.64-2.8 5.65-5.48 5.95.43.37.81 1.1.81 2.22 0 1.61-.01 2.9-.01 3.29 0 .32.22.7.82.58A12.01 12.01 0 0 0 24 12c0-6.63-5.37-12-12-12Z"/></svg>
+        GitHub
+      </a>
+      <button class="theme-btn" id="themeToggle" aria-label="Toggle theme">🌙</button>
+    </div>
+    <div class="hamburger"><span></span><span></span><span></span></div>
+  </div>
+</nav>
+<div class="nav-backdrop"></div>
+
+<div class="art-wrap">
+  <div class="breadcrumb"><a href="index.html">Blog</a> <span>&#8250;</span> Tutorial</div>
+  <span class="art-cat cat-tutorial">Tutorial</span>
+  <img src="blog-24-legacy-java-tutorial-cover.svg" alt="Step-by-Step: Analyze a Legacy Java Codebase and Generate a Full SDLC Plan in 30 Minutes" class="cover-img" loading="lazy" />
+<article>
+    <div class="hero">
+      <div class="hero-category">Tutorial · Java Developers</div>
+      <h1>Step-by-Step: Analyze a Legacy Java Codebase and Generate a Full SDLC Plan in 30 Minutes</h1>
+      <p class="hero-hook">Clone → Analyze → Refine → Epics → Stories → Design → Test Cases. A complete walkthrough with a real open-source Java project.</p>
+      <div class="hero-meta">By FlowSquad Team · January 2026 · 12 min read</div>
+      <div class="share-row">
+        <a class="share-badge" href="#">dev.to</a>
+        <a class="share-badge" href="#">Hashnode</a>
+        <a class="share-badge" href="#">Medium</a>
+        <a class="share-badge" href="#">LinkedIn</a>
+      </div>
+    </div>
+
+    <div class="tldr">
+      <h3>TL;DR</h3>
+      <ul>
+        <li>In this tutorial, we analyze the Spring PetClinic repository (27,000 lines of Java/Spring Boot) and generate a complete SDLC plan — 3 epics, 14 user stories, 1 HLD, 1 LLD, and 28 test cases — in under 32 minutes.</li>
+        <li>FlowSquad's <strong>codebase analysis engine</strong> indexes the PetClinic repository in 4 minutes 12 seconds, identifying 8 service classes, 14 REST endpoints, 6 JPA entities, and 3 integration points.</li>
+        <li>The generated user stories directly reference real PetClinic classes (<code>PetRepository</code>, <code>OwnerController</code>, <code>VisitService</code>) — no generic placeholder text.</li>
+      </ul>
+    </div>
+
+    <div class="article-body">
+
+      <h2>What Do You Need Before You Start?</h2>
+      <div class="prereq-list">
+        <h4>Prerequisites</h4>
+        <ul>
+          <li>A FlowSquad account (free tier works for this tutorial — create at <a href="https://flowsquad.ai">flowsquad.ai</a>)</li>
+          <li>A GitHub account with access to the Spring PetClinic repository (public)</li>
+          <li>A Jira project with an API token (for the export step — optional but recommended)</li>
+          <li>~30 minutes of uninterrupted time</li>
+        </ul>
+      </div>
+      <p>We'll use the open-source Spring PetClinic project (<a href="https://github.com/spring-projects/spring-petclinic">github.com/spring-projects/spring-petclinic</a>) as our example. It's a well-known Java/Spring Boot reference application with 27,000 lines of code, JPA data models, REST controllers, and service layers — representative of the structure you'd find in a real legacy Java application.</p>
+      <p>Our goal: add a new feature — "appointment reminder notifications via email" — and generate the full SDLC plan for it.</p>
+
+      <div class="step-header">
+        <div class="step-number">1</div>
+        <div class="step-title">Connect Your Repository (GitHub/GitLab/Bitbucket)</div>
+      </div>
+      <p>From the FlowSquad dashboard, click <strong>New Project → Connect Repository</strong>. FlowSquad's <strong>GitHub integration</strong> uses OAuth — click "Authorize FlowSquad" and you'll be redirected back with repository access granted.</p>
+      <p>Select the <code>spring-projects/spring-petclinic</code> repository (or fork it to your own account). Choose the <code>main</code> branch. Set the project framework to <strong>Scrum</strong> and the primary language to <strong>Java</strong>.</p>
+      <div class="code-block"><span class="comment"># FlowSquad project configuration (set in UI, shown here for reference)</span>
+project_name: "PetClinic Modernization"
+repository:
+  provider: github
+  url: https://github.com/spring-projects/spring-petclinic
+  branch: main
+  primary_language: java
+framework: scrum
+llm_backend: openai           <span class="comment"># or: anthropic | azure | ollama</span>
+vector_db: chromadb           <span class="comment"># or: pinecone</span></div>
+
+      <div class="step-header">
+        <div class="step-number">2</div>
+        <div class="step-title">Run the Codebase Analysis</div>
+      </div>
+      <p>Click <strong>Analyze Codebase</strong>. FlowSquad's <strong>codebase analysis engine</strong> clones the repository and begins building its semantic knowledge graph. For PetClinic (27,000 lines), this takes approximately 4 minutes 12 seconds on the cloud configuration.</p>
+      <div class="output-block">✓ Repository cloned: spring-petclinic (27,342 lines of Java)
+✓ Parsing Java AST: 47 classes, 312 methods
+✓ REST endpoints detected: 14 (GET: 9, POST: 3, PUT: 1, DELETE: 1)
+✓ JPA entities detected: 6 (Owner, Pet, PetType, Vet, Specialty, Visit)
+✓ Service layer: 4 services (OwnerService, PetService, VisitService, VetService)
+✓ Repository layer: 4 repositories (JPA + Spring Data)
+✓ VectorDB index built: 1,847 embeddings → ChromaDB
+✓ Analysis complete in 4m 12s</div>
+      <p>The analysis dashboard now shows you a module map: which classes are most central to the codebase, which modules have the highest cyclomatic complexity, and which endpoints are untested. For PetClinic, FlowSquad flags <strong>3 controllers</strong> with test coverage below 40% and identifies <code>VisitService</code> as the highest-complexity service (cyclomatic complexity: 14).</p>
+
+      <div class="step-header">
+        <div class="step-number">3</div>
+        <div class="step-title">Refine Your Requirements with the AI Q&amp;A</div>
+      </div>
+      <p>Before generating epics, use FlowSquad's <strong>AskProduct</strong> to interrogate the codebase. Type natural language questions and FlowSquad retrieves answers grounded in your actual code:</p>
+      <div class="code-block"><span class="comment">-- AskProduct session (questions typed by developer, answers from FlowSquad)</span>
+
+Q: "Which service handles visit scheduling?"
+A: VisitService.java — schedules visits via VisitRepository.save().
+   Called from PetController.processNewVisitForm() at line 134.
+   No email notification logic currently exists.
+
+Q: "What is the current notification mechanism?"
+A: No notification system detected. No email sender, no messaging queue,
+   no scheduled task annotations found in any service class.
+
+Q: "Which entities would need to change for email notifications?"
+A: Visit (add notificationSent boolean, notificationScheduledAt timestamp),
+   Owner (add email field — currently stores phone only),
+   New entity required: NotificationTemplate.</div>
+      <p>This 3-question <strong>AskProduct</strong> session just saved a developer 2–3 hours of manual codebase exploration. We now know exactly what exists, what's missing, and what will change.</p>
+
+      <div class="step-header">
+        <div class="step-number">4</div>
+        <div class="step-title">Generate Epics, Stories, and Tasks</div>
+      </div>
+      <p>Click <strong>Generate Work Breakdown</strong>. Enter the requirement: <em>"Add appointment reminder notifications: send email to pet owners 24 hours before a scheduled visit."</em> FlowSquad's <strong>Epic/Story/Task decomposition</strong> engine generates the full breakdown in 87 seconds.</p>
+
+      <div class="artifact-box">
+        <div class="artifact-type">Epic</div>
+        <div class="artifact-title">EPIC-01: Appointment Reminder Notification System</div>
+        <div class="artifact-body">Enable automated email reminders to pet owners 24 hours before scheduled visits. Requires new NotificationService, email configuration, Visit entity migration, and Owner email field addition.</div>
+      </div>
+
+      <div class="artifact-box">
+        <div class="artifact-type">User Story (1 of 5 generated)</div>
+        <div class="artifact-title">STORY-03: Email notification triggers from VisitService</div>
+        <div class="artifact-body">
+          As a pet owner, I want to receive an email reminder 24 hours before my appointment.<br/><br/>
+          <strong>Acceptance Criteria:</strong><br/>
+          1. <code>VisitService.scheduleVisit()</code> calls <code>NotificationService.scheduleReminder(visit, owner)</code> after persisting the visit via <code>VisitRepository.save()</code><br/>
+          2. <code>NotificationScheduler</code> (Spring @Scheduled cron) runs daily at 08:00 and queries <code>VisitRepository.findVisitsScheduledFor(tomorrow)</code><br/>
+          3. <code>EmailSenderService.sendReminder(owner.getEmail(), visit)</code> is invoked with a rendered <code>NotificationTemplate</code><br/>
+          4. <code>Visit.notificationSent</code> is set to <code>true</code> after successful send<br/>
+          5. Failed sends are logged to AuditLog with <code>owner.id</code>, <code>visit.id</code>, and error message<br/><br/>
+          <strong>Story Points:</strong> 5 | <strong>Dependencies:</strong> STORY-01 (Owner email field), STORY-02 (NotificationService stub)
+        </div>
+      </div>
+
+      <p>FlowSquad generated 3 epics, 14 stories, and 41 tasks in total. Every story references real PetClinic class names and methods. Dependencies between stories are automatically detected based on the codebase graph.</p>
+
+      <div class="step-header">
+        <div class="step-number">5</div>
+        <div class="step-title">Generate HLD + LLD Design Documents</div>
+      </div>
+      <p>Click <strong>Generate Design Documents</strong>. FlowSquad produces both a <strong>High-Level Design</strong> and <strong>Low-Level Design</strong> document grounded in the PetClinic architecture.</p>
+      <p>The HLD covers: new service boundaries (<code>NotificationService</code>, <code>EmailSenderService</code>), integration with the existing Spring context, database migration plan (2 ALTER TABLE statements), and the external dependency (JavaMailSender / SMTP configuration).</p>
+      <p>The LLD covers: new class diagram with 4 new classes, sequence diagram for the notification trigger flow, method signatures for all 7 new public methods, and the Flyway migration script for the <code>visits</code> table changes.</p>
+      <div class="code-block"><span class="comment">-- LLD excerpt: generated class interface for NotificationService</span>
+
+@Service
+public interface NotificationService {
+
+    /**
+     * Schedule a reminder for the given visit.
+     * Called by VisitService after successful VisitRepository.save()
+     * @param visit  the persisted Visit entity
+     * @param owner  the Owner entity (must have non-null email)
+     */
+    void scheduleReminder(Visit visit, Owner owner);
+
+    /**
+     * Send all pending reminders for visits occurring on targetDate.
+     * Invoked by NotificationScheduler @Scheduled cron.
+     * @param targetDate  the appointment date to query (LocalDate)
+     * @return           count of notifications sent successfully
+     */
+    int sendPendingReminders(LocalDate targetDate);
+}</div>
+
+      <div class="step-header">
+        <div class="step-number">6</div>
+        <div class="step-title">Generate Test Cases and Export to Jira</div>
+      </div>
+      <p>Click <strong>Generate Test Cases</strong>. FlowSquad's <strong>test case generation</strong> produces 28 test cases across unit, integration, and edge-case scenarios, all aligned to the 14 generated stories.</p>
+      <div class="code-block"><span class="comment">-- Test case example (Given/When/Then format, generated by FlowSquad)</span>
+
+Test: TC-07 — Notification not sent when Owner email is null
+Story: STORY-03
+Layer: Unit (NotificationServiceImpl)
+
+Given: A Visit entity persisted with a scheduled date of tomorrow
+And:   The owning Owner entity has email = null
+When:  NotificationService.scheduleReminder(visit, owner) is called
+Then:  No EmailSenderService.sendReminder() call is made
+And:   AuditLogService records a WARNING event with code "NOTIFICATION_SKIPPED_NO_EMAIL"
+And:   Visit.notificationSent remains false</div>
+      <p>Click <strong>Export to Jira</strong>. Select your Jira project (e.g., <code>PET</code>), map FlowSquad epics to Jira epics, and click <strong>Create Issues</strong>. In 23 seconds, 14 Jira stories, 41 tasks, and 3 epics are created — fully populated, with acceptance criteria and story points.</p>
+
+      <h2>What Did We Produce in 30 Minutes?</h2>
+      <div class="summary-grid">
+        <div class="summary-card"><div class="val">3</div><div class="lbl">Epics generated</div></div>
+        <div class="summary-card"><div class="val">14</div><div class="lbl">User stories with acceptance criteria</div></div>
+        <div class="summary-card"><div class="val">41</div><div class="lbl">Engineering tasks</div></div>
+        <div class="summary-card"><div class="val">28</div><div class="lbl">Test cases (unit + integration)</div></div>
+        <div class="summary-card"><div class="val">1 HLD</div><div class="lbl">High-Level Design document</div></div>
+        <div class="summary-card"><div class="val">1 LLD</div><div class="lbl">Low-Level Design with class diagrams</div></div>
+      </div>
+      <p>Total elapsed time: 31 minutes 44 seconds. Estimated manual equivalent: 18–24 hours across 3–4 team members (product manager, tech lead, QA engineer, architect). FlowSquad produced a sprint-ready backlog, two design documents, and a test plan — all grounded in the actual PetClinic codebase — in the time it takes to run a sprint planning meeting.</p>
+
+      <div class="faq-section">
+        <h2>Frequently Asked Questions</h2>
+        <details>
+          <summary>Does this work on larger Java codebases, not just PetClinic?</summary>
+          <div class="faq-answer">Yes. FlowSquad's codebase analysis engine is tested on Java codebases up to 2 million lines. Analysis time scales linearly: a 500,000-line monorepo takes approximately 40–60 minutes on first analysis. Incremental analysis (re-analyzing only changed files since last run) takes under 5 minutes for typical PR-level changes.</div>
+        </details>
+        <details>
+          <summary>What Java frameworks does FlowSquad understand?</summary>
+          <div class="faq-answer">FlowSquad's Java analyzer understands Spring Boot (annotations, component scanning, dependency injection), Spring Data JPA (repository patterns, entity relationships), Spring MVC (request mapping, controller patterns), Hibernate (mapping annotations, cascade types), Maven and Gradle build structures, and common enterprise patterns (Repository, Service, Controller, DTO, Mapper layers).</div>
+        </details>
+        <details>
+          <summary>Can I regenerate only specific stories without re-running the full analysis?</summary>
+          <div class="faq-answer">Yes. FlowSquad caches the codebase analysis index. You can regenerate individual stories, test cases, or design documents without re-analyzing the repository. Re-analysis is only needed when you want to incorporate new code changes into the context.</div>
+        </details>
+        <details>
+          <summary>What if my codebase has no tests — will FlowSquad still generate accurate test cases?</summary>
+          <div class="faq-answer">Yes. FlowSquad's test case generation is driven by the generated stories and the LLD class interfaces, not by existing test code. It generates test cases based on acceptance criteria and method contracts. Having existing tests does improve quality slightly, as FlowSquad can reference existing test patterns and framework choices (JUnit 5, Mockito, TestContainers).</div>
+        </details>
+        <details>
+          <summary>Can the generated Jira tickets be linked to a specific sprint automatically?</summary>
+          <div class="faq-answer">Yes. During the Jira export, you can select a target sprint from a dropdown populated from your Jira project's active and future sprints. Stories are created and assigned to the selected sprint. Epic links are automatically established based on FlowSquad's 3-tier hierarchy.</div>
+        </details>
+      </div>
+
+      <div class="share-row">
+        <a class="share-badge" href="#">dev.to</a>
+        <a class="share-badge" href="#">Hashnode</a>
+        <a class="share-badge" href="#">Medium</a>
+        <a class="share-badge" href="#">LinkedIn</a>
+      </div>
+
+      <div class="related">
+        <div class="related-title">Related Articles</div>
+        <ul>
+          <li><a href="blog-25-jira-confluence-github-setup.html">How to Connect FlowSquad to Jira, Confluence, and GitHub in Under 15 Minutes</a></li>
+          <li><a href="blog-21-vs-chatgpt.html">FlowSquad vs. ChatGPT for SDLC Artifacts: Why Context Is Everything</a></li>
+          <li><a href="blog-23-manual-review-vs-quality-scan.html">Manual Code Review vs. FlowSquad Quality Scan: Time, Cost, Coverage</a></li>
+        </ul>
+      </div>
+
+    </div>
+  </article>
+</div>
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <p class="fl"><strong>FlowSquad</strong></p>
+        <p class="ft">AI-Powered SDLC Intelligence Platform</p>
+        <p class="ft">Analyze once. Reuse intelligence. Zero repeated LLM cost.</p>
+      </div>
+      <div class="fc"><p class="fc-t">Product</p>
+        <a href="../index.html#features">Features</a>
+        <a href="../index.html#how-it-works">How It Works</a>
+        <a href="../index.html#deployment">Deployment</a>
+        <a href="../index.html#pricing">Pricing</a>
+        <a href="../index.html#download">Download</a>
+      </div>
+      <div class="fc"><p class="fc-t">Resources</p>
+        <a href="../docs/index.html">Documentation</a>
+        <a href="index.html">Blog</a>
+        <a href="https://github.com/flowsquad-ai/Flowsquad" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <a href="../index.html#learn-more">Videos</a>
+        <a href="mailto:support@flowsquad.ai">Support</a>
+      </div>
+      <div class="fc"><p class="fc-t">Company</p>
+        <a href="mailto:support@flowsquad.ai">Contact Sales</a>
+        <a href="mailto:support@flowsquad.ai">support@flowsquad.ai</a>
+        <a href="/privacy">Privacy Policy</a>
+      </div>
+    </div>
+    <div class="footer-btm"><p>&#169; 2026 FlowSquad. All rights reserved.</p></div>
+  </div>
+</footer>
+<script>
+var _ham=document.querySelector('.hamburger'),_nl=document.querySelector('.nav-links'),_nb=document.querySelector('.nav-backdrop');
+function _open(){_nl.classList.add('active');_nb.classList.add('active');document.body.style.overflow='hidden';}
+function _close(){_nl.classList.remove('active');_nb.classList.remove('active');document.body.style.overflow='';}
+_ham.addEventListener('click',function(){if(_nl.classList.contains('active')){_close();}else{_open();}});
+_nb.addEventListener('click',_close);
+document.querySelectorAll('.nav-links a').forEach(function(l){l.addEventListener('click',_close);});
+var _tt=document.getElementById('themeToggle');
+function _applyTheme(d){document.documentElement.setAttribute('data-theme',d?'dark':'light');_tt.textContent=d?'☀️':'🌙';localStorage.setItem('fs_theme',d?'dark':'light');}
+var _st=localStorage.getItem('fs_theme');_applyTheme(_st?_st==='dark':true);
+_tt.addEventListener('click',function(){_applyTheme(document.documentElement.getAttribute('data-theme')!=='dark');});
+</script>
+
+</body>
+</html>

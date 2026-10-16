@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>How FlowSquad Understands 11 Programming Languages Without You Writing a Single Parser | FlowSquad Blog</title>
+<meta name="description" content="FlowSquad analyzes Java, Python, Go, TypeScript, C# and 15+ languages in a single codebase. Deep-dive into how polyglot code analysis powers unified SDLC intelligence." />
+<meta property="og:title" content="How FlowSquad Understands 11 Programming Languages Without You Writing a Single Parser" />
+<meta property="og:description" content="FlowSquad analyzes Java, Python, Go, TypeScript, C# and 15+ languages in a single codebase. Deep-dive into how polyglot code analysis powers unified SDLC intelligence." />
+<meta property="og:type" content="article" />
+<meta property="og:site_name" content="FlowSquad" />
+<meta property="og:image" content="https://flowsquad.ai/blog/blog-12-polyglot-code-analysis-cover.svg" />
+<meta property="og:url" content="https://flowsquad.ai/blog/polyglot-code-analysis" />
+<meta name="twitter:card" content="summary_large_image" />
+<link rel="canonical" href="https://flowsquad.ai/blog/polyglot-code-analysis" />
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "How FlowSquad Understands 11 Programming Languages Without You Writing a Single Parser",
+    "description": "Tree-sitter grammars, ONNX embeddings, and semantic indexing — how FlowSquad extracts structure from Python, Java, Go, Rust, and 7 more languages in seconds.",
+    "author": {"@type": "Organization", "name": "FlowSquad"},
+    "publisher": {"@type": "Organization", "name": "FlowSquad", "url": "https://flowsquad.ai"},
+    "datePublished": "2026-01-20",
+    "articleSection": "Deep-Dive"
+  }
+  </script>
+<script>(function(){try{var t=localStorage.getItem('fs_theme');if(!t)t='dark';document.documentElement.setAttribute('data-theme',t==='dark'?'dark':'light');}catch(e){document.documentElement.setAttribute('data-theme','dark');}})();</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--pc:#0066cc;--pd:#0052a3;--pl:#e6f2ff;--bg:#ffffff;--cbg:#ffffff;--nbg:#ffffff;--lbg:#f6f8fa;--llbg:#f0f2f5;--tc:#1f2328;--tm:#57606a;--bc:#d0d7de;}
+[data-theme="dark"]{--pc:#58a6ff;--pd:#388bfd;--pl:#0d2a4a;--bg:#0d1117;--cbg:#161b22;--nbg:#161b22;--lbg:#1c2128;--llbg:#1c2128;--tc:#e6edf3;--tm:#8b949e;--bc:#30363d;}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--pc:#58a6ff;--pl:#0d2a4a;--bg:#0d1117;--cbg:#161b22;--nbg:#161b22;--lbg:#1c2128;--llbg:#1c2128;--tc:#e6edf3;--tm:#8b949e;--bc:#30363d;}}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-padding-top:72px;scroll-behavior:smooth;}
+body{font-family:'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;font-size:15px;line-height:1.7;color:var(--tc);background:var(--bg);transition:background .3s,color .3s;padding-top:72px;}
+a{color:var(--pc);text-decoration:none;}a:hover{text-decoration:underline;}
+.navbar{background:var(--nbg);border-bottom:1px solid var(--bc);padding:.875rem 0;position:fixed;top:0;left:0;right:0;z-index:1000;box-shadow:0 2px 8px rgba(0,0,0,.05);transition:background .3s;}
+.nav-inner{max-width:1400px;margin:0 auto;padding:0 24px;display:flex;justify-content:space-between;align-items:center;}
+.nav-brand{display:flex;align-items:center;gap:10px;text-decoration:none;flex-shrink:0;}
+.nav-brand img{height:38px;width:auto;display:block;}
+.nav-brand span{font-size:1.2rem;font-weight:700;color:var(--pc);}
+.nav-links{display:flex;align-items:center;gap:0;}
+.nav-links a{color:var(--tc);font-weight:500;font-size:.875rem;padding:0 .65rem;white-space:nowrap;text-decoration:none;transition:color .2s;}
+.nav-links a:hover,.nav-links a.active{color:var(--pc);text-decoration:none;}
+.nav-contact{display:inline-flex;align-items:center;padding:.3rem .8rem;border:1.5px solid var(--pc);border-radius:6px;color:var(--pc)!important;font-weight:600!important;font-size:.8rem;transition:all .2s;white-space:nowrap;margin-left:.4rem;text-decoration:none!important;}
+.nav-contact:hover{background:var(--pc)!important;color:#fff!important;}
+.nav-gh{display:inline-flex;align-items:center;gap:.35rem;padding:.35rem .6rem;border:1px solid var(--bc);border-radius:999px;font-size:.8rem;text-decoration:none!important;color:var(--tc)!important;}
+.nav-gh:hover{border-color:var(--pc);color:var(--pc)!important;}
+.nav-gh svg{width:16px;height:16px;fill:currentColor;}
+.theme-btn{display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border:1.5px solid var(--bc);border-radius:8px;background:transparent;cursor:pointer;color:var(--tc);transition:all .2s;flex-shrink:0;font-size:1rem;}
+.theme-btn:hover{border-color:var(--pc);}
+.art-wrap{max-width:1100px;margin:0 auto;padding:40px 48px 80px;}
+@media(max-width:960px){.art-wrap{padding:28px 24px 60px;}}
+.cover-img{width:100%;height:auto;border-radius:12px;margin-bottom:28px;display:block;}
+.breadcrumb{font-size:.8rem;color:var(--tm);margin-bottom:16px;}
+.breadcrumb a{color:var(--pc);}
+.art-cat{display:inline-block;font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;padding:.2rem .75rem;border-radius:999px;margin-bottom:12px;}
+.cat-problem{background:#fee2e2;color:#b91c1c;}.cat-deepdive{background:#dbeafe;color:#1e40af;}
+.cat-compare{background:#fef3c7;color:#92400e;}.cat-tutorial{background:#ede9fe;color:#6d28d9;}
+.cat-usecase{background:#dcfce7;color:#15803d;}
+h1{font-size:2rem;font-weight:800;line-height:1.2;color:var(--tc);margin-bottom:14px;}
+@media(max-width:640px){h1{font-size:1.55rem;}}
+.art-hook{font-size:1.05rem;color:var(--tm);margin-bottom:16px;border-left:4px solid var(--pc);padding-left:14px;line-height:1.6;}
+.art-meta{font-size:.78rem;color:var(--tm);margin-bottom:28px;display:flex;gap:.4rem;flex-wrap:wrap;align-items:center;padding-bottom:16px;border-bottom:1px solid var(--bc);}
+.art-meta span{background:var(--lbg);border:1px solid var(--bc);border-radius:4px;padding:.1rem .5rem;}
+.tldr{background:var(--lbg);border:1px solid var(--bc);border-left:4px solid var(--pc);border-radius:8px;padding:18px 22px;margin-bottom:36px;}
+.tldr-title{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--pc);margin-bottom:10px;}
+.tldr ul{list-style:none;padding:0;}
+.tldr ul li{padding:4px 0 4px 20px;position:relative;color:var(--tc);font-size:.875rem;}
+.tldr ul li::before{content:"✓";position:absolute;left:0;color:var(--pc);font-weight:700;}
+h2{font-size:1.3rem;font-weight:700;color:var(--tc);margin:44px 0 12px;padding-top:6px;border-top:1px solid var(--bc);}
+h3{font-size:1rem;font-weight:700;color:var(--tc);margin:24px 0 8px;}
+p{margin-bottom:14px;color:var(--tc);}
+ul,ol{padding-left:22px;margin-bottom:14px;}
+li{margin-bottom:5px;color:var(--tc);}
+strong{color:var(--tc);font-weight:700;}em{color:var(--tm);}
+.callout{background:var(--pl);border:1px solid var(--pc);border-radius:8px;padding:14px 18px;margin:20px 0;font-size:.875rem;color:var(--tc);}
+.callout strong{color:var(--pc);}
+pre{background:#1e1e2e;color:#cdd6f4;border-radius:10px;padding:18px;overflow-x:auto;font-size:.8rem;line-height:1.6;margin:20px 0;font-family:"Cascadia Code","Fira Code","Consolas",monospace;}
+code{font-family:"Cascadia Code","Fira Code","Consolas",monospace;font-size:.8rem;background:var(--lbg);padding:2px 5px;border-radius:3px;border:1px solid var(--bc);color:var(--tc);}
+pre code{background:none;border:none;padding:0;color:inherit;}
+.table-wrap{overflow-x:auto;margin:20px 0;}
+table{width:100%;border-collapse:collapse;font-size:.85rem;}
+th{background:var(--lbg);border:1px solid var(--bc);padding:9px 12px;text-align:left;font-weight:700;color:var(--tc);}
+td{border:1px solid var(--bc);padding:9px 12px;color:var(--tc);}
+tr:nth-child(even) td{background:var(--lbg);}
+.related{background:var(--lbg);border:1px solid var(--bc);border-radius:10px;padding:18px 22px;margin:36px 0;}
+.related-title{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--tm);margin-bottom:10px;}
+.related ul{list-style:none;padding:0;}
+.related ul li{padding:4px 0;}
+.related ul li a{color:var(--pc);font-size:.875rem;}
+.faq{margin-top:44px;}
+.faq h2{border-top:1px solid var(--bc);}
+details{border:1px solid var(--bc);border-radius:8px;margin-bottom:9px;background:var(--lbg);}
+summary{padding:13px 17px;font-weight:600;cursor:pointer;color:var(--tc);font-size:.9rem;list-style:none;display:flex;justify-content:space-between;align-items:center;}
+summary::-webkit-details-marker{display:none;}
+summary::after{content:"+";font-size:17px;color:var(--pc);font-weight:400;}
+details[open] summary::after{content:"-";}
+details p{padding:0 17px 14px;margin:0;color:var(--tm);font-size:.85rem;}
+.site-footer{background:#0d1117;color:rgba(255,255,255,.85);padding:3rem 0 0;margin-top:60px;}
+.footer-inner{max-width:1400px;margin:0 auto;padding:0 40px;}
+.footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:3rem;padding-bottom:3rem;border-bottom:1px solid rgba(255,255,255,.1);}
+.footer-brand .fl{font-size:1.1rem;font-weight:700;color:#fff;margin-bottom:.5rem;}
+.footer-brand .ft{font-size:.8rem;color:rgba(255,255,255,.5);line-height:1.6;}
+.fc{display:flex;flex-direction:column;gap:.5rem;}
+.fc-t{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:rgba(255,255,255,.4);margin-bottom:.3rem;}
+.fc a{color:rgba(255,255,255,.65);text-decoration:none;font-size:.85rem;transition:color .2s;}
+.fc a:hover{color:#fff;}
+.footer-btm{padding:1.25rem 0;text-align:center;}
+.footer-btm p{font-size:.75rem;color:rgba(255,255,255,.3);}
+.hamburger{display:none;flex-direction:column;cursor:pointer;gap:4px;}
+.hamburger span{width:24px;height:2.5px;background:var(--tc);transition:.3s;}
+.nav-backdrop{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:998;}
+.nav-backdrop.active{display:block;}
+@media(max-width:768px){
+  .hamburger{display:flex;}
+  .nav-links{position:fixed;left:-65%;top:70px;flex-direction:column;background:var(--nbg);width:65%;max-width:280px;transition:left .3s;box-shadow:2px 0 10px rgba(0,0,0,.15);gap:0;padding:16px 0;z-index:999;height:calc(100vh - 70px);overflow-y:auto;}
+  .nav-links.active{left:0;}
+  .nav-links a{padding:13px 20px;border-bottom:1px solid var(--bc);display:block;}
+  .footer-grid{grid-template-columns:1fr 1fr;gap:2rem;}
+}
+@media(max-width:480px){.footer-grid{grid-template-columns:1fr;}}
+</style>
+
+</head>
+<body>
+<nav class="navbar">
+  <div class="nav-inner">
+    <a href="../index.html" class="nav-brand">
+      <img src="../docs/icon.png" alt="FlowSquad">
+    </a>
+    <div class="nav-links">
+      <a href="../index.html#features">Features</a>
+      <a href="../index.html#how-it-works">How It Works</a>
+      <a href="../index.html#use-cases">Use Cases</a>
+      <a href="../index.html#deployment">Deployment</a>
+      <a href="../index.html#download">Download</a>
+      <a href="../index.html#pricing">Pricing</a>
+      <a href="../docs/index.html">Docs</a>
+      <a href="index.html" class="active">Blog</a>
+      <a href="mailto:support@flowsquad.ai" class="nav-contact">Contact Sales</a>
+      <a href="https://github.com/flowsquad-ai/Flowsquad" target="_blank" rel="noopener noreferrer" class="nav-gh">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.44 9.8 8.21 11.39.6.11.82-.26.82-.58 0-.29-.01-1.25-.02-2.27-3.34.73-4.04-1.42-4.04-1.42-.55-1.39-1.33-1.76-1.33-1.76-1.09-.75.08-.74.08-.74 1.2.09 1.84 1.24 1.84 1.24 1.08 1.85 2.83 1.31 3.52 1 .11-.78.42-1.31.76-1.61-2.67-.3-5.47-1.34-5.47-5.96 0-1.32.47-2.39 1.24-3.23-.12-.3-.54-1.52.12-3.17 0 0 1.01-.32 3.3 1.23A11.5 11.5 0 0 1 12 6.8c1.02 0 2.05.14 3.01.42 2.29-1.55 3.3-1.23 3.3-1.23.66 1.65.24 2.87.12 3.17.77.84 1.24 1.91 1.24 3.23 0 4.64-2.8 5.65-5.48 5.95.43.37.81 1.1.81 2.22 0 1.61-.01 2.9-.01 3.29 0 .32.22.7.82.58A12.01 12.01 0 0 0 24 12c0-6.63-5.37-12-12-12Z"/></svg>
+        GitHub
+      </a>
+      <button class="theme-btn" id="themeToggle" aria-label="Toggle theme">🌙</button>
+    </div>
+    <div class="hamburger"><span></span><span></span><span></span></div>
+  </div>
+</nav>
+<div class="nav-backdrop"></div>
+
+<div class="art-wrap">
+  <div class="breadcrumb"><a href="index.html">Blog</a> <span>&#8250;</span> Deep Dive</div>
+  <span class="art-cat cat-deepdive">Deep Dive</span>
+  <img src="blog-12-polyglot-code-analysis-cover.svg" alt="How FlowSquad Understands 11 Programming Languages Without You Writing a Single Parser" class="cover-img" loading="lazy" />
+<div class="post-meta">
+    <span class="category-badge">Deep-Dive</span>
+    <span class="target-badge">Developers · DevOps Engineers</span>
+  </div>
+
+  <h1>How FlowSquad Understands 11 Programming Languages Without You Writing a Single Parser</h1>
+
+  <p class="art-hook">Tree-sitter grammars, ONNX embeddings, and semantic indexing — how FlowSquad extracts structure from Python, Java, Go, Rust, and 7 more languages in seconds.</p>
+<div class="art-meta">April 15, 2026 <span>&#183;</span> 10 min read <span>&#183;</span> <span>Developers</span><span>DevOps Engineers</span></div>
+
+  <div class="tldr"><div class="tldr-title">TL;DR</div>
+    <ul>
+      <li>FlowSquad's <strong>Tree-sitter</strong> integration parses <strong>11 programming languages</strong> into concrete syntax trees at an average rate of <strong>1 MB/s</strong> per language worker.</li>
+      <li><strong>ONNX embeddings</strong> (all-MiniLM-L6-v2, 384-dimensional vectors) allow semantic similarity search across <strong>millions of code chunks</strong> without any cloud round-trip.</li>
+      <li>A 50,000-line Python monorepo is fully indexed in under <strong>90 seconds</strong>, producing structured extractions of classes, functions, imports, and docstrings stored in VectorDB.</li>
+    </ul>
+  </div>
+
+  <h2>Why Is Multi-Language Code Analysis Hard?</h2>
+  <p>Every programming language has its own syntax, scoping rules, idioms, and AST shape. A naive approach to multi-language analysis — regex-based pattern matching — breaks on multi-line strings, nested closures, metaprogramming, and language-specific comment styles. Writing a custom parser for each language is tractable for two or three languages but becomes an indefinite maintenance burden at <span class="metric">11+</span>.</p>
+
+  <p>The challenge compounds for AI-assisted analysis: LLMs have fixed context windows. You cannot simply dump an entire 200,000-line codebase into a prompt and ask "what does this do?". Effective code analysis requires <em>chunking</em> — splitting the codebase into semantically coherent units — and <em>retrieval</em> — finding the right chunks for a given query. Both chunking and retrieval are dramatically more accurate when done at semantic boundaries (function definitions, class bodies, module imports) rather than arbitrary line counts.</p>
+
+  <p>FlowSquad solves this by combining <span class="metric">3 technologies</span>: **Tree-sitter** for syntax-aware parsing, **ONNX Runtime** for fast local embeddings, and **VectorDB** (ChromaDB or Pinecone) for approximate nearest-neighbor retrieval. Together they form an analysis pipeline that requires no custom parser code for any supported language.</p>
+
+  <h2>How Does Tree-Sitter Enable Language-Agnostic Parsing?</h2>
+  <p><strong>Tree-sitter</strong> is a parser generator and incremental parsing library originally developed at GitHub. It produces a concrete syntax tree (CST) from source code using grammar files written in a declarative JSON/DSL format. FlowSquad ships with pre-compiled Tree-sitter grammars for all 11 supported languages — no grammar compilation is required at runtime.</p>
+
+  <p>The key property that makes Tree-sitter suitable for production code analysis is its error recovery: when encountering invalid syntax (which is common in partially written or refactoring-in-progress codebases), Tree-sitter produces a best-effort tree rather than failing. This means FlowSquad can analyze work-in-progress branches and uncommitted changes, not just clean main branches.</p>
+
+  <p>From the CST, FlowSquad's <strong>semantic extractor</strong> runs language-specific visitor functions that pull out the analysis-relevant nodes: function/method definitions and their signatures, class definitions and inheritance hierarchies, import/require/use statements, docstrings and inline comments, and top-level constants and configuration. These are normalized into a language-agnostic <code>CodeSymbol</code> schema used throughout the analysis pipeline.</p>
+
+  <div class="ascii-table">┌─────────────────── FlowSquad Code Analysis Pipeline ───────────────────────┐
+│                                                                              │
+│  Source File         Tree-sitter        Semantic           ONNX             │
+│  (any language)  ──► CST Parse      ──► Extractor      ──► Embedder         │
+│                      ~0.8ms/file        ~2ms/file          ~5ms/chunk        │
+│                                                                              │
+│  ──► VectorDB         Chunked           CodeSymbol         384-dim          │
+│      Upsert       ◄── Storage       ◄── Schema         ◄── Vectors          │
+│      ~10ms/batch      (ChromaDB/         {name, type,       (all-MiniLM     │
+│                        Pinecone)          body, lang,        -L6-v2)         │
+│                                           file, line}                        │
+└──────────────────────────────────────────────────────────────────────────────┘</div>
+
+  <h2>How Does FlowSquad Build a Semantic Index from Source Code?</h2>
+  <p>After Tree-sitter parsing produces a list of <code>CodeSymbol</code> objects, FlowSquad's indexer performs <span class="metric">3 steps</span> before writing to VectorDB. First, it <em>chunks</em> each symbol: functions shorter than 512 tokens are treated as single chunks; longer functions are split at logical boundaries (inner function definitions, loop bodies) to stay within the embedding model's context window. Second, it constructs a <em>chunk document</em> combining the symbol's signature, docstring, and body for richer semantic signal. Third, it calls the local ONNX embedding model to produce a <span class="metric">384-dimensional float32 vector</span> for each chunk.</p>
+
+  <p>The resulting vectors are upserted into VectorDB alongside metadata: file path, symbol name, language, line number range, and the raw source text. At query time (e.g., when <strong>AskProduct</strong> receives a user question), FlowSquad embeds the query using the same ONNX model, performs an ANN search across all <span class="metric">4 VectorDB collections</span> (code, epics, stories, documentation), and returns the top-K chunks for LLM context assembly.</p>
+
+  <h2>What Does ONNX Embedding Bring to the Analysis Pipeline?</h2>
+  <p><strong>ONNX Runtime</strong> (Open Neural Network Exchange) allows FlowSquad to run the embedding model entirely on-premise — the same host that runs the FlowSquad application server — without sending code to any external API. This is critical for air-gapped deployments and for organizations with strict data residency requirements that prohibit sending source code to cloud services.</p>
+
+  <p>The default embedding model is <code>all-MiniLM-L6-v2</code>, a <span class="metric">22.7M parameter</span> sentence transformer that produces high-quality 384-dimensional semantic embeddings while running efficiently on CPU. On a standard 4-core application server, it achieves <span class="metric">~200 embeddings/second</span> — sufficient to index a 100,000-line codebase in under 3 minutes. For teams with GPU resources, ONNX Runtime's CUDA execution provider can push throughput above <span class="metric">2,000 embeddings/second</span>.</p>
+
+  <p>Crucially, the same ONNX model is used at both index time and query time, guaranteeing that similarity scores are comparable. This is not guaranteed when using cloud embedding APIs, where model versions can change silently between index and query operations, corrupting retrieval quality.</p>
+
+  <h2>Which 11 Languages Are Supported and What Gets Extracted?</h2>
+  <p>FlowSquad's polyglot analysis covers the <span class="metric">11 most prevalent enterprise languages</span> based on GitHub survey data and FlowSquad customer profiling. Each language has a dedicated semantic extractor tuned to that language's idioms.</p>
+
+  <table>
+    <thead>
+      <tr><th>Language</th><th>Functions/Methods</th><th>Classes/Structs</th><th>Imports</th><th>Docstrings</th><th>Types/Interfaces</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Python</td><td>✓</td><td>✓</td><td>✓</td><td>✓ (PEP 257)</td><td>✓ (type hints)</td></tr>
+      <tr><td>Java</td><td>✓</td><td>✓</td><td>✓</td><td>✓ (Javadoc)</td><td>✓ (interfaces)</td></tr>
+      <tr><td>Go</td><td>✓</td><td>✓ (structs)</td><td>✓</td><td>✓ (GoDoc)</td><td>✓ (interfaces)</td></tr>
+      <tr><td>Rust</td><td>✓</td><td>✓ (structs/enums)</td><td>✓ (use)</td><td>✓ (//!)</td><td>✓ (traits)</td></tr>
+      <tr><td>JavaScript</td><td>✓</td><td>✓ (ES6)</td><td>✓ (ESM/CJS)</td><td>✓ (JSDoc)</td><td>—</td></tr>
+      <tr><td>TypeScript</td><td>✓</td><td>✓</td><td>✓</td><td>✓ (TSDoc)</td><td>✓ (interfaces)</td></tr>
+      <tr><td>C#</td><td>✓</td><td>✓</td><td>✓ (using)</td><td>✓ (XML)</td><td>✓ (interfaces)</td></tr>
+      <tr><td>C++</td><td>✓</td><td>✓</td><td>✓ (#include)</td><td>✓ (Doxygen)</td><td>✓ (templates)</td></tr>
+      <tr><td>Ruby</td><td>✓</td><td>✓ (modules)</td><td>✓ (require)</td><td>✓ (YARD)</td><td>—</td></tr>
+      <tr><td>PHP</td><td>✓</td><td>✓</td><td>✓ (use/require)</td><td>✓ (PHPDoc)</td><td>✓ (interfaces)</td></tr>
+      <tr><td>Kotlin</td><td>✓</td><td>✓ (data classes)</td><td>✓</td><td>✓ (KDoc)</td><td>✓ (interfaces)</td></tr>
+    </tbody>
+  </table>
+
+  <div class="code-block"><span class="comment"># Example: FlowSquad extraction output for a Python module</span>
+
+{
+  <span class="kw">"file"</span>: <span class="str">"src/services/payment_processor.py"</span>,
+  <span class="kw">"language"</span>: <span class="str">"python"</span>,
+  <span class="kw">"symbols"</span>: [
+    {
+      <span class="kw">"type"</span>: <span class="str">"class"</span>,
+      <span class="kw">"name"</span>: <span class="str">"PaymentProcessor"</span>,
+      <span class="kw">"line_start"</span>: 12,
+      <span class="kw">"docstring"</span>: <span class="str">"Handles Stripe and PayPal payment processing."</span>,
+      <span class="kw">"methods"</span>: [<span class="str">"charge"</span>, <span class="str">"refund"</span>, <span class="str">"get_status"</span>]
+    },
+    {
+      <span class="kw">"type"</span>: <span class="str">"function"</span>,
+      <span class="kw">"name"</span>: <span class="str">"charge"</span>,
+      <span class="kw">"signature"</span>: <span class="str">"def charge(self, amount: Decimal, card_token: str) -&gt; PaymentResult"</span>,
+      <span class="kw">"line_start"</span>: 34,
+      <span class="kw">"embedding_chunk"</span>: <span class="str">"[384-dim float32 vector]"</span>
+    }
+  ],
+  <span class="kw">"imports"</span>: [<span class="str">"stripe"</span>, <span class="str">"decimal"</span>, <span class="str">"logging"</span>],
+  <span class="kw">"index_time_ms"</span>: 23
+}</div>
+
+  <div class="related">
+    <div class="related-title">Related Articles</div>
+    <ul>
+      <li><a href="blog-15-askproduct-knowledge-hub.html">AskProduct: The Knowledge Hub That Actually Knows Your Codebase</a></li>
+      <li><a href="blog-11-multi-llm-architecture.html">Inside FlowSquad's Multi-LLM Architecture: Why We Never Lock You In</a></li>
+      <li><a href="blog-16-setup-wizard.html">10-Step Setup Wizard: Enterprise AI Platform, Running in Under an Hour</a></li>
+    </ul>
+  </div>
+
+  <div class="faq">
+    <h2>Frequently Asked Questions</h2>
+
+    <details>
+      <summary>Can FlowSquad be extended to support a 12th language?</summary>
+      <p>Yes. Adding a new language requires a Tree-sitter grammar (which exist for 100+ languages in the official Tree-sitter repository) and a semantic extractor visitor function. The ONNX embedding and VectorDB pipeline requires no changes. Community-contributed language support is on the public roadmap.</p>
+    </details>
+
+    <details>
+      <summary>How does FlowSquad handle mixed-language repositories (polyglot monorepos)?</summary>
+      <p>FlowSquad detects language at the file level using extension mapping and Tree-sitter grammar probing. Files of different languages within the same repository are indexed independently and stored in the same VectorDB collection, allowing cross-language queries in AskProduct (e.g., "How does the Java backend service map to the TypeScript frontend API client?").</p>
+    </details>
+
+    <details>
+      <summary>Does FlowSquad send source code to any external service?</summary>
+      <p>No code is sent externally during the indexing process. Tree-sitter parsing and ONNX embedding run entirely on the FlowSquad host. Code chunks <em>are</em> sent to your configured LLM provider (OpenAI, Anthropic, etc.) when features like AskProduct or HLD generation assemble an LLM prompt — but this can be eliminated entirely by using an on-premise Ollama deployment.</p>
+    </details>
+
+    <details>
+      <summary>How does the index stay up to date as the codebase changes?</summary>
+      <p>FlowSquad supports incremental re-indexing triggered by webhook events from connected Git providers (GitHub, GitLab, Bitbucket, Azure DevOps). When a push event is received, only the changed files are re-parsed and re-embedded. A full re-index can also be triggered manually from the Admin panel.</p>
+    </details>
+
+    <details>
+      <summary>What VectorDB backends are supported?</summary>
+      <p>FlowSquad supports two VectorDB backends: <strong>ChromaDB</strong> (recommended for on-premise/air-gapped deployments, runs as a local service) and <strong>Pinecone</strong> (managed cloud VectorDB, recommended for teams already on Pinecone or preferring a hosted option). The backend is configured in the Setup Wizard and can be changed with a re-index.</p>
+    </details>
+  </div>
+
+  <div class="share-badges" style="margin-top:40px; display:flex; gap:8px; flex-wrap:wrap;">
+    <a href="#" class="badge badge-devto">Share on dev.to</a>
+    <a href="#" class="badge badge-hashnode">Share on Hashnode</a>
+    <a href="#" class="badge badge-medium">Share on Medium</a>
+    <a href="#" class="badge badge-linkedin">Share on LinkedIn</a>
+  </div>
+</div>
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <p class="fl"><strong>FlowSquad</strong></p>
+        <p class="ft">AI-Powered SDLC Intelligence Platform</p>
+        <p class="ft">Analyze once. Reuse intelligence. Zero repeated LLM cost.</p>
+      </div>
+      <div class="fc"><p class="fc-t">Product</p>
+        <a href="../index.html#features">Features</a>
+        <a href="../index.html#how-it-works">How It Works</a>
+        <a href="../index.html#deployment">Deployment</a>
+        <a href="../index.html#pricing">Pricing</a>
+        <a href="../index.html#download">Download</a>
+      </div>
+      <div class="fc"><p class="fc-t">Resources</p>
+        <a href="../docs/index.html">Documentation</a>
+        <a href="index.html">Blog</a>
+        <a href="https://github.com/flowsquad-ai/Flowsquad" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <a href="../index.html#learn-more">Videos</a>
+        <a href="mailto:support@flowsquad.ai">Support</a>
+      </div>
+      <div class="fc"><p class="fc-t">Company</p>
+        <a href="mailto:support@flowsquad.ai">Contact Sales</a>
+        <a href="mailto:support@flowsquad.ai">support@flowsquad.ai</a>
+        <a href="/privacy">Privacy Policy</a>
+      </div>
+    </div>
+    <div class="footer-btm"><p>&#169; 2026 FlowSquad. All rights reserved.</p></div>
+  </div>
+</footer>
+<script>
+var _ham=document.querySelector('.hamburger'),_nl=document.querySelector('.nav-links'),_nb=document.querySelector('.nav-backdrop');
+function _open(){_nl.classList.add('active');_nb.classList.add('active');document.body.style.overflow='hidden';}
+function _close(){_nl.classList.remove('active');_nb.classList.remove('active');document.body.style.overflow='';}
+_ham.addEventListener('click',function(){if(_nl.classList.contains('active')){_close();}else{_open();}});
+_nb.addEventListener('click',_close);
+document.querySelectorAll('.nav-links a').forEach(function(l){l.addEventListener('click',_close);});
+var _tt=document.getElementById('themeToggle');
+function _applyTheme(d){document.documentElement.setAttribute('data-theme',d?'dark':'light');_tt.textContent=d?'☀️':'🌙';localStorage.setItem('fs_theme',d?'dark':'light');}
+var _st=localStorage.getItem('fs_theme');_applyTheme(_st?_st==='dark':true);
+_tt.addEventListener('click',function(){_applyTheme(document.documentElement.getAttribute('data-theme')!=='dark');});
+</script>
+
+</body>
+</html>

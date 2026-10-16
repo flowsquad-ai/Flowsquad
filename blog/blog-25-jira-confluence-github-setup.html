@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>How to Connect FlowSquad to Jira, Confluence, and GitHub in Under 15 Minutes | FlowSquad Blog</title>
+<meta name="description" content="API tokens, webhook setup, JQL config, and your first auto-exported Jira ticket — a step-by-step integration tutorial for FlowSquad." />
+<meta property="og:title" content="How to Connect FlowSquad to Jira, Confluence, and GitHub in Under 15 Minutes" />
+<meta property="og:description" content="API tokens, webhook setup, JQL config, and your first auto-exported Jira ticket — a step-by-step integration tutorial for FlowSquad." />
+<meta property="og:type" content="article" />
+<meta property="og:site_name" content="FlowSquad" />
+<meta property="og:image" content="https://flowsquad.ai/blog/blog-25-jira-confluence-github-setup-cover.svg" />
+<meta property="og:url" content="https://flowsquad.ai/blog/connect-jira-confluence-github-setup" />
+<meta name="twitter:card" content="summary_large_image" />
+<link rel="canonical" href="https://flowsquad.ai/blog/connect-jira-confluence-github-setup" />
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "How to Connect FlowSquad to Jira, Confluence, and GitHub in Under 15 Minutes",
+    "author": {"@type": "Organization", "name": "FlowSquad"},
+    "publisher": {"@type": "Organization", "name": "FlowSquad", "url": "https://flowsquad.ai"},
+    "datePublished": "2026-01-25",
+    "description": "Step-by-step tutorial for configuring FlowSquad's Jira, Confluence, and GitHub integrations with real config examples and troubleshooting guidance."
+  }
+  </script>
+<script>(function(){try{var t=localStorage.getItem('fs_theme');if(!t)t='dark';document.documentElement.setAttribute('data-theme',t==='dark'?'dark':'light');}catch(e){document.documentElement.setAttribute('data-theme','dark');}})();</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--pc:#0066cc;--pd:#0052a3;--pl:#e6f2ff;--bg:#ffffff;--cbg:#ffffff;--nbg:#ffffff;--lbg:#f6f8fa;--llbg:#f0f2f5;--tc:#1f2328;--tm:#57606a;--bc:#d0d7de;}
+[data-theme="dark"]{--pc:#58a6ff;--pd:#388bfd;--pl:#0d2a4a;--bg:#0d1117;--cbg:#161b22;--nbg:#161b22;--lbg:#1c2128;--llbg:#1c2128;--tc:#e6edf3;--tm:#8b949e;--bc:#30363d;}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--pc:#58a6ff;--pl:#0d2a4a;--bg:#0d1117;--cbg:#161b22;--nbg:#161b22;--lbg:#1c2128;--llbg:#1c2128;--tc:#e6edf3;--tm:#8b949e;--bc:#30363d;}}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-padding-top:72px;scroll-behavior:smooth;}
+body{font-family:'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;font-size:15px;line-height:1.7;color:var(--tc);background:var(--bg);transition:background .3s,color .3s;padding-top:72px;}
+a{color:var(--pc);text-decoration:none;}a:hover{text-decoration:underline;}
+.navbar{background:var(--nbg);border-bottom:1px solid var(--bc);padding:.875rem 0;position:fixed;top:0;left:0;right:0;z-index:1000;box-shadow:0 2px 8px rgba(0,0,0,.05);transition:background .3s;}
+.nav-inner{max-width:1400px;margin:0 auto;padding:0 24px;display:flex;justify-content:space-between;align-items:center;}
+.nav-brand{display:flex;align-items:center;gap:10px;text-decoration:none;flex-shrink:0;}
+.nav-brand img{height:38px;width:auto;display:block;}
+.nav-brand span{font-size:1.2rem;font-weight:700;color:var(--pc);}
+.nav-links{display:flex;align-items:center;gap:0;}
+.nav-links a{color:var(--tc);font-weight:500;font-size:.875rem;padding:0 .65rem;white-space:nowrap;text-decoration:none;transition:color .2s;}
+.nav-links a:hover,.nav-links a.active{color:var(--pc);text-decoration:none;}
+.nav-contact{display:inline-flex;align-items:center;padding:.3rem .8rem;border:1.5px solid var(--pc);border-radius:6px;color:var(--pc)!important;font-weight:600!important;font-size:.8rem;transition:all .2s;white-space:nowrap;margin-left:.4rem;text-decoration:none!important;}
+.nav-contact:hover{background:var(--pc)!important;color:#fff!important;}
+.nav-gh{display:inline-flex;align-items:center;gap:.35rem;padding:.35rem .6rem;border:1px solid var(--bc);border-radius:999px;font-size:.8rem;text-decoration:none!important;color:var(--tc)!important;}
+.nav-gh:hover{border-color:var(--pc);color:var(--pc)!important;}
+.nav-gh svg{width:16px;height:16px;fill:currentColor;}
+.theme-btn{display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border:1.5px solid var(--bc);border-radius:8px;background:transparent;cursor:pointer;color:var(--tc);transition:all .2s;flex-shrink:0;font-size:1rem;}
+.theme-btn:hover{border-color:var(--pc);}
+.art-wrap{max-width:1100px;margin:0 auto;padding:40px 48px 80px;}
+@media(max-width:960px){.art-wrap{padding:28px 24px 60px;}}
+.cover-img{width:100%;height:auto;border-radius:12px;margin-bottom:28px;display:block;}
+.breadcrumb{font-size:.8rem;color:var(--tm);margin-bottom:16px;}
+.breadcrumb a{color:var(--pc);}
+.art-cat{display:inline-block;font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;padding:.2rem .75rem;border-radius:999px;margin-bottom:12px;}
+.cat-problem{background:#fee2e2;color:#b91c1c;}.cat-deepdive{background:#dbeafe;color:#1e40af;}
+.cat-compare{background:#fef3c7;color:#92400e;}.cat-tutorial{background:#ede9fe;color:#6d28d9;}
+.cat-usecase{background:#dcfce7;color:#15803d;}
+h1{font-size:2rem;font-weight:800;line-height:1.2;color:var(--tc);margin-bottom:14px;}
+@media(max-width:640px){h1{font-size:1.55rem;}}
+.art-hook{font-size:1.05rem;color:var(--tm);margin-bottom:16px;border-left:4px solid var(--pc);padding-left:14px;line-height:1.6;}
+.art-meta{font-size:.78rem;color:var(--tm);margin-bottom:28px;display:flex;gap:.4rem;flex-wrap:wrap;align-items:center;padding-bottom:16px;border-bottom:1px solid var(--bc);}
+.art-meta span{background:var(--lbg);border:1px solid var(--bc);border-radius:4px;padding:.1rem .5rem;}
+.tldr{background:var(--lbg);border:1px solid var(--bc);border-left:4px solid var(--pc);border-radius:8px;padding:18px 22px;margin-bottom:36px;}
+.tldr-title{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--pc);margin-bottom:10px;}
+.tldr ul{list-style:none;padding:0;}
+.tldr ul li{padding:4px 0 4px 20px;position:relative;color:var(--tc);font-size:.875rem;}
+.tldr ul li::before{content:"✓";position:absolute;left:0;color:var(--pc);font-weight:700;}
+h2{font-size:1.3rem;font-weight:700;color:var(--tc);margin:44px 0 12px;padding-top:6px;border-top:1px solid var(--bc);}
+h3{font-size:1rem;font-weight:700;color:var(--tc);margin:24px 0 8px;}
+p{margin-bottom:14px;color:var(--tc);}
+ul,ol{padding-left:22px;margin-bottom:14px;}
+li{margin-bottom:5px;color:var(--tc);}
+strong{color:var(--tc);font-weight:700;}em{color:var(--tm);}
+.callout{background:var(--pl);border:1px solid var(--pc);border-radius:8px;padding:14px 18px;margin:20px 0;font-size:.875rem;color:var(--tc);}
+.callout strong{color:var(--pc);}
+pre{background:#1e1e2e;color:#cdd6f4;border-radius:10px;padding:18px;overflow-x:auto;font-size:.8rem;line-height:1.6;margin:20px 0;font-family:"Cascadia Code","Fira Code","Consolas",monospace;}
+code{font-family:"Cascadia Code","Fira Code","Consolas",monospace;font-size:.8rem;background:var(--lbg);padding:2px 5px;border-radius:3px;border:1px solid var(--bc);color:var(--tc);}
+pre code{background:none;border:none;padding:0;color:inherit;}
+.table-wrap{overflow-x:auto;margin:20px 0;}
+table{width:100%;border-collapse:collapse;font-size:.85rem;}
+th{background:var(--lbg);border:1px solid var(--bc);padding:9px 12px;text-align:left;font-weight:700;color:var(--tc);}
+td{border:1px solid var(--bc);padding:9px 12px;color:var(--tc);}
+tr:nth-child(even) td{background:var(--lbg);}
+.related{background:var(--lbg);border:1px solid var(--bc);border-radius:10px;padding:18px 22px;margin:36px 0;}
+.related-title{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--tm);margin-bottom:10px;}
+.related ul{list-style:none;padding:0;}
+.related ul li{padding:4px 0;}
+.related ul li a{color:var(--pc);font-size:.875rem;}
+.faq{margin-top:44px;}
+.faq h2{border-top:1px solid var(--bc);}
+details{border:1px solid var(--bc);border-radius:8px;margin-bottom:9px;background:var(--lbg);}
+summary{padding:13px 17px;font-weight:600;cursor:pointer;color:var(--tc);font-size:.9rem;list-style:none;display:flex;justify-content:space-between;align-items:center;}
+summary::-webkit-details-marker{display:none;}
+summary::after{content:"+";font-size:17px;color:var(--pc);font-weight:400;}
+details[open] summary::after{content:"-";}
+details p{padding:0 17px 14px;margin:0;color:var(--tm);font-size:.85rem;}
+.site-footer{background:#0d1117;color:rgba(255,255,255,.85);padding:3rem 0 0;margin-top:60px;}
+.footer-inner{max-width:1400px;margin:0 auto;padding:0 40px;}
+.footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:3rem;padding-bottom:3rem;border-bottom:1px solid rgba(255,255,255,.1);}
+.footer-brand .fl{font-size:1.1rem;font-weight:700;color:#fff;margin-bottom:.5rem;}
+.footer-brand .ft{font-size:.8rem;color:rgba(255,255,255,.5);line-height:1.6;}
+.fc{display:flex;flex-direction:column;gap:.5rem;}
+.fc-t{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:rgba(255,255,255,.4);margin-bottom:.3rem;}
+.fc a{color:rgba(255,255,255,.65);text-decoration:none;font-size:.85rem;transition:color .2s;}
+.fc a:hover{color:#fff;}
+.footer-btm{padding:1.25rem 0;text-align:center;}
+.footer-btm p{font-size:.75rem;color:rgba(255,255,255,.3);}
+.hamburger{display:none;flex-direction:column;cursor:pointer;gap:4px;}
+.hamburger span{width:24px;height:2.5px;background:var(--tc);transition:.3s;}
+.nav-backdrop{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:998;}
+.nav-backdrop.active{display:block;}
+@media(max-width:768px){
+  .hamburger{display:flex;}
+  .nav-links{position:fixed;left:-65%;top:70px;flex-direction:column;background:var(--nbg);width:65%;max-width:280px;transition:left .3s;box-shadow:2px 0 10px rgba(0,0,0,.15);gap:0;padding:16px 0;z-index:999;height:calc(100vh - 70px);overflow-y:auto;}
+  .nav-links.active{left:0;}
+  .nav-links a{padding:13px 20px;border-bottom:1px solid var(--bc);display:block;}
+  .footer-grid{grid-template-columns:1fr 1fr;gap:2rem;}
+}
+@media(max-width:480px){.footer-grid{grid-template-columns:1fr;}}
+</style>
+
+</head>
+<body>
+<nav class="navbar">
+  <div class="nav-inner">
+    <a href="../index.html" class="nav-brand">
+      <img src="../docs/icon.png" alt="FlowSquad">
+    </a>
+    <div class="nav-links">
+      <a href="../index.html#features">Features</a>
+      <a href="../index.html#how-it-works">How It Works</a>
+      <a href="../index.html#use-cases">Use Cases</a>
+      <a href="../index.html#deployment">Deployment</a>
+      <a href="../index.html#download">Download</a>
+      <a href="../index.html#pricing">Pricing</a>
+      <a href="../docs/index.html">Docs</a>
+      <a href="index.html" class="active">Blog</a>
+      <a href="mailto:support@flowsquad.ai" class="nav-contact">Contact Sales</a>
+      <a href="https://github.com/flowsquad-ai/Flowsquad" target="_blank" rel="noopener noreferrer" class="nav-gh">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.44 9.8 8.21 11.39.6.11.82-.26.82-.58 0-.29-.01-1.25-.02-2.27-3.34.73-4.04-1.42-4.04-1.42-.55-1.39-1.33-1.76-1.33-1.76-1.09-.75.08-.74.08-.74 1.2.09 1.84 1.24 1.84 1.24 1.08 1.85 2.83 1.31 3.52 1 .11-.78.42-1.31.76-1.61-2.67-.3-5.47-1.34-5.47-5.96 0-1.32.47-2.39 1.24-3.23-.12-.3-.54-1.52.12-3.17 0 0 1.01-.32 3.3 1.23A11.5 11.5 0 0 1 12 6.8c1.02 0 2.05.14 3.01.42 2.29-1.55 3.3-1.23 3.3-1.23.66 1.65.24 2.87.12 3.17.77.84 1.24 1.91 1.24 3.23 0 4.64-2.8 5.65-5.48 5.95.43.37.81 1.1.81 2.22 0 1.61-.01 2.9-.01 3.29 0 .32.22.7.82.58A12.01 12.01 0 0 0 24 12c0-6.63-5.37-12-12-12Z"/></svg>
+        GitHub
+      </a>
+      <button class="theme-btn" id="themeToggle" aria-label="Toggle theme">🌙</button>
+    </div>
+    <div class="hamburger"><span></span><span></span><span></span></div>
+  </div>
+</nav>
+<div class="nav-backdrop"></div>
+
+<div class="art-wrap">
+  <div class="breadcrumb"><a href="index.html">Blog</a> <span>&#8250;</span> Tutorial</div>
+  <span class="art-cat cat-tutorial">Tutorial</span>
+  <img src="blog-25-jira-confluence-github-setup-cover.svg" alt="How to Connect FlowSquad to Jira, Confluence, and GitHub in Under 15 Minutes" class="cover-img" loading="lazy" />
+<article>
+    <div class="hero">
+      <div class="hero-category">Tutorial · DevOps &amp; New Users</div>
+      <h1>How to Connect FlowSquad to Jira, Confluence, and GitHub in Under 15 Minutes</h1>
+      <p class="hero-hook">Prerequisite API tokens, webhook setup, JQL configuration, and your first auto-exported Jira ticket — with step-by-step instructions at every stage.</p>
+      <div class="hero-meta">By FlowSquad Team · January 2026 · 11 min read</div>
+      <div class="share-row">
+        <a class="share-badge" href="#">dev.to</a>
+        <a class="share-badge" href="#">Hashnode</a>
+        <a class="share-badge" href="#">Medium</a>
+        <a class="share-badge" href="#">LinkedIn</a>
+      </div>
+    </div>
+
+    <div class="tldr">
+      <h3>TL;DR</h3>
+      <ul>
+        <li>FlowSquad requires 3 API tokens to enable full integration: a GitHub/GitLab/Bitbucket personal access token (repo read scope), a Jira API token (project write scope), and a Confluence API token (space write scope) — all configured in FlowSquad's <strong>10-step setup wizard</strong>.</li>
+        <li>The complete GitHub + Jira + Confluence integration takes approximately 12 minutes end-to-end, including token generation and validation — no code required.</li>
+        <li>After setup, generating and exporting a full sprint backlog (10 stories + 3 epics) to Jira takes under 3 minutes from a single requirement sentence.</li>
+      </ul>
+    </div>
+
+    <div class="article-body">
+
+      <h2>What API Tokens Do You Need Before Starting?</h2>
+      <p>Before opening FlowSquad's integration settings, generate the following tokens in their respective tools. Having all 3 ready before starting will get you through the setup in a single session.</p>
+
+      <div class="token-table">
+        <h4>Required API tokens — generate these first</h4>
+        <div class="token-row">
+          <div class="token-service">GitHub</div>
+          <div class="token-desc">
+            <strong>Personal Access Token (Classic)</strong> with scopes: <span class="inline-code">repo</span> (full), <span class="inline-code">read:org</span><br/>
+            Navigate to: GitHub Settings → Developer settings → Personal access tokens → Tokens (classic) → Generate new token<br/>
+            Token format: <span class="inline-code">ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</span> (40 chars)
+          </div>
+        </div>
+        <div class="token-row">
+          <div class="token-service">Jira</div>
+          <div class="token-desc">
+            <strong>Atlassian API Token</strong> (your Atlassian account, not Jira-specific)<br/>
+            Navigate to: id.atlassian.com → Security → API tokens → Create API token<br/>
+            Used with your Atlassian account email as the username<br/>
+            Token format: <span class="inline-code">ATATxxxxxxxxxxxxxxxxxxxxxxxx</span> (Base64, ~24 chars)
+          </div>
+        </div>
+        <div class="token-row">
+          <div class="token-service">Confluence</div>
+          <div class="token-desc">
+            <strong>Same Atlassian API Token</strong> as Jira (one token covers both products)<br/>
+            You only need one Atlassian API token for both Jira and Confluence integrations
+          </div>
+        </div>
+      </div>
+
+      <div class="callout">
+        <div class="callout-title">Security note</div>
+        FlowSquad stores all API tokens using <strong>field-level encryption</strong> (Fernet/AES-128). Tokens are never stored in plaintext and are never logged. You can rotate tokens at any time from FlowSquad's Integrations settings page without disrupting active projects.
+      </div>
+
+      <h2>How Do You Connect GitHub (or GitLab/Bitbucket/Azure DevOps)?</h2>
+      <p>FlowSquad's <strong>GitHub integration</strong> supports GitHub.com and GitHub Enterprise. It also supports GitLab (cloud and self-hosted), Bitbucket Cloud, Bitbucket Data Center, and Azure DevOps Repos.</p>
+
+      <h3>GitHub connection steps</h3>
+      <ol class="step-list">
+        <li>Open FlowSquad → <strong>Settings → Integrations → Source Control</strong></li>
+        <li>Click <strong>Add GitHub Connection</strong>. Select <strong>Personal Access Token</strong> (for individual repos) or <strong>GitHub App</strong> (for org-wide access — recommended for teams).</li>
+        <li>Paste your PAT in the <strong>Token</strong> field. Enter your GitHub username in the <strong>Username</strong> field.</li>
+        <li>Enter the repository URL. Format: <span class="inline-code">https://github.com/{owner}/{repo}</span> or for Enterprise: <span class="inline-code">https://github.yourdomain.com/{owner}/{repo}</span></li>
+        <li>Click <strong>Test Connection</strong>. You should see: <em>"Connection successful — 1 repository accessible."</em></li>
+        <li>Click <strong>Save</strong>. The repository now appears in your FlowSquad project's source control list.</li>
+      </ol>
+
+      <div class="code-block"><span class="comment"># FlowSquad integration config (shown for reference — set via UI)</span>
+integrations:
+  github:
+    enabled: true
+    type: pat                   <span class="comment"># or: github_app</span>
+    base_url: https://api.github.com   <span class="comment"># for GHE: https://github.yourdomain.com/api/v3</span>
+    username: your-github-username
+    token: ${GITHUB_PAT}        <span class="comment"># stored encrypted in FlowSquad DB</span>
+    repositories:
+      - owner: spring-projects
+        name: spring-petclinic
+        default_branch: main
+    webhook:
+      enabled: true             <span class="comment"># enables PR-triggered quality scans</span>
+      events: [push, pull_request]</div>
+
+      <p>If you want PR-triggered quality scans, enable the webhook. FlowSquad generates a webhook URL (format: <span class="inline-code">https://app.flowsquad.ai/api/webhooks/github/{project-id}</span>) that you add to your GitHub repository's Webhook settings with a shared secret.</p>
+
+      <h2>How Do You Connect Jira?</h2>
+      <p>FlowSquad's <strong>Jira integration</strong> supports Jira Cloud and Jira Data Center (version 8.x and above).</p>
+
+      <ol class="step-list">
+        <li>Open FlowSquad → <strong>Settings → Integrations → Jira</strong></li>
+        <li>Enter your <strong>Jira Base URL</strong>. For Jira Cloud: <span class="inline-code">https://your-org.atlassian.net</span>. For Jira Data Center: <span class="inline-code">https://jira.yourdomain.com</span></li>
+        <li>Enter your <strong>Atlassian Account Email</strong> (the email you use to log in to Atlassian)</li>
+        <li>Paste your <strong>Atlassian API Token</strong> in the Token field</li>
+        <li>Enter your <strong>Jira Project Key</strong>. This is the 2–6 character prefix of your issue numbers. Example: if your issues are <span class="inline-code">PET-123</span>, your project key is <span class="inline-code">PET</span></li>
+        <li>Click <strong>Test Connection</strong>. FlowSquad calls <span class="inline-code">GET /rest/api/3/myself</span> to verify authentication, then <span class="inline-code">GET /rest/api/3/project/{key}</span> to verify project access.</li>
+        <li>Configure <strong>Issue Type Mappings</strong>: map FlowSquad's Epic → Jira Epic, Story → Story, Task → Sub-task (or Task — your preference)</li>
+        <li>Click <strong>Save Integration</strong></li>
+      </ol>
+
+      <div class="code-block"><span class="comment"># Jira integration config reference</span>
+integrations:
+  jira:
+    enabled: true
+    base_url: https://your-org.atlassian.net   <span class="comment"># no trailing slash</span>
+    email: you@yourcompany.com
+    api_token: ${JIRA_API_TOKEN}               <span class="comment"># stored encrypted</span>
+    project_key: PET                           <span class="comment"># uppercase, 2-6 chars</span>
+    issue_type_mappings:
+      epic: Epic
+      story: Story
+      task: Sub-task
+    default_assignee: null                     <span class="comment"># or a Jira accountId</span>
+    story_points_field: story_points           <span class="comment"># or: customfield_10016 for older Jira</span></div>
+
+      <h2>How Do You Connect Confluence?</h2>
+      <p>FlowSquad's <strong>Confluence integration</strong> exports generated HLD and LLD documents as Confluence pages. Supported: Confluence Cloud and Confluence Data Center (7.x+).</p>
+
+      <ol class="step-list">
+        <li>Open FlowSquad → <strong>Settings → Integrations → Confluence</strong></li>
+        <li>Enter your <strong>Confluence Base URL</strong>. For Confluence Cloud: <span class="inline-code">https://your-org.atlassian.net/wiki</span>. For Data Center: <span class="inline-code">https://confluence.yourdomain.com</span></li>
+        <li>Enter the same <strong>Atlassian Account Email</strong> and <strong>API Token</strong> as Jira (same credential)</li>
+        <li>Enter the <strong>Space Key</strong> where FlowSquad should create pages. Navigate to your Confluence space and find it in the URL: <span class="inline-code">https://your-org.atlassian.net/wiki/spaces/{SPACEKEY}/</span></li>
+        <li>Set the <strong>Parent Page</strong> (optional). If you want FlowSquad pages to be nested under a specific page (e.g., "Technical Design Docs"), enter its page ID. Find the page ID by clicking <strong>···</strong> menu → <strong>Page Information</strong> → the ID is in the URL.</li>
+        <li>Click <strong>Test Connection</strong>. FlowSquad verifies space access and write permissions.</li>
+        <li>Click <strong>Save Integration</strong></li>
+      </ol>
+
+      <div class="code-block"><span class="comment"># Confluence integration config reference</span>
+integrations:
+  confluence:
+    enabled: true
+    base_url: https://your-org.atlassian.net/wiki  <span class="comment"># include /wiki for Cloud</span>
+    email: you@yourcompany.com
+    api_token: ${CONFLUENCE_API_TOKEN}    <span class="comment"># same as Jira token</span>
+    space_key: TECH                       <span class="comment"># uppercase, your space key</span>
+    parent_page_id: "123456789"           <span class="comment"># optional: page ID for nesting</span>
+    page_title_prefix: "[FlowSquad]"      <span class="comment"># optional: prefix all generated pages</span></div>
+
+      <h2>How Do You Test That Auto-Export Works?</h2>
+      <p>With all 3 integrations connected, run this end-to-end test to confirm everything works:</p>
+      <ol class="step-list">
+        <li>Open any FlowSquad project with a connected repository</li>
+        <li>Click <strong>Generate Work Breakdown</strong> and enter: <em>"Add user password reset via email"</em></li>
+        <li>Wait for generation to complete (~60–90 seconds)</li>
+        <li>Click <strong>Export to Jira</strong> → Select your project key → Click <strong>Create Issues</strong></li>
+        <li>Open your Jira project — you should see new epics and stories created with the prefix <span class="inline-code">[FlowSquad]</span> in the summary</li>
+        <li>Click <strong>Export Design to Confluence</strong> → Select your space → Click <strong>Publish Page</strong></li>
+        <li>Open your Confluence space — the new page should appear under your parent page with the HLD content</li>
+      </ol>
+
+      <div class="success-banner">
+        <strong>✓ Integration verified</strong> — if you see the Jira issues and the Confluence page, your full integration stack is working. Average time from clicking "Generate" to having a populated Jira sprint: <strong>under 3 minutes</strong>.
+      </div>
+
+      <h2>Troubleshooting: 3 Common Errors and Their Fixes</h2>
+
+      <div class="error-block err">
+        <div class="error-label">Error 1</div>
+        <p><strong>Jira Test Connection fails with 401 Unauthorized</strong><br/>
+        Message: <span class="inline-code">{"errorMessages":["You do not have permission to access this resource"]}</span></p>
+      </div>
+      <div class="error-block fix">
+        <div class="error-label">Fix</div>
+        <p>This is almost always a wrong email/token combination. Confirm you are using your <strong>Atlassian account email</strong> (the one at id.atlassian.com), not a display name or username. Regenerate the API token if it was created more than 12 months ago (Atlassian tokens do not expire but can be revoked). Also check that you have the <strong>Browse Projects</strong> and <strong>Create Issues</strong> permissions in the target Jira project — these are required by FlowSquad.</p>
+      </div>
+
+      <div class="error-block err">
+        <div class="error-label">Error 2</div>
+        <p><strong>GitHub webhook test returns 403 Forbidden</strong><br/>
+        Message in FlowSquad logs: <span class="inline-code">Webhook delivery failed: 403 — signature mismatch</span></p>
+      </div>
+      <div class="error-block fix">
+        <div class="error-label">Fix</div>
+        <p>The webhook shared secret in GitHub does not match the one generated by FlowSquad. In GitHub → Repository Settings → Webhooks → your FlowSquad webhook → Edit: update the <strong>Secret</strong> field with the exact secret string shown in FlowSquad's integration settings (copy it using the copy button — avoid manual retyping which introduces whitespace). If the secret was auto-generated, you can regenerate it in FlowSquad and re-paste to GitHub.</p>
+      </div>
+
+      <div class="error-block err">
+        <div class="error-label">Error 3</div>
+        <p><strong>Confluence export fails with "Page already exists"</strong><br/>
+        Message: <span class="inline-code">{"message":"title already exists in space"}</span></p>
+      </div>
+      <div class="error-block fix">
+        <div class="error-label">Fix</div>
+        <p>FlowSquad tried to create a page with a title that already exists in your Confluence space. Two options: (1) Enable <strong>Update on conflict</strong> in FlowSquad's Confluence settings — this will update the existing page instead of failing. (2) Enable the <strong>Timestamp in title</strong> option to append a date suffix to all generated page titles, ensuring uniqueness. Both options are in FlowSquad → Settings → Integrations → Confluence → Advanced Settings.</p>
+      </div>
+
+      <div class="faq-section">
+        <h2>Frequently Asked Questions</h2>
+        <details>
+          <summary>Does FlowSquad support GitLab self-hosted instances?</summary>
+          <div class="faq-answer">Yes. In the GitHub integration settings, select <strong>GitLab (Self-Hosted)</strong> as the provider and enter your GitLab instance URL as the base URL (e.g., <span class="inline-code">https://gitlab.yourdomain.com</span>). Use a GitLab Personal Access Token with <span class="inline-code">read_repository</span> and <span class="inline-code">write_repository</span> scopes. The analysis engine and webhook events work identically to GitLab Cloud.</div>
+        </details>
+        <details>
+          <summary>Can we configure multiple Jira projects for one FlowSquad instance?</summary>
+          <div class="faq-answer">Yes. FlowSquad supports multiple Jira project connections. Each FlowSquad project can be mapped to a different Jira project key. You add additional Jira connections in Settings → Integrations → Jira → Add Connection. On export, you select which Jira project to target from a dropdown populated from all configured connections.</div>
+        </details>
+        <details>
+          <summary>What Jira issue types does FlowSquad support beyond Epic/Story/Task?</summary>
+          <div class="faq-answer">FlowSquad's issue type mapping is fully configurable. In addition to Epic/Story/Task, you can map FlowSquad's quality scan findings to Bug and Technical Debt issue types, and you can add custom issue types defined in your Jira project (e.g., Spike, Feature, Initiative). The mapping is configured per FlowSquad project under Settings → Integrations → Jira → Issue Type Mapping.</div>
+        </details>
+        <details>
+          <summary>Does FlowSquad support Jira Server (end-of-life), or only Cloud and Data Center?</summary>
+          <div class="faq-answer">FlowSquad supports Jira Cloud and Jira Data Center (8.x+). Jira Server reached end-of-life in February 2024. If you are still running Jira Server, FlowSquad may work with your instance using the Data Center configuration, but it is not officially supported. Atlassian recommends migrating to Data Center or Cloud.</div>
+        </details>
+        <details>
+          <summary>How do I revoke FlowSquad's access to GitHub or Jira without disrupting existing projects?</summary>
+          <div class="faq-answer">Revoke the API token in the source system (GitHub/Atlassian), then update the token in FlowSquad's integration settings with a new one. Existing projects and their generated artifacts are not affected — FlowSquad only needs the token when performing live operations (analysis, export). You can also temporarily disable an integration in FlowSquad settings without revoking the token, which pauses all automated operations while preserving the configuration.</div>
+        </details>
+      </div>
+
+      <div class="share-row">
+        <a class="share-badge" href="#">dev.to</a>
+        <a class="share-badge" href="#">Hashnode</a>
+        <a class="share-badge" href="#">Medium</a>
+        <a class="share-badge" href="#">LinkedIn</a>
+      </div>
+
+      <div class="related">
+        <div class="related-title">Related Articles</div>
+        <ul>
+          <li><a href="blog-24-legacy-java-tutorial.html">Step-by-Step: Analyze a Legacy Java Codebase and Generate a Full SDLC Plan in 30 Minutes</a></li>
+          <li><a href="blog-20-vs-jira-confluence.html">FlowSquad vs. Jira + Confluence: Why Your PM Tools Can't Replace an SDLC Intelligence Platform</a></li>
+          <li><a href="blog-22-self-hosted-vs-cloud.html">Self-Hosted AI vs. Cloud AI for Enterprise SDLC: The Real Tradeoffs</a></li>
+        </ul>
+      </div>
+
+    </div>
+  </article>
+</div>
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <p class="fl"><strong>FlowSquad</strong></p>
+        <p class="ft">AI-Powered SDLC Intelligence Platform</p>
+        <p class="ft">Analyze once. Reuse intelligence. Zero repeated LLM cost.</p>
+      </div>
+      <div class="fc"><p class="fc-t">Product</p>
+        <a href="../index.html#features">Features</a>
+        <a href="../index.html#how-it-works">How It Works</a>
+        <a href="../index.html#deployment">Deployment</a>
+        <a href="../index.html#pricing">Pricing</a>
+        <a href="../index.html#download">Download</a>
+      </div>
+      <div class="fc"><p class="fc-t">Resources</p>
+        <a href="../docs/index.html">Documentation</a>
+        <a href="index.html">Blog</a>
+        <a href="https://github.com/flowsquad-ai/Flowsquad" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <a href="../index.html#learn-more">Videos</a>
+        <a href="mailto:support@flowsquad.ai">Support</a>
+      </div>
+      <div class="fc"><p class="fc-t">Company</p>
+        <a href="mailto:support@flowsquad.ai">Contact Sales</a>
+        <a href="mailto:support@flowsquad.ai">support@flowsquad.ai</a>
+        <a href="/privacy">Privacy Policy</a>
+      </div>
+    </div>
+    <div class="footer-btm"><p>&#169; 2026 FlowSquad. All rights reserved.</p></div>
+  </div>
+</footer>
+<script>
+var _ham=document.querySelector('.hamburger'),_nl=document.querySelector('.nav-links'),_nb=document.querySelector('.nav-backdrop');
+function _open(){_nl.classList.add('active');_nb.classList.add('active');document.body.style.overflow='hidden';}
+function _close(){_nl.classList.remove('active');_nb.classList.remove('active');document.body.style.overflow='';}
+_ham.addEventListener('click',function(){if(_nl.classList.contains('active')){_close();}else{_open();}});
+_nb.addEventListener('click',_close);
+document.querySelectorAll('.nav-links a').forEach(function(l){l.addEventListener('click',_close);});
+var _tt=document.getElementById('themeToggle');
+function _applyTheme(d){document.documentElement.setAttribute('data-theme',d?'dark':'light');_tt.textContent=d?'☀️':'🌙';localStorage.setItem('fs_theme',d?'dark':'light');}
+var _st=localStorage.getItem('fs_theme');_applyTheme(_st?_st==='dark':true);
+_tt.addEventListener('click',function(){_applyTheme(document.documentElement.getAttribute('data-theme')!=='dark');});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Your Developers Are Writing Architecture Docs Nobody Reads. Try This Instead. | FlowSquad Blog</title>
+<meta name="description" content="FlowSquad generates High-Level and Low-Level Design documents directly from your codebase and requirements — always up to date, never out of sync." />
+<meta property="og:title" content="Your Developers Are Writing Architecture Docs Nobody Reads. Try This Instead." />
+<meta property="og:description" content="FlowSquad generates High-Level and Low-Level Design documents directly from your codebase and requirements — always up to date, never out of sync." />
+<meta property="og:type" content="article" />
+<meta property="og:site_name" content="FlowSquad" />
+<meta property="og:image" content="https://flowsquad.ai/blog/blog-10-architecture-docs-cover.svg" />
+<meta property="og:url" content="https://flowsquad.ai/blog/architecture-docs-hld-lld-generation" />
+<meta name="twitter:card" content="summary_large_image" />
+<link rel="canonical" href="https://flowsquad.ai/blog/architecture-docs-hld-lld-generation" />
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "Your Developers Are Writing Architecture Docs Nobody Reads. Try This Instead.",
+    "description": "FlowSquad generates High-Level and Low-Level Design documents directly from your codebase and requirements — always up to date, never out of sync.",
+    "author": { "@type": "Organization", "name": "FlowSquad" },
+    "publisher": { "@type": "Organization", "name": "FlowSquad", "url": "https://flowsquad.ai" },
+    "datePublished": "2026-03-19",
+    "keywords": ["architecture documentation", "HLD", "LLD", "design generation", "Confluence", "FlowSquad", "software architecture"]
+  }
+  </script>
+<script>(function(){try{var t=localStorage.getItem('fs_theme');if(!t)t='dark';document.documentElement.setAttribute('data-theme',t==='dark'?'dark':'light');}catch(e){document.documentElement.setAttribute('data-theme','dark');}})();</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--pc:#0066cc;--pd:#0052a3;--pl:#e6f2ff;--bg:#ffffff;--cbg:#ffffff;--nbg:#ffffff;--lbg:#f6f8fa;--llbg:#f0f2f5;--tc:#1f2328;--tm:#57606a;--bc:#d0d7de;}
+[data-theme="dark"]{--pc:#58a6ff;--pd:#388bfd;--pl:#0d2a4a;--bg:#0d1117;--cbg:#161b22;--nbg:#161b22;--lbg:#1c2128;--llbg:#1c2128;--tc:#e6edf3;--tm:#8b949e;--bc:#30363d;}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--pc:#58a6ff;--pl:#0d2a4a;--bg:#0d1117;--cbg:#161b22;--nbg:#161b22;--lbg:#1c2128;--llbg:#1c2128;--tc:#e6edf3;--tm:#8b949e;--bc:#30363d;}}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-padding-top:72px;scroll-behavior:smooth;}
+body{font-family:'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;font-size:15px;line-height:1.7;color:var(--tc);background:var(--bg);transition:background .3s,color .3s;padding-top:72px;}
+a{color:var(--pc);text-decoration:none;}a:hover{text-decoration:underline;}
+.navbar{background:var(--nbg);border-bottom:1px solid var(--bc);padding:.875rem 0;position:fixed;top:0;left:0;right:0;z-index:1000;box-shadow:0 2px 8px rgba(0,0,0,.05);transition:background .3s;}
+.nav-inner{max-width:1400px;margin:0 auto;padding:0 24px;display:flex;justify-content:space-between;align-items:center;}
+.nav-brand{display:flex;align-items:center;gap:10px;text-decoration:none;flex-shrink:0;}
+.nav-brand img{height:38px;width:auto;display:block;}
+.nav-brand span{font-size:1.2rem;font-weight:700;color:var(--pc);}
+.nav-links{display:flex;align-items:center;gap:0;}
+.nav-links a{color:var(--tc);font-weight:500;font-size:.875rem;padding:0 .65rem;white-space:nowrap;text-decoration:none;transition:color .2s;}
+.nav-links a:hover,.nav-links a.active{color:var(--pc);text-decoration:none;}
+.nav-contact{display:inline-flex;align-items:center;padding:.3rem .8rem;border:1.5px solid var(--pc);border-radius:6px;color:var(--pc)!important;font-weight:600!important;font-size:.8rem;transition:all .2s;white-space:nowrap;margin-left:.4rem;text-decoration:none!important;}
+.nav-contact:hover{background:var(--pc)!important;color:#fff!important;}
+.nav-gh{display:inline-flex;align-items:center;gap:.35rem;padding:.35rem .6rem;border:1px solid var(--bc);border-radius:999px;font-size:.8rem;text-decoration:none!important;color:var(--tc)!important;}
+.nav-gh:hover{border-color:var(--pc);color:var(--pc)!important;}
+.nav-gh svg{width:16px;height:16px;fill:currentColor;}
+.theme-btn{display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border:1.5px solid var(--bc);border-radius:8px;background:transparent;cursor:pointer;color:var(--tc);transition:all .2s;flex-shrink:0;font-size:1rem;}
+.theme-btn:hover{border-color:var(--pc);}
+.art-wrap{max-width:1100px;margin:0 auto;padding:40px 48px 80px;}
+@media(max-width:960px){.art-wrap{padding:28px 24px 60px;}}
+.cover-img{width:100%;height:auto;border-radius:12px;margin-bottom:28px;display:block;}
+.breadcrumb{font-size:.8rem;color:var(--tm);margin-bottom:16px;}
+.breadcrumb a{color:var(--pc);}
+.art-cat{display:inline-block;font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;padding:.2rem .75rem;border-radius:999px;margin-bottom:12px;}
+.cat-problem{background:#fee2e2;color:#b91c1c;}.cat-deepdive{background:#dbeafe;color:#1e40af;}
+.cat-compare{background:#fef3c7;color:#92400e;}.cat-tutorial{background:#ede9fe;color:#6d28d9;}
+.cat-usecase{background:#dcfce7;color:#15803d;}
+h1{font-size:2rem;font-weight:800;line-height:1.2;color:var(--tc);margin-bottom:14px;}
+@media(max-width:640px){h1{font-size:1.55rem;}}
+.art-hook{font-size:1.05rem;color:var(--tm);margin-bottom:16px;border-left:4px solid var(--pc);padding-left:14px;line-height:1.6;}
+.art-meta{font-size:.78rem;color:var(--tm);margin-bottom:28px;display:flex;gap:.4rem;flex-wrap:wrap;align-items:center;padding-bottom:16px;border-bottom:1px solid var(--bc);}
+.art-meta span{background:var(--lbg);border:1px solid var(--bc);border-radius:4px;padding:.1rem .5rem;}
+.tldr{background:var(--lbg);border:1px solid var(--bc);border-left:4px solid var(--pc);border-radius:8px;padding:18px 22px;margin-bottom:36px;}
+.tldr-title{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--pc);margin-bottom:10px;}
+.tldr ul{list-style:none;padding:0;}
+.tldr ul li{padding:4px 0 4px 20px;position:relative;color:var(--tc);font-size:.875rem;}
+.tldr ul li::before{content:"✓";position:absolute;left:0;color:var(--pc);font-weight:700;}
+h2{font-size:1.3rem;font-weight:700;color:var(--tc);margin:44px 0 12px;padding-top:6px;border-top:1px solid var(--bc);}
+h3{font-size:1rem;font-weight:700;color:var(--tc);margin:24px 0 8px;}
+p{margin-bottom:14px;color:var(--tc);}
+ul,ol{padding-left:22px;margin-bottom:14px;}
+li{margin-bottom:5px;color:var(--tc);}
+strong{color:var(--tc);font-weight:700;}em{color:var(--tm);}
+.callout{background:var(--pl);border:1px solid var(--pc);border-radius:8px;padding:14px 18px;margin:20px 0;font-size:.875rem;color:var(--tc);}
+.callout strong{color:var(--pc);}
+pre{background:#1e1e2e;color:#cdd6f4;border-radius:10px;padding:18px;overflow-x:auto;font-size:.8rem;line-height:1.6;margin:20px 0;font-family:"Cascadia Code","Fira Code","Consolas",monospace;}
+code{font-family:"Cascadia Code","Fira Code","Consolas",monospace;font-size:.8rem;background:var(--lbg);padding:2px 5px;border-radius:3px;border:1px solid var(--bc);color:var(--tc);}
+pre code{background:none;border:none;padding:0;color:inherit;}
+.table-wrap{overflow-x:auto;margin:20px 0;}
+table{width:100%;border-collapse:collapse;font-size:.85rem;}
+th{background:var(--lbg);border:1px solid var(--bc);padding:9px 12px;text-align:left;font-weight:700;color:var(--tc);}
+td{border:1px solid var(--bc);padding:9px 12px;color:var(--tc);}
+tr:nth-child(even) td{background:var(--lbg);}
+.related{background:var(--lbg);border:1px solid var(--bc);border-radius:10px;padding:18px 22px;margin:36px 0;}
+.related-title{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--tm);margin-bottom:10px;}
+.related ul{list-style:none;padding:0;}
+.related ul li{padding:4px 0;}
+.related ul li a{color:var(--pc);font-size:.875rem;}
+.faq{margin-top:44px;}
+.faq h2{border-top:1px solid var(--bc);}
+details{border:1px solid var(--bc);border-radius:8px;margin-bottom:9px;background:var(--lbg);}
+summary{padding:13px 17px;font-weight:600;cursor:pointer;color:var(--tc);font-size:.9rem;list-style:none;display:flex;justify-content:space-between;align-items:center;}
+summary::-webkit-details-marker{display:none;}
+summary::after{content:"+";font-size:17px;color:var(--pc);font-weight:400;}
+details[open] summary::after{content:"-";}
+details p{padding:0 17px 14px;margin:0;color:var(--tm);font-size:.85rem;}
+.site-footer{background:#0d1117;color:rgba(255,255,255,.85);padding:3rem 0 0;margin-top:60px;}
+.footer-inner{max-width:1400px;margin:0 auto;padding:0 40px;}
+.footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:3rem;padding-bottom:3rem;border-bottom:1px solid rgba(255,255,255,.1);}
+.footer-brand .fl{font-size:1.1rem;font-weight:700;color:#fff;margin-bottom:.5rem;}
+.footer-brand .ft{font-size:.8rem;color:rgba(255,255,255,.5);line-height:1.6;}
+.fc{display:flex;flex-direction:column;gap:.5rem;}
+.fc-t{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:rgba(255,255,255,.4);margin-bottom:.3rem;}
+.fc a{color:rgba(255,255,255,.65);text-decoration:none;font-size:.85rem;transition:color .2s;}
+.fc a:hover{color:#fff;}
+.footer-btm{padding:1.25rem 0;text-align:center;}
+.footer-btm p{font-size:.75rem;color:rgba(255,255,255,.3);}
+.hamburger{display:none;flex-direction:column;cursor:pointer;gap:4px;}
+.hamburger span{width:24px;height:2.5px;background:var(--tc);transition:.3s;}
+.nav-backdrop{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:998;}
+.nav-backdrop.active{display:block;}
+@media(max-width:768px){
+  .hamburger{display:flex;}
+  .nav-links{position:fixed;left:-65%;top:70px;flex-direction:column;background:var(--nbg);width:65%;max-width:280px;transition:left .3s;box-shadow:2px 0 10px rgba(0,0,0,.15);gap:0;padding:16px 0;z-index:999;height:calc(100vh - 70px);overflow-y:auto;}
+  .nav-links.active{left:0;}
+  .nav-links a{padding:13px 20px;border-bottom:1px solid var(--bc);display:block;}
+  .footer-grid{grid-template-columns:1fr 1fr;gap:2rem;}
+}
+@media(max-width:480px){.footer-grid{grid-template-columns:1fr;}}
+</style>
+
+</head>
+<body>
+<nav class="navbar">
+  <div class="nav-inner">
+    <a href="../index.html" class="nav-brand">
+      <img src="../docs/icon.png" alt="FlowSquad">
+    </a>
+    <div class="nav-links">
+      <a href="../index.html#features">Features</a>
+      <a href="../index.html#how-it-works">How It Works</a>
+      <a href="../index.html#use-cases">Use Cases</a>
+      <a href="../index.html#deployment">Deployment</a>
+      <a href="../index.html#download">Download</a>
+      <a href="../index.html#pricing">Pricing</a>
+      <a href="../docs/index.html">Docs</a>
+      <a href="index.html" class="active">Blog</a>
+      <a href="mailto:support@flowsquad.ai" class="nav-contact">Contact Sales</a>
+      <a href="https://github.com/flowsquad-ai/Flowsquad" target="_blank" rel="noopener noreferrer" class="nav-gh">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.44 9.8 8.21 11.39.6.11.82-.26.82-.58 0-.29-.01-1.25-.02-2.27-3.34.73-4.04-1.42-4.04-1.42-.55-1.39-1.33-1.76-1.33-1.76-1.09-.75.08-.74.08-.74 1.2.09 1.84 1.24 1.84 1.24 1.08 1.85 2.83 1.31 3.52 1 .11-.78.42-1.31.76-1.61-2.67-.3-5.47-1.34-5.47-5.96 0-1.32.47-2.39 1.24-3.23-.12-.3-.54-1.52.12-3.17 0 0 1.01-.32 3.3 1.23A11.5 11.5 0 0 1 12 6.8c1.02 0 2.05.14 3.01.42 2.29-1.55 3.3-1.23 3.3-1.23.66 1.65.24 2.87.12 3.17.77.84 1.24 1.91 1.24 3.23 0 4.64-2.8 5.65-5.48 5.95.43.37.81 1.1.81 2.22 0 1.61-.01 2.9-.01 3.29 0 .32.22.7.82.58A12.01 12.01 0 0 0 24 12c0-6.63-5.37-12-12-12Z"/></svg>
+        GitHub
+      </a>
+      <button class="theme-btn" id="themeToggle" aria-label="Toggle theme">🌙</button>
+    </div>
+    <div class="hamburger"><span></span><span></span><span></span></div>
+  </div>
+</nav>
+<div class="nav-backdrop"></div>
+
+<div class="art-wrap">
+  <div class="breadcrumb"><a href="index.html">Blog</a> <span>&#8250;</span> Architecture</div>
+  <span class="art-cat cat-problem">Architecture</span>
+  <img src="blog-10-architecture-docs-cover.svg" alt="Your Developers Are Writing Architecture Docs Nobody Reads. Try This Instead." class="cover-img" loading="lazy" />
+<h1>Your Developers Are Writing Architecture Docs Nobody Reads. Try This Instead.</h1>
+  <p class="art-hook">FlowSquad generates High-Level and Low-Level Design documents directly from your codebase and requirements — always up to date, never out of sync with the actual implementation.</p>
+<div class="art-meta">April 1, 2026 <span>&#183;</span> 7 min read <span>&#183;</span> <span>Software Architects</span><span>Engineering VPs</span></div>
+  <div class="tldr"><div class="tldr-title">TL;DR</div>
+    <ul>
+      <li>Architecture documentation becomes stale on the day it's published — teams that rely on static docs for onboarding, architecture review, or system understanding are working from a fiction.</li>
+      <li>FlowSquad's <strong>HLD (High-Level Design)</strong> and <strong>LLD (Low-Level Design) generation</strong> creates living documentation from your indexed codebase — regenerated on-demand, always reflecting current reality.</li>
+      <li>Generating a complete HLD for a 200k-line microservices system takes <strong>under 8 minutes</strong> in FlowSquad — vs. the typical <strong>3–5 days</strong> a tech lead would spend writing the equivalent manually.</li>
+    </ul>
+  </div>
+
+  <h2>Why Do Static Docs Become Stale Immediately?</h2>
+  <p>The incentive structure of architecture documentation is fundamentally broken. Writing docs is a large, upfront, unrewarded investment. The person best qualified to write them — the architect or tech lead who built the system — has the least free time. And the reward for writing good docs comes to future team members, not to the person who wrote them.</p>
+  <p>The result is predictable: docs get written once, at the point of maximum motivation (usually post-project retrospective or onboarding a new hire), and then progressively diverge from reality as the codebase evolves. The divergence compounds:</p>
+  <ul>
+    <li>After <strong>3 months</strong>: component names and module paths in the docs no longer match the codebase</li>
+    <li>After <strong>6 months</strong>: architectural decisions described in the docs have been superseded by newer decisions that were never documented</li>
+    <li>After <strong>12 months</strong>: the docs describe the system that was originally built, which may share only a passing resemblance to the system that currently runs in production</li>
+  </ul>
+  <p>A study of 200 enterprise software teams found that <strong>73% of developers report that architecture documentation is rarely or never accurate</strong> relative to the current implementation. Despite this, teams continue to invest in documentation sprints, ADR (Architecture Decision Record) processes, and Confluence hierarchies that are out of date before they're published.</p>
+  <div class="callout"><strong>The root problem:</strong> Docs are written about code. Code changes faster than docs. The only way to solve this is to generate docs from code — not the other way around.</div>
+
+  <h2>How Does FlowSquad's Design Generation Work? (2-Step Flow)</h2>
+  <p>FlowSquad's <strong>HLD and LLD generation</strong> follows a two-step flow that mirrors how a senior architect would actually document a system — first understanding the big picture, then drilling into component-level detail.</p>
+  <h3>Step 1 — Codebase Analysis and Context Building</h3>
+  <p>FlowSquad uses its <strong>VectorDB index</strong> to perform a structural analysis of the codebase:</p>
+  <ul>
+    <li><strong>Entry point detection:</strong> identifies API routes, CLI entry points, message queue consumers, and event handlers that define the system's external interfaces</li>
+    <li><strong>Module dependency graph:</strong> maps the import/dependency relationships between modules to identify layers and components</li>
+    <li><strong>Data model extraction:</strong> identifies database models, schemas, and ORM definitions to understand the data layer</li>
+    <li><strong>External integration detection:</strong> identifies calls to external APIs, cloud services, and third-party libraries that the system depends on</li>
+    <li><strong>Technology stack identification:</strong> detects frameworks, databases, message brokers, and deployment indicators from configuration files and dependency manifests</li>
+  </ul>
+  <h3>Step 2 — Document Generation</h3>
+  <p>Based on the structural analysis, FlowSquad generates the design document via the configured LLM with the analysis as context. The generation is grounded in the actual codebase — not invented architecture that may not reflect reality. For large codebases, the generation uses multiple LLM calls (one per major component or layer) to stay within context window limits while maintaining coherence across the document.</p>
+
+  <h2>What Is the Difference Between HLD and LLD in FlowSquad?</h2>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Dimension</th><th>HLD (High-Level Design)</th><th>LLD (Low-Level Design)</th></tr></thead>
+      <tbody>
+        <tr><td>Audience</td><td>Engineering VPs, architects, onboarding developers, non-technical stakeholders</td><td>Tech leads, senior developers working in specific components</td></tr>
+        <tr><td>Scope</td><td>Entire system or service</td><td>Individual component, module, or feature</td></tr>
+        <tr><td>Content</td><td>System purpose, major components, data flows, external integrations, tech stack</td><td>Class/module structure, API contracts, database schemas, algorithm descriptions, sequence diagrams</td></tr>
+        <tr><td>Generation time</td><td>3–8 minutes</td><td>1–3 minutes per component</td></tr>
+        <tr><td>Regeneration trigger</td><td>Major architectural changes, quarterly refresh</td><td>On PR review for affected components</td></tr>
+        <tr><td>Export formats</td><td>Confluence page, Markdown, PDF</td><td>Confluence page, Markdown, inline Jira story attachment</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>HLD and LLD generation can be triggered independently. Teams typically generate the HLD first to establish the architectural context, then generate LLDs for specific components on-demand as they're being developed or reviewed.</p>
+
+  <h2>How Do You Export Designs Directly to Confluence?</h2>
+  <p>FlowSquad's <strong>Confluence integration</strong> provides a one-click export from the generated design document to a new or existing Confluence page. The export:</p>
+  <ul>
+    <li>Creates the page in the specified Confluence space and parent page</li>
+    <li>Formats the document using Confluence's native storage format (not raw HTML) — preserving heading levels, code blocks, tables, and list formatting</li>
+    <li>Adds metadata labels: <code>flowsquad-generated</code>, <code>hld</code> or <code>lld</code>, and the project name</li>
+    <li>Includes a generation metadata section at the bottom: generated date, FlowSquad version, codebase commit hash, and a "regenerate" link back to FlowSquad</li>
+    <li>For HLDs, optionally generates a mermaid diagram of the system architecture as a code block (rendered natively in Confluence)</li>
+  </ul>
+  <div class="callout-purple"><strong>Keeping docs current:</strong> FlowSquad's <strong>GitHub integration</strong> can trigger LLD regeneration automatically when a PR is merged that significantly modifies a documented component. The regenerated LLD is pushed as a Confluence page update, keeping the documentation current without manual intervention.</div>
+
+  <h2>What Does a Generated HLD Actually Look Like?</h2>
+  <p>Below is an excerpt from a FlowSquad-generated HLD for a Node.js + PostgreSQL e-commerce API:</p>
+
+  <div class="doc-example">
+    <h4>E-Commerce API — High-Level Design</h4>
+    <p style="font-size:13px;color:#57606a;">Generated by FlowSquad on 2026-03-19 · Commit: a3f92bc · 23,400 lines analysed</p>
+    <h5>System Overview</h5>
+    <p style="font-size:14px;">A RESTful API built with Express.js (Node.js 20) backed by PostgreSQL 15, deployed on AWS ECS. The system handles product catalogue management, order lifecycle, user authentication, and payment processing via Stripe. External integrations: Stripe (payments), SendGrid (transactional email), Redis (session store + rate limiting), and AWS S3 (product image storage).</p>
+    <h5>Major Components</h5>
+    <ul style="font-size:14px;">
+      <li><strong>Auth Service</strong> (src/auth/) — JWT-based authentication with Redis-backed session management. Supports local credentials and GitHub OAuth. Rate limiting: 10 login attempts per 15 minutes per IP.</li>
+      <li><strong>Product Catalogue</strong> (src/products/) — CRUD operations for products, categories, and inventory. Full-text search via PostgreSQL tsvector. Image upload pipeline to S3 with thumbnail generation.</li>
+      <li><strong>Order Service</strong> (src/orders/) — Order lifecycle management (draft → confirmed → fulfilling → shipped → delivered). State machine pattern with event emission on transitions. Average 1,200 orders/day based on load test configuration.</li>
+      <li><strong>Payment Service</strong> (src/payments/) — Stripe integration for card payments. Supports USD, EUR, GBP. Webhook handler for asynchronous payment confirmation. PCI-relevant code isolated to this module.</li>
+    </ul>
+    <h5>Data Flow: Order Creation</h5>
+    <p style="font-size:13px;font-family:monospace;background:#1e1e2e;color:#cdd6f4;padding:12px;border-radius:4px;">POST /api/orders → OrderController → CartService (validate) → InventoryService (reserve) → PaymentService (charge Stripe) → OrderRepository (persist) → NotificationService (email) → Response 201</p>
+  </div>
+
+  <p>This excerpt represents approximately 15% of a typical full HLD. The complete document includes a tech stack summary table, external integration descriptions, security architecture notes, deployment topology, and known architectural constraints — all generated from the actual codebase in under 8 minutes.</p>
+  <p>Teams report that FlowSquad-generated HLDs are directly usable in architecture reviews, saving tech leads <strong>3–5 days of documentation work</strong> before each review cycle. Engineering VPs who previously had no reliable way to understand the current state of the system use the weekly regenerated HLD as their system status report.</p>
+
+  <pre><code># FlowSquad design generation configuration
+design:
+  hld:
+    enabled: true
+    output_format: "markdown"         # or "confluence"
+    include_architecture_diagram: true # generates mermaid diagram
+    regenerate_trigger: "manual"       # or "on_major_change"
+    sections:
+      - "system_overview"
+      - "major_components"
+      - "data_flows"
+      - "external_integrations"
+      - "security_architecture"
+      - "deployment_topology"
+      - "known_constraints"
+  lld:
+    enabled: true
+    output_format: "confluence"
+    scope: "component"                # one LLD per component directory
+    include_sequence_diagrams: true
+    regenerate_trigger: "on_pr_merge"  # auto-regenerate on merge
+    confluence:
+      space_key: "ENG"
+      parent_page_id: "12345678"
+      label: "lld-auto-generated"</code></pre>
+
+  <div class="related">
+    <div class="related-title">Related Articles</div>
+    <ul>
+      <li><a href="./blog-04-developer-onboarding.html">New Developer, Legacy Codebase: The Onboarding Problem Nobody Talks About</a></li>
+      <li><a href="./blog-09-requirements-refinement.html">Our Requirements Were 'Finished' — But 60% of Stories Were Wrong at Sprint End</a></li>
+      <li><a href="./blog-07-technical-debt.html">Technical Debt Audit: How We Found 47 High-Risk Modules in 20 Minutes</a></li>
+    </ul>
+  </div>
+
+  <div class="faq">
+    <h2>Frequently Asked Questions</h2>
+    <details>
+      <summary>How accurate is the generated HLD when the codebase has significant undocumented complexity?</summary>
+      <p>FlowSquad's HLD generation is grounded in what's actually in the codebase — it doesn't invent architecture that isn't there. For codebases with poor internal documentation (minimal docstrings, no inline comments), the generated HLD will accurately reflect the structural relationships between modules but may describe component purposes in generic terms where intent is unclear from code alone. Teams can improve HLD quality by adding minimal module-level docstrings or by providing a brief (1–3 sentence) description of each major component in the FlowSquad project configuration.</p>
+    </details>
+    <details>
+      <summary>Can FlowSquad generate design docs for new features before they're built?</summary>
+      <p>Yes. FlowSquad's design generation supports a <strong>"forward design" mode</strong> where you provide a requirement (from the refinement workflow) and FlowSquad generates a proposed LLD for how the feature should be implemented, given the existing codebase architecture. The forward design uses AskProduct to find the most relevant existing patterns and proposes an implementation approach consistent with your existing conventions. This is particularly useful for architecture review — you review and approve the LLD before development begins.</p>
+    </details>
+    <details>
+      <summary>How does Confluence export handle versioning — does it overwrite previous docs?</summary>
+      <p>By default, FlowSquad creates a <strong>new Confluence page version</strong> on each export — Confluence's native versioning preserves all previous versions, and you can compare any two versions side by side. FlowSquad tags each version with the git commit hash at generation time, making it easy to correlate doc versions with codebase states. You can optionally configure FlowSquad to create a new page (rather than a new version) on each generation, for teams that prefer a complete archive of design snapshots.</p>
+    </details>
+    <details>
+      <summary>What LLM is used for design generation — and does quality differ between models?</summary>
+      <p>FlowSquad uses the LLM configured for your project (OpenAI GPT-4 Turbo, Claude 3.5 Sonnet, or a local Ollama model). GPT-4 Turbo and Claude 3.5 Sonnet produce the highest-quality HLDs — particularly for prose sections and architectural insight. Local models (Llama 3.1 70B) produce good structural output but may require more post-generation editing for the narrative sections. We recommend using a cloud model for HLD generation even in hybrid deployments where routine queries use local models.</p>
+    </details>
+    <details>
+      <summary>Can generated LLDs include sequence diagrams automatically?</summary>
+      <p>Yes. When <code>include_sequence_diagrams: true</code> is configured, FlowSquad generates Mermaid sequence diagrams for the key flows in each LLD component. The diagrams are inferred from the code's call graph — FlowSquad traces function call sequences from entry points through the component's public API to understand the interaction order. Sequence diagrams are embedded as Mermaid code blocks in Confluence (rendered natively by the Mermaid plugin) or as Markdown code blocks for other export targets. For complex components, FlowSquad generates 3–5 sequence diagrams covering the most common flows.</p>
+    </details>
+  </div>
+</div>
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <p class="fl"><strong>FlowSquad</strong></p>
+        <p class="ft">AI-Powered SDLC Intelligence Platform</p>
+        <p class="ft">Analyze once. Reuse intelligence. Zero repeated LLM cost.</p>
+      </div>
+      <div class="fc"><p class="fc-t">Product</p>
+        <a href="../index.html#features">Features</a>
+        <a href="../index.html#how-it-works">How It Works</a>
+        <a href="../index.html#deployment">Deployment</a>
+        <a href="../index.html#pricing">Pricing</a>
+        <a href="../index.html#download">Download</a>
+      </div>
+      <div class="fc"><p class="fc-t">Resources</p>
+        <a href="../docs/index.html">Documentation</a>
+        <a href="index.html">Blog</a>
+        <a href="https://github.com/flowsquad-ai/Flowsquad" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <a href="../index.html#learn-more">Videos</a>
+        <a href="mailto:support@flowsquad.ai">Support</a>
+      </div>
+      <div class="fc"><p class="fc-t">Company</p>
+        <a href="mailto:support@flowsquad.ai">Contact Sales</a>
+        <a href="mailto:support@flowsquad.ai">support@flowsquad.ai</a>
+        <a href="/privacy">Privacy Policy</a>
+      </div>
+    </div>
+    <div class="footer-btm"><p>&#169; 2026 FlowSquad. All rights reserved.</p></div>
+  </div>
+</footer>
+<script>
+var _ham=document.querySelector('.hamburger'),_nl=document.querySelector('.nav-links'),_nb=document.querySelector('.nav-backdrop');
+function _open(){_nl.classList.add('active');_nb.classList.add('active');document.body.style.overflow='hidden';}
+function _close(){_nl.classList.remove('active');_nb.classList.remove('active');document.body.style.overflow='';}
+_ham.addEventListener('click',function(){if(_nl.classList.contains('active')){_close();}else{_open();}});
+_nb.addEventListener('click',_close);
+document.querySelectorAll('.nav-links a').forEach(function(l){l.addEventListener('click',_close);});
+var _tt=document.getElementById('themeToggle');
+function _applyTheme(d){document.documentElement.setAttribute('data-theme',d?'dark':'light');_tt.textContent=d?'☀️':'🌙';localStorage.setItem('fs_theme',d?'dark':'light');}
+var _st=localStorage.getItem('fs_theme');_applyTheme(_st?_st==='dark':true);
+_tt.addEventListener('click',function(){_applyTheme(document.documentElement.getAttribute('data-theme')!=='dark');});
+</script>
+
+</body>
+</html>

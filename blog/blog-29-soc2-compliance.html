@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>From Zero to SOC 2 Compliant: How FlowSquad's Audit Trail, RBAC, and Encryption Support the Certification | FlowSquad Blog</title>
+<meta name="description" content="Audit log every action, encrypt every API key, enforce MFA, control access with roles — FlowSquad ships with the controls SOC 2 auditors look for." />
+<meta property="og:title" content="From Zero to SOC 2 Compliant: How FlowSquad's Audit Trail, RBAC, and Encryption Support the Certification" />
+<meta property="og:description" content="Audit log every action, encrypt every API key, enforce MFA, control access with roles — FlowSquad ships with the controls SOC 2 auditors look for." />
+<meta property="og:type" content="article" />
+<meta property="og:site_name" content="FlowSquad" />
+<meta property="og:image" content="https://flowsquad.ai/blog/blog-29-soc2-compliance-cover.svg" />
+<meta property="og:url" content="https://flowsquad.ai/blog/soc2-compliance" />
+<meta name="twitter:card" content="summary_large_image" />
+<link rel="canonical" href="https://flowsquad.ai/blog/soc2-compliance" />
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "From Zero to SOC 2 Compliant: How FlowSquad's Audit Trail, RBAC, and Encryption Support the Certification",
+    "author": {"@type": "Organization", "name": "FlowSquad"},
+    "publisher": {"@type": "Organization", "name": "FlowSquad", "url": "https://flowsquad.ai"},
+    "datePublished": "2026-02-19",
+    "description": "A compliance-focused overview of how FlowSquad's built-in security controls map to SOC 2 Trust Service Criteria."
+  }
+  </script>
+<script>(function(){try{var t=localStorage.getItem('fs_theme');if(!t)t='dark';document.documentElement.setAttribute('data-theme',t==='dark'?'dark':'light');}catch(e){document.documentElement.setAttribute('data-theme','dark');}})();</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--pc:#0066cc;--pd:#0052a3;--pl:#e6f2ff;--bg:#ffffff;--cbg:#ffffff;--nbg:#ffffff;--lbg:#f6f8fa;--llbg:#f0f2f5;--tc:#1f2328;--tm:#57606a;--bc:#d0d7de;}
+[data-theme="dark"]{--pc:#58a6ff;--pd:#388bfd;--pl:#0d2a4a;--bg:#0d1117;--cbg:#161b22;--nbg:#161b22;--lbg:#1c2128;--llbg:#1c2128;--tc:#e6edf3;--tm:#8b949e;--bc:#30363d;}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--pc:#58a6ff;--pl:#0d2a4a;--bg:#0d1117;--cbg:#161b22;--nbg:#161b22;--lbg:#1c2128;--llbg:#1c2128;--tc:#e6edf3;--tm:#8b949e;--bc:#30363d;}}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-padding-top:72px;scroll-behavior:smooth;}
+body{font-family:'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;font-size:15px;line-height:1.7;color:var(--tc);background:var(--bg);transition:background .3s,color .3s;padding-top:72px;}
+a{color:var(--pc);text-decoration:none;}a:hover{text-decoration:underline;}
+.navbar{background:var(--nbg);border-bottom:1px solid var(--bc);padding:.875rem 0;position:fixed;top:0;left:0;right:0;z-index:1000;box-shadow:0 2px 8px rgba(0,0,0,.05);transition:background .3s;}
+.nav-inner{max-width:1400px;margin:0 auto;padding:0 24px;display:flex;justify-content:space-between;align-items:center;}
+.nav-brand{display:flex;align-items:center;gap:10px;text-decoration:none;flex-shrink:0;}
+.nav-brand img{height:38px;width:auto;display:block;}
+.nav-brand span{font-size:1.2rem;font-weight:700;color:var(--pc);}
+.nav-links{display:flex;align-items:center;gap:0;}
+.nav-links a{color:var(--tc);font-weight:500;font-size:.875rem;padding:0 .65rem;white-space:nowrap;text-decoration:none;transition:color .2s;}
+.nav-links a:hover,.nav-links a.active{color:var(--pc);text-decoration:none;}
+.nav-contact{display:inline-flex;align-items:center;padding:.3rem .8rem;border:1.5px solid var(--pc);border-radius:6px;color:var(--pc)!important;font-weight:600!important;font-size:.8rem;transition:all .2s;white-space:nowrap;margin-left:.4rem;text-decoration:none!important;}
+.nav-contact:hover{background:var(--pc)!important;color:#fff!important;}
+.nav-gh{display:inline-flex;align-items:center;gap:.35rem;padding:.35rem .6rem;border:1px solid var(--bc);border-radius:999px;font-size:.8rem;text-decoration:none!important;color:var(--tc)!important;}
+.nav-gh:hover{border-color:var(--pc);color:var(--pc)!important;}
+.nav-gh svg{width:16px;height:16px;fill:currentColor;}
+.theme-btn{display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border:1.5px solid var(--bc);border-radius:8px;background:transparent;cursor:pointer;color:var(--tc);transition:all .2s;flex-shrink:0;font-size:1rem;}
+.theme-btn:hover{border-color:var(--pc);}
+.art-wrap{max-width:1100px;margin:0 auto;padding:40px 48px 80px;}
+@media(max-width:960px){.art-wrap{padding:28px 24px 60px;}}
+.cover-img{width:100%;height:auto;border-radius:12px;margin-bottom:28px;display:block;}
+.breadcrumb{font-size:.8rem;color:var(--tm);margin-bottom:16px;}
+.breadcrumb a{color:var(--pc);}
+.art-cat{display:inline-block;font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;padding:.2rem .75rem;border-radius:999px;margin-bottom:12px;}
+.cat-problem{background:#fee2e2;color:#b91c1c;}.cat-deepdive{background:#dbeafe;color:#1e40af;}
+.cat-compare{background:#fef3c7;color:#92400e;}.cat-tutorial{background:#ede9fe;color:#6d28d9;}
+.cat-usecase{background:#dcfce7;color:#15803d;}
+h1{font-size:2rem;font-weight:800;line-height:1.2;color:var(--tc);margin-bottom:14px;}
+@media(max-width:640px){h1{font-size:1.55rem;}}
+.art-hook{font-size:1.05rem;color:var(--tm);margin-bottom:16px;border-left:4px solid var(--pc);padding-left:14px;line-height:1.6;}
+.art-meta{font-size:.78rem;color:var(--tm);margin-bottom:28px;display:flex;gap:.4rem;flex-wrap:wrap;align-items:center;padding-bottom:16px;border-bottom:1px solid var(--bc);}
+.art-meta span{background:var(--lbg);border:1px solid var(--bc);border-radius:4px;padding:.1rem .5rem;}
+.tldr{background:var(--lbg);border:1px solid var(--bc);border-left:4px solid var(--pc);border-radius:8px;padding:18px 22px;margin-bottom:36px;}
+.tldr-title{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--pc);margin-bottom:10px;}
+.tldr ul{list-style:none;padding:0;}
+.tldr ul li{padding:4px 0 4px 20px;position:relative;color:var(--tc);font-size:.875rem;}
+.tldr ul li::before{content:"✓";position:absolute;left:0;color:var(--pc);font-weight:700;}
+h2{font-size:1.3rem;font-weight:700;color:var(--tc);margin:44px 0 12px;padding-top:6px;border-top:1px solid var(--bc);}
+h3{font-size:1rem;font-weight:700;color:var(--tc);margin:24px 0 8px;}
+p{margin-bottom:14px;color:var(--tc);}
+ul,ol{padding-left:22px;margin-bottom:14px;}
+li{margin-bottom:5px;color:var(--tc);}
+strong{color:var(--tc);font-weight:700;}em{color:var(--tm);}
+.callout{background:var(--pl);border:1px solid var(--pc);border-radius:8px;padding:14px 18px;margin:20px 0;font-size:.875rem;color:var(--tc);}
+.callout strong{color:var(--pc);}
+pre{background:#1e1e2e;color:#cdd6f4;border-radius:10px;padding:18px;overflow-x:auto;font-size:.8rem;line-height:1.6;margin:20px 0;font-family:"Cascadia Code","Fira Code","Consolas",monospace;}
+code{font-family:"Cascadia Code","Fira Code","Consolas",monospace;font-size:.8rem;background:var(--lbg);padding:2px 5px;border-radius:3px;border:1px solid var(--bc);color:var(--tc);}
+pre code{background:none;border:none;padding:0;color:inherit;}
+.table-wrap{overflow-x:auto;margin:20px 0;}
+table{width:100%;border-collapse:collapse;font-size:.85rem;}
+th{background:var(--lbg);border:1px solid var(--bc);padding:9px 12px;text-align:left;font-weight:700;color:var(--tc);}
+td{border:1px solid var(--bc);padding:9px 12px;color:var(--tc);}
+tr:nth-child(even) td{background:var(--lbg);}
+.related{background:var(--lbg);border:1px solid var(--bc);border-radius:10px;padding:18px 22px;margin:36px 0;}
+.related-title{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--tm);margin-bottom:10px;}
+.related ul{list-style:none;padding:0;}
+.related ul li{padding:4px 0;}
+.related ul li a{color:var(--pc);font-size:.875rem;}
+.faq{margin-top:44px;}
+.faq h2{border-top:1px solid var(--bc);}
+details{border:1px solid var(--bc);border-radius:8px;margin-bottom:9px;background:var(--lbg);}
+summary{padding:13px 17px;font-weight:600;cursor:pointer;color:var(--tc);font-size:.9rem;list-style:none;display:flex;justify-content:space-between;align-items:center;}
+summary::-webkit-details-marker{display:none;}
+summary::after{content:"+";font-size:17px;color:var(--pc);font-weight:400;}
+details[open] summary::after{content:"-";}
+details p{padding:0 17px 14px;margin:0;color:var(--tm);font-size:.85rem;}
+.site-footer{background:#0d1117;color:rgba(255,255,255,.85);padding:3rem 0 0;margin-top:60px;}
+.footer-inner{max-width:1400px;margin:0 auto;padding:0 40px;}
+.footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:3rem;padding-bottom:3rem;border-bottom:1px solid rgba(255,255,255,.1);}
+.footer-brand .fl{font-size:1.1rem;font-weight:700;color:#fff;margin-bottom:.5rem;}
+.footer-brand .ft{font-size:.8rem;color:rgba(255,255,255,.5);line-height:1.6;}
+.fc{display:flex;flex-direction:column;gap:.5rem;}
+.fc-t{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:rgba(255,255,255,.4);margin-bottom:.3rem;}
+.fc a{color:rgba(255,255,255,.65);text-decoration:none;font-size:.85rem;transition:color .2s;}
+.fc a:hover{color:#fff;}
+.footer-btm{padding:1.25rem 0;text-align:center;}
+.footer-btm p{font-size:.75rem;color:rgba(255,255,255,.3);}
+.hamburger{display:none;flex-direction:column;cursor:pointer;gap:4px;}
+.hamburger span{width:24px;height:2.5px;background:var(--tc);transition:.3s;}
+.nav-backdrop{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:998;}
+.nav-backdrop.active{display:block;}
+@media(max-width:768px){
+  .hamburger{display:flex;}
+  .nav-links{position:fixed;left:-65%;top:70px;flex-direction:column;background:var(--nbg);width:65%;max-width:280px;transition:left .3s;box-shadow:2px 0 10px rgba(0,0,0,.15);gap:0;padding:16px 0;z-index:999;height:calc(100vh - 70px);overflow-y:auto;}
+  .nav-links.active{left:0;}
+  .nav-links a{padding:13px 20px;border-bottom:1px solid var(--bc);display:block;}
+  .footer-grid{grid-template-columns:1fr 1fr;gap:2rem;}
+}
+@media(max-width:480px){.footer-grid{grid-template-columns:1fr;}}
+</style>
+
+</head>
+<body>
+<nav class="navbar">
+  <div class="nav-inner">
+    <a href="../index.html" class="nav-brand">
+      <img src="../docs/icon.png" alt="FlowSquad">
+    </a>
+    <div class="nav-links">
+      <a href="../index.html#features">Features</a>
+      <a href="../index.html#how-it-works">How It Works</a>
+      <a href="../index.html#use-cases">Use Cases</a>
+      <a href="../index.html#deployment">Deployment</a>
+      <a href="../index.html#download">Download</a>
+      <a href="../index.html#pricing">Pricing</a>
+      <a href="../docs/index.html">Docs</a>
+      <a href="index.html" class="active">Blog</a>
+      <a href="mailto:support@flowsquad.ai" class="nav-contact">Contact Sales</a>
+      <a href="https://github.com/flowsquad-ai/Flowsquad" target="_blank" rel="noopener noreferrer" class="nav-gh">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.44 9.8 8.21 11.39.6.11.82-.26.82-.58 0-.29-.01-1.25-.02-2.27-3.34.73-4.04-1.42-4.04-1.42-.55-1.39-1.33-1.76-1.33-1.76-1.09-.75.08-.74.08-.74 1.2.09 1.84 1.24 1.84 1.24 1.08 1.85 2.83 1.31 3.52 1 .11-.78.42-1.31.76-1.61-2.67-.3-5.47-1.34-5.47-5.96 0-1.32.47-2.39 1.24-3.23-.12-.3-.54-1.52.12-3.17 0 0 1.01-.32 3.3 1.23A11.5 11.5 0 0 1 12 6.8c1.02 0 2.05.14 3.01.42 2.29-1.55 3.3-1.23 3.3-1.23.66 1.65.24 2.87.12 3.17.77.84 1.24 1.91 1.24 3.23 0 4.64-2.8 5.65-5.48 5.95.43.37.81 1.1.81 2.22 0 1.61-.01 2.9-.01 3.29 0 .32.22.7.82.58A12.01 12.01 0 0 0 24 12c0-6.63-5.37-12-12-12Z"/></svg>
+        GitHub
+      </a>
+      <button class="theme-btn" id="themeToggle" aria-label="Toggle theme">🌙</button>
+    </div>
+    <div class="hamburger"><span></span><span></span><span></span></div>
+  </div>
+</nav>
+<div class="nav-backdrop"></div>
+
+<div class="art-wrap">
+  <div class="breadcrumb"><a href="index.html">Blog</a> <span>&#8250;</span> Use Case</div>
+  <span class="art-cat cat-usecase">Use Case</span>
+  <img src="blog-29-soc2-compliance-cover.svg" alt="From Zero to SOC 2 Compliant: How FlowSquad's Audit Trail, RBAC, and Encryption Support the Certification" class="cover-img" loading="lazy" />
+<h1>From Zero to SOC 2 Compliant: How FlowSquad's Audit Trail, RBAC, and Encryption Support the Certification</h1>
+  <div class="art-hook">Audit log every action, encrypt every API key, enforce MFA, control access with roles — FlowSquad ships with the controls SOC 2 auditors look for out of the box.</div>
+
+  <div class="tldr"><div class="tldr-title">TL;DR</div>
+    <ul>
+      <li>FlowSquad's built-in security controls address <strong>9 of the 17 Common Criteria (CC)</strong> categories in SOC 2 Type II directly, with out-of-box evidence generation for each.</li>
+      <li><strong>Field-level encryption</strong> (Fernet/AES-128) protects all LLM API keys and credentials at rest; key rotation takes under <strong>4 minutes</strong> without downtime.</li>
+      <li>Audit logs capture <strong>100% of user actions</strong> with immutable timestamps — a 90-day retention window satisfies the most common SOC 2 CC6 evidence request from auditors.</li>
+    </ul>
+  </div>
+
+  <h2>What SOC 2 Trust Service Criteria Does FlowSquad Address?</h2>
+  <p>SOC 2 is built on five Trust Service Criteria (TSC): Security, Availability, Processing Integrity, Confidentiality, and Privacy. The most commonly audited — and the most complex to evidence — is the Security category, specifically the CC6 (Logical and Physical Access) series. FlowSquad's security architecture was designed with these criteria in mind, because the platform itself handles sensitive artifacts: LLM API keys, codebase data, design documents, and user management.</p>
+<div class="art-meta">August 22, 2026 <span>&#183;</span> 9 min read <span>&#183;</span> <span>Compliance Officers</span><span>CTOs</span></div>
+
+  <div class="metric-row">
+    <div class="metric-pill"><div class="num">9</div><div class="lbl">SOC 2 CC categories addressed</div></div>
+    <div class="metric-pill"><div class="num">100%</div><div class="lbl">User actions captured in audit log</div></div>
+    <div class="metric-pill"><div class="num">AES-128</div><div class="lbl">Encryption standard for all secrets</div></div>
+    <div class="metric-pill"><div class="num">5</div><div class="lbl">RBAC roles enforcing least privilege</div></div>
+  </div>
+
+  <p>The table below maps the key SOC 2 criteria to the specific FlowSquad features that provide evidence. This mapping is the starting point for preparing your SOC 2 readiness documentation.</p>
+
+  <table>
+    <thead><tr><th>SOC 2 Control</th><th>Criterion</th><th>FlowSquad Feature</th><th>Evidence Type</th></tr></thead>
+    <tbody>
+      <tr><td><span class="control-tag cc">CC6.1</span></td><td>Logical access security measures</td><td><strong>Field-level encryption</strong> (Fernet/AES-128)</td><td>Encrypted secrets in DB, key rotation logs</td></tr>
+      <tr><td><span class="control-tag cc">CC6.2</span></td><td>Prior to issuing credentials</td><td><strong>10-step setup wizard</strong> + admin approval workflow</td><td>User provisioning audit trail</td></tr>
+      <tr><td><span class="control-tag cc">CC6.3</span></td><td>Registered users / authorization</td><td><strong>RBAC</strong> (global admin, product admin, analyst, reviewer, viewer)</td><td>Role assignment logs, permission policy export</td></tr>
+      <tr><td><span class="control-tag cc">CC6.6</span></td><td>Logical access — system boundaries</td><td><strong>SAML 2.0 with Keycloak</strong>, MFA enforcement</td><td>SSO configuration, MFA enrollment rate report</td></tr>
+      <tr><td><span class="control-tag cc">CC6.7</span></td><td>Transmission of data</td><td>TLS 1.3 on all endpoints, HTTPS enforced</td><td>TLS certificate logs, Ingress config</td></tr>
+      <tr><td><span class="control-tag cc">CC6.8</span></td><td>Unauthorized access prevention</td><td><strong>OWASP Top 10</strong> / Semgrep scanning</td><td>Vulnerability scan reports, remediation tickets</td></tr>
+      <tr><td><span class="control-tag">CC7.2</span></td><td>Monitoring of system components</td><td><strong>Audit logs</strong>, health probes, LLM cost tracker anomaly alerts</td><td>Audit log exports, monitoring dashboards</td></tr>
+      <tr><td><span class="control-tag">CC7.3</span></td><td>Evaluation of security events</td><td>Audit log + alert rules on suspicious patterns</td><td>Alert history, incident response records</td></tr>
+      <tr><td><span class="control-tag a">A1.1</span></td><td>Availability — capacity planning</td><td>Kubernetes HPA, PostgreSQL connection pooling</td><td>HPA configuration, uptime metrics</td></tr>
+    </tbody>
+  </table>
+
+  <h2>How Does FlowSquad's Audit Log Support SOC 2 CC6?</h2>
+  <p>The SOC 2 CC6 criteria require that you demonstrate who accessed what, when, and what they did. FlowSquad's <strong>audit logs</strong> capture every user action at the application layer with five mandatory fields: timestamp (UTC, millisecond precision), user ID, action type, resource affected, and IP address. Logs are written to an append-only table in PostgreSQL and cannot be modified by any user role — not even global admin.</p>
+  <p>The most commonly requested audit log export during a SOC 2 Type II audit covers a <strong>90-day lookback window</strong>. FlowSquad's admin panel exports this as CSV or JSON with one click, filtering by user, action type, date range, or resource. The export is timestamped and cryptographically signed, giving auditors confidence the log has not been tampered with since export.</p>
+
+  <div class="evidence-box">
+    <strong>Auditor Evidence Request (typical):</strong> "Provide a complete list of all user access events to system X for the period January 1 – March 31, 2026, including the action taken, resource affected, timestamp, and originating IP."<br/><br/>
+    <strong>FlowSquad Response:</strong> Admin panel → Audit Logs → Export → Date range: Jan 1–Mar 31 → Format: JSON. <em>Time to produce: under 60 seconds.</em>
+  </div>
+
+  <pre><span class="cm"># Sample audit log entry (JSON format)</span>
+{
+  <span class="k">"event_id"</span>: <span class="v">"evt_01HZ9M2X..."</span>,
+  <span class="k">"timestamp"</span>: <span class="v">"2026-03-15T09:14:22.847Z"</span>,
+  <span class="k">"user_id"</span>: <span class="v">"usr_jane_doe"</span>,
+  <span class="k">"user_email"</span>: <span class="v">"jane@example.com"</span>,
+  <span class="k">"role"</span>: <span class="v">"analyst"</span>,
+  <span class="k">"action"</span>: <span class="v">"story.generate"</span>,
+  <span class="k">"resource_type"</span>: <span class="v">"epic"</span>,
+  <span class="k">"resource_id"</span>: <span class="v">"epic_0042"</span>,
+  <span class="k">"ip_address"</span>: <span class="v">"192.168.1.44"</span>,
+  <span class="k">"session_id"</span>: <span class="v">"sess_XwQ..."</span>,
+  <span class="k">"outcome"</span>: <span class="v">"success"</span>,
+  <span class="k">"llm_provider"</span>: <span class="v">"openai"</span>,
+  <span class="k">"tokens_used"</span>: <span class="v">1842</span>
+}</pre>
+
+  <h2>How Does RBAC Enforce the Principle of Least Privilege?</h2>
+  <p>SOC 2 CC6.3 requires that system access is granted based on job function and revoked promptly when no longer needed. FlowSquad's <strong>RBAC</strong> implements 5 role tiers that map cleanly to the job functions in an SDLC team, ensuring no user has more access than their role requires.</p>
+
+  <table>
+    <thead><tr><th>Role</th><th>Access Scope</th><th>Typical Job Function</th><th>SOC 2 Least Privilege?</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Global Admin</strong></td><td>All products, all settings, user management, audit logs</td><td>Platform administrator</td><td>Restricted to &lt;3 users by policy</td></tr>
+      <tr><td><strong>Product Admin</strong></td><td>One product: all features, project settings, integrations</td><td>Tech lead / product owner</td><td>Product-scoped, no cross-product access</td></tr>
+      <tr><td><strong>Analyst</strong></td><td>Generate artifacts, view code analysis, run quality scans</td><td>Business analyst, developer</td><td>No user management, no billing</td></tr>
+      <tr><td><strong>Reviewer</strong></td><td>View and comment on artifacts only</td><td>QA, security reviewer</td><td>Read + comment only</td></tr>
+      <tr><td><strong>Viewer</strong></td><td>View published artifacts only</td><td>Stakeholder, executive</td><td>Strictly read-only</td></tr>
+    </tbody>
+  </table>
+
+  <p>Role assignments are logged in the audit trail — every grant, revocation, and modification. Auditors typically ask for an "access matrix" showing which users have which roles on which systems. FlowSquad exports this directly from the admin panel as a CSV. For SOC 2 Type II, you will need to demonstrate that you performed a <strong>quarterly access review</strong> — FlowSquad's admin panel includes a one-click "Access Review Report" button specifically to support this control.</p>
+
+  <h2>How Does Field-Level Encryption Satisfy CC6.1?</h2>
+  <p>SOC 2 CC6.1 requires protection of logical access credentials, including encryption of stored credentials. FlowSquad applies <strong>field-level encryption</strong> using Fernet (AES-128-CBC with HMAC-SHA256) to every sensitive field stored in PostgreSQL: LLM provider API keys, database credentials, OAuth tokens for GitHub/Jira/Confluence integrations, and SAML private keys.</p>
+  <p>The encryption key is stored separately from the database — in a Kubernetes Secret or external secrets manager (Vault, AWS Secrets Manager, Azure Key Vault). This means a database dump alone is useless without the encryption key — a critical separation that SOC 2 auditors explicitly look for under CC6.1's "logical access security measures."</p>
+
+  <div class="evidence-box">
+    <strong>Evidence for CC6.1:</strong> The platform's architecture document (auto-generated by FlowSquad's <strong>HLD generation</strong> feature) includes a data classification section showing which fields are encrypted, the encryption algorithm, and the key management approach. This document satisfies the "description of security measures" evidence typically requested.
+  </div>
+
+  <p>Quarterly key rotation is a SOC 2 operational best practice. FlowSquad's key rotation wizard re-encrypts all stored secrets with a new Fernet key without downtime, completing in under <strong>4 minutes</strong> for a typical deployment with 50 stored credentials. The rotation event is recorded in the audit log with the timestamp and the admin user who initiated it.</p>
+
+  <h2>How Does MFA Reduce Access Risk?</h2>
+  <p>SOC 2 CC6.6 requires that system access is protected against unauthorized access, including multi-factor authentication for remote access. FlowSquad supports <strong>MFA</strong> (TOTP-based, compatible with Google Authenticator, Authy, and 1Password) enforced at the platform level. When <code>auth.mfaRequired: true</code> is set in the Helm values, users cannot log in without MFA — there is no opt-out at the user level.</p>
+  <p>Industry data shows that MFA blocks <strong>99.9% of automated account takeover attacks</strong> (Microsoft Security, 2023). For SOC 2, the evidence requirement is an MFA enrollment report showing that 100% of users have MFA enabled. FlowSquad's admin panel exports this report in one click, showing each user's MFA status and enrollment date.</p>
+
+  <h2>What Does a SOC 2 Auditor Look for That FlowSquad Provides Out of the Box?</h2>
+  <p>SOC 2 auditors conduct walkthroughs of your environment to verify controls are operating as described. Based on common audit findings, the table below lists the most frequent requests during a SOC 2 Type II audit and where each FlowSquad feature satisfies the request.</p>
+
+  <table>
+    <thead><tr><th>Auditor Request</th><th>FlowSquad Feature</th><th>Time to Produce Evidence</th></tr></thead>
+    <tbody>
+      <tr><td>"Show me a list of all user logins in the past 90 days"</td><td>Audit Logs → Filter by action=login → Export CSV</td><td>&lt; 60 seconds</td></tr>
+      <tr><td>"Who has admin access to the platform?"</td><td>Admin panel → Users → Filter by role=global_admin</td><td>&lt; 30 seconds</td></tr>
+      <tr><td>"Show me evidence that credentials are encrypted at rest"</td><td>Architecture doc (HLD output) + DB schema showing encrypted columns</td><td>&lt; 5 minutes</td></tr>
+      <tr><td>"How do you detect and respond to unauthorized access attempts?"</td><td>Audit log failed login events + alert rules configuration export</td><td>&lt; 5 minutes</td></tr>
+      <tr><td>"Show me your vulnerability scan results for the past quarter"</td><td>OWASP Top 10 / Semgrep scan report exports (per-PR and monthly summary)</td><td>&lt; 2 minutes</td></tr>
+      <tr><td>"What is your MFA enrollment rate?"</td><td>Admin panel → Auth report → MFA enrollment by user</td><td>&lt; 30 seconds</td></tr>
+      <tr><td>"Can you demonstrate your access review process?"</td><td>Quarterly Access Review Report + role change audit trail</td><td>&lt; 3 minutes</td></tr>
+    </tbody>
+  </table>
+
+  <div class="faq">
+    <h2>Frequently Asked Questions</h2>
+
+    <details>
+      <summary>Does FlowSquad provide a SOC 2 report of its own?</summary>
+      <p>Yes. FlowSquad maintains a SOC 2 Type II report covering the Security Trust Service Criteria. The report is available under NDA to customers and prospects. The controls described in this post — audit logs, RBAC, MFA, field-level encryption — are all covered in FlowSquad's own SOC 2 report, meaning your organization inherits these controls as part of a vendor due diligence argument. Contact sales@flowsquad.ai to request the report.</p>
+    </details>
+
+    <details>
+      <summary>How long are audit logs retained by default?</summary>
+      <p>The default retention period is <strong>90 days</strong>, which satisfies most SOC 2 Type II audit windows. Retention can be extended to 365 days or indefinitely in the admin panel under Settings → Audit Logs → Retention Policy. Log storage is compressed at approximately <strong>1.2 KB per event</strong>; a team of 20 engineers generating 500 events/day requires ~11 MB/month of storage — negligible cost compared to the compliance value.</p>
+    </details>
+
+    <details>
+      <summary>Can FlowSquad integrate with our existing SIEM (Splunk, Datadog)?</summary>
+      <p>Yes. FlowSquad's audit log API streams events in JSON-LD format via a webhook endpoint. Configure the webhook URL to point at your Splunk HEC, Datadog Log Intake, or Elastic Logstash endpoint. The webhook fires within <strong>500ms</strong> of each event. Alternatively, use the PostgreSQL audit log table directly with a Splunk DB Connect or Datadog PostgreSQL integration for bulk historical ingestion.</p>
+    </details>
+
+    <details>
+      <summary>Does RBAC work with SAML 2.0 / SSO groups?</summary>
+      <p>Yes. When <strong>SAML 2.0 with Keycloak</strong> is configured, FlowSquad maps Keycloak group membership to FlowSquad RBAC roles via a configurable attribute mapping in the SAML assertion. For example, the Keycloak group <code>flowsquad-analysts</code> maps to the <code>analyst</code> role automatically on first login. Role changes in Keycloak are reflected at the user's next login. This means your organization's Identity team controls access through existing IAM tooling rather than a separate FlowSquad admin panel.</p>
+    </details>
+
+    <details>
+      <summary>What encryption does FlowSquad use for data in transit vs. data at rest?</summary>
+      <p>Data in transit is protected by <strong>TLS 1.3</strong> enforced on all HTTP endpoints (the Ingress rejects connections below TLS 1.2). Data at rest uses <strong>field-level Fernet encryption (AES-128-CBC + HMAC-SHA256)</strong> for sensitive fields in PostgreSQL, and relies on the cloud provider's disk encryption (e.g., AWS EBS encryption with KMS, or GCP Persistent Disk encryption) for the full volume. The combination satisfies CC6.1 requirements for both in-transit and at-rest protection as documented in FlowSquad's own SOC 2 report.</p>
+    </details>
+  </div>
+
+  <div class="related">
+    <h3>Related Posts</h3>
+    <ul>
+      <li><a href="./blog-30-banking-airgapped.html">AI-Powered SDLC in a Bank: Zero Data Leaving the Data Centre</a></li>
+      <li><a href="./blog-26-kubernetes-deployment.html">Deploy FlowSquad on Kubernetes: Production Checklist</a></li>
+      <li><a href="./blog-28-small-team-productivity.html">How a 5-Person Engineering Team Ships Like a 20-Person Team</a></li>
+    </ul>
+  </div>
+
+  <div class="share-bottom">
+    <a class="badge" href="#">dev.to</a>
+    <a class="badge" href="#">Hashnode</a>
+    <a class="badge" href="#">Medium</a>
+    <a class="badge" href="#">LinkedIn</a>
+  </div>
+</div>
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <p class="fl"><strong>FlowSquad</strong></p>
+        <p class="ft">AI-Powered SDLC Intelligence Platform</p>
+        <p class="ft">Analyze once. Reuse intelligence. Zero repeated LLM cost.</p>
+      </div>
+      <div class="fc"><p class="fc-t">Product</p>
+        <a href="../index.html#features">Features</a>
+        <a href="../index.html#how-it-works">How It Works</a>
+        <a href="../index.html#deployment">Deployment</a>
+        <a href="../index.html#pricing">Pricing</a>
+        <a href="../index.html#download">Download</a>
+      </div>
+      <div class="fc"><p class="fc-t">Resources</p>
+        <a href="../docs/index.html">Documentation</a>
+        <a href="index.html">Blog</a>
+        <a href="https://github.com/flowsquad-ai/Flowsquad" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <a href="../index.html#learn-more">Videos</a>
+        <a href="mailto:support@flowsquad.ai">Support</a>
+      </div>
+      <div class="fc"><p class="fc-t">Company</p>
+        <a href="mailto:support@flowsquad.ai">Contact Sales</a>
+        <a href="mailto:support@flowsquad.ai">support@flowsquad.ai</a>
+        <a href="/privacy">Privacy Policy</a>
+      </div>
+    </div>
+    <div class="footer-btm"><p>&#169; 2026 FlowSquad. All rights reserved.</p></div>
+  </div>
+</footer>
+<script>
+var _ham=document.querySelector('.hamburger'),_nl=document.querySelector('.nav-links'),_nb=document.querySelector('.nav-backdrop');
+function _open(){_nl.classList.add('active');_nb.classList.add('active');document.body.style.overflow='hidden';}
+function _close(){_nl.classList.remove('active');_nb.classList.remove('active');document.body.style.overflow='';}
+_ham.addEventListener('click',function(){if(_nl.classList.contains('active')){_close();}else{_open();}});
+_nb.addEventListener('click',_close);
+document.querySelectorAll('.nav-links a').forEach(function(l){l.addEventListener('click',_close);});
+var _tt=document.getElementById('themeToggle');
+function _applyTheme(d){document.documentElement.setAttribute('data-theme',d?'dark':'light');_tt.textContent=d?'☀️':'🌙';localStorage.setItem('fs_theme',d?'dark':'light');}
+var _st=localStorage.getItem('fs_theme');_applyTheme(_st?_st==='dark':true);
+_tt.addEventListener('click',function(){_applyTheme(document.documentElement.getAttribute('data-theme')!=='dark');});
+</script>
+
+</body>
+</html>

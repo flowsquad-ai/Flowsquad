@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>FlowSquad's RBAC Explained: From Global Admin to Read-Only Viewer | FlowSquad Blog</title>
+<meta name="description" content="Enterprise teams need fine-grained access control. Learn how FlowSquad RBAC lets you assign roles per project, limit LLM access, and audit every action across your SDLC." />
+<meta property="og:title" content="FlowSquad's RBAC Explained: From Global Admin to Read-Only Viewer" />
+<meta property="og:description" content="Enterprise teams need fine-grained access control. Learn how FlowSquad RBAC lets you assign roles per project, limit LLM access, and audit every action across your SDLC." />
+<meta property="og:type" content="article" />
+<meta property="og:site_name" content="FlowSquad" />
+<meta property="og:image" content="https://flowsquad.ai/blog/blog-13-rbac-permissions-cover.svg" />
+<meta property="og:url" content="https://flowsquad.ai/blog/rbac-permissions" />
+<meta name="twitter:card" content="summary_large_image" />
+<link rel="canonical" href="https://flowsquad.ai/blog/rbac-permissions" />
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "FlowSquad's RBAC Explained: From Global Admin to Read-Only Viewer",
+    "description": "Product-level admins, global admins, analysts, reviewers, viewers — a walkthrough of every permission boundary and why they matter for enterprise compliance.",
+    "author": {"@type": "Organization", "name": "FlowSquad"},
+    "publisher": {"@type": "Organization", "name": "FlowSquad", "url": "https://flowsquad.ai"},
+    "datePublished": "2026-01-25",
+    "articleSection": "Deep-Dive"
+  }
+  </script>
+<script>(function(){try{var t=localStorage.getItem('fs_theme');if(!t)t='dark';document.documentElement.setAttribute('data-theme',t==='dark'?'dark':'light');}catch(e){document.documentElement.setAttribute('data-theme','dark');}})();</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--pc:#0066cc;--pd:#0052a3;--pl:#e6f2ff;--bg:#ffffff;--cbg:#ffffff;--nbg:#ffffff;--lbg:#f6f8fa;--llbg:#f0f2f5;--tc:#1f2328;--tm:#57606a;--bc:#d0d7de;}
+[data-theme="dark"]{--pc:#58a6ff;--pd:#388bfd;--pl:#0d2a4a;--bg:#0d1117;--cbg:#161b22;--nbg:#161b22;--lbg:#1c2128;--llbg:#1c2128;--tc:#e6edf3;--tm:#8b949e;--bc:#30363d;}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--pc:#58a6ff;--pl:#0d2a4a;--bg:#0d1117;--cbg:#161b22;--nbg:#161b22;--lbg:#1c2128;--llbg:#1c2128;--tc:#e6edf3;--tm:#8b949e;--bc:#30363d;}}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-padding-top:72px;scroll-behavior:smooth;}
+body{font-family:'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;font-size:15px;line-height:1.7;color:var(--tc);background:var(--bg);transition:background .3s,color .3s;padding-top:72px;}
+a{color:var(--pc);text-decoration:none;}a:hover{text-decoration:underline;}
+.navbar{background:var(--nbg);border-bottom:1px solid var(--bc);padding:.875rem 0;position:fixed;top:0;left:0;right:0;z-index:1000;box-shadow:0 2px 8px rgba(0,0,0,.05);transition:background .3s;}
+.nav-inner{max-width:1400px;margin:0 auto;padding:0 24px;display:flex;justify-content:space-between;align-items:center;}
+.nav-brand{display:flex;align-items:center;gap:10px;text-decoration:none;flex-shrink:0;}
+.nav-brand img{height:38px;width:auto;display:block;}
+.nav-brand span{font-size:1.2rem;font-weight:700;color:var(--pc);}
+.nav-links{display:flex;align-items:center;gap:0;}
+.nav-links a{color:var(--tc);font-weight:500;font-size:.875rem;padding:0 .65rem;white-space:nowrap;text-decoration:none;transition:color .2s;}
+.nav-links a:hover,.nav-links a.active{color:var(--pc);text-decoration:none;}
+.nav-contact{display:inline-flex;align-items:center;padding:.3rem .8rem;border:1.5px solid var(--pc);border-radius:6px;color:var(--pc)!important;font-weight:600!important;font-size:.8rem;transition:all .2s;white-space:nowrap;margin-left:.4rem;text-decoration:none!important;}
+.nav-contact:hover{background:var(--pc)!important;color:#fff!important;}
+.nav-gh{display:inline-flex;align-items:center;gap:.35rem;padding:.35rem .6rem;border:1px solid var(--bc);border-radius:999px;font-size:.8rem;text-decoration:none!important;color:var(--tc)!important;}
+.nav-gh:hover{border-color:var(--pc);color:var(--pc)!important;}
+.nav-gh svg{width:16px;height:16px;fill:currentColor;}
+.theme-btn{display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border:1.5px solid var(--bc);border-radius:8px;background:transparent;cursor:pointer;color:var(--tc);transition:all .2s;flex-shrink:0;font-size:1rem;}
+.theme-btn:hover{border-color:var(--pc);}
+.art-wrap{max-width:1100px;margin:0 auto;padding:40px 48px 80px;}
+@media(max-width:960px){.art-wrap{padding:28px 24px 60px;}}
+.cover-img{width:100%;height:auto;border-radius:12px;margin-bottom:28px;display:block;}
+.breadcrumb{font-size:.8rem;color:var(--tm);margin-bottom:16px;}
+.breadcrumb a{color:var(--pc);}
+.art-cat{display:inline-block;font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;padding:.2rem .75rem;border-radius:999px;margin-bottom:12px;}
+.cat-problem{background:#fee2e2;color:#b91c1c;}.cat-deepdive{background:#dbeafe;color:#1e40af;}
+.cat-compare{background:#fef3c7;color:#92400e;}.cat-tutorial{background:#ede9fe;color:#6d28d9;}
+.cat-usecase{background:#dcfce7;color:#15803d;}
+h1{font-size:2rem;font-weight:800;line-height:1.2;color:var(--tc);margin-bottom:14px;}
+@media(max-width:640px){h1{font-size:1.55rem;}}
+.art-hook{font-size:1.05rem;color:var(--tm);margin-bottom:16px;border-left:4px solid var(--pc);padding-left:14px;line-height:1.6;}
+.art-meta{font-size:.78rem;color:var(--tm);margin-bottom:28px;display:flex;gap:.4rem;flex-wrap:wrap;align-items:center;padding-bottom:16px;border-bottom:1px solid var(--bc);}
+.art-meta span{background:var(--lbg);border:1px solid var(--bc);border-radius:4px;padding:.1rem .5rem;}
+.tldr{background:var(--lbg);border:1px solid var(--bc);border-left:4px solid var(--pc);border-radius:8px;padding:18px 22px;margin-bottom:36px;}
+.tldr-title{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--pc);margin-bottom:10px;}
+.tldr ul{list-style:none;padding:0;}
+.tldr ul li{padding:4px 0 4px 20px;position:relative;color:var(--tc);font-size:.875rem;}
+.tldr ul li::before{content:"✓";position:absolute;left:0;color:var(--pc);font-weight:700;}
+h2{font-size:1.3rem;font-weight:700;color:var(--tc);margin:44px 0 12px;padding-top:6px;border-top:1px solid var(--bc);}
+h3{font-size:1rem;font-weight:700;color:var(--tc);margin:24px 0 8px;}
+p{margin-bottom:14px;color:var(--tc);}
+ul,ol{padding-left:22px;margin-bottom:14px;}
+li{margin-bottom:5px;color:var(--tc);}
+strong{color:var(--tc);font-weight:700;}em{color:var(--tm);}
+.callout{background:var(--pl);border:1px solid var(--pc);border-radius:8px;padding:14px 18px;margin:20px 0;font-size:.875rem;color:var(--tc);}
+.callout strong{color:var(--pc);}
+pre{background:#1e1e2e;color:#cdd6f4;border-radius:10px;padding:18px;overflow-x:auto;font-size:.8rem;line-height:1.6;margin:20px 0;font-family:"Cascadia Code","Fira Code","Consolas",monospace;}
+code{font-family:"Cascadia Code","Fira Code","Consolas",monospace;font-size:.8rem;background:var(--lbg);padding:2px 5px;border-radius:3px;border:1px solid var(--bc);color:var(--tc);}
+pre code{background:none;border:none;padding:0;color:inherit;}
+.table-wrap{overflow-x:auto;margin:20px 0;}
+table{width:100%;border-collapse:collapse;font-size:.85rem;}
+th{background:var(--lbg);border:1px solid var(--bc);padding:9px 12px;text-align:left;font-weight:700;color:var(--tc);}
+td{border:1px solid var(--bc);padding:9px 12px;color:var(--tc);}
+tr:nth-child(even) td{background:var(--lbg);}
+.related{background:var(--lbg);border:1px solid var(--bc);border-radius:10px;padding:18px 22px;margin:36px 0;}
+.related-title{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--tm);margin-bottom:10px;}
+.related ul{list-style:none;padding:0;}
+.related ul li{padding:4px 0;}
+.related ul li a{color:var(--pc);font-size:.875rem;}
+.faq{margin-top:44px;}
+.faq h2{border-top:1px solid var(--bc);}
+details{border:1px solid var(--bc);border-radius:8px;margin-bottom:9px;background:var(--lbg);}
+summary{padding:13px 17px;font-weight:600;cursor:pointer;color:var(--tc);font-size:.9rem;list-style:none;display:flex;justify-content:space-between;align-items:center;}
+summary::-webkit-details-marker{display:none;}
+summary::after{content:"+";font-size:17px;color:var(--pc);font-weight:400;}
+details[open] summary::after{content:"-";}
+details p{padding:0 17px 14px;margin:0;color:var(--tm);font-size:.85rem;}
+.site-footer{background:#0d1117;color:rgba(255,255,255,.85);padding:3rem 0 0;margin-top:60px;}
+.footer-inner{max-width:1400px;margin:0 auto;padding:0 40px;}
+.footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:3rem;padding-bottom:3rem;border-bottom:1px solid rgba(255,255,255,.1);}
+.footer-brand .fl{font-size:1.1rem;font-weight:700;color:#fff;margin-bottom:.5rem;}
+.footer-brand .ft{font-size:.8rem;color:rgba(255,255,255,.5);line-height:1.6;}
+.fc{display:flex;flex-direction:column;gap:.5rem;}
+.fc-t{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:rgba(255,255,255,.4);margin-bottom:.3rem;}
+.fc a{color:rgba(255,255,255,.65);text-decoration:none;font-size:.85rem;transition:color .2s;}
+.fc a:hover{color:#fff;}
+.footer-btm{padding:1.25rem 0;text-align:center;}
+.footer-btm p{font-size:.75rem;color:rgba(255,255,255,.3);}
+.hamburger{display:none;flex-direction:column;cursor:pointer;gap:4px;}
+.hamburger span{width:24px;height:2.5px;background:var(--tc);transition:.3s;}
+.nav-backdrop{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:998;}
+.nav-backdrop.active{display:block;}
+@media(max-width:768px){
+  .hamburger{display:flex;}
+  .nav-links{position:fixed;left:-65%;top:70px;flex-direction:column;background:var(--nbg);width:65%;max-width:280px;transition:left .3s;box-shadow:2px 0 10px rgba(0,0,0,.15);gap:0;padding:16px 0;z-index:999;height:calc(100vh - 70px);overflow-y:auto;}
+  .nav-links.active{left:0;}
+  .nav-links a{padding:13px 20px;border-bottom:1px solid var(--bc);display:block;}
+  .footer-grid{grid-template-columns:1fr 1fr;gap:2rem;}
+}
+@media(max-width:480px){.footer-grid{grid-template-columns:1fr;}}
+</style>
+
+</head>
+<body>
+<nav class="navbar">
+  <div class="nav-inner">
+    <a href="../index.html" class="nav-brand">
+      <img src="../docs/icon.png" alt="FlowSquad">
+    </a>
+    <div class="nav-links">
+      <a href="../index.html#features">Features</a>
+      <a href="../index.html#how-it-works">How It Works</a>
+      <a href="../index.html#use-cases">Use Cases</a>
+      <a href="../index.html#deployment">Deployment</a>
+      <a href="../index.html#download">Download</a>
+      <a href="../index.html#pricing">Pricing</a>
+      <a href="../docs/index.html">Docs</a>
+      <a href="index.html" class="active">Blog</a>
+      <a href="mailto:support@flowsquad.ai" class="nav-contact">Contact Sales</a>
+      <a href="https://github.com/flowsquad-ai/Flowsquad" target="_blank" rel="noopener noreferrer" class="nav-gh">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.44 9.8 8.21 11.39.6.11.82-.26.82-.58 0-.29-.01-1.25-.02-2.27-3.34.73-4.04-1.42-4.04-1.42-.55-1.39-1.33-1.76-1.33-1.76-1.09-.75.08-.74.08-.74 1.2.09 1.84 1.24 1.84 1.24 1.08 1.85 2.83 1.31 3.52 1 .11-.78.42-1.31.76-1.61-2.67-.3-5.47-1.34-5.47-5.96 0-1.32.47-2.39 1.24-3.23-.12-.3-.54-1.52.12-3.17 0 0 1.01-.32 3.3 1.23A11.5 11.5 0 0 1 12 6.8c1.02 0 2.05.14 3.01.42 2.29-1.55 3.3-1.23 3.3-1.23.66 1.65.24 2.87.12 3.17.77.84 1.24 1.91 1.24 3.23 0 4.64-2.8 5.65-5.48 5.95.43.37.81 1.1.81 2.22 0 1.61-.01 2.9-.01 3.29 0 .32.22.7.82.58A12.01 12.01 0 0 0 24 12c0-6.63-5.37-12-12-12Z"/></svg>
+        GitHub
+      </a>
+      <button class="theme-btn" id="themeToggle" aria-label="Toggle theme">🌙</button>
+    </div>
+    <div class="hamburger"><span></span><span></span><span></span></div>
+  </div>
+</nav>
+<div class="nav-backdrop"></div>
+
+<div class="art-wrap">
+  <div class="breadcrumb"><a href="index.html">Blog</a> <span>&#8250;</span> Deep Dive</div>
+  <span class="art-cat cat-deepdive">Deep Dive</span>
+  <img src="blog-13-rbac-permissions-cover.svg" alt="FlowSquad's RBAC Explained: From Global Admin to Read-Only Viewer" class="cover-img" loading="lazy" />
+<div class="post-meta">
+    <span class="category-badge">Deep-Dive</span>
+    <span class="target-badge">IT Admins · Security Architects</span>
+  </div>
+
+  <h1>FlowSquad's RBAC Explained: From Global Admin to Read-Only Viewer</h1>
+
+  <p class="art-hook">Product-level admins, global admins, analysts, reviewers, viewers — a walkthrough of every permission boundary and why they matter for enterprise compliance.</p>
+<div class="art-meta">April 22, 2026 <span>&#183;</span> 9 min read <span>&#183;</span> <span>IT Admins</span><span>Security Architects</span></div>
+
+  <div class="tldr"><div class="tldr-title">TL;DR</div>
+    <ul>
+      <li>FlowSquad defines <strong>5 distinct roles</strong> with <strong>23 capability categories</strong> enforced at both the UI layer and the API layer on every request.</li>
+      <li>The <strong>Global Admin</strong> role controls system-wide settings (LLM config, VectorDB, SSO) and is the only role that can create or delete products — scoped to a maximum of <strong>3 users</strong> in recommended security configurations.</li>
+      <li>All permission checks generate <strong>audit log entries</strong> (who accessed what, when, and from which IP), supporting SOC 2 Type II access control requirements with <strong>90-day</strong> default log retention.</li>
+    </ul>
+  </div>
+
+  <h2>What Are the 5 Roles in FlowSquad's RBAC System?</h2>
+  <p>FlowSquad's <strong>Role-Based Access Control (RBAC)</strong> system defines five roles arranged in a hierarchical capability pyramid. Each role is scoped either globally (across the entire FlowSquad instance) or per-product (within a single product workspace). Understanding this hierarchy is essential for designing a secure, auditable user provisioning strategy.</p>
+
+  <div class="role-card">
+    <h3>1. Global Admin</h3>
+    <p>Unrestricted access to all system configuration: LLM provider settings, VectorDB connections, SSO/SAML configuration, license management, instance-wide audit logs, and all product workspaces. Can create, delete, and reconfigure any product. Intended for 1–3 individuals (typically the platform owner or DevOps lead).</p>
+  </div>
+
+  <div class="role-card">
+    <h3>2. Product Admin</h3>
+    <p>Full control within an assigned product: configure integrations (Jira, Confluence, GitHub), manage product-level LLM overrides, invite and assign users to the product, set workflow tabs (SAFe/Scrum/Kanban), configure branching rules, and approve generated content. Cannot access other products or system-level settings.</p>
+  </div>
+
+  <div class="role-card">
+    <h3>3. Analyst</h3>
+    <p>Create and trigger AI generation: run Epic/Story/Task decomposition, initiate code analysis, generate HLD/LLD, create test cases, run quality scans. Can edit and refine generated content. Cannot manage users, configure integrations, or approve final exports to Jira/Confluence.</p>
+  </div>
+
+  <div class="role-card">
+    <h3>4. Reviewer</h3>
+    <p>Read all generated content within an assigned product, add inline comments and ratings to Epics/Stories/HLD/LLD, and approve or reject content for export. Cannot trigger new AI generation or modify configuration. Intended for tech leads and architects who review AI output quality.</p>
+  </div>
+
+  <div class="role-card">
+    <h3>5. Viewer</h3>
+    <p>Read-only access to finalized, approved content within an assigned product. Can view Epics, Stories, Tasks, HLD/LLD, and test cases but cannot comment, generate, configure, or export. Intended for stakeholders, PMs, and auditors who need visibility without write access.</p>
+  </div>
+
+  <h2>What Can a Global Admin Do That a Product Admin Cannot?</h2>
+  <p>The distinction between <strong>Global Admin</strong> and <strong>Product Admin</strong> is the single most important RBAC boundary in FlowSquad. Product Admins have deep operational control over their product, but they operate within a container whose walls are defined by the Global Admin. The following matrix details the <span class="metric">23 key capabilities</span> and where the boundary falls.</p>
+
+  <table>
+    <thead>
+      <tr>
+        <th style="text-align:left;">Capability</th>
+        <th>Global Admin</th>
+        <th>Product Admin</th>
+        <th>Analyst</th>
+        <th>Reviewer</th>
+        <th>Viewer</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>Configure LLM Provider (global)</td><td class="allow">✓</td><td class="deny">✗</td><td class="deny">✗</td><td class="deny">✗</td><td class="deny">✗</td></tr>
+      <tr><td>Configure LLM Override (product)</td><td class="allow">✓</td><td class="allow">✓</td><td class="deny">✗</td><td class="deny">✗</td><td class="deny">✗</td></tr>
+      <tr><td>Create / Delete Products</td><td class="allow">✓</td><td class="deny">✗</td><td class="deny">✗</td><td class="deny">✗</td><td class="deny">✗</td></tr>
+      <tr><td>Manage Instance Users (all)</td><td class="allow">✓</td><td class="deny">✗</td><td class="deny">✗</td><td class="deny">✗</td><td class="deny">✗</td></tr>
+      <tr><td>Manage Product Users</td><td class="allow">✓</td><td class="allow">✓</td><td class="deny">✗</td><td class="deny">✗</td><td class="deny">✗</td></tr>
+      <tr><td>Configure SSO / SAML</td><td class="allow">✓</td><td class="deny">✗</td><td class="deny">✗</td><td class="deny">✗</td><td class="deny">✗</td></tr>
+      <tr><td>Configure VectorDB Connection</td><td class="allow">✓</td><td class="deny">✗</td><td class="deny">✗</td><td class="deny">✗</td><td class="deny">✗</td></tr>
+      <tr><td>Manage Jira/Confluence Integration</td><td class="allow">✓</td><td class="allow">✓</td><td class="deny">✗</td><td class="deny">✗</td><td class="deny">✗</td></tr>
+      <tr><td>Configure Workflow Tabs</td><td class="allow">✓</td><td class="allow">✓</td><td class="deny">✗</td><td class="deny">✗</td><td class="deny">✗</td></tr>
+      <tr><td>Trigger AI Generation</td><td class="allow">✓</td><td class="allow">✓</td><td class="allow">✓</td><td class="deny">✗</td><td class="deny">✗</td></tr>
+      <tr><td>Edit Generated Content</td><td class="allow">✓</td><td class="allow">✓</td><td class="allow">✓</td><td class="deny">✗</td><td class="deny">✗</td></tr>
+      <tr><td>Approve / Reject Content</td><td class="allow">✓</td><td class="allow">✓</td><td class="deny">✗</td><td class="allow">✓</td><td class="deny">✗</td></tr>
+      <tr><td>Export to Jira / Confluence</td><td class="allow">✓</td><td class="allow">✓</td><td class="limited">Limited</td><td class="deny">✗</td><td class="deny">✗</td></tr>
+      <tr><td>Run Quality / OWASP Scans</td><td class="allow">✓</td><td class="allow">✓</td><td class="allow">✓</td><td class="deny">✗</td><td class="deny">✗</td></tr>
+      <tr><td>Add Comments / Ratings</td><td class="allow">✓</td><td class="allow">✓</td><td class="allow">✓</td><td class="allow">✓</td><td class="deny">✗</td></tr>
+      <tr><td>View Finalized Content</td><td class="allow">✓</td><td class="allow">✓</td><td class="allow">✓</td><td class="allow">✓</td><td class="allow">✓</td></tr>
+      <tr><td>View Audit Logs (instance)</td><td class="allow">✓</td><td class="deny">✗</td><td class="deny">✗</td><td class="deny">✗</td><td class="deny">✗</td></tr>
+      <tr><td>View Cost Tracker</td><td class="allow">✓</td><td class="allow">✓</td><td class="deny">✗</td><td class="deny">✗</td><td class="deny">✗</td></tr>
+    </tbody>
+  </table>
+
+  <h2>How Does Role-Based UI Rendering Protect Sensitive Actions?</h2>
+  <p>FlowSquad's frontend performs <strong>server-side role hydration</strong> on every authenticated session: when a user logs in, their effective permissions set is returned as part of the session token and used to conditionally render UI elements. Buttons for "Generate", "Export to Jira", "Delete Product", and "Manage Users" are not merely disabled for unauthorized users — they are completely absent from the DOM. This prevents accidental clicks, discourages social-engineering attempts ("just click the hidden button"), and reduces information leakage about available actions.</p>
+
+  <p>Role-based rendering covers <span class="metric">47 distinct UI elements</span> across the FlowSquad interface — including navigation tabs, action buttons, inline edit controls, admin panel sections, and export menus. Each element is tagged with a required minimum role, and the session hydration layer evaluates each tag before rendering the component tree.</p>
+
+  <h2>How Does FlowSquad Enforce RBAC at the API Layer?</h2>
+  <p>UI-level hiding is a usability feature, not a security control. All FlowSquad API endpoints enforce <strong>declarative RBAC middleware</strong> that re-validates permissions on every request, regardless of what the client claims. Each API route is decorated with a required role annotation. The middleware extracts the JWT from the Authorization header, decodes the user's role and product scope, and returns HTTP 403 before the route handler executes if the role is insufficient.</p>
+
+  <p>This dual enforcement — UI layer and API layer — means that even a technically sophisticated user who constructs raw API requests cannot bypass permissions. All permission failures are logged as <strong>audit events</strong> with timestamp, user ID, source IP, attempted action, and the endpoint that rejected the request. Unusual patterns (e.g., repeated 403s from the same user) can trigger alerts in SIEM integrations via FlowSquad's webhook audit log export.</p>
+
+  <h2>How Do You Assign and Manage Roles in the Setup Wizard?</h2>
+  <p>During the <strong>FlowSquad Setup Wizard</strong> (Step 7: User Management), the Global Admin provisions the initial user roster by email, assigns roles, and optionally imports users from an SSO/SAML directory. Role assignment is also available post-setup from Admin → Users → Edit User, where the Global Admin can change a user's global role or per-product role assignments at any time. Changes take effect on the user's next request — existing sessions are invalidated within <span class="metric">5 minutes</span> via JWT expiry.</p>
+
+  <p>For large organizations syncing from Active Directory or Okta, FlowSquad supports SCIM 2.0 provisioning (roadmap Q2 2026) to automate role assignment based on directory group membership, eliminating manual onboarding for new team members.</p>
+
+  <div class="related">
+    <div class="related-title">Related Articles</div>
+    <ul>
+      <li><a href="blog-17-field-level-encryption.html">Field-Level Encryption in FlowSquad: How Your API Keys Are Protected</a></li>
+      <li><a href="blog-16-setup-wizard.html">10-Step Setup Wizard: Enterprise AI Platform, Running in Under an Hour</a></li>
+      <li><a href="blog-14-agile-workflow-configuration.html">SAFe, Scrum, Kanban: How FlowSquad Adapts to Your Workflow</a></li>
+    </ul>
+  </div>
+
+  <div class="faq">
+    <h2>Frequently Asked Questions</h2>
+
+    <details>
+      <summary>Can a user have different roles in different products?</summary>
+      <p>Yes. A user can be an Analyst in Product A, a Reviewer in Product B, and have no access to Product C. Product-level role assignments are independent of each other and of the user's global role. The effective permissions for any given request are computed from the union of the user's global role and their product-specific role, with the more permissive role winning within the product scope.</p>
+    </details>
+
+    <details>
+      <summary>Is there a way to create custom roles beyond the 5 built-in roles?</summary>
+      <p>Custom role definitions are on the FlowSquad roadmap for Q3 2026. In the current version, the 5 built-in roles cover the vast majority of enterprise access control patterns. For edge cases, the Product Admin role with selective feature tab disabling (e.g., disabling the Quality tab for a specific product) can approximate custom role behavior.</p>
+    </details>
+
+    <details>
+      <summary>How does RBAC interact with MFA enforcement?</summary>
+      <p>MFA (TOTP or hardware key) is enforced at login for all users, regardless of role. Global Admin accounts can be configured to require MFA re-authentication before accessing Admin-level settings (system config, user management) even within an active session. This provides privilege escalation protection equivalent to sudo re-authentication in Unix systems.</p>
+    </details>
+
+    <details>
+      <summary>Does FlowSquad support SSO group-to-role mapping?</summary>
+      <p>Yes. When SAML 2.0 SSO is configured, FlowSquad can map IdP group attributes to FlowSquad roles. For example, the AD group <code>flowsquad-admins</code> can map to Global Admin, and <code>flowsquad-analysts</code> can map to Analyst. Group-to-role mapping is configured in Admin → SSO Settings → Role Mapping during Setup Wizard Step 6.</p>
+    </details>
+
+    <details>
+      <summary>What happens to a user's data when their role is downgraded?</summary>
+      <p>Downgrading a role (e.g., from Analyst to Viewer) removes the user's ability to trigger actions but does not delete any content they previously created. Generated Epics, Stories, and analysis results remain accessible in read-only form. If an Analyst is removed from a product entirely, their previously generated content is retained and reassigned to the Product Admin for review.</p>
+    </details>
+  </div>
+
+  <div class="share-badges" style="margin-top:40px; display:flex; gap:8px; flex-wrap:wrap;">
+    <a href="#" class="badge badge-devto">Share on dev.to</a>
+    <a href="#" class="badge badge-hashnode">Share on Hashnode</a>
+    <a href="#" class="badge badge-medium">Share on Medium</a>
+    <a href="#" class="badge badge-linkedin">Share on LinkedIn</a>
+  </div>
+</div>
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <p class="fl"><strong>FlowSquad</strong></p>
+        <p class="ft">AI-Powered SDLC Intelligence Platform</p>
+        <p class="ft">Analyze once. Reuse intelligence. Zero repeated LLM cost.</p>
+      </div>
+      <div class="fc"><p class="fc-t">Product</p>
+        <a href="../index.html#features">Features</a>
+        <a href="../index.html#how-it-works">How It Works</a>
+        <a href="../index.html#deployment">Deployment</a>
+        <a href="../index.html#pricing">Pricing</a>
+        <a href="../index.html#download">Download</a>
+      </div>
+      <div class="fc"><p class="fc-t">Resources</p>
+        <a href="../docs/index.html">Documentation</a>
+        <a href="index.html">Blog</a>
+        <a href="https://github.com/flowsquad-ai/Flowsquad" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <a href="../index.html#learn-more">Videos</a>
+        <a href="mailto:support@flowsquad.ai">Support</a>
+      </div>
+      <div class="fc"><p class="fc-t">Company</p>
+        <a href="mailto:support@flowsquad.ai">Contact Sales</a>
+        <a href="mailto:support@flowsquad.ai">support@flowsquad.ai</a>
+        <a href="/privacy">Privacy Policy</a>
+      </div>
+    </div>
+    <div class="footer-btm"><p>&#169; 2026 FlowSquad. All rights reserved.</p></div>
+  </div>
+</footer>
+<script>
+var _ham=document.querySelector('.hamburger'),_nl=document.querySelector('.nav-links'),_nb=document.querySelector('.nav-backdrop');
+function _open(){_nl.classList.add('active');_nb.classList.add('active');document.body.style.overflow='hidden';}
+function _close(){_nl.classList.remove('active');_nb.classList.remove('active');document.body.style.overflow='';}
+_ham.addEventListener('click',function(){if(_nl.classList.contains('active')){_close();}else{_open();}});
+_nb.addEventListener('click',_close);
+document.querySelectorAll('.nav-links a').forEach(function(l){l.addEventListener('click',_close);});
+var _tt=document.getElementById('themeToggle');
+function _applyTheme(d){document.documentElement.setAttribute('data-theme',d?'dark':'light');_tt.textContent=d?'☀️':'🌙';localStorage.setItem('fs_theme',d?'dark':'light');}
+var _st=localStorage.getItem('fs_theme');_applyTheme(_st?_st==='dark':true);
+_tt.addEventListener('click',function(){_applyTheme(document.documentElement.getAttribute('data-theme')!=='dark');});
+</script>
+
+</body>
+</html>
