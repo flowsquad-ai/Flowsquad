@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Blog — FlowSquad AI-Powered SDLC Platform</title>
+<meta name="description" content="Expert articles on AI-powered software development: sprint planning, security scanning, LLM cost optimisation, codebase analysis, on-premise deployment, and enterprise engineering workflows.">
+<meta property="og:title" content="FlowSquad Blog — AI-Powered SDLC Insights">
+<meta property="og:description" content="Expert articles on AI-powered software development lifecycle management — deep dives, comparisons, tutorials, and real-world use cases.">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://flowsquad.ai/static/og-image.png">
+<meta property="og:url" content="https://flowsquad.ai/blog/">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="canonical" href="https://flowsquad.ai/blog/">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"Blog","name":"FlowSquad Blog","description":"Expert articles on AI-powered software development lifecycle management","url":"https://flowsquad.ai/blog/","publisher":{"@type":"Organization","name":"FlowSquad","url":"https://flowsquad.ai"}}
+</script>
+<script>(function(){try{var t=localStorage.getItem('fs_theme');if(!t)t='dark';document.documentElement.setAttribute('data-theme',t==='dark'?'dark':'light');}catch(e){document.documentElement.setAttribute('data-theme','dark');}})();</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--pc:#0066cc;--pd:#0052a3;--pl:#e6f2ff;--bg:#ffffff;--cbg:#ffffff;--nbg:#ffffff;--lbg:#f6f8fa;--llbg:#f0f2f5;--tc:#1f2328;--tm:#57606a;--bc:#d0d7de;--hgs:#0066cc;--hge:#003d8f;--ht:#ffffff;--htm:rgba(255,255,255,0.85);--ss:0 1px 3px rgba(0,0,0,.08);--sm:0 4px 12px rgba(0,0,0,.1);}
+[data-theme="dark"]{--pc:#58a6ff;--pd:#388bfd;--pl:#0d2a4a;--bg:#0d1117;--cbg:#161b22;--nbg:#161b22;--lbg:#1c2128;--llbg:#1c2128;--tc:#e6edf3;--tm:#8b949e;--bc:#30363d;--hgs:#0d1f3c;--hge:#0a1628;--ht:#e6edf3;--htm:rgba(230,237,243,.75);--ss:0 1px 3px rgba(0,0,0,.5);--sm:0 4px 12px rgba(0,0,0,.6);}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--pc:#58a6ff;--pl:#0d2a4a;--bg:#0d1117;--cbg:#161b22;--nbg:#161b22;--lbg:#1c2128;--llbg:#1c2128;--tc:#e6edf3;--tm:#8b949e;--bc:#30363d;--hgs:#0d1f3c;--hge:#0a1628;--ht:#e6edf3;--htm:rgba(230,237,243,.75);}}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{overflow-x:hidden;scroll-padding-top:72px;scroll-behavior:smooth;}
+body{overflow-x:hidden;font-family:'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;font-size:15px;line-height:1.6;color:var(--tc);background:var(--bg);transition:background .3s,color .3s;padding-top:72px;}
+a{color:var(--pc);text-decoration:none;}a:hover{text-decoration:underline;}
+
+/* ── Navbar ── */
+.navbar{background:var(--nbg);border-bottom:1px solid var(--bc);padding:.875rem 0;position:fixed;top:0;left:0;right:0;z-index:1000;box-shadow:0 2px 8px rgba(0,0,0,.05);transition:background .3s;}
+.nav-inner{max-width:1400px;margin:0 auto;padding:0 24px;display:flex;justify-content:space-between;align-items:center;}
+.nav-brand{display:flex;align-items:center;gap:10px;text-decoration:none;flex-shrink:0;margin-right:1.5rem;}
+.nav-brand img{height:38px;width:auto;display:block;}
+.nav-brand span{font-size:1.2rem;font-weight:700;color:var(--pc);}
+.nav-links{display:flex;align-items:center;gap:0;}
+.nav-links a{color:var(--tc);font-weight:500;font-size:.875rem;padding:0 .65rem;white-space:nowrap;text-decoration:none;transition:color .2s;}
+.nav-links a:hover,.nav-links a.active{color:var(--pc);text-decoration:none;}
+.nav-contact{display:inline-flex;align-items:center;padding:.3rem .8rem;border:1.5px solid var(--pc);border-radius:6px;color:var(--pc)!important;font-weight:600!important;font-size:.8rem;transition:all .2s;white-space:nowrap;margin-left:.4rem;text-decoration:none!important;}
+.nav-contact:hover{background:var(--pc)!important;color:#fff!important;}
+.nav-gh{display:inline-flex;align-items:center;gap:.35rem;padding:.35rem .6rem;border:1px solid var(--bc);border-radius:999px;font-size:.8rem;text-decoration:none!important;color:var(--tc)!important;}
+.nav-gh:hover{border-color:var(--pc);color:var(--pc)!important;}
+.nav-gh svg{width:16px;height:16px;fill:currentColor;}
+.theme-btn{display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border:1.5px solid var(--bc);border-radius:8px;background:transparent;cursor:pointer;color:var(--tc);transition:all .2s;flex-shrink:0;font-size:1rem;}
+.theme-btn:hover{border-color:var(--pc);}
+.hamburger{display:none;flex-direction:column;cursor:pointer;gap:4px;order:-1;flex-shrink:0;}
+.hamburger span{width:24px;height:2.5px;background:var(--tc);transition:.3s;}
+.nav-backdrop{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:998;}
+.nav-backdrop.active{display:block;}
+
+/* ── Page hero ── */
+.blog-hero{background:linear-gradient(160deg,var(--hgs) 0%,var(--hge) 100%);color:var(--ht);padding:56px 20px 44px;text-align:center;}
+.blog-hero .eyebrow{display:inline-block;font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:rgba(255,255,255,.55);margin-bottom:1rem;border:1px solid rgba(255,255,255,.2);padding:.3rem .9rem;border-radius:999px;}
+.blog-hero h1{font-size:2.6rem;font-weight:700;line-height:1.2;margin-bottom:.875rem;color:var(--ht);}
+.blog-hero p{font-size:1.05rem;color:var(--htm);max-width:580px;margin:0 auto 1.75rem;}
+.hero-stats{display:flex;gap:2.5rem;justify-content:center;flex-wrap:wrap;padding-top:1.5rem;border-top:1px solid rgba(255,255,255,.12);}
+.hero-stat{text-align:center;}
+.hero-stat-value{display:block;font-size:1.5rem;font-weight:700;color:var(--ht);line-height:1;}
+.hero-stat-label{display:block;font-size:.72rem;font-weight:500;text-transform:uppercase;letter-spacing:.08em;color:rgba(255,255,255,.5);margin-top:.2rem;}
+
+/* ── Filter bar ── */
+.filter-bar{background:var(--lbg);border-bottom:1px solid var(--bc);padding:.625rem 0;position:sticky;top:72px;z-index:50;}
+.filter-inner{max-width:1400px;margin:0 auto;padding:0 40px;display:flex;gap:.5rem;align-items:center;flex-wrap:wrap;}
+.filter-btn{display:inline-block;padding:.3rem .85rem;border-radius:999px;font-size:.78rem;font-weight:600;border:1.5px solid var(--bc);background:var(--cbg);color:var(--tm);cursor:pointer;transition:all .2s;text-decoration:none;}
+.filter-btn:hover{border-color:var(--pc);color:var(--pc);text-decoration:none;}
+.filter-btn.active{background:var(--pc);color:#fff;border-color:var(--pc);}
+
+/* ── Container ── */
+.container{max-width:1400px;margin:0 auto;padding:0 40px;}
+.blog-section{padding:52px 0;}
+
+/* ── Section heading ── */
+.section-eyebrow{display:block;font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--pc);margin-bottom:.5rem;background:var(--pl);width:fit-content;padding:.2rem .7rem;border-radius:999px;}
+.section-title{font-size:1.5rem;font-weight:700;color:var(--tc);margin-bottom:.4rem;letter-spacing:-.02em;}
+.section-sub{font-size:.9rem;color:var(--tm);margin-bottom:1.75rem;max-width:600px;line-height:1.6;}
+
+/* ── Blog card grid ── */
+.blog-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(340px,100%),1fr));gap:1.125rem;}
+
+/* ── Blog card ── */
+.blog-card{background:var(--cbg);border:1px solid var(--bc);border-radius:12px;overflow:hidden;display:flex;flex-direction:column;text-decoration:none;color:inherit;transition:all .25s;}
+.blog-card:hover{border-color:var(--pc);box-shadow:var(--sm);transform:translateY(-3px);text-decoration:none;}
+.blog-card-cover{display:block;width:100%;height:160px;object-fit:cover;background:var(--lbg);}
+.blog-card-body{padding:1.25rem;display:flex;flex-direction:column;gap:.625rem;flex:1;}
+.card-top{display:flex;align-items:center;gap:.5rem;}
+.blog-num{font-size:.7rem;font-weight:700;color:var(--tm);background:var(--lbg);border:1px solid var(--bc);border-radius:4px;padding:.1rem .45rem;flex-shrink:0;}
+.cat-badge{display:inline-block;font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.04em;padding:.15rem .6rem;border-radius:999px;}
+.cat-problem{background:#fee2e2;color:#b91c1c;}.cat-deepdive{background:#dbeafe;color:#1e40af;}
+.cat-compare{background:#fef3c7;color:#92400e;}.cat-tutorial{background:#ede9fe;color:#6d28d9;}
+.cat-usecase{background:#dcfce7;color:#15803d;}
+.blog-card-title{font-size:.95rem;font-weight:700;color:var(--tc);line-height:1.4;}
+.blog-card-hook{font-size:.845rem;color:var(--tm);line-height:1.5;border-left:3px solid var(--pc);padding-left:.6rem;font-style:italic;}
+.blog-card-meta{display:flex;gap:.4rem;flex-wrap:wrap;margin-top:auto;padding-top:.625rem;border-top:1px solid var(--bc);}
+.meta-pill{font-size:.68rem;color:var(--tm);background:var(--lbg);border:1px solid var(--bc);border-radius:4px;padding:.1rem .4rem;}
+.read-link{display:inline-flex;align-items:center;gap:.25rem;font-size:.78rem;font-weight:600;color:var(--pc);margin-top:.25rem;}
+.read-link svg{width:13px;height:13px;fill:currentColor;transition:transform .15s;}
+.blog-card:hover .read-link svg{transform:translateX(3px);}
+
+/* ── CTA band ── */
+.cta-band{background:linear-gradient(160deg,var(--hgs) 0%,var(--hge) 100%);padding:52px 0;text-align:center;}
+.cta-band h2{font-size:1.9rem;font-weight:700;color:var(--ht);margin-bottom:.625rem;}
+.cta-band p{font-size:1rem;color:var(--htm);margin-bottom:1.625rem;}
+.btn-cta-p{display:inline-block;padding:.8rem 1.875rem;border-radius:6px;text-decoration:none;font-weight:600;font-size:.95rem;background:var(--ht);color:var(--pc);box-shadow:0 4px 12px rgba(0,0,0,.15);transition:all .3s;}
+.btn-cta-p:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,0,0,.25);opacity:.95;text-decoration:none;}
+.btn-cta-s{display:inline-block;padding:.8rem 1.875rem;border-radius:6px;text-decoration:none;font-weight:600;font-size:.95rem;color:var(--ht);border:2px solid rgba(255,255,255,.6);margin-left:1rem;transition:all .3s;}
+.btn-cta-s:hover{background:rgba(255,255,255,.12);border-color:var(--ht);transform:translateY(-2px);text-decoration:none;}
+
+/* ── Footer ── */
+.site-footer{background:#0d1117;color:rgba(255,255,255,.85);padding:3rem 0 0;}
+.footer-inner{max-width:1400px;margin:0 auto;padding:0 40px;}
+.footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:3rem;padding-bottom:3rem;border-bottom:1px solid rgba(255,255,255,.1);}
+.footer-brand .fl{font-size:1.1rem;font-weight:700;color:#fff;margin-bottom:.5rem;}
+.footer-brand .ft{font-size:.8rem;color:rgba(255,255,255,.5);line-height:1.6;}
+.fc{display:flex;flex-direction:column;gap:.5rem;}
+.fc-t{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:rgba(255,255,255,.4);margin-bottom:.3rem;}
+.fc a{color:rgba(255,255,255,.65);text-decoration:none;font-size:.85rem;transition:color .2s;}
+.fc a:hover{color:#fff;}
+.footer-btm{padding:1.25rem 0;text-align:center;}
+.footer-btm p{font-size:.75rem;color:rgba(255,255,255,.3);}
+
+/* ── Responsive ── */
+@media(max-width:768px){
+  .hamburger{display:flex;}
+  .nav-links{position:fixed;left:-65%;top:70px;flex-direction:column;background:var(--nbg);width:65%;max-width:280px;transition:left .3s;box-shadow:2px 0 10px rgba(0,0,0,.15);gap:0;padding:16px 0;z-index:999;height:calc(100vh - 70px);overflow-y:auto;}
+  .nav-links.active{left:0;}
+  .nav-links a{padding:13px 20px;border-bottom:1px solid var(--bc);display:block;}
+  .blog-hero h1{font-size:1.9rem;}
+  .hero-stats{gap:1.25rem;}
+  .container,.footer-inner,.filter-inner{padding:0 16px;}
+  .footer-grid{grid-template-columns:1fr 1fr;gap:2rem;}
+  .blog-grid{grid-template-columns:1fr;}
+}
+@media(max-width:480px){
+  .footer-grid{grid-template-columns:1fr;}
+  .hero-stats{flex-direction:column;align-items:center;gap:.75rem;}
+  .btn-cta-s{margin-left:0;margin-top:.75rem;display:block;}
+}
+</style>
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="navbar">
+  <div class="nav-inner">
+    <a href="../index.html" class="nav-brand">
+      <img src="../docs/icon.png" alt="FlowSquad">
+      <!--<span>FlowSquad</span>-->
+    </a>
+    <div class="nav-links">
+      <a href="../index.html#features">Features</a>
+      <a href="../index.html#how-it-works">How It Works</a>
+      <a href="../index.html#use-cases">Use Cases</a>
+      <a href="../index.html#deployment">Deployment</a>
+      <a href="../index.html#download">Download</a>
+      <a href="../index.html#pricing">Pricing</a>
+      <a href="../docs/index.html">Docs</a>
+      <a href="index.html" class="active">Blog</a>
+      <a href="mailto:support@flowsquad.ai" class="nav-contact">Contact Sales</a>
+      <a href="https://github.com/flowsquad-ai/Flowsquad" target="_blank" rel="noopener noreferrer" class="nav-gh">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.44 9.8 8.21 11.39.6.11.82-.26.82-.58 0-.29-.01-1.25-.02-2.27-3.34.73-4.04-1.42-4.04-1.42-.55-1.39-1.33-1.76-1.33-1.76-1.09-.75.08-.74.08-.74 1.2.09 1.84 1.24 1.84 1.24 1.08 1.85 2.83 1.31 3.52 1 .11-.78.42-1.31.76-1.61-2.67-.3-5.47-1.34-5.47-5.96 0-1.32.47-2.39 1.24-3.23-.12-.3-.54-1.52.12-3.17 0 0 1.01-.32 3.3 1.23A11.5 11.5 0 0 1 12 6.8c1.02 0 2.05.14 3.01.42 2.29-1.55 3.3-1.23 3.3-1.23.66 1.65.24 2.87.12 3.17.77.84 1.24 1.91 1.24 3.23 0 4.64-2.8 5.65-5.48 5.95.43.37.81 1.1.81 2.22 0 1.61-.01 2.9-.01 3.29 0 .32.22.7.82.58A12.01 12.01 0 0 0 24 12c0-6.63-5.37-12-12-12Z"/></svg>
+        GitHub
+      </a>
+      <button class="theme-btn" id="themeToggle" aria-label="Toggle theme">&#127769;</button>
+    </div>
+    <div class="hamburger"><span></span><span></span><span></span></div>
+  </div>
+</nav>
+<div class="nav-backdrop"></div>
+
+<!-- Hero -->
+<div class="blog-hero">
+  <div class="container" style="max-width:900px;">
+    <span class="eyebrow">FlowSquad Blog</span>
+    <h1>AI-Powered SDLC Insights</h1>
+    <p>In-depth articles on engineering productivity, AI cost optimisation, security, on-premise deployment, and the future of software development.</p>
+    <div class="hero-stats">
+      <div class="hero-stat"><span class="hero-stat-value">30</span><span class="hero-stat-label">Articles</span></div>
+      <div class="hero-stat"><span class="hero-stat-value">5</span><span class="hero-stat-label">Topics</span></div>
+      <div class="hero-stat"><span class="hero-stat-value">73K+</span><span class="hero-stat-label">Words</span></div>
+      <div class="hero-stat"><span class="hero-stat-value">Free</span><span class="hero-stat-label">Always</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- Filter bar -->
+<div class="filter-bar">
+  <div class="filter-inner">
+    <a href="#" class="filter-btn active" data-filter="all">All (30)</a>
+    <a href="#" class="filter-btn" data-filter="problem">Common Problems (10)</a>
+    <a href="#" class="filter-btn" data-filter="deepdive">Deep Dives (8)</a>
+    <a href="#" class="filter-btn" data-filter="compare">Comparisons (5)</a>
+    <a href="#" class="filter-btn" data-filter="tutorial">Tutorials (4)</a>
+    <a href="#" class="filter-btn" data-filter="usecase">Use Cases (3)</a>
+  </div>
+</div>
+
+<!-- Blog listing -->
+<div class="blog-section">
+<div class="container">
+
+<!-- ── Section 1 ── -->
+<div class="blog-section-group" id="sec-problem">
+  <span class="section-eyebrow">Common Problems</span>
+  <h2 class="section-title">Real Pain Points, Solved</h2>
+  <p class="section-sub">Each article takes a real engineering problem, explains why it happens, and shows exactly how FlowSquad addresses it — with data.</p>
+  <div class="blog-grid">
+
+    <a class="blog-card" href="blog-01-sprint-planning.html">
+      <img src="blog-01-sprint-planning-cover.svg" class="blog-card-cover" alt="Sprint Planning" loading="lazy">
+      <div class="blog-card-body">
+        <div class="card-top"><span class="blog-num">01</span><span class="cat-badge cat-problem">Problem</span></div>
+        <div class="blog-card-title">Why Your Sprint Planning Takes 3 Days — And How to Cut It to 3 Hours</div>
+        <div class="blog-card-hook">"Most teams spend 40% of sprint planning time just writing stories from scratch."</div>
+        <div class="blog-card-meta"><span class="meta-pill">Engineering Managers</span><span class="meta-pill">Scrum Masters</span></div>
+        <span class="read-link">Read article <svg viewBox="0 0 16 16"><path d="M8.22 2.97a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.75.75 0 0 1-1.06-1.06L11.44 8.5H2.75a.75.75 0 0 1 0-1.5h8.69L8.22 4.03a.75.75 0 0 1 0-1.06Z"/></svg></span>
+      </div>
+    </a>
+
+    <a class="blog-card" href="blog-02-owasp-security.html">
+      <img src="blog-02-owasp-security-cover.svg" class="blog-card-cover" alt="OWASP Security" loading="lazy">
+      <div class="blog-card-body">
+        <div class="card-top"><span class="blog-num">02</span><span class="cat-badge cat-problem">Problem</span></div>
+        <div class="blog-card-title">We Paid $80K for OWASP Penetration Testing. Our Code Still Had Vulnerabilities.</div>
+        <div class="blog-card-hook">"External pentests are point-in-time snapshots. FlowSquad scans every commit continuously."</div>
+        <div class="blog-card-meta"><span class="meta-pill">CISOs</span><span class="meta-pill">Security Engineers</span></div>
+        <span class="read-link">Read article <svg viewBox="0 0 16 16"><path d="M8.22 2.97a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.75.75 0 0 1-1.06-1.06L11.44 8.5H2.75a.75.75 0 0 1 0-1.5h8.69L8.22 4.03a.75.75 0 0 1 0-1.06Z"/></svg></span>
+      </div>
+    </a>
+
+    <a class="blog-card" href="blog-03-llm-cost.html">
+      <img src="blog-03-llm-cost-cover.svg" class="blog-card-cover" alt="LLM Cost" loading="lazy">
+      <div class="blog-card-body">
+        <div class="card-top"><span class="blog-num">03</span><span class="cat-badge cat-problem">Problem</span></div>
+        <div class="blog-card-title">Your LLM Bill is $12,000/Month. Here's Why — and How to Fix It.</div>
+        <div class="blog-card-hook">"FlowSquad vectorises your code once and answers from embeddings — 85% fewer tokens."</div>
+        <div class="blog-card-meta"><span class="meta-pill">CTOs</span><span class="meta-pill">Platform Engineers</span></div>
+        <span class="read-link">Read article <svg viewBox="0 0 16 16"><path d="M8.22 2.97a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.75.75 0 0 1-1.06-1.06L11.44 8.5H2.75a.75.75 0 0 1 0-1.5h8.69L8.22 4.03a.75.75 0 0 1 0-1.06Z"/></svg></span>
+      </div>
+    </a>
+
+    <a class="blog-card" href="blog-04-developer-onboarding.html">
+      <img src="blog-04-developer-onboarding-cover.svg" class="blog-card-cover" alt="Developer Onboarding" loading="lazy">
+      <div class="blog-card-body">
+        <div class="card-top"><span class="blog-num">04</span><span class="cat-badge cat-problem">Problem</span></div>
+        <div class="blog-card-title">New Developer, Legacy Codebase: The Onboarding Problem Nobody Talks About</div>
+        <div class="blog-card-hook">"The average developer takes 3–6 months to be fully productive on a legacy codebase."</div>
+        <div class="blog-card-meta"><span class="meta-pill">Engineering Leads</span><span class="meta-pill">HR Tech</span></div>
+        <span class="read-link">Read article <svg viewBox="0 0 16 16"><path d="M8.22 2.97a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.75.75 0 0 1-1.06-1.06L11.44 8.5H2.75a.75.75 0 0 1 0-1.5h8.69L8.22 4.03a.75.75 0 0 1 0-1.06Z"/></svg></span>
+      </div>
+    </a>
+
+    <a class="blog-card" href="blog-05-backlog-prioritization.html">
+      <img src="blog-05-backlog-prioritization-cover.svg" class="blog-card-cover" alt="Backlog" loading="lazy">
+      <div class="blog-card-body">
+        <div class="card-top"><span class="blog-num">05</span><span class="cat-badge cat-problem">Problem</span></div>
+        <div class="blog-card-title">We Had 300 Jira Epics. Nobody Knew Which Ones Actually Mattered.</div>
+        <div class="blog-card-hook">"FlowSquad scores each epic 0–100 and surfaces what moves the needle."</div>
+        <div class="blog-card-meta"><span class="meta-pill">Product Managers</span><span class="meta-pill">Agile Coaches</span></div>
+        <span class="read-link">Read article <svg viewBox="0 0 16 16"><path d="M8.22 2.97a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.75.75 0 0 1-1.06-1.06L11.44 8.5H2.75a.75.75 0 0 1 0-1.5h8.69L8.22 4.03a.75.75 0 0 1 0-1.06Z"/></svg></span>
+      </div>
+    </a>
+
+    <a class="blog-card" href="blog-06-ai-test-cases.html">
+      <img src="blog-06-ai-test-cases-cover.svg" class="blog-card-cover" alt="AI Test Cases" loading="lazy">
+      <div class="blog-card-body">
+        <div class="card-top"><span class="blog-num">06</span><span class="cat-badge cat-problem">Problem</span></div>
+        <div class="blog-card-title">Why "AI-Generated Test Cases" Are Usually Garbage — And How to Make Them Useful</div>
+        <div class="blog-card-hook">"Generic LLM prompts produce generic tests. FlowSquad uses your actual codebase context."</div>
+        <div class="blog-card-meta"><span class="meta-pill">QA Engineers</span><span class="meta-pill">Test Leads</span></div>
+        <span class="read-link">Read article <svg viewBox="0 0 16 16"><path d="M8.22 2.97a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.75.75 0 0 1-1.06-1.06L11.44 8.5H2.75a.75.75 0 0 1 0-1.5h8.69L8.22 4.03a.75.75 0 0 1 0-1.06Z"/></svg></span>
+      </div>
+    </a>
+
+    <a class="blog-card" href="blog-07-technical-debt.html">
+      <img src="blog-07-technical-debt-cover.svg" class="blog-card-cover" alt="Technical Debt" loading="lazy">
+      <div class="blog-card-body">
+        <div class="card-top"><span class="blog-num">07</span><span class="cat-badge cat-problem">Problem</span></div>
+        <div class="blog-card-title">Technical Debt Audit: How We Found 47 High-Risk Modules in 20 Minutes</div>
+        <div class="blog-card-hook">"FlowSquad scores every module for test density, complexity, and security risk."</div>
+        <div class="blog-card-meta"><span class="meta-pill">Tech Leads</span><span class="meta-pill">Architects</span></div>
+        <span class="read-link">Read article <svg viewBox="0 0 16 16"><path d="M8.22 2.97a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.75.75 0 0 1-1.06-1.06L11.44 8.5H2.75a.75.75 0 0 1 0-1.5h8.69L8.22 4.03a.75.75 0 0 1 0-1.06Z"/></svg></span>
+      </div>
+    </a>
+
+    <a class="blog-card" href="blog-08-airgapped-deployment.html">
+      <img src="blog-08-airgapped-deployment-cover.svg" class="blog-card-cover" alt="Air-Gapped" loading="lazy">
+      <div class="blog-card-body">
+        <div class="card-top"><span class="blog-num">08</span><span class="cat-badge cat-problem">Problem</span></div>
+        <div class="blog-card-title">We Couldn't Use Cloud LLMs. Here's How We Still Built an AI-Powered SDLC.</div>
+        <div class="blog-card-hook">"FlowSquad runs entirely on-premise with Ollama + ChromaDB — no data leaves your network."</div>
+        <div class="blog-card-meta"><span class="meta-pill">Government</span><span class="meta-pill">Finance</span><span class="meta-pill">Healthcare</span></div>
+        <span class="read-link">Read article <svg viewBox="0 0 16 16"><path d="M8.22 2.97a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.75.75 0 0 1-1.06-1.06L11.44 8.5H2.75a.75.75 0 0 1 0-1.5h8.69L8.22 4.03a.75.75 0 0 1 0-1.06Z"/></svg></span>
+      </div>
+    </a>
+
+    <a class="blog-card" href="blog-09-requirements-refinement.html">
+      <img src="blog-09-requirements-refinement-cover.svg" class="blog-card-cover" alt="Requirements" loading="lazy">
+      <div class="blog-card-body">
+        <div class="card-top"><span class="blog-num">09</span><span class="cat-badge cat-problem">Problem</span></div>
+        <div class="blog-card-title">Our Requirements Were "Finished" — But 60% of Stories Were Wrong at Sprint End</div>
+        <div class="blog-card-hook">"FlowSquad asks clarifying questions and cross-references your codebase before locking in a spec."</div>
+        <div class="blog-card-meta"><span class="meta-pill">Business Analysts</span><span class="meta-pill">Product Owners</span></div>
+        <span class="read-link">Read article <svg viewBox="0 0 16 16"><path d="M8.22 2.97a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.75.75 0 0 1-1.06-1.06L11.44 8.5H2.75a.75.75 0 0 1 0-1.5h8.69L8.22 4.03a.75.75 0 0 1 0-1.06Z"/></svg></span>
+      </div>
+    </a>
+
+    <a class="blog-card" href="blog-10-architecture-docs.html">
+      <img src="blog-10-architecture-docs-cover.svg" class="blog-card-cover" alt="Architecture Docs" loading="lazy">
+      <div class="blog-card-body">
+        <div class="card-top"><span class="blog-num">10</span><span class="cat-badge cat-problem">Problem</span></div>
+        <div class="blog-card-title">Your Developers Are Writing Architecture Docs Nobody Reads. Try This Instead.</div>
+        <div class="blog-card-hook">"FlowSquad generates HLD + LLD documents from your codebase — always up to date."</div>
+        <div class="blog-card-meta"><span class="meta-pill">Architects</span><span class="meta-pill">Engineering VPs</span></div>
+        <span class="read-link">Read article <svg viewBox="0 0 16 16"><path d="M8.22 2.97a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.75.75 0 0 1-1.06-1.06L11.44 8.5H2.75a.75.75 0 0 1 0-1.5h8.69L8.22 4.03a.75.75 0 0 1 0-1.06Z"/></svg></span>
+      </div>
+    </a>
+
+  </div>
+</div><!-- end problem section -->
+
+<div style="height:52px;"></div>
+
+<!-- ── Section 2 ── -->
+<div class="blog-section-group" id="sec-deepdive">
+  <span class="section-eyebrow">Deep Dives</span>
+  <h2 class="section-title">Inside the Platform</h2>
+  <p class="section-sub">Technical deep-dives into FlowSquad's core architecture, security model, and capabilities.</p>
+  <div class="blog-grid">
+
+    <a class="blog-card" href="blog-11-multi-llm-architecture.html">
+      <img src="blog-11-multi-llm-architecture-cover.svg" class="blog-card-cover" alt="Multi-LLM" loading="lazy">
+      <div class="blog-card-body">
+        <div class="card-top"><span class="blog-num">11</span><span class="cat-badge cat-deepdive">Deep Dive</span></div>
+        <div class="blog-card-title">Inside FlowSquad's Multi-LLM Architecture: Why We Never Lock You In</div>
+        <div class="blog-card-hook">"A single config change swaps your LLM — no code changes required."</div>
+        <div class="blog-card-meta"><span class="meta-pill">Platform Engineers</span><span class="meta-pill">Architects</span></div>
+        <span class="read-link">Read article <svg viewBox="0 0 16 16"><path d="M8.22 2.97a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.75.75 0 0 1-1.06-1.06L11.44 8.5H2.75a.75.75 0 0 1 0-1.5h8.69L8.22 4.03a.75.75 0 0 1 0-1.06Z"/></svg></span>
+      </div>
+    </a>
+
+    <a class="blog-card" href="blog-12-polyglot-code-analysis.html">
+      <img src="blog-12-polyglot-code-analysis-cover.svg" class="blog-card-cover" alt="Code Analysis" loading="lazy">
+      <div class="blog-card-body">
+        <div class="card-top"><span class="blog-num">12</span><span class="cat-badge cat-deepdive">Deep Dive</span></div>
+        <div class="blog-card-title">How FlowSquad Understands 11 Programming Languages Without You Writing a Single Parser</div>
+        <div class="blog-card-hook">"Tree-sitter grammars, ONNX embeddings, and semantic indexing in seconds."</div>
+        <div class="blog-card-meta"><span class="meta-pill">Developers</span><span class="meta-pill">DevOps Engineers</span></div>
+        <span class="read-link">Read article <svg viewBox="0 0 16 16"><path d="M8.22 2.97a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.75.75 0 0 1-1.06-1.06L11.44 8.5H2.75a.75.75 0 0 1 0-1.5h8.69L8.22 4.03a.75.75 0 0 1 0-1.06Z"/></svg></span>
+      </div>
+    </a>
+
+    <a class="blog-card" href="blog-13-rbac-permissions.html">
+      <img src="blog-13-rbac-permissions-cover.svg" class="blog-card-cover" alt="RBAC" loading="lazy">
+      <div class="blog-card-body">
+        <div class="card-top"><span class="blog-num">13</span><span class="cat-badge cat-deepdive">Deep Dive</span></div>
+        <div class="blog-card-title">FlowSquad's RBAC Explained: From Global Admin to Read-Only Viewer</div>
+        <div class="blog-card-hook">"Every permission boundary — why they matter for enterprise compliance."</div>
+        <div class="blog-card-meta"><span class="meta-pill">IT Admins</span><span class="meta-pill">Security Architects</span></div>
+        <span class="read-link">Read article <svg viewBox="0 0 16 16"><path d="M8.22 2.97a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.75.75 0 0 1-1.06-1.06L11.44 8.5H2.75a.75.75 0 0 1 0-1.5h8.69L8.22 4.03a.75.75 0 0 1 0-1.06Z"/></svg></span>
+      </div>
+    </a>
+
+    <a class="blog-card" href="blog-14-agile-workflow-configuration.html">
+      <img src="blog-14-agile-workflow-configuration-cover.svg" class="blog-card-cover" alt="Agile Config" loading="lazy">
+      <div class="blog-card-body">
+        <div class="card-top"><span class="blog-num">14</span><span class="cat-badge cat-deepdive">Deep Dive</span></div>
+        <div class="blog-card-title">SAFe, Scrum, Kanban: How FlowSquad Adapts to Your Workflow (Not the Other Way Around)</div>
+        <div class="blog-card-hook">"Enable/disable tabs, configure branching rules, toggle SAFe mode per product."</div>
+        <div class="blog-card-meta"><span class="meta-pill">Agile Coaches</span><span class="meta-pill">Scrum Masters</span></div>
+        <span class="read-link">Read article <svg viewBox="0 0 16 16"><path d="M8.22 2.97a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.75.75 0 0 1-1.06-1.06L11.44 8.5H2.75a.75.75 0 0 1 0-1.5h8.69L8.22 4.03a.75.75 0 0 1 0-1.06Z"/></svg></span>
+      </div>
+    </a>
+
+    <a class="blog-card" href="blog-15-askproduct-knowledge-hub.html">
+      <img src="blog-15-askproduct-knowledge-hub-cover.svg" class="blog-card-cover" alt="AskProduct" loading="lazy">
+      <div class="blog-card-body">
+        <div class="card-top"><span class="blog-num">15</span><span class="cat-badge cat-deepdive">Deep Dive</span></div>
+        <div class="blog-card-title">AskProduct: The Knowledge Hub That Actually Knows Your Codebase</div>
+        <div class="blog-card-hook">"Multi-turn conversation, relevance filtering, context from 4 VectorDB collections simultaneously."</div>
+        <div class="blog-card-meta"><span class="meta-pill">Developers</span><span class="meta-pill">Product Managers</span></div>
+        <span class="read-link">Read article <svg viewBox="0 0 16 16"><path d="M8.22 2.97a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.75.75 0 0 1-1.06-1.06L11.44 8.5H2.75a.75.75 0 0 1 0-1.5h8.69L8.22 4.03a.75.75 0 0 1 0-1.06Z"/></svg></span>
+      </div>
+    </a>
+
+    <a class="blog-card" href="blog-16-setup-wizard.html">
+      <img src="blog-16-setup-wizard-cover.svg" class="blog-card-cover" alt="Setup Wizard" loading="lazy">
+      <div class="blog-card-body">
+        <div class="card-top"><span class="blog-num">16</span><span class="cat-badge cat-deepdive">Deep Dive</span></div>
+        <div class="blog-card-title">10-Step Setup Wizard: Enterprise AI Platform, Running in Under an Hour</div>
+        <div class="blog-card-hook">"Database, VectorDB, LLM, SSO, Git, Confluence, users, license — all configured without YAML."</div>
+        <div class="blog-card-meta"><span class="meta-pill">IT Admins</span><span class="meta-pill">DevOps Engineers</span></div>
+        <span class="read-link">Read article <svg viewBox="0 0 16 16"><path d="M8.22 2.97a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.75.75 0 0 1-1.06-1.06L11.44 8.5H2.75a.75.75 0 0 1 0-1.5h8.69L8.22 4.03a.75.75 0 0 1 0-1.06Z"/></svg></span>
+      </div>
+    </a>
+
+    <a class="blog-card" href="blog-17-field-level-encryption.html">
+      <img src="blog-17-field-level-encryption-cover.svg" class="blog-card-cover" alt="Encryption" loading="lazy">
+      <div class="blog-card-body">
+        <div class="card-top"><span class="blog-num">17</span><span class="cat-badge cat-deepdive">Deep Dive</span></div>
+        <div class="blog-card-title">Field-Level Encryption in FlowSquad: How Your API Keys Are Protected</div>
+        <div class="blog-card-hook">"Fernet (AES-128) encrypts every API key before it touches the database."</div>
+        <div class="blog-card-meta"><span class="meta-pill">Security Engineers</span><span class="meta-pill">CISOs</span></div>
+        <span class="read-link">Read article <svg viewBox="0 0 16 16"><path d="M8.22 2.97a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.75.75 0 0 1-1.06-1.06L11.44 8.5H2.75a.75.75 0 0 1 0-1.5h8.69L8.22 4.03a.75.75 0 0 1 0-1.06Z"/></svg></span>
+      </div>
+    </a>
+
+    <a class="blog-card" href="blog-18-llm-cost-tracker.html">
+      <img src="blog-18-llm-cost-tracker-cover.svg" class="blog-card-cover" alt="LLM Cost Tracker" loading="lazy">
+      <div class="blog-card-body">
+        <div class="card-top"><span class="blog-num">18</span><span class="cat-badge cat-deepdive">Deep Dive</span></div>
+        <div class="blog-card-title">The LLM Cost Tracker: Know Exactly What Your AI Features Are Costing, Per Request</div>
+        <div class="blog-card-hook">"Per-model pricing, token-level accounting — turn AI spend from a mystery into a line item."</div>
+        <div class="blog-card-meta"><span class="meta-pill">CTOs</span><span class="meta-pill">FinOps Teams</span></div>
+        <span class="read-link">Read article <svg viewBox="0 0 16 16"><path d="M8.22 2.97a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.75.75 0 0 1-1.06-1.06L11.44 8.5H2.75a.75.75 0 0 1 0-1.5h8.69L8.22 4.03a.75.75 0 0 1 0-1.06Z"/></svg></span>
+      </div>
+    </a>
+
+  </div>
+</div>
+
+<div style="height:52px;"></div>
+
+<!-- ── Section 3 ── -->
+<div class="blog-section-group" id="sec-compare">
+  <span class="section-eyebrow">Comparisons</span>
+  <h2 class="section-title">How Does FlowSquad Compare?</h2>
+  <p class="section-sub">Honest head-to-head comparisons with tools you're already using or evaluating.</p>
+  <div class="blog-grid">
+
+    <a class="blog-card" href="blog-19-vs-github-copilot.html">
+      <img src="blog-19-vs-github-copilot-cover.svg" class="blog-card-cover" alt="vs GitHub Copilot" loading="lazy">
+      <div class="blog-card-body">
+        <div class="card-top"><span class="blog-num">19</span><span class="cat-badge cat-compare">Comparison</span></div>
+        <div class="blog-card-title">FlowSquad vs. GitHub Copilot: Different Tools for Different Jobs (And Why You Need Both)</div>
+        <div class="blog-card-hook">"Copilot writes code. FlowSquad architects it."</div>
+        <div class="blog-card-meta"><span class="meta-pill">Developers</span><span class="meta-pill">AI Tool Evaluators</span></div>
+        <span class="read-link">Read article <svg viewBox="0 0 16 16"><path d="M8.22 2.97a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.75.75 0 0 1-1.06-1.06L11.44 8.5H2.75a.75.75 0 0 1 0-1.5h8.69L8.22 4.03a.75.75 0 0 1 0-1.06Z"/></svg></span>
+      </div>
+    </a>
+
+    <a class="blog-card" href="blog-20-vs-jira-confluence.html">
+      <img src="blog-20-vs-jira-confluence-cover.svg" class="blog-card-cover" alt="vs Jira" loading="lazy">
+      <div class="blog-card-body">
+        <div class="card-top"><span class="blog-num">20</span><span class="cat-badge cat-compare">Comparison</span></div>
+        <div class="blog-card-title">FlowSquad vs. Jira + Confluence: Why Your PM Tools Can't Replace an SDLC Intelligence Platform</div>
+        <div class="blog-card-hook">"Jira tracks work. FlowSquad generates it."</div>
+        <div class="blog-card-meta"><span class="meta-pill">Product Managers</span><span class="meta-pill">Engineering VPs</span></div>
+        <span class="read-link">Read article <svg viewBox="0 0 16 16"><path d="M8.22 2.97a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.75.75 0 0 1-1.06-1.06L11.44 8.5H2.75a.75.75 0 0 1 0-1.5h8.69L8.22 4.03a.75.75 0 0 1 0-1.06Z"/></svg></span>
+      </div>
+    </a>
+
+    <a class="blog-card" href="blog-21-vs-chatgpt.html">
+      <img src="blog-21-vs-chatgpt-cover.svg" class="blog-card-cover" alt="vs ChatGPT" loading="lazy">
+      <div class="blog-card-body">
+        <div class="card-top"><span class="blog-num">21</span><span class="cat-badge cat-compare">Comparison</span></div>
+        <div class="blog-card-title">FlowSquad vs. ChatGPT for SDLC Artifacts: Why Context Is Everything</div>
+        <div class="blog-card-hook">"ChatGPT generates generic stories. FlowSquad generates stories grounded in your actual codebase."</div>
+        <div class="blog-card-meta"><span class="meta-pill">Teams Evaluating AI Tools</span></div>
+        <span class="read-link">Read article <svg viewBox="0 0 16 16"><path d="M8.22 2.97a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.75.75 0 0 1-1.06-1.06L11.44 8.5H2.75a.75.75 0 0 1 0-1.5h8.69L8.22 4.03a.75.75 0 0 1 0-1.06Z"/></svg></span>
+      </div>
+    </a>
+
+    <a class="blog-card" href="blog-22-self-hosted-vs-cloud.html">
+      <img src="blog-22-self-hosted-vs-cloud-cover.svg" class="blog-card-cover" alt="Self-Hosted vs Cloud" loading="lazy">
+      <div class="blog-card-body">
+        <div class="card-top"><span class="blog-num">22</span><span class="cat-badge cat-compare">Comparison</span></div>
+        <div class="blog-card-title">Self-Hosted AI vs. Cloud AI for Enterprise SDLC: The Real Tradeoffs</div>
+        <div class="blog-card-hook">"FlowSquad runs both. A decision framework based on your actual constraints."</div>
+        <div class="blog-card-meta"><span class="meta-pill">Enterprise Architects</span><span class="meta-pill">CTOs</span></div>
+        <span class="read-link">Read article <svg viewBox="0 0 16 16"><path d="M8.22 2.97a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.75.75 0 0 1-1.06-1.06L11.44 8.5H2.75a.75.75 0 0 1 0-1.5h8.69L8.22 4.03a.75.75 0 0 1 0-1.06Z"/></svg></span>
+      </div>
+    </a>
+
+    <a class="blog-card" href="blog-23-manual-review-vs-quality-scan.html">
+      <img src="blog-23-manual-review-vs-quality-scan-cover.svg" class="blog-card-cover" alt="Manual Review vs Quality Scan" loading="lazy">
+      <div class="blog-card-body">
+        <div class="card-top"><span class="blog-num">23</span><span class="cat-badge cat-compare">Comparison</span></div>
+        <div class="blog-card-title">Manual Code Review for Architecture vs. FlowSquad Quality Scan: Time, Cost, Coverage</div>
+        <div class="blog-card-hook">"A senior architect costs $150/hr. FlowSquad's quality deep-scan costs pennies per run."</div>
+        <div class="blog-card-meta"><span class="meta-pill">Tech Leads</span><span class="meta-pill">CTOs</span></div>
+        <span class="read-link">Read article <svg viewBox="0 0 16 16"><path d="M8.22 2.97a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.75.75 0 0 1-1.06-1.06L11.44 8.5H2.75a.75.75 0 0 1 0-1.5h8.69L8.22 4.03a.75.75 0 0 1 0-1.06Z"/></svg></span>
+      </div>
+    </a>
+
+  </div>
+</div>
+
+<div style="height:52px;"></div>
+
+<!-- ── Section 4 ── -->
+<div class="blog-section-group" id="sec-tutorial">
+  <span class="section-eyebrow">Tutorials</span>
+  <h2 class="section-title">Step-by-Step Guides</h2>
+  <p class="section-sub">Practical walkthroughs — follow along and get something working by the end.</p>
+  <div class="blog-grid">
+
+    <a class="blog-card" href="blog-24-legacy-java-tutorial.html">
+      <img src="blog-24-legacy-java-tutorial-cover.svg" class="blog-card-cover" alt="Java Tutorial" loading="lazy">
+      <div class="blog-card-body">
+        <div class="card-top"><span class="blog-num">24</span><span class="cat-badge cat-tutorial">Tutorial</span></div>
+        <div class="blog-card-title">Step-by-Step: Analyze a Legacy Java Codebase and Generate a Full SDLC Plan in 30 Minutes</div>
+        <div class="blog-card-hook">"Clone → Analyze → Refine → Epics → Stories → Design → Test Cases. A complete walkthrough."</div>
+        <div class="blog-card-meta"><span class="meta-pill">Java Developers</span><span class="meta-pill">FlowSquad Evaluators</span></div>
+        <span class="read-link">Read article <svg viewBox="0 0 16 16"><path d="M8.22 2.97a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.75.75 0 0 1-1.06-1.06L11.44 8.5H2.75a.75.75 0 0 1 0-1.5h8.69L8.22 4.03a.75.75 0 0 1 0-1.06Z"/></svg></span>
+      </div>
+    </a>
+
+    <a class="blog-card" href="blog-25-jira-confluence-github-setup.html">
+      <img src="blog-25-jira-confluence-github-setup-cover.svg" class="blog-card-cover" alt="Jira Setup" loading="lazy">
+      <div class="blog-card-body">
+        <div class="card-top"><span class="blog-num">25</span><span class="cat-badge cat-tutorial">Tutorial</span></div>
+        <div class="blog-card-title">How to Connect FlowSquad to Jira, Confluence, and GitHub in Under 15 Minutes</div>
+        <div class="blog-card-hook">"API tokens, webhook setup, JQL configuration, and your first auto-exported Jira ticket."</div>
+        <div class="blog-card-meta"><span class="meta-pill">New FlowSquad Users</span><span class="meta-pill">DevOps</span></div>
+        <span class="read-link">Read article <svg viewBox="0 0 16 16"><path d="M8.22 2.97a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.75.75 0 0 1-1.06-1.06L11.44 8.5H2.75a.75.75 0 0 1 0-1.5h8.69L8.22 4.03a.75.75 0 0 1 0-1.06Z"/></svg></span>
+      </div>
+    </a>
+
+    <a class="blog-card" href="blog-26-kubernetes-deployment.html">
+      <img src="blog-26-kubernetes-deployment-cover.svg" class="blog-card-cover" alt="Kubernetes" loading="lazy">
+      <div class="blog-card-body">
+        <div class="card-top"><span class="blog-num">26</span><span class="cat-badge cat-tutorial">Tutorial</span></div>
+        <div class="blog-card-title">Deploy FlowSquad on Kubernetes with PostgreSQL and Pinecone: Production Checklist</div>
+        <div class="blog-card-hook">"Helm values, environment secrets, health probes — everything for production-grade K8s."</div>
+        <div class="blog-card-meta"><span class="meta-pill">DevOps Engineers</span><span class="meta-pill">Platform Teams</span></div>
+        <span class="read-link">Read article <svg viewBox="0 0 16 16"><path d="M8.22 2.97a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.75.75 0 0 1-1.06-1.06L11.44 8.5H2.75a.75.75 0 0 1 0-1.5h8.69L8.22 4.03a.75.75 0 0 1 0-1.06Z"/></svg></span>
+      </div>
+    </a>
+
+    <a class="blog-card" href="blog-27-custom-llm-provider.html">
+      <img src="blog-27-custom-llm-provider-cover.svg" class="blog-card-cover" alt="Custom LLM" loading="lazy">
+      <div class="blog-card-body">
+        <div class="card-top"><span class="blog-num">27</span><span class="cat-badge cat-tutorial">Tutorial</span></div>
+        <div class="blog-card-title">Building a Custom LLM Provider for FlowSquad in 45 Minutes</div>
+        <div class="blog-card-hook">"Adding Azure OpenAI as a fifth provider — a single Python class, start to finish."</div>
+        <div class="blog-card-meta"><span class="meta-pill">Platform Engineers</span><span class="meta-pill">LLM Enthusiasts</span></div>
+        <span class="read-link">Read article <svg viewBox="0 0 16 16"><path d="M8.22 2.97a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.75.75 0 0 1-1.06-1.06L11.44 8.5H2.75a.75.75 0 0 1 0-1.5h8.69L8.22 4.03a.75.75 0 0 1 0-1.06Z"/></svg></span>
+      </div>
+    </a>
+
+  </div>
+</div>
+
+<div style="height:52px;"></div>
+
+<!-- ── Section 5 ── -->
+<div class="blog-section-group" id="sec-usecase">
+  <span class="section-eyebrow">Use Cases</span>
+  <h2 class="section-title">FlowSquad in the Real World</h2>
+  <p class="section-sub">Real deployments across startups, enterprises, and regulated industries.</p>
+  <div class="blog-grid">
+
+    <a class="blog-card" href="blog-28-small-team-productivity.html">
+      <img src="blog-28-small-team-productivity-cover.svg" class="blog-card-cover" alt="Small Team" loading="lazy">
+      <div class="blog-card-body">
+        <div class="card-top"><span class="blog-num">28</span><span class="cat-badge cat-usecase">Use Case</span></div>
+        <div class="blog-card-title">How a 5-Person Engineering Team Ships Like a 20-Person Team Using FlowSquad</div>
+        <div class="blog-card-hook">"No dedicated BA, no QA team, no architect. FlowSquad fills every role for artifact generation."</div>
+        <div class="blog-card-meta"><span class="meta-pill">Startup CTOs</span><span class="meta-pill">Small Teams</span></div>
+        <span class="read-link">Read article <svg viewBox="0 0 16 16"><path d="M8.22 2.97a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.75.75 0 0 1-1.06-1.06L11.44 8.5H2.75a.75.75 0 0 1 0-1.5h8.69L8.22 4.03a.75.75 0 0 1 0-1.06Z"/></svg></span>
+      </div>
+    </a>
+
+    <a class="blog-card" href="blog-29-soc2-compliance.html">
+      <img src="blog-29-soc2-compliance-cover.svg" class="blog-card-cover" alt="SOC 2" loading="lazy">
+      <div class="blog-card-body">
+        <div class="card-top"><span class="blog-num">29</span><span class="cat-badge cat-usecase">Use Case</span></div>
+        <div class="blog-card-title">From Zero to SOC 2 Compliant: How FlowSquad's Audit Trail, RBAC, and Encryption Support the Certification</div>
+        <div class="blog-card-hook">"FlowSquad ships with the controls SOC 2 auditors look for — out of the box."</div>
+        <div class="blog-card-meta"><span class="meta-pill">Compliance Officers</span><span class="meta-pill">CTOs in SaaS</span></div>
+        <span class="read-link">Read article <svg viewBox="0 0 16 16"><path d="M8.22 2.97a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.75.75 0 0 1-1.06-1.06L11.44 8.5H2.75a.75.75 0 0 1 0-1.5h8.69L8.22 4.03a.75.75 0 0 1 0-1.06Z"/></svg></span>
+      </div>
+    </a>
+
+    <a class="blog-card" href="blog-30-banking-airgapped.html">
+      <img src="blog-30-banking-airgapped-cover.svg" class="blog-card-cover" alt="Banking Air-Gapped" loading="lazy">
+      <div class="blog-card-body">
+        <div class="card-top"><span class="blog-num">30</span><span class="cat-badge cat-usecase">Use Case</span></div>
+        <div class="blog-card-title">AI-Powered SDLC in a Bank: How We Run FlowSquad with Zero Data Leaving Our Data Centre</div>
+        <div class="blog-card-hook">"Ollama on-premise, local ChromaDB, SAML 2.0 with Keycloak, PostgreSQL on bare metal."</div>
+        <div class="blog-card-meta"><span class="meta-pill">Banking</span><span class="meta-pill">Insurance</span><span class="meta-pill">Government</span></div>
+        <span class="read-link">Read article <svg viewBox="0 0 16 16"><path d="M8.22 2.97a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.75.75 0 0 1-1.06-1.06L11.44 8.5H2.75a.75.75 0 0 1 0-1.5h8.69L8.22 4.03a.75.75 0 0 1 0-1.06Z"/></svg></span>
+      </div>
+    </a>
+
+  </div>
+</div>
+
+</div><!-- /.container -->
+</div><!-- /.blog-section -->
+
+<!-- CTA -->
+<div class="cta-band">
+  <div class="container" style="max-width:900px;">
+    <h2>Ready to Experience FlowSquad?</h2>
+    <p>Free 30-day evaluation — all 10 workflow tabs, every feature, on your own infrastructure.</p>
+    <a href="../index.html#download" class="btn-cta-p">&#8595; Download Free</a>
+    <a href="mailto:support@flowsquad.ai" class="btn-cta-s">Contact Sales</a>
+  </div>
+</div>
+
+<!-- Footer -->
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <p class="fl"><strong>FlowSquad</strong></p>
+        <p class="ft">AI-Powered SDLC Intelligence Platform</p>
+        <p class="ft">Analyze once. Reuse intelligence. Zero repeated LLM cost.</p>
+      </div>
+      <div class="fc"><p class="fc-t">Product</p>
+        <a href="../index.html#features">Features</a>
+        <a href="../index.html#how-it-works">How It Works</a>
+        <a href="../index.html#deployment">Deployment</a>
+        <a href="../index.html#pricing">Pricing</a>
+        <a href="../index.html#download">Download</a>
+      </div>
+      <div class="fc"><p class="fc-t">Resources</p>
+        <a href="../docs/index.html">Documentation</a>
+        <a href="index.html">Blog</a>
+        <a href="https://github.com/flowsquad-ai/Flowsquad" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <a href="../index.html#learn-more">Videos</a>
+        <a href="mailto:support@flowsquad.ai">Support</a>
+      </div>
+      <div class="fc"><p class="fc-t">Company</p>
+        <a href="mailto:support@flowsquad.ai">Contact Sales</a>
+        <a href="mailto:support@flowsquad.ai">support@flowsquad.ai</a>
+        <a href="/privacy">Privacy Policy</a>
+      </div>
+    </div>
+    <div class="footer-btm"><p>&#169; 2026 FlowSquad. All rights reserved.</p></div>
+  </div>
+</footer>
+
+<script>
+var _ham=document.querySelector('.hamburger'),_nl=document.querySelector('.nav-links'),_nb=document.querySelector('.nav-backdrop');
+function _open(){_nl.classList.add('active');_nb.classList.add('active');document.body.style.overflow='hidden';}
+function _close(){_nl.classList.remove('active');_nb.classList.remove('active');document.body.style.overflow='';}
+_ham.addEventListener('click',function(){if(_nl.classList.contains('active')){_close();}else{_open();}});
+_nb.addEventListener('click',_close);
+document.querySelectorAll('.nav-links a').forEach(function(l){l.addEventListener('click',_close);});
+var _tt=document.getElementById('themeToggle');
+function _applyTheme(d){
+  document.documentElement.setAttribute('data-theme',d?'dark':'light');
+  _tt.innerHTML=d?'&#9728;&#65039;':'&#127769;';
+  localStorage.setItem('fs_theme',d?'dark':'light');
+}
+var _st=localStorage.getItem('fs_theme');_applyTheme(_st?_st==='dark':true);
+_tt.addEventListener('click',function(){_applyTheme(document.documentElement.getAttribute('data-theme')!=='dark');});
+
+// Category filter
+document.querySelectorAll('.filter-btn').forEach(function(btn){
+  btn.addEventListener('click',function(e){
+    e.preventDefault();
+    document.querySelectorAll('.filter-btn').forEach(function(b){b.classList.remove('active');});
+    this.classList.add('active');
+    var f=this.dataset.filter;
+    document.querySelectorAll('.blog-card').forEach(function(card){
+      if(f==='all'){card.style.display='';return;}
+      var badge=card.querySelector('.cat-badge');
+      var match=badge&&badge.classList.contains('cat-'+f);
+      card.style.display=match?'':'none';
+    });
+    // Hide/show section groups
+    document.querySelectorAll('.blog-section-group').forEach(function(sg){
+      if(f==='all'){sg.style.display='';return;}
+      var hasBadge=[].some.call(sg.querySelectorAll('.cat-badge'),function(b){return b.classList.contains('cat-'+f);});
+      sg.style.display=hasBadge?'':'none';
+    });
+  });
+});
+</script>
+</body>
+</html>
