@@ -31,7 +31,7 @@
     if (!stored && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
       stored = 'dark';
     }
-    applyTheme(stored || 'light');
+    applyTheme(stored || 'dark');
   }());
 
   // Keep global for any legacy inline onclick still in markup during transition
