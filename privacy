@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Privacy Policy - FlowSquad</title>
+<meta name="description" content="FlowSquad Privacy Policy — how we handle data when you use our self-hosted, on-premises AI-powered SDLC intelligence platform.">
+<link rel="canonical" href="https://flowsquad.ai/privacy">
+
+<!-- Early theme init — prevents flash of wrong theme on load -->
+<script>
+(function(){
+  try {
+    var t = localStorage.getItem('fs_theme');
+    if (!t) t = 'dark';
+    document.documentElement.setAttribute('data-theme', t === 'dark' ? 'dark' : 'light');
+  } catch(e) {
+    document.documentElement.setAttribute('data-theme', 'dark');
+  }
+})();
+</script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --primary-color:  #0066cc;
+  --primary-dark:   #0052a3;
+  --primary-light:  #e6f2ff;
+  --accent:         #0066cc;
+  --success-color:  #2da44e;
+  --body-bg:        #ffffff;
+  --card-bg:        #ffffff;
+  --navbar-bg:      #ffffff;
+  --light-bg:       #f6f8fa;
+  --text-color:     #1f2328;
+  --text-muted:     #57606a;
+  --border-color:   #d0d7de;
+  --shadow-sm:  0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.04);
+  --hero-grad-start: #0066cc;
+  --hero-grad-end:   #003d8f;
+  --hero-text:       #ffffff;
+  --hero-text-muted: rgba(255,255,255,0.85);
+  --radius-sm: 6px;
+  --radius-md: 10px;
+}
+
+[data-theme="dark"] {
+  --primary-color:  #58a6ff;
+  --primary-dark:   #388bfd;
+  --primary-light:  #0d2a4a;
+  --accent:         #58a6ff;
+  --success-color:  #3fb950;
+  --body-bg:        #0d1117;
+  --card-bg:        #161b22;
+  --navbar-bg:      #161b22;
+  --light-bg:       #1c2128;
+  --text-color:     #e6edf3;
+  --text-muted:     #8b949e;
+  --border-color:   #30363d;
+  --shadow-sm:  0 1px 3px rgba(0,0,0,0.5);
+  --hero-grad-start: #0d1f3c;
+  --hero-grad-end:   #0a1628;
+  --hero-text:       #e6edf3;
+  --hero-text-muted: rgba(230,237,243,0.75);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --primary-color:  #58a6ff;
+    --primary-dark:   #388bfd;
+    --primary-light:  #0d2a4a;
+    --accent:         #58a6ff;
+    --success-color:  #3fb950;
+    --body-bg:        #0d1117;
+    --card-bg:        #161b22;
+    --navbar-bg:      #161b22;
+    --light-bg:       #1c2128;
+    --text-color:     #e6edf3;
+    --text-muted:     #8b949e;
+    --border-color:   #30363d;
+    --shadow-sm:  0 1px 3px rgba(0,0,0,0.5);
+    --hero-grad-start: #0d1f3c;
+    --hero-grad-end:   #0a1628;
+    --hero-text:       #e6edf3;
+    --hero-text-muted: rgba(230,237,243,0.75);
+  }
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html { overflow-x: hidden; scroll-padding-top: 72px; }
+
+body {
+  overflow-x: hidden;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  line-height: 1.6;
+  color: var(--text-color);
+  background: var(--body-bg);
+  transition: background 0.3s, color 0.3s;
+  padding-top: 72px;
+}
+
+/* Navbar */
+.navbar {
+  background-color: var(--navbar-bg);
+  border-bottom: 1px solid var(--border-color);
+  padding: 1rem 0;
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 1000;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  transition: background 0.3s;
+}
+
+.container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 40px;
+}
+
+.navbar .container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+  padding-left: 24px;
+}
+
+.nav-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+  margin-right: 2.5rem;
+  flex-shrink: 0;
+}
+
+.nav-brand img {
+  height: 40px;
+  width: auto;
+  max-width: 180px;
+  display: block;
+}
+
+.nav-menu {
+  display: flex;
+  gap: 0;
+  align-items: center;
+  flex-shrink: 1;
+}
+
+.nav-menu a {
+  text-decoration: none;
+  color: var(--text-color);
+  font-weight: 500;
+  font-size: 0.875rem;
+  transition: color 0.2s;
+  padding: 0 0.7rem;
+  white-space: nowrap;
+}
+
+.nav-menu a:hover { color: var(--primary-color); }
+
+.nav-github {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.45rem 0.7rem;
+  border: 1px solid var(--border-color);
+  border-radius: 999px;
+}
+
+.nav-github svg { width: 18px; height: 18px; }
+
+.nav-contact-sales {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.35rem 0.85rem;
+  border: 1.5px solid var(--primary-color);
+  border-radius: 6px;
+  color: var(--primary-color) !important;
+  font-weight: 600 !important;
+  font-size: 0.8rem;
+  transition: all 0.2s;
+  white-space: nowrap;
+  margin-left: 0.5rem;
+}
+
+.nav-contact-sales:hover {
+  background: var(--primary-color) !important;
+  color: white !important;
+}
+
+.theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border: 1.5px solid var(--border-color);
+  border-radius: 8px;
+  background: transparent;
+  cursor: pointer;
+  color: var(--text-color);
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+
+.theme-toggle:hover { border-color: var(--primary-color); color: var(--primary-color); }
+
+.hamburger {
+  display: none;
+  flex-direction: column;
+  cursor: pointer;
+  gap: 4px;
+  order: -1;
+  flex-shrink: 0;
+}
+
+.hamburger span {
+  width: 25px;
+  height: 3px;
+  background-color: var(--text-color);
+  transition: 0.3s;
+}
+
+.nav-backdrop {
+  display: none;
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background-color: rgba(0,0,0,0.5);
+  z-index: 998;
+}
+
+.nav-backdrop.active { display: block; }
+
+/* Page header */
+.page-header {
+  background: linear-gradient(160deg, var(--hero-grad-start) 0%, var(--hero-grad-end) 100%);
+  color: var(--hero-text);
+  padding: 60px 20px 50px;
+  text-align: center;
+}
+
+.page-header h1 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 0.75rem;
+  color: var(--hero-text);
+}
+
+.page-header p {
+  font-size: 1rem;
+  color: var(--hero-text-muted);
+  max-width: 580px;
+  margin: 0 auto;
+}
+
+/* Content */
+.privacy-content {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 3.5rem 48px 5rem;
+}
+
+.privacy-content .last-updated {
+  display: inline-block;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  border: 1px solid var(--border-color);
+  border-radius: 999px;
+  padding: 0.2rem 0.75rem;
+  margin-bottom: 2.5rem;
+}
+
+.privacy-content h2 {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--text-color);
+  margin-top: 2.75rem;
+  margin-bottom: 0.75rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.privacy-content h2:first-of-type {
+  margin-top: 0;
+}
+
+.privacy-content p {
+  font-size: 0.95rem;
+  color: var(--text-muted);
+  margin-bottom: 0.85rem;
+  line-height: 1.75;
+}
+
+.privacy-content ul {
+  list-style: none;
+  padding: 0;
+  margin: 0.5rem 0 1rem;
+}
+
+.privacy-content ul li {
+  font-size: 0.95rem;
+  color: var(--text-muted);
+  padding: 0.3rem 0;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+  line-height: 1.6;
+}
+
+.privacy-content ul li::before {
+  content: '\2192';
+  color: var(--primary-color);
+  font-weight: 600;
+  flex-shrink: 0;
+  margin-top: 0.05rem;
+}
+
+.privacy-content .callout {
+  background: var(--light-bg);
+  border: 1px solid var(--border-color);
+  border-left: 4px solid var(--primary-color);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  padding: 1rem 1.25rem;
+  margin: 1.25rem 0;
+}
+
+.privacy-content .callout p {
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+.privacy-content a {
+  color: var(--primary-color);
+  text-decoration: none;
+}
+
+.privacy-content a:hover { text-decoration: underline; }
+
+/* Footer */
+.footer {
+  background: #0d1117;
+  color: rgba(255,255,255,0.85);
+  padding: 4rem 0 0;
+}
+
+.footer-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: 3rem;
+  padding-bottom: 3rem;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.footer-brand .footer-logo-text {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: white;
+  margin-bottom: 0.6rem;
+}
+
+.footer-brand .footer-tagline {
+  font-size: 0.85rem;
+  color: rgba(255,255,255,0.5);
+  line-height: 1.6;
+  margin-bottom: 0.25rem;
+}
+
+.footer-col {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.footer-col-title {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: rgba(255,255,255,0.4);
+  margin-bottom: 0.4rem;
+}
+
+.footer-col a {
+  color: rgba(255,255,255,0.65);
+  text-decoration: none;
+  font-size: 0.875rem;
+  transition: color 0.2s;
+}
+
+.footer-col a:hover { color: white; }
+
+.footer-bottom {
+  padding: 1.5rem 0;
+  text-align: center;
+}
+
+.footer-bottom p {
+  font-size: 0.8rem;
+  color: rgba(255,255,255,0.3);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .navbar .container { padding: 0 15px; }
+
+  .nav-menu {
+    display: none;
+    flex-direction: column;
+    position: fixed;
+    top: 0; right: 0;
+    width: 280px; height: 100vh;
+    background-color: var(--navbar-bg);
+    padding: 80px 24px 24px;
+    z-index: 999;
+    gap: 0.25rem;
+    overflow-y: auto;
+  }
+
+  .nav-menu.active { display: flex; }
+
+  .nav-menu a {
+    padding: 0.75rem 0;
+    font-size: 1rem;
+    border-bottom: 1px solid var(--border-color);
+  }
+
+  .hamburger { display: flex; }
+
+  .page-header h1 { font-size: 1.75rem; }
+
+  .privacy-content { padding: 2.5rem 24px 4rem; }
+
+  .footer-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .footer-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="navbar">
+  <div class="container">
+    <a href="index.html" class="nav-brand">
+      <img src="docs/icon.png" alt="FlowSquad">
+    </a>
+    <div class="nav-menu">
+      <a href="index.html#features">Features</a>
+      <a href="index.html#how-it-works">How It Works</a>
+      <a href="index.html#use-cases">Use Cases</a>
+      <a href="index.html#deployment">Deployment</a>
+      <a href="index.html#download">Download</a>
+      <a href="index.html#pricing">Pricing</a>
+      <a href="docs/index.html">Docs</a>
+      <a href="blog/index.html">Blog</a>
+      <a href="mailto:support@flowsquad.ai" class="nav-contact-sales">Contact Sales</a>
+      <a href="https://github.com/flowsquad-ai/Flowsquad" target="_blank" rel="noopener noreferrer" class="nav-github" aria-label="View FlowSquad on GitHub">
+        <svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor">
+          <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.44 9.8 8.21 11.39.6.11.82-.26.82-.58 0-.29-.01-1.25-.02-2.27-3.34.73-4.04-1.42-4.04-1.42-.55-1.39-1.33-1.76-1.33-1.76-1.09-.75.08-.74.08-.74 1.2.09 1.84 1.24 1.84 1.24 1.08 1.85 2.83 1.31 3.52 1 .11-.78.42-1.31.76-1.61-2.67-.3-5.47-1.34-5.47-5.96 0-1.32.47-2.39 1.24-3.23-.12-.3-.54-1.52.12-3.17 0 0 1.01-.32 3.3 1.23A11.5 11.5 0 0 1 12 6.8c1.02 0 2.05.14 3.01.42 2.29-1.55 3.3-1.23 3.3-1.23.66 1.65.24 2.87.12 3.17.77.84 1.24 1.91 1.24 3.23 0 4.64-2.8 5.65-5.48 5.95.43.37.81 1.1.81 2.22 0 1.61-.01 2.9-.01 3.29 0 .32.22.7.82.58A12.01 12.01 0 0 0 24 12c0-6.63-5.37-12-12-12Z"/>
+        </svg>
+        <span>GitHub</span>
+      </a>
+      <button class="theme-toggle" id="themeToggle" aria-label="Toggle light/dark mode" title="Switch to dark mode">🌙</button>
+    </div>
+    <div class="hamburger">
+      <span></span><span></span><span></span>
+    </div>
+  </div>
+</nav>
+
+<!-- Mobile Navigation Backdrop -->
+<div class="nav-backdrop"></div>
+
+<!-- Page Header -->
+<div class="page-header">
+  <h1>Privacy Policy</h1>
+  <p>How FlowSquad handles data — built on the principle that your code and data stay under your control.</p>
+</div>
+
+<!-- Content -->
+<div class="privacy-content">
+  <span class="last-updated">Last updated: June 2025</span>
+
+  <div class="callout">
+    <p><strong>FlowSquad is a self-hosted, on-premises product.</strong> You download and run it inside your own infrastructure. We do not operate a cloud service on your behalf, and we do not have access to your codebase, your users, or the artifacts you generate.</p>
+  </div>
+
+  <h2>1. Who This Policy Applies To</h2>
+  <p>This Privacy Policy applies to:</p>
+  <ul>
+    <li>Visitors to <strong>flowsquad.ai</strong> (this website)</li>
+    <li>Individuals who download, evaluate, or purchase a FlowSquad license</li>
+    <li>Individuals who contact us by email or through our website forms</li>
+  </ul>
+  <p>It does <strong>not</strong> govern the data that you and your organization process inside your self-hosted FlowSquad installation. That data never leaves your infrastructure and is entirely under your control.</p>
+
+  <h2>2. Information We Collect on This Website</h2>
+  <p>When you visit <strong>flowsquad.ai</strong>, standard web server logs may record:</p>
+  <ul>
+    <li>IP address and approximate geographic region</li>
+    <li>Browser type, operating system, and referrer URL</li>
+    <li>Pages visited and time of visit</li>
+  </ul>
+  <p>We use this information solely for operating and improving the website. We do not sell or share it with third-party advertisers.</p>
+
+  <h2>3. Information You Provide to Us</h2>
+  <p>When you contact us (e.g. via <a href="mailto:support@flowsquad.ai">support@flowsquad.ai</a>), request a license, or fill in any form on this site, we collect the information you voluntarily submit — such as your name, email address, and organization. We use this only to:</p>
+  <ul>
+    <li>Respond to your inquiry or deliver the requested license</li>
+    <li>Send license renewal reminders or important product notices</li>
+    <li>Provide support when you request it</li>
+  </ul>
+  <p>We do not send marketing emails without your explicit consent, and you may opt out of any communications at any time by replying to any email or contacting us directly.</p>
+
+  <h2>4. What We Do Not Collect</h2>
+  <p>Because FlowSquad runs entirely inside your own infrastructure:</p>
+  <ul>
+    <li>We have no access to your source code or repositories</li>
+    <li>We have no access to LLM prompts, responses, or generated artifacts</li>
+    <li>We have no access to your internal users, roles, or access logs</li>
+    <li>We do not embed telemetry, analytics SDKs, or tracking pixels inside the FlowSquad application</li>
+    <li>We do not receive any data from within your FlowSquad installation unless you explicitly send it to us (e.g. in a support email)</li>
+  </ul>
+
+  <h2>5. LLM Providers</h2>
+  <p>FlowSquad connects to the LLM provider(s) you configure — such as OpenAI, Azure OpenAI, Anthropic, or a locally hosted model. All LLM API calls are made directly from your infrastructure to the provider you have chosen. FlowSquad does not proxy, log, or receive the content of those calls.</p>
+  <p>The privacy practices of your chosen LLM provider are governed by their own policies. If you require full data isolation, FlowSquad supports fully air-gapped deployment with locally hosted models.</p>
+
+  <h2>6. License Validation</h2>
+  <p>FlowSquad licenses are validated locally using the license file you receive. The application does not phone home to FlowSquad servers for license checks. If you choose to contact us for a license renewal or upgrade, you do so voluntarily by email.</p>
+
+  <h2>7. Cookies</h2>
+  <p>This website uses a single local-storage key (<code>fs_theme</code>) to remember your light/dark mode preference. No tracking cookies or third-party cookie scripts are used on this site.</p>
+
+  <h2>8. Third-Party Services</h2>
+  <p>This website loads the <strong>Inter</strong> font from Google Fonts. Google may log the font request including your IP address, subject to <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer">Google's Privacy Policy</a>. No other third-party scripts or services are loaded on this site.</p>
+
+  <h2>9. Data Retention</h2>
+  <p>We retain contact and license information for as long as it is needed for support or licensing purposes, or as required by applicable law. You may request deletion of your personal data at any time by emailing <a href="mailto:support@flowsquad.ai">support@flowsquad.ai</a>.</p>
+
+  <h2>10. Your Rights</h2>
+  <p>Depending on your jurisdiction, you may have rights to access, correct, or delete personal data we hold about you. To exercise any of these rights, contact us at <a href="mailto:support@flowsquad.ai">support@flowsquad.ai</a>. We will respond within a reasonable timeframe.</p>
+
+  <h2>11. Security</h2>
+  <p>We take reasonable technical and organisational measures to protect the limited personal data we hold. Because FlowSquad is self-hosted, the security of data processed within your installation is your organization's responsibility. FlowSquad ships with support for SSO, RBAC, field-level encryption, and air-gapped deployment to help you meet your own security requirements.</p>
+
+  <h2>12. Changes to This Policy</h2>
+  <p>We may update this policy from time to time. Changes will be published on this page with an updated date at the top. Continued use of the website or the software after changes are posted constitutes acceptance of the updated policy.</p>
+
+  <h2>13. Contact</h2>
+  <p>For any privacy-related questions or requests, please contact us at:</p>
+  <p><strong>FlowSquad</strong><br>
+  <a href="mailto:support@flowsquad.ai">support@flowsquad.ai</a></p>
+</div>
+
+<!-- Footer -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <p class="footer-logo-text"><strong>FlowSquad</strong></p>
+        <p class="footer-tagline">AI-Powered SDLC Intelligence Platform</p>
+        <p class="footer-tagline">Analyze once. Reuse intelligence. Zero repeated LLM cost.</p>
+      </div>
+      <div class="footer-col">
+        <p class="footer-col-title">Product</p>
+        <a href="index.html#features">Features</a>
+        <a href="index.html#how-it-works">How It Works</a>
+        <a href="index.html#deployment">Deployment</a>
+        <a href="index.html#pricing">Pricing</a>
+        <a href="index.html#download">Download</a>
+      </div>
+      <div class="footer-col">
+        <p class="footer-col-title">Resources</p>
+        <a href="docs/index.html">Documentation</a>
+        <a href="blog/index.html">Blog</a>
+        <a href="https://github.com/flowsquad-ai/Flowsquad" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <a href="index.html#learn-more">Videos</a>
+        <a href="mailto:support@flowsquad.ai">Support</a>
+      </div>
+      <div class="footer-col">
+        <p class="footer-col-title">Company</p>
+        <a href="mailto:support@flowsquad.ai">Contact Sales</a>
+        <a href="mailto:support@flowsquad.ai">support@flowsquad.ai</a>
+        <a href="/privacy">Privacy Policy</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&#169; 2026 FlowSquad. All rights reserved.</p>
+    </div>
+  </div>
+</footer>
+
+<script>
+const hamburger = document.querySelector('.hamburger');
+const navMenu = document.querySelector('.nav-menu');
+const navBackdrop = document.querySelector('.nav-backdrop');
+
+function toggleMenu() {
+  navMenu.classList.toggle('active');
+  navBackdrop.classList.toggle('active');
+  document.body.style.overflow = navMenu.classList.contains('active') ? 'hidden' : '';
+}
+
+function closeMenu() {
+  navMenu.classList.remove('active');
+  navBackdrop.classList.remove('active');
+  document.body.style.overflow = '';
+}
+
+hamburger.addEventListener('click', toggleMenu);
+navBackdrop.addEventListener('click', closeMenu);
+document.querySelectorAll('.nav-menu a').forEach(link => {
+  link.addEventListener('click', closeMenu);
+});
+
+const themeToggle = document.getElementById('themeToggle');
+
+function applyTheme(dark) {
+  document.documentElement.setAttribute('data-theme', dark ? 'dark' : 'light');
+  themeToggle.textContent = dark ? '☀️' : '🌙';
+  themeToggle.setAttribute('title', dark ? 'Switch to light mode' : 'Switch to dark mode');
+  localStorage.setItem('fs_theme', dark ? 'dark' : 'light');
+}
+
+const savedTheme = localStorage.getItem('fs_theme');
+applyTheme(savedTheme ? savedTheme === 'dark' : true);
+
+themeToggle.addEventListener('click', function() {
+  const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+  applyTheme(!isDark);
+});
+</script>
+
+</body>
+</html>
