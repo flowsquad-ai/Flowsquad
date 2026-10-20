@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Administrator Guide -- FlowSquad Docs</title>
   <meta name="description" content="FlowSquad Administrator Guide: Configure users, roles, products, LLM providers, vector databases, SSO (LDAP, SAML, OAuth2), MFA, Jira/Confluence integrations, database management, backup, audit logging, and system health monitoring for FlowSquad Enterprise." />
-  <meta name="keywords" content="FlowSquad admin guide, user management, RBAC, roles, LDAP, SAML, OAuth2, MFA, LLM configuration, OpenAI, Anthropic Claude, GitHub Models, Ollama, PostgreSQL, MySQL, Jira integration, Confluence integration, audit log, system health, health check" />
+  <meta name="keywords" content="FlowSquad admin guide, user management, RBAC, roles, LDAP, SAML, OAuth2, MFA, LLM configuration, OpenAI, Anthropic Claude, Mistral AI, Google Gemini, Groq, Cohere, Azure OpenAI, AWS Bedrock, GitHub Models, Ollama, PostgreSQL, MySQL, Jira integration, Confluence integration, audit log, system health, health check" />
   <meta property="og:title" content="FlowSquad Enterprise Administrator Guide" />
   <meta property="og:description" content="Complete administrator reference for FlowSquad Enterprise -- user roles, LLM provider configuration, SSO setup, database management, and system integrations." />
   <meta property="og:type" content="article" />
@@ -471,18 +471,25 @@ Regular User  (read/write on assigned products)</code></pre>
     <div class="table-wrap"><table>
       <thead><tr><th>Provider</th><th>Models</th><th>Notes</th></tr></thead>
       <tbody>
-        <tr><td>OpenAI</td><td>GPT-4, GPT-4o, GPT-4o-mini, GPT-4-turbo, GPT-3.5-turbo</td><td>API key required</td></tr>
-        <tr><td>Anthropic Claude</td><td>Claude 3.5 Sonnet, Claude 3 Opus, Claude 3 Sonnet, Claude 3 Haiku</td><td>API key required</td></tr>
-        <tr><td>GitHub Models</td><td>GPT-4o, GPT-4o-mini, GPT-4-turbo</td><td>GitHub account with Models marketplace access required</td></tr>
-        <tr><td>Ollama (Enterprise)</td><td>Llama 3, Mistral, Code Llama, and any locally pulled model</td><td>Self-hosted; no external API key needed</td></tr>
+        <tr><td>OpenAI</td><td>GPT-4o, GPT-4o-mini, o1, o3, o3-mini, GPT-4-turbo</td><td>API key from platform.openai.com</td></tr>
+        <tr><td>Anthropic Claude</td><td>Claude 3.5 Sonnet, Claude 3.5 Haiku, Claude 3 Opus, Claude 4 Sonnet</td><td>API key from console.anthropic.com</td></tr>
+        <tr><td>Mistral AI</td><td>Mistral Large, Mistral Small, Codestral, open-mistral-nemo</td><td>API key from console.mistral.ai</td></tr>
+        <tr><td>Google Gemini</td><td>Gemini 2.0 Flash, Gemini 1.5 Pro, Gemini 1.5 Flash</td><td>API key from aistudio.google.com</td></tr>
+        <tr><td>Groq</td><td>Llama 3.3 70B, Mixtral 8x7B, Gemma 2</td><td>API key from console.groq.com</td></tr>
+        <tr><td>Cohere</td><td>Command R+, Command R</td><td>API key from dashboard.cohere.com</td></tr>
+        <tr><td>Azure OpenAI</td><td>Any model deployed in your Azure AI Foundry</td><td>API key + endpoint + deployment name (from Azure Portal)</td></tr>
+        <tr><td>AWS Bedrock</td><td>Claude, Llama, Titan, Nova (enabled in your account)</td><td>AWS region required; IAM role or static key (both supported)</td></tr>
+        <tr><td>GitHub Models</td><td>GPT-4o, GPT-4o-mini, Claude 3.5 Sonnet, Llama 3.1 via GitHub</td><td>GitHub PAT required</td></tr>
+        <tr><td>Ollama</td><td>Llama 3, Mistral, Code Llama, and any locally pulled model</td><td>Self-hosted; no external API key needed</td></tr>
       </tbody>
     </table></div>
 
     <h3>Adding an LLM Provider</h3>
+    <p>Click <strong>+ Add LLM Provider</strong> in the LLM Configuration panel to open the provider selector. Choose a provider group (Cloud APIs, Hosted/Enterprise, or Local), select a card, fill in the credentials, click <strong>Test Connection</strong>, then <strong>Add to Configuration List</strong>.</p>
 
     <h4>OpenAI</h4>
     <ol>
-      <li>Click <strong>+ Add LLM Provider</strong> -> select <strong>OpenAI</strong></li>
+      <li>Click <strong>+ Add LLM Provider</strong> &rarr; select <strong>OpenAI</strong></li>
       <li>Enter your API key</li>
       <li>Select models to enable (GPT-4o for highest quality, GPT-4o-mini for cost efficiency, GPT-3.5-turbo for fastest/cheapest)</li>
       <li>Click <strong>Test Connection</strong>, then <strong>Save</strong></li>
@@ -490,7 +497,7 @@ Regular User  (read/write on assigned products)</code></pre>
 
     <h4>Anthropic Claude</h4>
     <ol>
-      <li>Click <strong>+ Add LLM Provider</strong> -> select <strong>Anthropic</strong></li>
+      <li>Click <strong>+ Add LLM Provider</strong> &rarr; select <strong>Anthropic</strong></li>
       <li>Enter your API key</li>
       <li>Select models (Claude 3.5 Sonnet for best overall, Claude 3 Opus for highest intelligence, Claude 3 Haiku for fastest/cheapest)</li>
       <li>Click <strong>Test Connection</strong>, then <strong>Save</strong></li>
@@ -505,6 +512,23 @@ Regular User  (read/write on assigned products)</code></pre>
     </ol>
     <p><strong>Note:</strong> Enterprise-managed user (EMU) accounts cannot access GitHub Models &mdash; use a personal GitHub account.</p>
 
+    <h4>Azure OpenAI</h4>
+    <ol>
+      <li>In Azure Portal, open your OpenAI resource &rarr; <strong>Keys and Endpoint</strong></li>
+      <li>Deploy a model in <strong>Azure AI Foundry</strong> and note the deployment name</li>
+      <li>Click <strong>+ Add LLM Provider</strong> &rarr; select <strong>Azure OpenAI</strong></li>
+      <li>Enter: API Key, Azure Endpoint URL, Deployment Name. API Version defaults to <code>2024-10-21</code></li>
+      <li>Click <strong>Test Connection</strong> to validate, then <strong>Add to Configuration List</strong></li>
+    </ol>
+
+    <h4>AWS Bedrock</h4>
+    <ol>
+      <li>In AWS console, enable Bedrock in your region and enable the model(s) you want to use</li>
+      <li>Click <strong>+ Add LLM Provider</strong> &rarr; select <strong>AWS Bedrock</strong></li>
+      <li>Enter AWS Region (required). Leave Access Key / Secret blank to use IAM role / instance profile</li>
+      <li>Click <strong>Test Connection</strong> to load available models, select a model, then <strong>Add to Configuration List</strong></li>
+    </ol>
+
     <h4>Ollama (Self-Hosted)</h4>
     <pre><code># 1. Install Ollama on your server
 curl https://ollama.ai/install.sh | sh
@@ -513,7 +537,7 @@ curl https://ollama.ai/install.sh | sh
 ollama pull llama3
 ollama pull mistral</code></pre>
     <ol>
-      <li>Click <strong>+ Add LLM Provider</strong> -> select <strong>Ollama</strong></li>
+      <li>Click <strong>+ Add LLM Provider</strong> &rarr; select <strong>Ollama</strong></li>
       <li>Enter the Ollama API URL: <code>http://localhost:11434</code></li>
       <li>Available models are auto-detected from Ollama</li>
       <li>Click <strong>Test Connection</strong>, then <strong>Save</strong></li>
@@ -993,9 +1017,14 @@ work_mem            = 16MB</code></pre>
   </article>
 
   <article itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+    <h3 itemprop="name">Which LLM providers does FlowSquad support?</h3>
+    <div itemscope itemtype="https://schema.org/Answer">
+      <p itemprop="text" style="color:var(--text);margin:0;">FlowSquad supports <strong>10 LLM providers</strong>: OpenAI (GPT-4o, o1, o3), Anthropic Claude (3.5/4), Mistral AI (Large, Codestral), Google Gemini (2.0 Flash, 1.5 Pro), Groq (Llama 3.3, Mixtral), Cohere (Command R+), Azure OpenAI (any deployment), AWS Bedrock (Claude, Llama, Titan — IAM role supported), GitHub Models, and Ollama (local/air-gapped). All providers are accessible from the Setup Wizard Step 3 or Admin Panel &rarr; LLM Configuration.</p>
+    </div>
+
     <h3 itemprop="name">How do I configure different LLM providers per product?</h3>
     <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
-      <p itemprop="text" style="color:var(--text);margin:0;">Each product can have its own LLM configuration per operation type (e.g., Analyze, Refine, Epic, Design, Test Cases). Go to <strong>Admin Panel -> Products -> Edit Product -> LLM Configuration</strong>. For each operation, select the provider (OpenAI, Anthropic Claude, GitHub Models, or Ollama for Enterprise) and model. If no per-product setting is configured, the product inherits the global default set during the Setup Wizard.</p>
+      <p itemprop="text" style="color:var(--text);margin:0;">Each product can have its own LLM configuration per operation type (e.g., Analyze, Refine, Epic, Design, Test Cases). Go to <strong>Admin Panel &rarr; Products &rarr; Edit Product &rarr; LLM Configuration</strong>. For each operation, select from any of the 10 configured providers and its available models. If no per-product setting is configured, the product inherits the global default set during the Setup Wizard.</p>
     </div>
   </article>
 
@@ -1030,7 +1059,7 @@ work_mem            = 16MB</code></pre>
   <article itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
     <h3 itemprop="name">How do I configure Ollama in FlowSquad?</h3>
     <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
-      <p itemprop="text" style="color:var(--text);margin:0;">Ollama is available in the Enterprise tier only. During the Setup Wizard (LLM Provider step) or in the Admin Panel, select <strong>Ollama</strong> as the provider and enter the base URL of your Ollama instance (e.g., <code>http://localhost:11434</code>). Ollama runs fully locally with no internet dependency, making it suitable for air-gapped environments. Ensure the desired model (e.g., <code>llama3</code>, <code>mistral</code>) is already pulled on your Ollama instance before configuring FlowSquad.</p>
+      <p itemprop="text" style="color:var(--text);margin:0;">During the Setup Wizard (Step 3) or in the Admin Panel, select <strong>Ollama</strong> as the provider and enter the base URL of your Ollama instance (e.g., <code>http://localhost:11434</code>). Ollama runs fully locally with no internet dependency, making it suitable for air-gapped environments. Ensure the desired model (e.g., <code>llama3</code>, <code>mistral</code>) is already pulled on your Ollama instance before configuring FlowSquad.</p>
     </div>
   </article>
 </section>

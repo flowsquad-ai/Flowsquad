@@ -119,7 +119,7 @@ document.getElementById('dlPdfBtn').addEventListener('click', function() {
       <tbody>
         <tr><td>Step 1 &mdash; Infrastructure &amp; Database</td><td>SSL/TLS certificate + private key paths (if using direct HTTPS). PostgreSQL or MySQL hostname, port, database name, username, password</td><td>Your CA-issued certificate files; your DBA or cloud database service console</td></tr>
         <tr><td>Step 2 &mdash; Vector DB</td><td>ChromaDB (nothing needed &mdash; runs locally)</td><td>Nothing required &mdash; ChromaDB is bundled</td></tr>
-        <tr><td>Step 3 &mdash; LLM Provider</td><td>API key for at least one provider: OpenAI, Anthropic, GitHub Models, or Ollama URL</td><td>platform.openai.com / console.anthropic.com / github.com/marketplace?type=models</td></tr>
+        <tr><td>Step 3 &mdash; LLM Provider</td><td>API key for at least one provider: OpenAI, Anthropic, Mistral AI, Google Gemini, Groq, Cohere, Azure OpenAI, AWS Bedrock, GitHub Models, or Ollama URL</td><td>platform.openai.com / console.anthropic.com / console.mistral.ai / aistudio.google.com / console.groq.com / dashboard.cohere.com / portal.azure.com / aws.amazon.com/bedrock / github.com/marketplace?type=models</td></tr>
         <tr><td>Step 4 &mdash; Authentication</td><td>LDAP: server URL, bind DN, bind password, user search base. SAML: IdP SSO URL, Entity ID, X.509 certificate. OAuth2: Client ID + Secret from provider's developer console</td><td>Your IT / identity team; IdP admin console</td></tr>
         <tr><td>Step 5 &mdash; Source Control</td><td>Personal access token or App Password for your Git provider (GitHub, GitLab, Bitbucket Cloud, Bitbucket Server, Azure DevOps, or Gitea)</td><td>github.com/settings/tokens &bull; GitLab: User Settings &rarr; Access Tokens &bull; Bitbucket: Personal Settings &rarr; App passwords</td></tr>
         <tr><td>Step 6 &mdash; Collaboration</td><td>Jira: URL + email + API token. Confluence: URL + email + API token</td><td>id.atlassian.com -> API tokens</td></tr>
@@ -271,14 +271,30 @@ EXIT;</code></pre>
         <tr><th>Provider</th><th>Models Available</th><th>Pre-requisite</th><th>Notes</th></tr>
       </thead>
       <tbody>
-        <tr><td><strong>OpenAI</strong></td><td>GPT-4o, GPT-4o-mini, GPT-4-turbo, GPT-4, GPT-3.5-turbo</td><td>OpenAI account with billing enabled</td><td>Most widely used. GPT-4o-mini is recommended for cost-efficiency.</td></tr>
-        <tr><td><strong>Anthropic Claude</strong></td><td>Claude 3.5 Sonnet, Claude 3 Opus, Claude 3 Sonnet, Claude 3 Haiku</td><td>Anthropic account with API access</td><td>Excellent for long-context reasoning and design generation.</td></tr>
-        <tr><td><strong>GitHub Models</strong></td><td>GPT-4o, GPT-4o-mini, GPT-4-turbo</td><td>GitHub account with Models marketplace access</td><td>Free tier: 15 RPM / 150 RPD. Suitable for low-volume or trial use.</td></tr>
-        <tr><td><strong>Ollama</strong> (Enterprise)</td><td>Llama 3, Mistral, Code Llama, and any locally pulled model</td><td>Ollama server running locally or on a reachable host</td><td>Fully offline &mdash; suitable for air-gapped deployments. Enterprise tier only.</td></tr>
+        <tr><td><strong>OpenAI</strong></td><td>GPT-4o, GPT-4o-mini, o1, o3, o3-mini, GPT-4-turbo</td><td>OpenAI account with billing enabled</td><td>Most widely used. GPT-4o-mini recommended for cost-efficiency.</td></tr>
+        <tr><td><strong>Anthropic Claude</strong></td><td>Claude 3.5 Sonnet, Claude 3.5 Haiku, Claude 3 Opus, Claude 4 Sonnet</td><td>Anthropic account with API access</td><td>Excellent for long-context reasoning and design generation.</td></tr>
+        <tr><td><strong>Mistral AI</strong></td><td>Mistral Large, Mistral Small, Codestral, open-mistral-nemo</td><td>Mistral account (console.mistral.ai)</td><td>EU-based, GDPR-native. Strong code generation with Codestral.</td></tr>
+        <tr><td><strong>Google Gemini</strong></td><td>Gemini 2.0 Flash, Gemini 1.5 Pro, Gemini 1.5 Flash</td><td>Google AI Studio API key (aistudio.google.com)</td><td>Largest context window (1M tokens). Best for large codebase analysis.</td></tr>
+        <tr><td><strong>Groq</strong></td><td>Llama 3.3 70B, Mixtral 8x7B, Gemma 2</td><td>Groq account (console.groq.com)</td><td>Fastest inference via LPU hardware. Ideal for latency-sensitive workflows.</td></tr>
+        <tr><td><strong>Cohere</strong></td><td>Command R+, Command R</td><td>Cohere account (dashboard.cohere.com)</td><td>Strong RAG and retrieval-augmented workflows.</td></tr>
+        <tr><td><strong>Azure OpenAI</strong></td><td>Your Azure deployment (GPT-4o, GPT-4-turbo, etc.)</td><td>Azure subscription + OpenAI resource deployed in Azure AI Foundry</td><td>Required for enterprise Azure EA agreements and data residency.</td></tr>
+        <tr><td><strong>AWS Bedrock</strong></td><td>Claude, Llama, Titan, Nova (any enabled in your account)</td><td>AWS account with Bedrock enabled in your region</td><td>IAM role supported &mdash; no static API key required. Best for AWS-native deployments.</td></tr>
+        <tr><td><strong>GitHub Models</strong></td><td>GPT-4o, GPT-4o-mini, Claude 3.5 Sonnet, Llama 3.1</td><td>GitHub Personal Access Token with Models access</td><td>Free tier available. Useful for evaluation and CI/CD automation.</td></tr>
+        <tr><td><strong>Ollama</strong></td><td>Llama 3, Mistral, Code Llama, and any locally pulled model</td><td>Ollama server running locally or on a reachable host</td><td>Fully offline &mdash; suitable for air-gapped deployments.</td></tr>
       </tbody>
     </table></div>
 
-    <h3>Fields &mdash; OpenAI</h3>
+    <h3>Fields &mdash; Cloud API Providers (OpenAI, Anthropic, Mistral AI, Google Gemini, Groq, Cohere)</h3>
+    <p>All six cloud API providers follow the same configuration pattern: enter your API key, click <strong>Test Connection</strong> to validate credentials and load your available models, select a model, then click <strong>Add to Configuration List</strong>.</p>
+    <table>
+      <tr><th>Field</th><th>Notes</th></tr>
+      <tr><td><strong>API Key</strong></td><td>Provider-specific API key. Stored encrypted. See provider links in the prerequisites table above.</td></tr>
+      <tr><td><strong>Model</strong></td><td>Auto-populated after Test Connection. Select from your account's available models.</td></tr>
+      <tr><td><strong>Max Tokens</strong></td><td>Maximum tokens per request. Default: 4000.</td></tr>
+      <tr><td><strong>Temperature</strong></td><td>Sampling temperature (0.0&ndash;2.0). Default: 0.3.</td></tr>
+    </table>
+
+    <h3>Fields &mdash; OpenAI (detail)</h3>
     <div class="table-wrap"><table>
       <thead>
         <tr><th>Field</th><th>Description</th></tr>
@@ -307,6 +323,24 @@ EXIT;</code></pre>
         <tr><td><strong>Default Model</strong></td><td>Claude 3.5 Sonnet recommended for best quality/cost balance.</td></tr>
       </tbody>
     </table></div>
+
+    <h3>Fields &mdash; Azure OpenAI</h3>
+    <table>
+      <tr><th>Field</th><th>Notes</th></tr>
+      <tr><td><strong>API Key</strong></td><td>From Azure Portal &rarr; your OpenAI resource &rarr; Keys and Endpoint.</td></tr>
+      <tr><td><strong>Azure Endpoint</strong></td><td>Your resource endpoint URL, e.g. <code>https://my-resource.openai.azure.com</code>.</td></tr>
+      <tr><td><strong>API Version</strong></td><td>Optional. Defaults to <code>2024-10-21</code>.</td></tr>
+      <tr><td><strong>Deployment Name</strong></td><td>The name of your Azure deployment (set when you deployed the model in Azure AI Foundry). This is user-defined, not a model name.</td></tr>
+    </table>
+
+    <h3>Fields &mdash; AWS Bedrock</h3>
+    <table>
+      <tr><th>Field</th><th>Notes</th></tr>
+      <tr><td><strong>AWS Region</strong></td><td>Region where Bedrock is enabled, e.g. <code>us-east-1</code>. Required.</td></tr>
+      <tr><td><strong>AWS Access Key ID</strong></td><td>Optional. Leave blank to use IAM role / instance profile.</td></tr>
+      <tr><td><strong>AWS Secret Access Key</strong></td><td>Optional. Leave blank to use IAM role / instance profile.</td></tr>
+      <tr><td><strong>Model ID</strong></td><td>Auto-populated after Test Connection. Select from models enabled in your account and region.</td></tr>
+    </table>
 
     <h3>Fields &mdash; Ollama</h3>
     <div class="table-wrap"><table>
@@ -703,8 +737,11 @@ https://flowsquad.yourcompany.com/oauth2/custom/callback</code></pre>
     <p><strong>Solutions:</strong></p>
     <ol>
       <li>Verify there are no leading/trailing spaces in the pasted API key</li>
-      <li>For OpenAI: check billing is active and the key is not restricted to specific IPs at platform.openai.com -> API keys</li>
+      <li>For OpenAI: check billing is active and the key is not restricted to specific IPs at platform.openai.com &rarr; API keys</li>
       <li>For Anthropic: confirm the key starts with <code>sk-ant-</code> and was created in the correct workspace</li>
+      <li>For Azure OpenAI: verify the Azure Endpoint URL is correct and the deployment name matches exactly what was created in Azure AI Foundry</li>
+      <li>For AWS Bedrock: verify the region has Bedrock enabled and the selected model is enabled for your account in the AWS console</li>
+      <li>For Mistral / Groq / Cohere / Gemini: confirm the key was created in the correct project/workspace and has not expired</li>
       <li>Generate a new key from the provider's console and re-enter it</li>
     </ol>
 
@@ -791,6 +828,11 @@ https://flowsquad.yourcompany.com/oauth2/custom/callback</code></pre>
   </article>
 
   <article itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+    <h3 itemprop="name">Which LLM providers does FlowSquad support?</h3>
+    <div itemscope itemtype="https://schema.org/Answer">
+      <p itemprop="text" style="color:var(--text);margin:0;">FlowSquad supports 10 LLM providers: <strong>OpenAI</strong> (GPT-4o, o1, o3), <strong>Anthropic</strong> (Claude 3.5/4), <strong>Mistral AI</strong> (Mistral Large, Codestral), <strong>Google Gemini</strong> (2.0 Flash, 1.5 Pro), <strong>Groq</strong> (Llama 3.3, Mixtral), <strong>Cohere</strong> (Command R+), <strong>Azure OpenAI</strong> (any Azure deployment), <strong>AWS Bedrock</strong> (Claude, Llama, Titan — IAM role supported), <strong>GitHub Models</strong>, and <strong>Ollama</strong> (local / air-gapped). Multiple providers can be configured simultaneously and assigned per-product or per-operation.</p>
+    </div>
+
     <h3 itemprop="name">Can I change the LLM provider after setup?</h3>
     <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
       <p itemprop="text" style="color:var(--text);margin:0;">Yes. Re-run the Setup Wizard via the <strong>&#x2699;&#xFE0F; Setup</strong> button in the top navigation bar to change the global default LLM provider. Per-product LLM overrides are available in each product's Settings -> LLM Configuration page without requiring a wizard re-run.</p>
