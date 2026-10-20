@@ -1771,6 +1771,10 @@ body {
       <span class="trust-badge">&#128159; Jira</span>
       <span class="trust-badge">&#128159; Confluence</span>
       <span class="trust-badge">&#129504; OpenAI</span>
+      <span class="trust-badge">&#129504; Anthropic</span>
+      <span class="trust-badge">&#129504; Mistral</span>
+      <span class="trust-badge">&#129504; Gemini</span>
+      <span class="trust-badge">&#129504; Groq</span>
       <span class="trust-badge">&#129504; Ollama</span>
       <span class="trust-badge">&#128272; SAML / OAuth2</span>
     </div>
@@ -2196,7 +2200,7 @@ body {
           <li>Granular tasks grounded in real code patterns &amp; structure</li>
           <li>Incremental re-analysis — only changed code is re-scanned</li>
           <li>Selective exclusion — choose what not to analyze</li>
-          <li>LLM of choice per tab: OpenAI, Claude, Ollama, GitHub Models</li>
+          <li>LLM of choice per tab: OpenAI, Claude, Mistral, Gemini, Groq, Cohere, Azure, Bedrock, GitHub Models, Ollama</li>
           <li>Onboard to any repo in minutes, not weeks</li>
         </ul>
       </div>
@@ -2355,7 +2359,7 @@ body {
       <div class="card">
         <div class="icon">&#128273;</div>
         <h3>Your Own LLM Keys</h3>
-        <p>Use your own OpenAI, Anthropic, or GitHub Models API keys. Per-product LLM configuration for full cost control.</p>
+        <p>Use your own API keys for any of 10 providers: OpenAI, Anthropic, Mistral AI, Google Gemini, Groq, Cohere, Azure OpenAI, AWS Bedrock, GitHub Models. Per-product LLM configuration for full cost control.</p>
       </div>
 
       <div class="card">
@@ -2415,8 +2419,14 @@ body {
       <div class="integration-row">
         <h4>&#129504; AI Providers — Per-Tab Configuration</h4>
         <div class="integration-items">
-          <span class="integration-badge">OpenAI (GPT series)</span>
-          <span class="integration-badge">Anthropic Claude</span>
+          <span class="integration-badge">OpenAI (GPT-4o, o1, o3)</span>
+          <span class="integration-badge">Anthropic Claude (3.5 / 4)</span>
+          <span class="integration-badge">Mistral AI</span>
+          <span class="integration-badge">Google Gemini</span>
+          <span class="integration-badge">Groq (LPU inference)</span>
+          <span class="integration-badge">Cohere Command R+</span>
+          <span class="integration-badge">Azure OpenAI</span>
+          <span class="integration-badge">AWS Bedrock</span>
           <span class="integration-badge">GitHub Models</span>
           <span class="integration-badge">Ollama (fully local / air-gapped)</span>
           <span class="integration-badge">Per-product &amp; per-tab LLM config</span>
@@ -2881,16 +2891,38 @@ const hamburger = document.querySelector('.hamburger');
 const navMenu = document.querySelector('.nav-menu');
 const navBackdrop = document.querySelector('.nav-backdrop');
 
+let _scrollY = 0;
+
+function lockBodyScroll() {
+  _scrollY = window.scrollY;
+  document.body.style.position = 'fixed';
+  document.body.style.top = '-' + _scrollY + 'px';
+  document.body.style.width = '100%';
+  document.body.style.overflow = 'hidden';
+}
+
+function unlockBodyScroll() {
+  document.body.style.position = '';
+  document.body.style.top = '';
+  document.body.style.width = '';
+  document.body.style.overflow = '';
+  window.scrollTo(0, _scrollY);
+}
+
 function toggleMenu() {
   navMenu.classList.toggle('active');
   navBackdrop.classList.toggle('active');
-  document.body.style.overflow = navMenu.classList.contains('active') ? 'hidden' : '';
+  if (navMenu.classList.contains('active')) {
+    lockBodyScroll();
+  } else {
+    unlockBodyScroll();
+  }
 }
 
 function closeMenu() {
   navMenu.classList.remove('active');
   navBackdrop.classList.remove('active');
-  document.body.style.overflow = '';
+  unlockBodyScroll();
 }
 
 hamburger.addEventListener('click', toggleMenu);
