@@ -635,8 +635,9 @@ a{color:var(--pc);text-decoration:none;}a:hover{text-decoration:underline;}
 
 <script>
 var _ham=document.querySelector('.hamburger'),_nl=document.querySelector('.nav-links'),_nb=document.querySelector('.nav-backdrop');
-function _open(){_nl.classList.add('active');_nb.classList.add('active');document.body.style.overflow='hidden';}
-function _close(){_nl.classList.remove('active');_nb.classList.remove('active');document.body.style.overflow='';}
+var _scrollY=0;
+function _open(){_scrollY=window.scrollY;document.body.style.position='fixed';document.body.style.top='-'+_scrollY+'px';document.body.style.width='100%';document.body.style.overflow='hidden';_nl.classList.add('active');_nb.classList.add('active');}
+function _close(){_nl.classList.remove('active');_nb.classList.remove('active');document.body.style.position='';document.body.style.top='';document.body.style.width='';document.body.style.overflow='';window.scrollTo(0,_scrollY);}
 _ham.addEventListener('click',function(){if(_nl.classList.contains('active')){_close();}else{_open();}});
 _nb.addEventListener('click',_close);
 document.querySelectorAll('.nav-links a').forEach(function(l){l.addEventListener('click',_close);});

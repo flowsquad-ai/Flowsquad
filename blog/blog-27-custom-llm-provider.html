@@ -4,7 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Building a Custom LLM Provider for FlowSquad in 45 Minutes | FlowSquad Blog</title>
-<meta name="description" content="FlowSquad's provider pattern makes adding a new LLM a single Python class. Walk through adding Azure OpenAI as a fifth provider — start to finish." />
+<meta name="description" content="FlowSquad's provider pattern makes adding a new LLM a single Python class. Walk through adding a custom provider — start to finish. FlowSquad ships with 10 built-in providers." />
 <meta property="og:title" content="Building a Custom LLM Provider for FlowSquad in 45 Minutes" />
 <meta property="og:description" content="FlowSquad's provider pattern makes adding a new LLM a single Python class. Walk through adding Azure OpenAI as a fifth provider — start to finish." />
 <meta property="og:type" content="article" />
@@ -157,13 +157,13 @@ details p{padding:0 17px 14px;margin:0;color:var(--tm);font-size:.85rem;}
   <span class="art-cat cat-tutorial">Tutorial</span>
   <img src="blog-27-custom-llm-provider-cover.svg" alt="Building a Custom LLM Provider for FlowSquad in 45 Minutes" class="cover-img" loading="lazy" />
 <h1>Building a Custom LLM Provider for FlowSquad in 45 Minutes</h1>
-  <div class="art-hook">FlowSquad's provider pattern makes adding a new LLM a single Python class. This post walks you through adding Azure OpenAI as a fifth provider — start to finish, including the registration config and a test harness.</div>
+  <div class="art-hook">FlowSquad's provider pattern makes adding a new LLM a single Python class. FlowSquad ships with 10 built-in providers (OpenAI, Anthropic, Mistral AI, Groq, Cohere, Azure OpenAI, Google Gemini, AWS Bedrock, GitHub Models, Ollama). This post walks you through adding a fully custom provider — the same pattern used to build all 10.</div>
 
   <div class="tldr"><div class="tldr-title">TL;DR</div>
     <ul>
       <li>A complete provider class requires implementing exactly <strong>4 abstract methods</strong>: <code>complete()</code>, <code>embed()</code>, <code>stream()</code>, and <code>health_check()</code>.</li>
       <li>Registering a new provider takes <strong>3 config lines</strong> and a <code>flowsquad reload-providers</code> CLI command — no code changes outside the provider module.</li>
-      <li>FlowSquad ships with <strong>4 built-in providers</strong> (OpenAI GPT-4, Anthropic Claude, Azure OpenAI, Ollama Llama2/Mistral); the pluggable pattern means any LLM API is a 45-minute project.</li>
+      <li>FlowSquad ships with <strong>10 built-in providers</strong> (OpenAI, Anthropic, Mistral AI, Groq, Cohere, Azure OpenAI, Google Gemini, AWS Bedrock, GitHub Models, Ollama); the pluggable pattern means any additional LLM API is a 45-minute project.</li>
     </ul>
   </div>
 

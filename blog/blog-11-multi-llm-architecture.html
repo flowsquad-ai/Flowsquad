@@ -4,7 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Inside FlowSquad's Multi-LLM Architecture: Why We Never Lock You In | FlowSquad Blog</title>
-<meta name="description" content="FlowSquad supports GPT-4o, Claude, Gemini, Mistral and custom models simultaneously. Learn how its multi-LLM routing architecture works and why it matters for enterprise SDLC." />
+<meta name="description" content="FlowSquad supports 10 LLM providers — OpenAI, Anthropic, Mistral, Groq, Cohere, Azure OpenAI, Google Gemini, AWS Bedrock, GitHub Models, and Ollama — simultaneously. Learn how its multi-LLM routing architecture works." />
 <meta property="og:title" content="Inside FlowSquad's Multi-LLM Architecture: Why We Never Lock You In" />
 <meta property="og:description" content="FlowSquad supports GPT-4o, Claude, Gemini, Mistral and custom models simultaneously. Learn how its multi-LLM routing architecture works and why it matters for enterprise SDLC." />
 <meta property="og:type" content="article" />
@@ -169,7 +169,7 @@ details p{padding:0 17px 14px;margin:0;color:var(--tm);font-size:.85rem;}
 
   <div class="tldr"><div class="tldr-title">TL;DR</div>
     <ul>
-      <li>FlowSquad supports <strong>5 LLM providers</strong> (OpenAI GPT-4, Anthropic Claude, Azure OpenAI, Ollama Llama2, Ollama Mistral) switchable via a single config field.</li>
+      <li>FlowSquad supports <strong>10 LLM providers</strong> (OpenAI, Anthropic, Mistral AI, Groq, Cohere, Azure OpenAI, Google Gemini, AWS Bedrock, GitHub Models, Ollama) switchable via a single config field.</li>
       <li>Switching providers in production takes under <strong>2 minutes</strong> — update the provider key, save, and the next request routes to the new model with zero downtime.</li>
       <li>On-premise Ollama deployments have a marginal cost of <strong>$0/1k tokens</strong>, reducing AI spend for high-volume teams by up to <strong>90%</strong>.</li>
     </ul>
@@ -208,18 +208,23 @@ details p{padding:0 17px 14px;margin:0;color:var(--tm);font-size:.85rem;}
   </div>
 
   <h2>Which LLMs Does FlowSquad Support Out of the Box?</h2>
-  <p>FlowSquad ships with <span class="metric">5 production-ready LLM provider adapters</span> covering the most widely used commercial and open-weight models available in 2025–2026. Each adapter is tested against FlowSquad's full feature suite, including structured JSON output requirements (for Epic/Story/Task decomposition), long-context requirements (for full-codebase analysis), and streaming requirements (for real-time UI feedback).</p>
+  <p>FlowSquad ships with <span class="metric">10 production-ready LLM provider adapters</span> covering the most widely used commercial and open-weight models. Each adapter is tested against FlowSquad's full feature suite, including structured JSON output requirements (for Epic/Story/Task decomposition), long-context requirements (for full-codebase analysis), and streaming requirements (for real-time UI feedback).</p>
 
   <table>
     <thead>
-      <tr><th>Provider</th><th>Model</th><th>Context Window</th><th>Cost / 1k Input Tokens</th><th>On-Premise?</th></tr>
+      <tr><th>Provider</th><th>Recommended Model</th><th>Context Window</th><th>Cost / 1k Input Tokens</th><th>On-Premise?</th></tr>
     </thead>
     <tbody>
-      <tr><td>OpenAI</td><td>GPT-4 Turbo</td><td>128,000 tokens</td><td>$0.01</td><td><span class="chip-off">Cloud only</span></td></tr>
-      <tr><td>Anthropic</td><td>Claude 3.5 Sonnet</td><td>200,000 tokens</td><td>$0.003</td><td><span class="chip-off">Cloud only</span></td></tr>
-      <tr><td>Azure OpenAI</td><td>GPT-4o / GPT-4 Turbo</td><td>128,000 tokens</td><td>$0.01 (enterprise)</td><td><span class="chip-on">Azure VNet</span></td></tr>
-      <tr><td>Ollama</td><td>Llama2 (7B / 13B / 70B)</td><td>4,096 tokens</td><td>$0.00</td><td><span class="chip-on">Full air-gap</span></td></tr>
-      <tr><td>Ollama</td><td>Mistral 7B Instruct</td><td>8,192 tokens</td><td>$0.00</td><td><span class="chip-on">Full air-gap</span></td></tr>
+      <tr><td>OpenAI</td><td>GPT-4o</td><td>128,000 tokens</td><td>$2.50 / 1M</td><td><span class="chip-off">Cloud only</span></td></tr>
+      <tr><td>Anthropic</td><td>Claude 3.5 Sonnet</td><td>200,000 tokens</td><td>$3.00 / 1M</td><td><span class="chip-off">Cloud only</span></td></tr>
+      <tr><td>Mistral AI</td><td>Mistral Large</td><td>128,000 tokens</td><td>$2.00 / 1M</td><td><span class="chip-off">Cloud only</span></td></tr>
+      <tr><td>Groq</td><td>Llama 3.3 70B</td><td>128,000 tokens</td><td>$0.59 / 1M</td><td><span class="chip-off">Cloud only</span></td></tr>
+      <tr><td>Cohere</td><td>Command R+</td><td>128,000 tokens</td><td>$2.50 / 1M</td><td><span class="chip-off">Cloud only</span></td></tr>
+      <tr><td>Azure OpenAI</td><td>GPT-4o via Azure</td><td>128,000 tokens</td><td>Enterprise rate</td><td><span class="chip-on">Azure VNet</span></td></tr>
+      <tr><td>Google Gemini</td><td>Gemini 2.0 Flash</td><td>1,000,000 tokens</td><td>$0.10 / 1M</td><td><span class="chip-off">Cloud only</span></td></tr>
+      <tr><td>AWS Bedrock</td><td>Claude 3.5 Sonnet</td><td>200,000 tokens</td><td>$3.00 / 1M</td><td><span class="chip-on">AWS VPC</span></td></tr>
+      <tr><td>GitHub Models</td><td>GPT-4o-mini</td><td>128,000 tokens</td><td>Free tier</td><td><span class="chip-off">Cloud only</span></td></tr>
+      <tr><td>Ollama</td><td>Llama 3.1 70B / Mistral 7B</td><td>128,000 tokens</td><td>$0.00</td><td><span class="chip-on">Full air-gap</span></td></tr>
     </tbody>
   </table>
 
