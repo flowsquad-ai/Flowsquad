@@ -99,6 +99,15 @@ document.getElementById('dlPdfBtn').addEventListener('click', function() {
     <h1>Setup Guide</h1>
     <p class="page-subtitle">Complete the 10-step Setup Wizard after installing FlowSquad &mdash; covering every field, every pre-requisite, and every configuration option from SSL/TLS to license activation.</p>
 
+    <div class="callout callout-tip">
+      <span class="callout-icon">&#x1F3AC;</span>
+      <div class="callout-body">
+        <strong>Prefer to watch?</strong><br />
+        <a href="https://youtu.be/pdPI02TuHL4" target="_blank" rel="noopener noreferrer">&#9654; Demo Part 1 &mdash; Download, Install &amp; Setup Wizard</a> &mdash; walks through all 10 Setup Wizard steps through to first dashboard login.<br />
+        <a href="https://youtu.be/IJVX6osxOiA" target="_blank" rel="noopener noreferrer">&#9654; Demo Part 2 &mdash; Add Product, Try Demo &amp; Feature Tour</a> &mdash; covers adding your first product, running the demo flow, and exploring all tabs and admin pages.
+      </div>
+    </div>
+
     <div class="callout callout-info">
       <span class="callout-icon">&#x2139;&#xFE0F;</span>
       <div class="callout-body">
@@ -118,7 +127,7 @@ document.getElementById('dlPdfBtn').addEventListener('click', function() {
       </thead>
       <tbody>
         <tr><td>Step 1 &mdash; Infrastructure &amp; Database</td><td>SSL/TLS certificate + private key paths (if using direct HTTPS). PostgreSQL or MySQL hostname, port, database name, username, password</td><td>Your CA-issued certificate files; your DBA or cloud database service console</td></tr>
-        <tr><td>Step 2 &mdash; Vector DB</td><td>ChromaDB (nothing needed &mdash; runs locally)</td><td>Nothing required &mdash; ChromaDB is bundled</td></tr>
+        <tr><td>Step 2 &mdash; Vector DB</td><td>ChromaDB (nothing needed &mdash; runs locally) <em>or</em> Qdrant (URL, optional API key, collection prefix)</td><td>ChromaDB: nothing required &mdash; bundled. Qdrant: a running Qdrant server (local or remote)</td></tr>
         <tr><td>Step 3 &mdash; LLM Provider</td><td>API key for at least one provider: OpenAI, Anthropic, Mistral AI, Google Gemini, Groq, Cohere, Azure OpenAI, AWS Bedrock, GitHub Models, or Ollama URL</td><td>platform.openai.com / console.anthropic.com / console.mistral.ai / aistudio.google.com / console.groq.com / dashboard.cohere.com / portal.azure.com / aws.amazon.com/bedrock / github.com/marketplace?type=models</td></tr>
         <tr><td>Step 4 &mdash; Authentication</td><td>LDAP: server URL, bind DN, bind password, user search base. SAML: IdP SSO URL, Entity ID, X.509 certificate. OAuth2: Client ID + Secret from provider's developer console</td><td>Your IT / identity team; IdP admin console</td></tr>
         <tr><td>Step 5 &mdash; Source Control</td><td>Personal access token or App Password for your Git provider (GitHub, GitLab, Bitbucket Cloud, Bitbucket Server, Azure DevOps, or Gitea)</td><td>github.com/settings/tokens &bull; GitLab: User Settings &rarr; Access Tokens &bull; Bitbucket: Personal Settings &rarr; App passwords</td></tr>
@@ -252,11 +261,25 @@ EXIT;</code></pre>
           <td>Runs locally inside FlowSquad with zero additional setup. Persists data to the FlowSquad data directory.</td>
           <td>All deployments, including air-gapped. The recommended default choice.</td>
         </tr>
+        <tr>
+          <td><strong>Qdrant</strong></td>
+          <td>Connects to an external Qdrant server over HTTP/HTTPS. Requires <code>qdrant-client</code> and <code>fastembed</code> Python packages to be installed (<code>pip install qdrant-client fastembed</code>). The Qdrant card only appears in the wizard when the packages are detected.</td>
+          <td>Teams that already operate a Qdrant cluster, or that want a dedicated, independently scalable vector store.</td>
+        </tr>
       </tbody>
     </table></div>
 
     <h3>Fields &mdash; ChromaDB</h3>
     <p>No fields required. Select <strong>ChromaDB (Local)</strong> and click <strong>Save &amp; Continue</strong>.</p>
+
+    <h3>Fields &mdash; Qdrant</h3>
+    <table>
+      <tr><th>Field</th><th>Required</th><th>Notes</th></tr>
+      <tr><td><strong>Qdrant URL</strong></td><td>Yes</td><td>Full URL of the Qdrant server, e.g. <code>http://localhost:6333</code> or <code>https://my-qdrant.example.com</code>.</td></tr>
+      <tr><td><strong>API Key</strong></td><td>No</td><td>Leave blank for unauthenticated local instances. Required for Qdrant Cloud or any server configured with an API key.</td></tr>
+      <tr><td><strong>Collection Prefix</strong></td><td>No</td><td>Optional string prepended to every collection name (e.g. <code>flowsquad_</code>). Useful when sharing a single Qdrant server across multiple environments. Defaults to <code>flowsquad</code>.</td></tr>
+    </table>
+    <p>Click <strong>Test Connection</strong> to verify connectivity before saving.</p>
 
     <hr />
 

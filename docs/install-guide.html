@@ -98,6 +98,14 @@ document.getElementById('dlPdfBtn').addEventListener('click', function() {
     <h1>Installation Guide</h1>
     <p class="page-subtitle">Step-by-step deployment instructions for every supported platform &mdash; Windows, Linux, Docker, and Kubernetes. Gets FlowSquad running; the <a href="setup-guide.html">Setup Guide</a> covers first-run configuration.</p>
 
+    <div class="callout callout-tip">
+      <span class="callout-icon">&#x1F3AC;</span>
+      <div class="callout-body">
+        <strong>Prefer to watch?</strong> &mdash; The <strong>Demo Part 1</strong> video covers every available installer and walks through all 10 Setup Wizard steps through to first dashboard login.<br />
+        <a href="https://youtu.be/pdPI02TuHL4" target="_blank" rel="noopener noreferrer">&#9654; Watch Demo Part 1 &mdash; Download, Install &amp; Setup Wizard</a>
+      </div>
+    </div>
+
     <!-- ======================================================= -->
     <h2 id="overview">1. Overview &amp; Prerequisites</h2>
 
@@ -1675,7 +1683,7 @@ sudo kill &lt;pid&gt;</code></pre>
   <article itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
     <h3 itemprop="name">Can FlowSquad run in an air-gapped environment?</h3>
     <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
-      <p itemprop="text" style="color:var(--text);margin:0;">Yes. FlowSquad can run fully offline when using Ollama as the LLM provider and ChromaDB as the vector database &mdash; both run locally with no internet dependency. License validation is performed locally without requiring internet access. All installer packages are distributed as self-contained downloadable archives and can be transferred to air-gapped environments via USB or internal file transfer. External integrations (Jira, Confluence, Git providers) are optional and only require connectivity if enabled.</p>
+      <p itemprop="text" style="color:var(--text);margin:0;">Yes. FlowSquad can run fully offline when using Ollama as the LLM provider and ChromaDB as the vector database &mdash; both run locally with no internet dependency. Qdrant is also supported as an alternative vector database, but it requires a running Qdrant server; in an air-gapped environment you would need to run Qdrant locally (e.g. via its official Docker image). License validation is performed locally without requiring internet access. All installer packages are distributed as self-contained downloadable archives and can be transferred to air-gapped environments via USB or internal file transfer. External integrations (Jira, Confluence, Git providers) are optional and only require connectivity if enabled.</p>
     </div>
   </article>
 </section>
