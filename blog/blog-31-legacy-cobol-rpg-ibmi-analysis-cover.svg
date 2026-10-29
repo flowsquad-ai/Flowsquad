@@ -1,0 +1,38 @@
+<svg width="640" height="420" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 420">
+  <defs>
+    <linearGradient id="bg31" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0f1a10"/>
+      <stop offset="100%" stop-color="#080e08"/>
+    </linearGradient>
+  </defs>
+  <rect width="640" height="420" fill="url(#bg31)"/>
+  <line x1="0"   y1="140" x2="640" y2="140" stroke="rgba(255,255,255,0.025)" stroke-width="1"/>
+  <line x1="0"   y1="280" x2="640" y2="280" stroke="rgba(255,255,255,0.025)" stroke-width="1"/>
+  <line x1="213" y1="0"   x2="213" y2="420" stroke="rgba(255,255,255,0.025)" stroke-width="1"/>
+  <line x1="426" y1="0"   x2="426" y2="420" stroke="rgba(255,255,255,0.025)" stroke-width="1"/>
+  <ellipse cx="520" cy="80" rx="260" ry="150" fill="#15803d" fill-opacity="0.09"/>
+  <circle  cx="560" cy="340" r="180" fill="#0066cc" fill-opacity="0.06"/>
+  <!-- terminal-style code block decoration -->
+  <rect x="390" y="110" width="220" height="130" rx="6" fill="rgba(0,0,0,0.45)" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
+  <circle cx="406" cy="124" r="4" fill="#ef4444" fill-opacity="0.7"/>
+  <circle cx="420" cy="124" r="4" fill="#f59e0b" fill-opacity="0.7"/>
+  <circle cx="434" cy="124" r="4" fill="#22c55e" fill-opacity="0.7"/>
+  <text x="402" y="148" font-family="'Courier New',monospace" font-size="9" fill="#22c55e" fill-opacity="0.85">000100 IDENTIFICATION DIVISION.</text>
+  <text x="402" y="161" font-family="'Courier New',monospace" font-size="9" fill="#22c55e" fill-opacity="0.85">000200 PROGRAM-ID. PAYROLL.</text>
+  <text x="402" y="174" font-family="'Courier New',monospace" font-size="9" fill="#86efac" fill-opacity="0.6">000300 DATA DIVISION.</text>
+  <text x="402" y="187" font-family="'Courier New',monospace" font-size="9" fill="#86efac" fill-opacity="0.6">000400   01 WS-TOTAL PIC 9(9).</text>
+  <text x="402" y="200" font-family="'Courier New',monospace" font-size="9" fill="#22c55e" fill-opacity="0.85">000500 PROCEDURE DIVISION.</text>
+  <text x="402" y="213" font-family="'Courier New',monospace" font-size="9" fill="#86efac" fill-opacity="0.45">000600   COMPUTE WS-TOTAL ...</text>
+  <text x="402" y="226" font-family="'Courier New',monospace" font-size="9" fill="#86efac" fill-opacity="0.3">000700   STOP RUN.</text>
+  <!-- category badge -->
+  <rect x="32" y="126" width="88" height="26" rx="13" fill="#dcfce7" fill-opacity="0.9"/>
+  <text x="76" y="139" font-family="Inter,-apple-system,sans-serif" font-size="11" font-weight="700" fill="#15803d" text-anchor="middle" dominant-baseline="middle" letter-spacing="0.07em">USE CASE</text>
+  <!-- headline -->
+  <text x="32" y="200" font-family="Inter,-apple-system,sans-serif" font-size="31" font-weight="800" fill="#ffffff">COBOL, RPG &amp; IBM i</text>
+  <text x="32" y="238" font-family="Inter,-apple-system,sans-serif" font-size="31" font-weight="800" fill="#ffffff">Analysis in FlowSquad</text>
+  <text x="32" y="298" font-family="Inter,-apple-system,sans-serif" font-size="19" font-weight="500" fill="rgba(255,255,255,0.55)">Legacy languages. Modern SDLC intelligence.</text>
+  <!-- footer bar -->
+  <rect x="0" y="382" width="640" height="38" fill="rgba(0,0,0,0.3)"/>
+  <text x="32" y="406" font-family="Inter,-apple-system,sans-serif" font-size="13" font-weight="400" fill="rgba(255,255,255,0.38)">flowsquad.ai/blog</text>
+  <text x="620" y="406" font-family="Inter,-apple-system,sans-serif" font-size="13" font-weight="400" fill="rgba(255,255,255,0.38)" text-anchor="end">2026</text>
+</svg>

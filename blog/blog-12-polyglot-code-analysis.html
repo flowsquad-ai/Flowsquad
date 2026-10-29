@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>How FlowSquad Understands 11 Programming Languages Without You Writing a Single Parser | FlowSquad Blog</title>
-<meta name="description" content="FlowSquad analyzes Java, Python, Go, TypeScript, C# and 15+ languages in a single codebase. Deep-dive into how polyglot code analysis powers unified SDLC intelligence." />
-<meta property="og:title" content="How FlowSquad Understands 11 Programming Languages Without You Writing a Single Parser" />
-<meta property="og:description" content="FlowSquad analyzes Java, Python, Go, TypeScript, C# and 15+ languages in a single codebase. Deep-dive into how polyglot code analysis powers unified SDLC intelligence." />
+<title>How FlowSquad Understands 29+ Programming Languages — Including COBOL, RPG, and Fortran | FlowSquad Blog</title>
+<meta name="description" content="FlowSquad analyzes 29 modern languages with tree-sitter AST parsing, plus COBOL, RPG/RPGLE, REXX, Fortran, Assembly and IBM i artifacts with LLM-first analysis — no grammar required." />
+<meta property="og:title" content="How FlowSquad Understands 29+ Programming Languages — Including COBOL, RPG, and Fortran" />
+<meta property="og:description" content="FlowSquad analyzes 29 modern languages with tree-sitter AST parsing, plus COBOL, RPG/RPGLE, REXX, Fortran, Assembly and IBM i artifacts with LLM-first analysis — no grammar required." />
 <meta property="og:type" content="article" />
 <meta property="og:site_name" content="FlowSquad" />
 <meta property="og:image" content="https://flowsquad.ai/blog/blog-12-polyglot-code-analysis-cover.svg" />
@@ -17,8 +17,8 @@
   {
     "@context": "https://schema.org",
     "@type": "Article",
-    "headline": "How FlowSquad Understands 11 Programming Languages Without You Writing a Single Parser",
-    "description": "Tree-sitter grammars, ONNX embeddings, and semantic indexing — how FlowSquad extracts structure from Python, Java, Go, Rust, and 7 more languages in seconds.",
+    "headline": "How FlowSquad Understands 29+ Programming Languages — Including COBOL, RPG, and Fortran",
+    "description": "Tree-sitter grammars, ONNX embeddings, and LLM-first semantic analysis — how FlowSquad handles 29 modern languages plus COBOL, RPG, REXX, Fortran, Assembly and IBM i artifacts.",
     "author": {"@type": "Organization", "name": "FlowSquad"},
     "publisher": {"@type": "Organization", "name": "FlowSquad", "url": "https://flowsquad.ai"},
     "datePublished": "2026-01-20",
@@ -156,34 +156,35 @@ details p{padding:0 17px 14px;margin:0;color:var(--tm);font-size:.85rem;}
 <div class="art-wrap">
   <div class="breadcrumb"><a href="index.html">Blog</a> <span>&#8250;</span> Deep Dive</div>
   <span class="art-cat cat-deepdive">Deep Dive</span>
-  <img src="blog-12-polyglot-code-analysis-cover.svg" alt="How FlowSquad Understands 11 Programming Languages Without You Writing a Single Parser" class="cover-img" loading="lazy" />
+  <img src="blog-12-polyglot-code-analysis-cover.svg" alt="How FlowSquad Understands 29+ Programming Languages — Including COBOL, RPG, and Fortran" class="cover-img" loading="lazy" />
 <div class="post-meta">
     <span class="category-badge">Deep-Dive</span>
     <span class="target-badge">Developers · DevOps Engineers</span>
   </div>
 
-  <h1>How FlowSquad Understands 11 Programming Languages Without You Writing a Single Parser</h1>
+  <h1>How FlowSquad Understands 29+ Programming Languages — Including COBOL, RPG, and Fortran</h1>
 
-  <p class="art-hook">Tree-sitter grammars, ONNX embeddings, and semantic indexing — how FlowSquad extracts structure from Python, Java, Go, Rust, and 7 more languages in seconds.</p>
-<div class="art-meta">April 15, 2026 <span>&#183;</span> 10 min read <span>&#183;</span> <span>Developers</span><span>DevOps Engineers</span></div>
+  <p class="art-hook">Tree-sitter AST parsing for 29 modern languages, plus LLM-first analysis for COBOL, RPG/RPGLE, REXX, Fortran, Assembly, and IBM i artifacts — without writing a single custom parser.</p>
+<div class="art-meta">April 15, 2026 <span>&#183;</span> 12 min read <span>&#183;</span> <span>Developers</span><span>DevOps Engineers</span></div>
 
   <div class="tldr"><div class="tldr-title">TL;DR</div>
     <ul>
-      <li>FlowSquad's <strong>Tree-sitter</strong> integration parses <strong>11 programming languages</strong> into concrete syntax trees at an average rate of <strong>1 MB/s</strong> per language worker.</li>
+      <li>FlowSquad's <strong>Tree-sitter</strong> integration parses <strong>29 modern languages</strong> into concrete syntax trees at an average rate of <strong>1 MB/s</strong> per language worker.</li>
+      <li><strong>COBOL, RPG/RPGLE, REXX, Fortran, Assembly, and IBM i artifacts</strong> are supported via LLM-first analysis — file discovery, LOC metrics, security scanning, and semantic understanding all work without a tree-sitter grammar.</li>
       <li><strong>ONNX embeddings</strong> (all-MiniLM-L6-v2, 384-dimensional vectors) allow semantic similarity search across <strong>millions of code chunks</strong> without any cloud round-trip.</li>
       <li>A 50,000-line Python monorepo is fully indexed in under <strong>90 seconds</strong>, producing structured extractions of classes, functions, imports, and docstrings stored in VectorDB.</li>
     </ul>
   </div>
 
   <h2>Why Is Multi-Language Code Analysis Hard?</h2>
-  <p>Every programming language has its own syntax, scoping rules, idioms, and AST shape. A naive approach to multi-language analysis — regex-based pattern matching — breaks on multi-line strings, nested closures, metaprogramming, and language-specific comment styles. Writing a custom parser for each language is tractable for two or three languages but becomes an indefinite maintenance burden at <span class="metric">11+</span>.</p>
+  <p>Every programming language has its own syntax, scoping rules, idioms, and AST shape. A naive approach to multi-language analysis — regex-based pattern matching — breaks on multi-line strings, nested closures, metaprogramming, and language-specific comment styles. Writing a custom parser for each language is tractable for two or three languages but becomes an indefinite maintenance burden at <span class="metric">29+</span>. For legacy languages like COBOL and RPG, the situation is even harder: mature tree-sitter grammars simply do not exist for most of them.</p>
 
   <p>The challenge compounds for AI-assisted analysis: LLMs have fixed context windows. You cannot simply dump an entire 200,000-line codebase into a prompt and ask "what does this do?". Effective code analysis requires <em>chunking</em> — splitting the codebase into semantically coherent units — and <em>retrieval</em> — finding the right chunks for a given query. Both chunking and retrieval are dramatically more accurate when done at semantic boundaries (function definitions, class bodies, module imports) rather than arbitrary line counts.</p>
 
-  <p>FlowSquad solves this by combining <span class="metric">3 technologies</span>: **Tree-sitter** for syntax-aware parsing, **ONNX Runtime** for fast local embeddings, and **VectorDB** (ChromaDB or Pinecone) for approximate nearest-neighbor retrieval. Together they form an analysis pipeline that requires no custom parser code for any supported language.</p>
+  <p>FlowSquad solves this by combining <span class="metric">3 technologies</span>: <strong>Tree-sitter</strong> for syntax-aware parsing of modern languages, <strong>ONNX Runtime</strong> for fast local embeddings, and <strong>VectorDB</strong> (ChromaDB or Pinecone) for approximate nearest-neighbor retrieval. For legacy languages where tree-sitter grammars are unavailable, FlowSquad uses an <strong>LLM-first approach</strong> — the LLM natively understands COBOL, RPG, REXX, and Fortran semantics, producing analysis quality that exceeds regex-based alternatives for these languages.</p>
 
   <h2>How Does Tree-Sitter Enable Language-Agnostic Parsing?</h2>
-  <p><strong>Tree-sitter</strong> is a parser generator and incremental parsing library originally developed at GitHub. It produces a concrete syntax tree (CST) from source code using grammar files written in a declarative JSON/DSL format. FlowSquad ships with pre-compiled Tree-sitter grammars for all 11 supported languages — no grammar compilation is required at runtime.</p>
+  <p><strong>Tree-sitter</strong> is a parser generator and incremental parsing library originally developed at GitHub. It produces a concrete syntax tree (CST) from source code using grammar files written in a declarative JSON/DSL format. FlowSquad ships with pre-compiled Tree-sitter grammars for <strong>29 modern languages</strong> — no grammar compilation is required at runtime.</p>
 
   <p>The key property that makes Tree-sitter suitable for production code analysis is its error recovery: when encountering invalid syntax (which is common in partially written or refactoring-in-progress codebases), Tree-sitter produces a best-effort tree rather than failing. This means FlowSquad can analyze work-in-progress branches and uncommitted changes, not just clean main branches.</p>
 
@@ -214,8 +215,11 @@ details p{padding:0 17px 14px;margin:0;color:var(--tm);font-size:.85rem;}
 
   <p>Crucially, the same ONNX model is used at both index time and query time, guaranteeing that similarity scores are comparable. This is not guaranteed when using cloud embedding APIs, where model versions can change silently between index and query operations, corrupting retrieval quality.</p>
 
-  <h2>Which 11 Languages Are Supported and What Gets Extracted?</h2>
-  <p>FlowSquad's polyglot analysis covers the <span class="metric">11 most prevalent enterprise languages</span> based on GitHub survey data and FlowSquad customer profiling. Each language has a dedicated semantic extractor tuned to that language's idioms.</p>
+  <h2>Which Languages Are Supported and What Gets Extracted?</h2>
+  <p>FlowSquad's polyglot analysis spans <span class="metric">two tiers</span>: 29 modern languages with full tree-sitter AST parsing, and a second tier of legacy and platform-specific languages served by LLM-first analysis. Together they cover the full range of codebases found in enterprise environments — from greenfield microservices to decades-old IBM i applications.</p>
+
+  <h3>Tier 1 — Tree-Sitter AST Parsing (29 languages)</h3>
+  <p>Each of these languages has a dedicated tree-sitter grammar bundled with FlowSquad and a semantic extractor tuned to that language's idioms. AST-level metrics (cyclomatic complexity, call depth, symbol extraction) are available for all Tier 1 languages.</p>
 
   <table>
     <thead>
@@ -233,8 +237,47 @@ details p{padding:0 17px 14px;margin:0;color:var(--tm);font-size:.85rem;}
       <tr><td>Ruby</td><td>✓</td><td>✓ (modules)</td><td>✓ (require)</td><td>✓ (YARD)</td><td>—</td></tr>
       <tr><td>PHP</td><td>✓</td><td>✓</td><td>✓ (use/require)</td><td>✓ (PHPDoc)</td><td>✓ (interfaces)</td></tr>
       <tr><td>Kotlin</td><td>✓</td><td>✓ (data classes)</td><td>✓</td><td>✓ (KDoc)</td><td>✓ (interfaces)</td></tr>
+      <tr><td>Swift</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td><td>✓ (protocols)</td></tr>
+      <tr><td>Scala</td><td>✓</td><td>✓</td><td>✓</td><td>✓ (ScalaDoc)</td><td>✓ (traits)</td></tr>
+      <tr><td>Dart</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td></tr>
+      <tr><td>Lua</td><td>✓</td><td>—</td><td>✓ (require)</td><td>—</td><td>—</td></tr>
+      <tr><td>R</td><td>✓</td><td>—</td><td>✓ (library)</td><td>✓ (roxygen2)</td><td>—</td></tr>
+      <tr><td>Groovy</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td></tr>
+      <tr><td>Perl</td><td>✓</td><td>✓ (packages)</td><td>✓ (use)</td><td>✓ (POD)</td><td>—</td></tr>
+      <tr><td>Bash/Shell</td><td>✓ (functions)</td><td>—</td><td>✓ (source)</td><td>—</td><td>—</td></tr>
+      <tr><td>PowerShell</td><td>✓</td><td>—</td><td>✓</td><td>—</td><td>—</td></tr>
+      <tr><td>Fortran</td><td>✓</td><td>✓ (modules)</td><td>✓ (use)</td><td>—</td><td>—</td></tr>
+      <tr><td>Assembly (ASM)</td><td>✓ (procedures)</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+      <tr><td>Objective-C</td><td>✓</td><td>✓</td><td>✓ (#import)</td><td>✓</td><td>✓</td></tr>
+      <tr><td>HTML</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+      <tr><td>CSS</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+      <tr><td>JSON</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+      <tr><td>YAML</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+      <tr><td>SQL</td><td>✓ (procedures)</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
     </tbody>
   </table>
+
+  <h3>Tier 2 — LLM-First Analysis (legacy &amp; IBM i languages)</h3>
+  <p>For these languages, no mature tree-sitter grammar exists. FlowSquad skips the AST parse step and routes directly to LLM-based semantic analysis — which actually performs better than regex parsers for highly structured legacy dialects like COBOL and RPG. File discovery, LOC metrics, security pattern scanning, and full LLM-driven requirement and architecture analysis are all available.</p>
+
+  <table>
+    <thead>
+      <tr><th>Language</th><th>File Extensions</th><th>File Discovery &amp; LOC</th><th>Security Scan</th><th>LLM Semantic Analysis</th><th>AST Metrics</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>COBOL</td><td>.cbl .cob .cobol .sqlcbl</td><td>✓</td><td>✓ (regex patterns)</td><td>✓</td><td>—</td></tr>
+      <tr><td>RPG / RPGLE</td><td>.rpg .rpgle .sqlrpgle</td><td>✓</td><td>✓ (regex patterns)</td><td>✓</td><td>—</td></tr>
+      <tr><td>CL / CLLE</td><td>.clle .clp .clp38</td><td>✓</td><td>✓</td><td>✓</td><td>—</td></tr>
+      <tr><td>REXX</td><td>.rexx .rex</td><td>✓</td><td>✓</td><td>✓</td><td>—</td></tr>
+      <tr><td>IBM i Artifacts</td><td>.dds .bnd .mnusrc .msgf</td><td>✓</td><td>✓</td><td>✓</td><td>—</td></tr>
+      <tr><td>PL/SQL</td><td>.pls .pck .pkb .pks .plsql</td><td>✓</td><td>—</td><td>✓</td><td>—</td></tr>
+      <tr><td>T-SQL</td><td>.tsql</td><td>✓</td><td>—</td><td>✓</td><td>—</td></tr>
+    </tbody>
+  </table>
+
+  <div class="callout">
+    <strong>Why LLM-first works well for legacy languages:</strong> Modern LLMs are trained on large corpora of COBOL, RPG, and REXX source code from open-source repositories, mainframe documentation, and enterprise code samples. They understand COBOL's IDENTIFICATION DIVISION, RPG's fixed-format columns, and REXX's procedural structures natively — without requiring a compiled grammar. For the primary use cases (requirement extraction, architecture mapping, security pattern detection), LLM analysis of legacy code is comparable in quality to tree-sitter analysis of modern languages.
+  </div>
 
   <div class="code-block"><span class="comment"># Example: FlowSquad extraction output for a Python module</span>
 
@@ -264,6 +307,7 @@ details p{padding:0 17px 14px;margin:0;color:var(--tm);font-size:.85rem;}
   <div class="related">
     <div class="related-title">Related Articles</div>
     <ul>
+      <li><a href="blog-31-legacy-cobol-rpg-ibmi-analysis.html">COBOL, RPG &amp; IBM i Analysis in FlowSquad: What Works, What Doesn't, and Why It Still Matters</a></li>
       <li><a href="blog-15-askproduct-knowledge-hub.html">AskProduct: The Knowledge Hub That Actually Knows Your Codebase</a></li>
       <li><a href="blog-11-multi-llm-architecture.html">Inside FlowSquad's Multi-LLM Architecture: Why We Never Lock You In</a></li>
       <li><a href="blog-16-setup-wizard.html">10-Step Setup Wizard: Enterprise AI Platform, Running in Under an Hour</a></li>
@@ -274,13 +318,23 @@ details p{padding:0 17px 14px;margin:0;color:var(--tm);font-size:.85rem;}
     <h2>Frequently Asked Questions</h2>
 
     <details>
-      <summary>Can FlowSquad be extended to support a 12th language?</summary>
-      <p>Yes. Adding a new language requires a Tree-sitter grammar (which exist for 100+ languages in the official Tree-sitter repository) and a semantic extractor visitor function. The ONNX embedding and VectorDB pipeline requires no changes. Community-contributed language support is on the public roadmap.</p>
+      <summary>Does FlowSquad support COBOL analysis?</summary>
+      <p>Yes. FlowSquad recognises COBOL files (<code>.cbl</code>, <code>.cob</code>, <code>.cobol</code>, <code>.sqlcbl</code>) and processes them through file discovery, LOC metrics, regex-based security pattern scanning, and LLM-driven semantic analysis. Because no production-ready tree-sitter grammar exists for enterprise COBOL dialects, FlowSquad uses an LLM-first approach for COBOL — which delivers meaningful requirement extraction, architecture mapping, and security insights without a compiled parser. See <a href="blog-31-legacy-cobol-rpg-ibmi-analysis.html">COBOL, RPG &amp; IBM i Analysis in FlowSquad</a> for a full walkthrough.</p>
+    </details>
+
+    <details>
+      <summary>Does FlowSquad support RPG / RPGLE for IBM i?</summary>
+      <p>Yes. FlowSquad recognises RPG files (<code>.rpg</code>, <code>.rpgle</code>, <code>.sqlrpgle</code>) alongside CL, REXX, DDS, BND, and other IBM i platform artifacts. These are processed through the same LLM-first pipeline as COBOL. IBM i shops can load an entire IFS repository and get requirement analysis, architecture diagrams, and security scanning on their RPG and CL source — out of the box, with no configuration changes.</p>
+    </details>
+
+    <details>
+      <summary>Can FlowSquad be extended to support additional languages?</summary>
+      <p>Yes. Adding a new Tier 1 language requires a Tree-sitter grammar (which exist for 100+ languages in the official Tree-sitter repository) and a semantic extractor visitor function. The ONNX embedding and VectorDB pipeline requires no changes. For languages without a tree-sitter grammar, FlowSquad's LLM-first path handles them automatically as long as the file extension is registered — community-contributed language support is on the public roadmap.</p>
     </details>
 
     <details>
       <summary>How does FlowSquad handle mixed-language repositories (polyglot monorepos)?</summary>
-      <p>FlowSquad detects language at the file level using extension mapping and Tree-sitter grammar probing. Files of different languages within the same repository are indexed independently and stored in the same VectorDB collection, allowing cross-language queries in AskProduct (e.g., "How does the Java backend service map to the TypeScript frontend API client?").</p>
+      <p>FlowSquad detects language at the file level using extension mapping and Tree-sitter grammar probing. Files of different languages within the same repository — including a mix of Java microservices and legacy COBOL batch programs — are indexed independently and stored in the same VectorDB collection, allowing cross-language queries in AskProduct (e.g., "How does the Java API service call the COBOL payment batch program?").</p>
     </details>
 
     <details>

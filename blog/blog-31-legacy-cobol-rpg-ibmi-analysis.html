@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>COBOL, RPG &amp; IBM i Analysis in FlowSquad: What Works, What Doesn't, and Why It Still Matters | FlowSquad Blog</title>
+<meta name="description" content="FlowSquad supports COBOL, RPG/RPGLE, CL, REXX, and IBM i artifact analysis via LLM-first semantic analysis — no tree-sitter grammar required. File discovery, LOC metrics, security scanning, and full SDLC artifact generation all work today." />
+<meta property="og:title" content="COBOL, RPG &amp; IBM i Analysis in FlowSquad: What Works, What Doesn't, and Why It Still Matters" />
+<meta property="og:description" content="FlowSquad supports COBOL, RPG/RPGLE, CL, REXX, and IBM i artifact analysis via LLM-first semantic analysis — no tree-sitter grammar required. File discovery, LOC metrics, security scanning, and full SDLC artifact generation all work today." />
+<meta property="og:type" content="article" />
+<meta property="og:site_name" content="FlowSquad" />
+<meta property="og:image" content="https://flowsquad.ai/blog/blog-31-legacy-cobol-rpg-ibmi-analysis-cover.svg" />
+<meta property="og:url" content="https://flowsquad.ai/blog/legacy-cobol-rpg-ibmi-analysis" />
+<meta name="twitter:card" content="summary_large_image" />
+<link rel="canonical" href="https://flowsquad.ai/blog/legacy-cobol-rpg-ibmi-analysis" />
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "COBOL, RPG &amp; IBM i Analysis in FlowSquad: What Works, What Doesn't, and Why It Still Matters",
+    "description": "FlowSquad supports COBOL, RPG/RPGLE, CL, REXX, and IBM i artifact analysis via LLM-first semantic analysis — file discovery, LOC metrics, security scanning, and full SDLC artifact generation all work today.",
+    "author": {"@type": "Organization", "name": "FlowSquad"},
+    "publisher": {"@type": "Organization", "name": "FlowSquad", "url": "https://flowsquad.ai"},
+    "datePublished": "2026-05-12",
+    "articleSection": "Use Case",
+    "keywords": "COBOL analysis tool, RPG SDLC, IBM i code analysis, RPGLE analysis, legacy language AI, mainframe modernization, COBOL AI tool, FlowSquad COBOL"
+  }
+</script>
+<script>(function(){try{var t=localStorage.getItem('fs_theme');if(!t)t='dark';document.documentElement.setAttribute('data-theme',t==='dark'?'dark':'light');}catch(e){document.documentElement.setAttribute('data-theme','dark');}})();</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--pc:#0066cc;--pd:#0052a3;--pl:#e6f2ff;--bg:#ffffff;--cbg:#ffffff;--nbg:#ffffff;--lbg:#f6f8fa;--llbg:#f0f2f5;--tc:#1f2328;--tm:#57606a;--bc:#d0d7de;}
+[data-theme="dark"]{--pc:#58a6ff;--pd:#388bfd;--pl:#0d2a4a;--bg:#0d1117;--cbg:#161b22;--nbg:#161b22;--lbg:#1c2128;--llbg:#1c2128;--tc:#e6edf3;--tm:#8b949e;--bc:#30363d;}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--pc:#58a6ff;--pl:#0d2a4a;--bg:#0d1117;--cbg:#161b22;--nbg:#161b22;--lbg:#1c2128;--llbg:#1c2128;--tc:#e6edf3;--tm:#8b949e;--bc:#30363d;}}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-padding-top:72px;scroll-behavior:smooth;}
+body{font-family:'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;font-size:15px;line-height:1.7;color:var(--tc);background:var(--bg);transition:background .3s,color .3s;padding-top:72px;}
+a{color:var(--pc);text-decoration:none;}a:hover{text-decoration:underline;}
+.navbar{background:var(--nbg);border-bottom:1px solid var(--bc);padding:.875rem 0;position:fixed;top:0;left:0;right:0;z-index:1000;box-shadow:0 2px 8px rgba(0,0,0,.05);transition:background .3s;}
+.nav-inner{max-width:1400px;margin:0 auto;padding:0 24px;display:flex;justify-content:space-between;align-items:center;}
+.nav-brand{display:flex;align-items:center;gap:10px;text-decoration:none;flex-shrink:0;}
+.nav-brand img{height:38px;width:auto;display:block;}
+.nav-brand span{font-size:1.2rem;font-weight:700;color:var(--pc);}
+.nav-links{display:flex;align-items:center;gap:0;}
+.nav-links a{color:var(--tc);font-weight:500;font-size:.875rem;padding:0 .65rem;white-space:nowrap;text-decoration:none;transition:color .2s;}
+.nav-links a:hover,.nav-links a.active{color:var(--pc);text-decoration:none;}
+.nav-contact{display:inline-flex;align-items:center;padding:.3rem .8rem;border:1.5px solid var(--pc);border-radius:6px;color:var(--pc)!important;font-weight:600!important;font-size:.8rem;transition:all .2s;white-space:nowrap;margin-left:.4rem;text-decoration:none!important;}
+.nav-contact:hover{background:var(--pc)!important;color:#fff!important;}
+.nav-gh{display:inline-flex;align-items:center;gap:.35rem;padding:.35rem .6rem;border:1px solid var(--bc);border-radius:999px;font-size:.8rem;text-decoration:none!important;color:var(--tc)!important;}
+.nav-gh:hover{border-color:var(--pc);color:var(--pc)!important;}
+.nav-gh svg{width:16px;height:16px;fill:currentColor;}
+.theme-btn{display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border:1.5px solid var(--bc);border-radius:8px;background:transparent;cursor:pointer;color:var(--tc);transition:all .2s;flex-shrink:0;font-size:1rem;}
+.theme-btn:hover{border-color:var(--pc);}
+.art-wrap{max-width:1100px;margin:0 auto;padding:40px 48px 80px;}
+@media(max-width:960px){.art-wrap{padding:28px 24px 60px;}}
+.cover-img{width:100%;height:auto;border-radius:12px;margin-bottom:28px;display:block;}
+.breadcrumb{font-size:.8rem;color:var(--tm);margin-bottom:16px;}
+.breadcrumb a{color:var(--pc);}
+.art-cat{display:inline-block;font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;padding:.2rem .75rem;border-radius:999px;margin-bottom:12px;}
+.cat-usecase{background:#dcfce7;color:#15803d;}
+h1{font-size:2rem;font-weight:800;line-height:1.2;color:var(--tc);margin-bottom:14px;}
+@media(max-width:640px){h1{font-size:1.55rem;}}
+.art-hook{font-size:1.05rem;color:var(--tm);margin-bottom:16px;border-left:4px solid var(--pc);padding-left:14px;line-height:1.6;}
+.art-meta{font-size:.78rem;color:var(--tm);margin-bottom:28px;display:flex;gap:.4rem;flex-wrap:wrap;align-items:center;padding-bottom:16px;border-bottom:1px solid var(--bc);}
+.art-meta span{background:var(--lbg);border:1px solid var(--bc);border-radius:4px;padding:.1rem .5rem;}
+.tldr{background:var(--lbg);border:1px solid var(--bc);border-left:4px solid var(--pc);border-radius:8px;padding:18px 22px;margin-bottom:36px;}
+.tldr-title{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--pc);margin-bottom:10px;}
+.tldr ul{list-style:none;padding:0;}
+.tldr ul li{padding:4px 0 4px 20px;position:relative;color:var(--tc);font-size:.875rem;}
+.tldr ul li::before{content:"✓";position:absolute;left:0;color:var(--pc);font-weight:700;}
+h2{font-size:1.3rem;font-weight:700;color:var(--tc);margin:44px 0 12px;padding-top:6px;border-top:1px solid var(--bc);}
+h3{font-size:1rem;font-weight:700;color:var(--tc);margin:24px 0 8px;}
+p{margin-bottom:14px;color:var(--tc);}
+ul,ol{padding-left:22px;margin-bottom:14px;}
+li{margin-bottom:5px;color:var(--tc);}
+strong{color:var(--tc);font-weight:700;}em{color:var(--tm);}
+.callout{background:var(--pl);border:1px solid var(--pc);border-radius:8px;padding:14px 18px;margin:20px 0;font-size:.875rem;color:var(--tc);}
+.callout-warn{background:#fef9c3;border:1px solid #ca8a04;border-radius:8px;padding:14px 18px;margin:20px 0;font-size:.875rem;color:#1f2328;}
+[data-theme="dark"] .callout-warn{background:#2d2408;border-color:#ca8a04;color:#e6edf3;}
+table{width:100%;border-collapse:collapse;margin:18px 0;font-size:.85rem;}
+th{background:var(--lbg);font-weight:700;text-align:left;padding:8px 12px;border:1px solid var(--bc);color:var(--tc);}
+td{padding:7px 12px;border:1px solid var(--bc);color:var(--tc);}
+tr:nth-child(even) td{background:var(--lbg);}
+.code-block{background:var(--lbg);border:1px solid var(--bc);border-radius:8px;padding:18px 20px;font-family:'Courier New',Courier,monospace;font-size:.8rem;line-height:1.6;overflow-x:auto;margin:18px 0;white-space:pre;}
+.comment{color:var(--tm);font-style:italic;}
+.kw{color:var(--pc);font-weight:700;}
+.str{color:#16a34a;}
+[data-theme="dark"] .str{color:#4ade80;}
+.metric{font-weight:700;color:var(--pc);}
+.ascii-table{background:var(--lbg);border:1px solid var(--bc);border-radius:8px;padding:16px 20px;font-family:'Courier New',Courier,monospace;font-size:.78rem;line-height:1.5;overflow-x:auto;margin:18px 0;white-space:pre;color:var(--tc);}
+.related{background:var(--lbg);border:1px solid var(--bc);border-radius:8px;padding:18px 22px;margin:36px 0 0;}
+.related-title{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--tm);margin-bottom:10px;}
+.related ul{list-style:none;padding:0;}
+.related ul li{padding:5px 0;border-bottom:1px solid var(--bc);}
+.related ul li:last-child{border-bottom:none;}
+.faq{margin-top:44px;}
+.faq h2{margin-bottom:16px;}
+details{border:1px solid var(--bc);border-radius:8px;margin-bottom:10px;padding:0;}
+summary{font-weight:600;padding:13px 16px;cursor:pointer;color:var(--tc);font-size:.9rem;list-style:none;}
+summary::-webkit-details-marker{display:none;}
+summary::before{content:"+ ";color:var(--pc);font-weight:700;}
+details[open] summary::before{content:"− ";}
+details[open]{background:var(--lbg);}
+details p{padding:0 16px 14px;color:var(--tc);font-size:.875rem;}
+.share-badges{display:flex;gap:8px;flex-wrap:wrap;margin-top:36px;}
+.badge{display:inline-block;padding:.3rem .9rem;border-radius:999px;font-size:.75rem;font-weight:600;border:1.5px solid var(--bc);color:var(--tm);text-decoration:none;transition:all .2s;}
+.badge:hover{border-color:var(--pc);color:var(--pc);text-decoration:none;}
+.site-footer{background:#0d1117;color:rgba(255,255,255,.85);padding:3rem 0 0;margin-top:0;}
+.footer-inner{max-width:1400px;margin:0 auto;padding:0 40px;}
+.footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:3rem;padding-bottom:3rem;border-bottom:1px solid rgba(255,255,255,.1);}
+.footer-brand .fl{font-size:1.1rem;font-weight:700;color:#fff;margin-bottom:.5rem;}
+.footer-brand .ft{font-size:.8rem;color:rgba(255,255,255,.5);line-height:1.6;}
+.fc{display:flex;flex-direction:column;gap:.5rem;}
+.fc-t{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:rgba(255,255,255,.4);margin-bottom:.3rem;}
+.fc a{color:rgba(255,255,255,.65);text-decoration:none;font-size:.85rem;transition:color .2s;}
+.fc a:hover{color:#fff;}
+.footer-btm{padding:1.25rem 0;text-align:center;}
+.footer-btm p{font-size:.75rem;color:rgba(255,255,255,.3);}
+.hamburger{display:none;flex-direction:column;cursor:pointer;gap:4px;}
+.hamburger span{width:24px;height:2.5px;background:var(--tc);transition:.3s;}
+.nav-backdrop{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:998;}
+.nav-backdrop.active{display:block;}
+@media(max-width:768px){
+  .hamburger{display:flex;}
+  .nav-links{position:fixed;left:-65%;top:70px;flex-direction:column;background:var(--nbg);width:65%;max-width:280px;transition:left .3s;box-shadow:2px 0 10px rgba(0,0,0,.15);gap:0;padding:16px 0;z-index:999;height:calc(100vh - 70px);overflow-y:auto;}
+  .nav-links.active{left:0;}
+  .nav-links a{padding:13px 20px;border-bottom:1px solid var(--bc);display:block;}
+  .footer-grid{grid-template-columns:1fr 1fr;gap:2rem;}
+}
+</style>
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="nav-inner">
+    <a href="../index.html" class="nav-brand">
+      <img src="../docs/icon.png" alt="FlowSquad">
+    </a>
+    <div class="nav-links">
+      <a href="../index.html#features">Features</a>
+      <a href="../index.html#how-it-works">How It Works</a>
+      <a href="../index.html#use-cases">Use Cases</a>
+      <a href="../index.html#deployment">Deployment</a>
+      <a href="../index.html#download">Download</a>
+      <a href="../index.html#pricing">Pricing</a>
+      <a href="../docs/index.html">Docs</a>
+      <a href="index.html" class="active">Blog</a>
+      <a href="mailto:support@flowsquad.ai" class="nav-contact">Contact Sales</a>
+      <a href="https://github.com/flowsquad-ai/Flowsquad" target="_blank" rel="noopener noreferrer" class="nav-gh">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.44 9.8 8.21 11.39.6.11.82-.26.82-.58 0-.29-.01-1.25-.02-2.27-3.34.73-4.04-1.42-4.04-1.42-.55-1.39-1.33-1.76-1.33-1.76-1.09-.75.08-.74.08-.74 1.2.09 1.84 1.24 1.84 1.24 1.08 1.85 2.83 1.31 3.52 1 .11-.78.42-1.31.76-1.61-2.67-.3-5.47-1.34-5.47-5.96 0-1.32.47-2.39 1.24-3.23-.12-.3-.54-1.52.12-3.17 0 0 1.01-.32 3.3 1.23A11.5 11.5 0 0 1 12 6.8c1.02 0 2.05.14 3.01.42 2.29-1.55 3.3-1.23 3.3-1.23.66 1.65.24 2.87.12 3.17.77.84 1.24 1.91 1.24 3.23 0 4.64-2.8 5.65-5.48 5.95.43.37.81 1.1.81 2.22 0 1.61-.01 2.9-.01 3.29 0 .32.22.7.82.58A12.01 12.01 0 0 0 24 12c0-6.63-5.37-12-12-12Z"/></svg>
+        GitHub
+      </a>
+      <button class="theme-btn" id="themeToggle" aria-label="Toggle theme">&#127769;</button>
+    </div>
+    <div class="hamburger"><span></span><span></span><span></span></div>
+  </div>
+</nav>
+<div class="nav-backdrop"></div>
+
+<div class="art-wrap">
+  <div class="breadcrumb"><a href="index.html">Blog</a> <span>&#8250;</span> Use Case</div>
+  <span class="art-cat cat-usecase">Use Case</span>
+  <img src="blog-31-legacy-cobol-rpg-ibmi-analysis-cover.svg" alt="COBOL, RPG &amp; IBM i Analysis in FlowSquad" class="cover-img" loading="lazy" />
+
+  <h1>COBOL, RPG &amp; IBM i Analysis in FlowSquad: What Works, What Doesn't, and Why It Still Matters</h1>
+
+  <p class="art-hook">Most modern SDLC tools quietly drop the ball on COBOL and RPG. FlowSquad doesn't — here's exactly what you get, how it works, and what honest limitations to expect.</p>
+  <div class="art-meta">May 12, 2026 <span>&#183;</span> 11 min read <span>&#183;</span> <span>IBM i Teams</span><span>Legacy Modernisation</span><span>Banking &amp; Insurance</span></div>
+
+  <div class="tldr"><div class="tldr-title">TL;DR</div>
+    <ul>
+      <li>FlowSquad supports <strong>COBOL, RPG/RPGLE, CL/CLLE, REXX</strong>, and full IBM i platform artifacts (.dds, .bnd, .mnusrc, .msgf) out of the box — no configuration required.</li>
+      <li>File discovery, LOC metrics, language detection, security pattern scanning, and <strong>full LLM-driven semantic analysis</strong> all work for legacy languages today.</li>
+      <li>FlowSquad uses an <strong>LLM-first approach</strong> for these languages instead of tree-sitter AST parsing — which works better than regex parsers and delivers meaningful requirement extraction, architecture mapping, and SDLC artifact generation.</li>
+      <li>AST-level metrics (cyclomatic complexity, call graph) are <strong>not available</strong> for COBOL/RPG — no production-ready tree-sitter grammar exists for these dialects. We say so plainly.</li>
+      <li>IBM i shops running air-gapped can use FlowSquad with <strong>on-premise Ollama</strong> — no code leaves the data centre.</li>
+    </ul>
+  </div>
+
+  <h2>Why This Question Comes Up So Often</h2>
+  <p>There are an estimated <strong>800 billion lines of COBOL</strong> in production worldwide, processing over $3 trillion in daily commerce. IBM i (formerly AS/400) runs the back-office of most of the world's banks, insurers, and retailers. RPG — the native programming language of IBM i — is still being actively written and maintained by tens of thousands of developers.</p>
+
+  <p>Yet when those organisations evaluate modern SDLC tools, they almost always hit the same wall: the tool either silently ignores their COBOL and RPG files, or worse, claims to support them and then fails to parse anything meaningful. Neither outcome is acceptable when your payment processing engine is written in 1982-era COBOL and your team needs to generate user stories from it.</p>
+
+  <p>This article explains exactly what FlowSquad does — and does not do — for these languages, so you can make an informed decision before you commit to an evaluation.</p>
+
+  <h2>The Tree-Sitter Gap: Why Legacy Languages Are Hard</h2>
+  <p>FlowSquad uses <strong>tree-sitter</strong> for AST-level parsing of 29 modern languages. Tree-sitter is a parser generator that produces concrete syntax trees from source code — enabling precise extraction of function signatures, class hierarchies, complexity metrics, and symbol graphs. It is fast, battle-tested, and language-agnostic.</p>
+
+  <p>The catch: tree-sitter needs a <em>grammar file</em> for each language. While the tree-sitter ecosystem has grammars for over 100 languages, production-grade grammars for enterprise COBOL dialects (IBM COBOL, COBOL/400, Micro Focus COBOL) and RPG (fixed-format RPG III, free-format RPGLE, SQL/RPG) do not exist in a mature state. Community experiments exist but they are incomplete — they parse simple programs and break on real enterprise code that uses vendor-specific extensions, fixed-column formatting, and decades of accumulated idioms.</p>
+
+  <p>Rather than bundle an incomplete grammar that silently fails on your actual codebase, FlowSquad takes a different approach.</p>
+
+  <h2>The LLM-First Approach for Legacy Languages</h2>
+  <p>For languages without a reliable tree-sitter grammar, FlowSquad routes source files directly to LLM-based semantic analysis, bypassing the AST parse step entirely. This is not a workaround — it is actually the <em>better</em> approach for COBOL and RPG, for a specific reason.</p>
+
+  <div class="callout">
+    <strong>Why LLMs understand COBOL better than regex parsers:</strong> Modern LLMs (GPT-4, Claude, Llama 3, Mistral) are trained on large corpora that include COBOL reference manuals, mainframe documentation, open-source COBOL repositories, and decades of Stack Overflow discussions about IBM i development. They understand the IDENTIFICATION DIVISION, the structure of WORKING-STORAGE SECTION, the meaning of PERFORM UNTIL, and RPG's fixed-format column assignments and op-codes at a semantic level — not just as text patterns. A regex parser can find <code>PROCEDURE DIVISION</code>. An LLM can tell you what the procedure <em>does</em>.
+  </div>
+
+  <h3>What the pipeline looks like for a COBOL file</h3>
+  <div class="ascii-table">┌─────────────────── FlowSquad Legacy Language Pipeline ─────────────────────┐
+│                                                                              │
+│  .cbl / .rpgle     File          Extension       Language                   │
+│  Source File   ──► Discovery ──► Detection   ──► Classification             │
+│                    ✓              ✓               COBOL / RPG                │
+│                                                                              │
+│  ──► LOC / Size    Security       ONNX            VectorDB                  │
+│      Metrics   ──► Scan       ──► Embedding   ──► Upsert                    │
+│      ✓             (regex)        384-dim         code collection            │
+│                    ✓              ✓               ✓                          │
+│                                                                              │
+│  ──► LLM Semantic Analysis (no AST step)                                    │
+│      Requirement extraction · Architecture mapping · Story generation        │
+│      ✓                                                                       │
+│                                                                              │
+│  ✗   tree-sitter AST (skipped — no grammar)                                 │
+│      Cyclomatic complexity · Call graph — NOT available                      │
+└──────────────────────────────────────────────────────────────────────────────┘</div>
+
+  <h2>What You Get Today: Supported Legacy Languages</h2>
+
+  <table>
+    <thead>
+      <tr><th>Language / Artifact</th><th>File Extensions</th><th>File Discovery &amp; LOC</th><th>Security Scan</th><th>LLM Semantic Analysis</th><th>AST Metrics</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><strong>COBOL</strong></td><td>.cbl .cob .cobol .sqlcbl</td><td>✓</td><td>✓ regex</td><td>✓</td><td>—</td></tr>
+      <tr><td><strong>RPG / RPGLE</strong></td><td>.rpg .rpgle .sqlrpgle</td><td>✓</td><td>✓ regex</td><td>✓</td><td>—</td></tr>
+      <tr><td><strong>CL / CLLE</strong></td><td>.clle .clp .clp38</td><td>✓</td><td>✓</td><td>✓</td><td>—</td></tr>
+      <tr><td><strong>REXX</strong></td><td>.rexx .rex</td><td>✓</td><td>✓</td><td>✓</td><td>—</td></tr>
+      <tr><td><strong>DDS (Display/Printer/LF)</strong></td><td>.dds .dspfdds .prtfdds .lfdds .pfdds</td><td>✓</td><td>✓</td><td>✓</td><td>—</td></tr>
+      <tr><td><strong>IBM i Binder / Menu / Msg</strong></td><td>.bnd .mnusrc .msgf .cmdsrc .pnlgrpsrc</td><td>✓</td><td>✓</td><td>✓</td><td>—</td></tr>
+      <tr><td><strong>SQL COBOL / SQL RPG</strong></td><td>.sqlcbl .sqlrpgle</td><td>✓</td><td>✓</td><td>✓</td><td>—</td></tr>
+    </tbody>
+  </table>
+
+  <p>Every one of these file types is indexed into VectorDB alongside your modern-language files. AskProduct queries work across all of them — you can ask <em>"How does the COBOL batch job interact with the Java REST API?"</em> and FlowSquad will retrieve relevant chunks from both codebases to construct the answer.</p>
+
+  <h2>Feature-by-Feature Breakdown</h2>
+
+  <h3>1. File Discovery and LOC Metrics</h3>
+  <p>FlowSquad's repository walker recognises all legacy file extensions at discovery time. When you load an IBM i project via Git URL or ZIP upload, COBOL, RPG, CL, REXX, and DDS files are counted, sized, and included in the language breakdown shown on the Analyze tab. Line-of-code metrics, file counts by language, and extension distribution charts all include legacy files correctly.</p>
+
+  <h3>2. Security Pattern Scanning</h3>
+  <p>The security scanner runs regex-based pattern matching across legacy source files, looking for hardcoded credentials, SQL injection patterns in embedded SQL, cleartext data transmission indicators, and other OWASP-aligned issues. This is not as precise as Semgrep (which does not support COBOL or RPG), but it covers the most common vulnerability classes found in legacy enterprise code — particularly hardcoded passwords in WORKING-STORAGE and unparameterised dynamic SQL in embedded SQL RPG programs.</p>
+
+  <div class="code-block"><span class="comment">      * COBOL — example of a pattern FlowSquad's security scanner flags</span>
+      WORKING-STORAGE SECTION.
+      01 WS-DB-PASSWORD    PIC X(20) VALUE <span class="str">'S3cr3tP@ss'</span>.
+<span class="comment">      * ↑ Hardcoded credential — flagged as HIGH severity</span>
+
+      <span class="comment">* RPG/RPGLE — embedded SQL with concatenated input</span>
+       C/EXEC SQL
+       C+ SELECT * FROM ORDERS WHERE CUSTID = <span class="str">'</span>' + CustInput
+       C/END-EXEC
+<span class="comment">      * ↑ SQL injection risk — flagged as HIGH severity</span></div>
+
+  <h3>3. LLM-Driven Semantic Analysis</h3>
+  <p>This is where the most value lies for legacy language users. When FlowSquad generates requirements, epics, user stories, high-level designs, or AskProduct answers, the LLM receives the raw COBOL/RPG source as context. Because the LLM genuinely understands these languages, the output quality is comparable to what you get from modern languages.</p>
+
+  <p>In practice, teams use this to:</p>
+  <ul>
+    <li><strong>Extract requirements from legacy programs</strong> — ask FlowSquad to derive a requirement specification from a 3,000-line COBOL payroll program. The LLM identifies business rules encoded in conditional logic, PERFORM chains, and data transformations.</li>
+    <li><strong>Generate epics and user stories for modernisation projects</strong> — the most common use case. Load the existing COBOL system, have FlowSquad generate SDLC artifacts describing what it currently does, then use those artifacts as the specification for a Java or Python rewrite.</li>
+    <li><strong>Produce architecture documentation</strong> — FlowSquad maps the structure of an IBM i application: which programs call which, how batch jobs chain, how DDS screen definitions relate to RPG display file programs.</li>
+    <li><strong>Answer questions about legacy code</strong> — AskProduct lets developers who are unfamiliar with RPG ask plain-language questions and get plain-language answers grounded in the actual source.</li>
+  </ul>
+
+  <h3>4. Embedding and VectorDB Indexing</h3>
+  <p>COBOL and RPG source files are chunked and embedded using the same ONNX all-MiniLM-L6-v2 model used for modern languages. Because the embedding model is a general-purpose sentence transformer trained on diverse text (including technical documentation), it produces meaningful semantic vectors for COBOL and RPG source — allowing AskProduct to retrieve the most relevant code sections for a given query even when the query uses modern terminology.</p>
+
+  <p>For example, querying <em>"payment processing error handling"</em> will retrieve relevant COBOL paragraphs that deal with payment errors even if those paragraphs use legacy terminology like <code>COMPUTE WS-PAYMENT-TOTAL</code> and <code>PERFORM ERROR-ROUTINE</code> rather than modern equivalents.</p>
+
+  <h2>What Doesn't Work (Honest Limitations)</h2>
+
+  <div class="callout-warn">
+    <strong>AST-level metrics are not available for COBOL, RPG, or REXX.</strong> Cyclomatic complexity scores, precise call graphs, and symbol-level extraction (individual paragraph/procedure names with line numbers) require a tree-sitter grammar. No production-quality grammar exists for enterprise COBOL or RPG dialects. FlowSquad does not fake these metrics with regex approximations — if a metric is unavailable, it is simply omitted from the output rather than reported inaccurately.
+  </div>
+
+  <p>Specifically, the following features that work for Tier 1 languages are <strong>not available</strong> for COBOL/RPG:</p>
+  <ul>
+    <li>Cyclomatic complexity per procedure/paragraph</li>
+    <li>Precise call graph (which program calls which paragraph)</li>
+    <li>Symbol-level VectorDB chunks (individual COBOL paragraphs stored as separate vectors)</li>
+    <li>Automated test case generation using AST-derived entry points</li>
+  </ul>
+
+  <p>The semantic analysis and SDLC artifact generation features work well. The deep structural metrics do not. This is a known limitation and it is honest.</p>
+
+  <h2>Air-Gapped IBM i Deployments</h2>
+  <p>Many IBM i shops operate in regulated, air-gapped environments — banking, government, defence. FlowSquad's on-premise deployment mode is designed for exactly this scenario.</p>
+
+  <p>The full stack runs locally:</p>
+  <ul>
+    <li><strong>FlowSquad server</strong> — Windows installer or Docker image, deployed on a local server</li>
+    <li><strong>Ollama</strong> — local LLM inference (Llama 3, Mistral, CodeLlama) — no OpenAI API calls</li>
+    <li><strong>ChromaDB</strong> — local VectorDB — no Pinecone, no cloud</li>
+    <li><strong>PostgreSQL</strong> — local database — on-premise or on IBM i via PASE</li>
+    <li><strong>ONNX Runtime</strong> — embedding model runs entirely on-CPU — no external model API</li>
+  </ul>
+
+  <p>COBOL and RPG source code never leaves your network. The LLM that analyses it runs on your own hardware. This makes FlowSquad viable for environments where cloud AI tools are explicitly prohibited by policy or regulation.</p>
+
+  <h2>Practical Example: Modernisation of a COBOL Payroll System</h2>
+  <p>Here is a representative workflow for an IBM i team using FlowSquad to support a COBOL-to-Java modernisation project:</p>
+
+  <ol>
+    <li><strong>Load the legacy codebase.</strong> Point FlowSquad at the Git repository or ZIP export from RDi (Rational Developer for i). FlowSquad discovers all .cbl, .rpgle, .clle, and .dds files automatically.</li>
+    <li><strong>Run Analyze.</strong> FlowSquad indexes the codebase into VectorDB, runs security scanning, and produces the language breakdown report. For a typical payroll system this takes 2–5 minutes.</li>
+    <li><strong>Generate a requirement specification from the legacy code.</strong> Use the Refine tab to extract business rules and functional requirements from the COBOL source. The LLM produces a structured specification describing what the system currently does — written in plain English, not COBOL.</li>
+    <li><strong>Generate modernisation epics and user stories.</strong> Use the Epic and Story tabs to convert the requirement specification into Jira-ready epics and user stories describing the target Java system. These can be exported directly to Jira.</li>
+    <li><strong>Generate a high-level design for the target system.</strong> The Design tab produces an HLD describing the Java architecture that will replace the COBOL program, informed by the legacy code structure.</li>
+    <li><strong>Use AskProduct throughout.</strong> Developers on the modernisation team use AskProduct to answer questions like "What are the tax calculation rules in the COBOL payroll engine?" without needing to read thousands of lines of COBOL themselves.</li>
+  </ol>
+
+  <p>This workflow is being used today by teams migrating IBM i applications to cloud-native Java and Python systems. FlowSquad does not write the replacement code — but it dramatically compresses the knowledge-extraction and specification phase, which typically consumes 30–40% of a modernisation project's budget.</p>
+
+  <h2>Roadmap</h2>
+  <p>We are tracking developments in the tree-sitter ecosystem for legacy languages. If and when a mature, production-quality grammar for IBM COBOL or free-format RPGLE reaches stability, we will evaluate bundling it to unlock Tier 1 AST metrics for those languages. We will not bundle an incomplete grammar that produces misleading metrics on real enterprise code.</p>
+
+  <p>Community contributions to the language support pipeline are welcome — see the <a href="https://github.com/flowsquad-ai/Flowsquad" target="_blank" rel="noopener noreferrer">FlowSquad GitHub repository</a> for the grammar registration interface.</p>
+
+  <div class="related">
+    <div class="related-title">Related Articles</div>
+    <ul>
+      <li><a href="blog-12-polyglot-code-analysis.html">How FlowSquad Understands 29+ Programming Languages — Including COBOL, RPG, and Fortran</a></li>
+      <li><a href="blog-08-airgapped-deployment.html">We Couldn't Use Cloud LLMs. Here's How We Still Built an AI-Powered SDLC.</a></li>
+      <li><a href="blog-30-banking-airgapped.html">AI-Powered SDLC in a Bank: How We Run FlowSquad with Zero Data Leaving Our Data Centre</a></li>
+      <li><a href="blog-15-askproduct-knowledge-hub.html">AskProduct: The Knowledge Hub That Actually Knows Your Codebase</a></li>
+    </ul>
+  </div>
+
+  <div class="faq">
+    <h2>Frequently Asked Questions</h2>
+
+    <details>
+      <summary>Does FlowSquad support IBM COBOL specifically, or only standard COBOL?</summary>
+      <p>FlowSquad's LLM-based analysis works on any COBOL dialect because the LLM — not a hand-written grammar — does the understanding. IBM COBOL, Micro Focus COBOL, COBOL/400, and embedded SQL COBOL (.sqlcbl) have all been tested with FlowSquad. Dialect-specific extensions (EXEC SQL, EXEC CICS, IBM-specific data types) are understood by the LLM without additional configuration.</p>
+    </details>
+
+    <details>
+      <summary>Can FlowSquad analyse free-format RPGLE and fixed-format RPG III together?</summary>
+      <p>Yes. Both are recognised by extension (<code>.rpgle</code> for ILE RPG including free-format, <code>.rpg</code> for older fixed-format programs) and indexed together. The LLM handles the difference in format automatically — free-format RPGLE and fixed-format RPG IV are both understood without separate configuration.</p>
+    </details>
+
+    <details>
+      <summary>We have a mixed codebase: Java services calling COBOL batch programs via MQ. Can FlowSquad handle that?</summary>
+      <p>Yes. FlowSquad indexes both the Java and COBOL source into the same VectorDB collection. AskProduct queries can retrieve context from both and the LLM can reason across the boundary — for example, answering "Which Java service triggers the COBOL PAYROLL batch job and what data does it pass?" by combining context from Java method signatures and COBOL JCL/CL definitions.</p>
+    </details>
+
+    <details>
+      <summary>Can FlowSquad generate test cases for COBOL programs?</summary>
+      <p>Partially. Test case generation using AST-derived entry points (which requires tree-sitter) is not available for COBOL. However, FlowSquad can generate <em>functional</em> test cases from the LLM-derived requirement specification — describing what inputs and expected outputs should be tested, based on the business logic the LLM extracted from the source. These are behaviour-level test cases, not unit test stubs with line-level coverage annotations.</p>
+    </details>
+
+    <details>
+      <summary>We run in an air-gapped environment. Can FlowSquad work without internet access?</summary>
+      <p>Yes — this is a first-class supported deployment mode. FlowSquad with Ollama (local LLM), ChromaDB (local VectorDB), and ONNX Runtime (local embeddings) operates entirely offline. The only external dependency is the initial download of FlowSquad itself and the Ollama models, which can be done on a connected machine and then transferred. See the <a href="blog-08-airgapped-deployment.html">air-gapped deployment guide</a> for full instructions.</p>
+    </details>
+
+    <details>
+      <summary>What about JCL (Job Control Language)?</summary>
+      <p>JCL (<code>.jcl</code>) file recognition is on the near-term roadmap. The LLM understands JCL natively, so once the extension is registered in FlowSquad's file discovery configuration, JCL files will be indexed and available for analysis. Contact <a href="mailto:support@flowsquad.ai">support@flowsquad.ai</a> if this is a priority for your team — it accelerates the roadmap prioritisation.</p>
+    </details>
+
+  </div>
+
+  <div class="share-badges" style="margin-top:40px; display:flex; gap:8px; flex-wrap:wrap;">
+    <a href="#" class="badge">Share on dev.to</a>
+    <a href="#" class="badge">Share on Hashnode</a>
+    <a href="#" class="badge">Share on Medium</a>
+    <a href="#" class="badge">Share on LinkedIn</a>
+  </div>
+</div>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <p class="fl"><strong>FlowSquad</strong></p>
+        <p class="ft">AI-Powered SDLC Intelligence Platform</p>
+        <p class="ft">Analyze once. Reuse intelligence. Zero repeated LLM cost.</p>
+      </div>
+      <div class="fc"><p class="fc-t">Product</p>
+        <a href="../index.html#features">Features</a>
+        <a href="../index.html#how-it-works">How It Works</a>
+        <a href="../index.html#deployment">Deployment</a>
+        <a href="../index.html#pricing">Pricing</a>
+        <a href="../index.html#download">Download</a>
+      </div>
+      <div class="fc"><p class="fc-t">Resources</p>
+        <a href="../docs/index.html">Documentation</a>
+        <a href="index.html">Blog</a>
+        <a href="https://github.com/flowsquad-ai/Flowsquad" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <a href="../index.html#learn-more">Videos</a>
+        <a href="mailto:support@flowsquad.ai">Support</a>
+      </div>
+      <div class="fc"><p class="fc-t">Company</p>
+        <a href="mailto:support@flowsquad.ai">Contact Sales</a>
+        <a href="mailto:support@flowsquad.ai">support@flowsquad.ai</a>
+        <a href="/privacy.html">Privacy Policy</a>
+      </div>
+    </div>
+    <div class="footer-btm"><p>&#169; 2026 FlowSquad. All rights reserved.</p></div>
+  </div>
+</footer>
+
+<script>
+var _ham=document.querySelector('.hamburger'),_nl=document.querySelector('.nav-links'),_nb=document.querySelector('.nav-backdrop');
+var _scrollY=0;
+function _open(){_scrollY=window.scrollY;document.body.style.position='fixed';document.body.style.top='-'+_scrollY+'px';document.body.style.width='100%';document.body.style.overflow='hidden';_nl.classList.add('active');_nb.classList.add('active');}
+function _close(){_nl.classList.remove('active');_nb.classList.remove('active');document.body.style.position='';document.body.style.top='';document.body.style.width='';document.body.style.overflow='';window.scrollTo(0,_scrollY);}
+_ham.addEventListener('click',function(){if(_nl.classList.contains('active')){_close();}else{_open();}});
+_nb.addEventListener('click',_close);
+document.querySelectorAll('.nav-links a').forEach(function(l){l.addEventListener('click',_close);});
+var _tt=document.getElementById('themeToggle');
+function _applyTheme(d){document.documentElement.setAttribute('data-theme',d?'dark':'light');_tt.innerHTML=d?'&#9728;&#65039;':'&#127769;';localStorage.setItem('fs_theme',d?'dark':'light');}
+var _st=localStorage.getItem('fs_theme');_applyTheme(_st?_st==='dark':true);
+_tt.addEventListener('click',function(){_applyTheme(document.documentElement.getAttribute('data-theme')!=='dark');});
+</script>
+</body>
+</html>
